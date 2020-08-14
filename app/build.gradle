@@ -1,0 +1,67 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlinx-serialization'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        applicationId "com.gaurav.avnc"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "0.1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            applicationIdSuffix ".debug"
+        }
+    }
+
+    buildFeatures {
+        dataBinding true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+}
+
+dependencies {
+    def version = [
+            appCompat : '1.1.0',
+            navigation: '2.3.0',
+            lifecycle : '2.2.0',
+            room      : '2.2.5',
+            material  : '1.1.0'
+    ]
+
+    implementation "androidx.core:core-ktx:1.3.1"
+    implementation 'androidx.fragment:fragment-ktx:1.2.5'
+    implementation "androidx.appcompat:appcompat:$version.appCompat"
+    implementation "com.google.android.material:material:$version.material"
+
+    implementation "androidx.navigation:navigation-fragment:$version.navigation"
+    implementation "androidx.navigation:navigation-ui:$version.navigation"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version.lifecycle"
+    implementation "androidx.room:room-runtime:$version.room"
+    implementation "androidx.room:room-ktx:$version.room"
+    kapt "androidx.room:room-compiler:$version.room"
+
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0"
+}
