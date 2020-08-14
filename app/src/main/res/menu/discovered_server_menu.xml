@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ Released under the terms of GPLv3 (or later).
+  ~ See COPYING.txt for more details.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/add_bookmark"
+        android:title="@string/title_add_bookmark" />
+    <item
+        android:id="@+id/copy_name"
+        android:title="@string/title_copy_name" />
+    <item
+        android:id="@+id/copy_address"
+        android:title="@string/title_copy_address" />
+</menu>

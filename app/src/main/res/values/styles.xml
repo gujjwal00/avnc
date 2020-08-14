@@ -1,0 +1,50 @@
+<!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ Released under the terms of GPLv3 (or later).
+  ~ See COPYING.txt for more details.
+  -->
+
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat">
+        <!--Colors-->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+
+        <!--Controls-->
+        <item name="buttonBarButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.AppCompat.Button</item>
+    </style>
+
+    <style name="FormLabel" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_gravity">start|center</item>
+        <item name="android:layout_margin">@dimen/margin_small</item>
+        <item name="android:layout_width">0px</item>
+        <item name="android:layout_weight">.3</item>
+    </style>
+
+    <style name="FormField">
+        <item name="android:layout_width">0px</item>
+        <item name="android:layout_weight">.7</item>
+        <item name="android:layout_margin">@dimen/margin_small</item>
+    </style>
+
+    <style name="ListItem">
+        <item name="android:layout_marginTop">@dimen/margin_normal</item>
+        <item name="android:layout_marginLeft">@dimen/margin_normal</item>
+        <item name="android:layout_marginRight">@dimen/margin_normal</item>
+        <item name="android:padding">@dimen/padding_normal</item>
+        <item name="android:background">@drawable/bg_list_item</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="Fab" parent="Widget.Design.FloatingActionButton">
+        <item name="android:layout_gravity">bottom|end</item>
+        <item name="android:layout_marginRight">@dimen/margin_normal</item>
+        <item name="android:layout_marginBottom">@dimen/margin_normal</item>
+    </style>
+</resources>

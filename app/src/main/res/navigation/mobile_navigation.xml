@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ Released under the terms of GPLv3 (or later).
+  ~ See COPYING.txt for more details.
+  -->
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_bookmarks">
+
+    <fragment
+        android:id="@+id/nav_bookmarks"
+        android:name="com.gaurav.avnc.ui.home.BookmarksFragment"
+        android:label="@string/title_bookmarks"
+        tools:layout="@layout/fragment_bookmarks" />
+
+    <fragment
+        android:id="@+id/nav_recents"
+        android:name="com.gaurav.avnc.ui.home.RecentsFragment"
+        android:label="@string/title_recents"
+        tools:layout="@layout/fragment_recents" />
+
+    <fragment
+        android:id="@+id/nav_discovery"
+        android:name="com.gaurav.avnc.ui.home.DiscoveryFragment"
+        android:label="@string/title_discovery"
+        tools:layout="@layout/fragment_discovery" />
+
+</navigation>

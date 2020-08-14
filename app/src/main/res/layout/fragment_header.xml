@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ Released under the terms of GPLv3 (or later).
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.gaurav.avnc.viewmodel.HomeViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_main_header"
+        android:elevation="5dp"
+        android:padding="@dimen/padding_normal">
+
+        <!-- <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_gravity="top|start"
+             android:text="@string/app_name"
+             style="@style/TextAppearance.AppCompat.Title"/>
+
+         <ImageButton
+             style="@style/Widget.AppCompat.Button.Borderless"
+             android:layout_width="36dp"
+             android:layout_height="wrap_content"
+             android:layout_gravity="top|end"
+             android:background="?selectableItemBackgroundBorderless"
+             android:src="@drawable/ic_more"
+             android:tint="#fff"/>-->
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="40dp"
+            android:background="@drawable/bg_quick_connect"
+            android:elevation="5dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:padding="5dp">
+
+            <EditText
+                android:id="@+id/urlBox"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:hint="@string/header_url_hint"
+                android:imeOptions="actionGo"
+                android:importantForAutofill="no"
+                android:inputType="textUri"
+                android:text="@={viewModel.serverUrl}"
+                android:textSize="15sp" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|end"
+                android:background="?selectableItemBackgroundBorderless"
+                android:padding="@dimen/padding_small"
+                android:src="@drawable/ic_forward"
+                android:tint="@color/colorAccent"
+                android:contentDescription="@string/desc_connect_btn"
+                app:isVisible='@{!viewModel.serverUrl.equals("")}' />
+        </FrameLayout>
+    </FrameLayout>
+</layout>

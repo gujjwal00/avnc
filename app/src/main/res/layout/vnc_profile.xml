@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ Released under the terms of GPLv3 (or later).
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.gaurav.avnc.model.VncProfile" />
+
+        <variable
+            name="showAll"
+            type="boolean" />
+
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_normal">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!--
+               This table is divided into two sections:
+                   Normal: These are 'normal' options which user will edit most frequently
+                   Advanced: These options are modified less frequently. They  are hidden by default
+                             and user will have to explicitly un-hide them.
+            -->
+
+            <!-- ~~~~~~~~~~~~~~~~~~~~ Normal Options ~~~~~~~~~~~~~~~~~~ -->
+
+            <!--Bookmark name-->
+            <TableRow>
+
+                <TextView
+                    style="@style/FormLabel"
+                    android:text="@string/label_name" />
+
+                <EditText
+                    style="@style/FormField"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:text="@={viewModel.displayName}" />
+            </TableRow>
+
+            <!--Host-->
+            <TableRow>
+
+                <TextView
+                    style="@style/FormLabel"
+                    android:text="@string/label_host" />
+
+                <EditText
+                    style="@style/FormField"
+                    android:hint="@string/hint_host"
+                    android:importantForAutofill="no"
+                    android:inputType="textUri"
+                    android:text="@={viewModel.host}" />
+            </TableRow>
+
+            <!--Port-->
+            <TableRow>
+
+                <TextView
+                    style="@style/FormLabel"
+                    android:text="@string/label_port" />
+
+                <EditText
+                    style="@style/FormField"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:text='@={"" +  viewModel.port}' />
+            </TableRow>
+
+            <!--Username-->
+            <TableRow>
+
+                <TextView
+                    style="@style/FormLabel"
+                    android:text="@string/label_username" />
+
+                <EditText
+                    style="@style/FormField"
+                    android:autofillHints="username"
+                    android:hint="@string/hint_optional"
+                    android:inputType="text"
+                    android:text="@={viewModel.username}" />
+            </TableRow>
+
+            <!--Password-->
+            <TableRow>
+
+                <TextView
+                    style="@style/FormLabel"
+                    android:text="@string/label_password" />
+
+                <EditText
+                    style="@style/FormField"
+                    android:autofillHints="password"
+                    android:hint="@string/hint_optional"
+                    android:inputType="textPassword"
+                    android:text="@={viewModel.password}" />
+            </TableRow>
+
+            <!-- ~~~~~~~~~~~~~~~~~~~~ Advanced Options ~~~~~~~~~~~~~~~~~~ -->
+
+            <!--View-only mode-->
+            <TableRow app:isVisible="@{showAll}">
+
+                <!--Empty View-->
+                <View style="@style/FormLabel" />
+
+                <CheckBox
+                    style="@style/FormField"
+                    android:checked="@={viewModel.viewOnly}"
+                    android:text="@string/label_view_only_mode" />
+            </TableRow>
+
+        </TableLayout>
+    </ScrollView>
+</layout>

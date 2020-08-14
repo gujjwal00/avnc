@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ Released under the terms of GPLv3 (or later).
+  ~ See COPYING.txt for more details.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/edit"
+        android:title="@string/title_edit" />
+    <item
+        android:id="@+id/duplicate"
+        android:title="@string/title_duplicate" />
+    <item
+        android:id="@+id/copy_address"
+        android:title="@string/title_copy_address" />
+    <item
+        android:id="@+id/delete"
+        android:title="@string/title_delete" />
+</menu>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ Released under the terms of GPLv3 (or later).
+  ~ See COPYING.txt for more details.
+  -->
+
+<resources>
+    <color name="colorPrimary">#232323</color>
+    <color name="colorPrimaryDark">#121212</color>
+    <color name="colorBorder">#484848</color>
+    <color name="colorAccent">#a44900</color>
+    <color name="iconTintColor">#fff</color>
+</resources>
