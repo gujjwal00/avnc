@@ -21,8 +21,6 @@ import androidx.lifecycle.Observer
  *
  * LiveEvent tracks whether someone has handled the current value/change in LiveData.
  * Once handled, observers will not be notified for the same value.
- *
- * Thread Safety:
  */
 class LiveEvent<T> : LiveData<T>() {
 
@@ -31,18 +29,30 @@ class LiveEvent<T> : LiveData<T>() {
      */
     private var handled = false
 
+    /**
+     * Override to reset state.
+     */
+    override fun setValue(value: T) {
+        handled = false
+        super.setValue(value)
+    }
 
     /**
      * Sets new value for this event.
      *
-     * This event will be marked as 'not handled' and
-     * any observers will be notified.
-     *
      * This must be called on main thread.
      */
     fun set(value: T) {
-        handled = false
-        super.setValue(value)
+        setValue(value)
+    }
+
+    /**
+     * Sets new value for this event.
+     *
+     * This can be called from other threads.
+     */
+    fun post(value: T) {
+        postValue(value)
     }
 
 
