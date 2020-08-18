@@ -70,10 +70,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|end"
                 android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/desc_connect_btn"
                 android:padding="@dimen/padding_small"
                 android:src="@drawable/ic_forward"
                 android:tint="@color/colorAccent"
-                android:contentDescription="@string/desc_connect_btn"
                 app:isVisible='@{!viewModel.serverUrl.equals("")}' />
         </FrameLayout>
     </FrameLayout>
