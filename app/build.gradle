@@ -13,6 +13,15 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "0.1.0"
+
+        externalNativeBuild {
+            cmake {
+                //We are not using STL
+                arguments '-DANDROID_STL=none'
+
+                targets 'vncclient', 'native-vnc'
+            }
+        }
     }
 
     buildTypes {
@@ -35,6 +44,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    externalNativeBuild {
+        cmake {
+            path file('CMakeLists.txt')
+        }
     }
 }
 
