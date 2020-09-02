@@ -15,7 +15,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.gaurav.avnc.databinding.FragmentHeaderBinding
+import com.gaurav.avnc.model.VncProfile
 import com.gaurav.avnc.viewmodel.HomeViewModel
+import com.gaurav.avnc.vnc.VncUri
 
 /**
  *
@@ -38,12 +40,13 @@ class HeaderFragment : Fragment() {
     }
 
     /**
-     * Starts VNC activity for given url
+     * Starts VNC activity for given uri
      */
-    private fun startVncActivity(url: String) {
-        if (url.isBlank())
+    private fun startVncActivity(uri: String) {
+        if (uri.isBlank())
             return
 
-        TODO("Not Implemented")
+        val profile = VncProfile(VncUri(uri))
+        viewModel.startConnection(profile)
     }
 }

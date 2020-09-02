@@ -16,12 +16,12 @@
             type="com.gaurav.avnc.viewmodel.HomeViewModel" />
     </data>
 
-    <FrameLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_main_header"
-        android:elevation="5dp"
-        android:padding="@dimen/padding_normal">
+        android:padding="@dimen/padding_normal"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="1dp">
 
         <!-- <TextView
              android:layout_width="wrap_content"
@@ -40,16 +40,18 @@
              android:tint="#fff"/>-->
 
 
-        <FrameLayout
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="40dp"
-            android:background="@drawable/bg_quick_connect"
-            android:elevation="5dp"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:padding="5dp">
+            app:cardCornerRadius="30dp"
+            app:cardElevation="3dp"
+            app:contentPadding="@dimen/padding_small"
+            app:strokeColor="?attr/colorPrimaryDark"
+            app:strokeWidth="2dp">
 
             <EditText
                 android:id="@+id/urlBox"
@@ -63,8 +65,8 @@
                 android:importantForAutofill="no"
                 android:inputType="textUri"
                 android:text="@={viewModel.serverUrl}"
-                android:textSize="15sp" />
-
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+            <!--
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -73,8 +75,8 @@
                 android:contentDescription="@string/desc_connect_btn"
                 android:padding="@dimen/padding_small"
                 android:src="@drawable/ic_forward"
-                android:tint="@color/colorAccent"
-                app:isVisible='@{!viewModel.serverUrl.equals("")}' />
-        </FrameLayout>
-    </FrameLayout>
+                android:tint="?attr/colorSecondary"
+                app:isVisible='@{!viewModel.serverUrl.equals("")}' />-->
+        </com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.card.MaterialCardView>
 </layout>
