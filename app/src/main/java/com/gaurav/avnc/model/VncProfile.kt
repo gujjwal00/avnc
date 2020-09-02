@@ -9,6 +9,7 @@
 package com.gaurav.avnc.model
 
 import android.os.Parcelable
+import com.gaurav.avnc.vnc.VncUri
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -46,11 +47,13 @@ data class VncProfile(
 
         /**
          * Security type to be used when connecting to this server.
+         * Ex: VncAuth
          */
         var securityType: Int = 0,
 
         /**
          * Transport type to be used for communicating with the server.
+         * Ex: TCP, SSH Tunnel
          */
         var transportType: Int = 0,
 
@@ -72,4 +75,20 @@ data class VncProfile(
          */
         var viewOnly: Boolean = false
 
-) : Parcelable
+) : Parcelable {
+
+    /**
+     * Construct from [VncUri]
+     */
+    constructor(uri: VncUri) : this() {
+        displayName = uri.connectionName
+        host = uri.host
+        port = uri.port
+        username = uri.username
+        password = uri.password
+        securityType = uri.securityType
+        transportType = uri.channelType
+        colorQuality = uri.colorLevel
+        viewOnly = uri.viewOnly
+    }
+}
