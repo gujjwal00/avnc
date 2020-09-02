@@ -17,6 +17,10 @@ import androidx.annotation.Keep
  * -      +-------v--------+       +--------------+       +--------v---------+
  * -      | Native Methods |------>| LibVNCClient |<----->| Native Callbacks |
  * -      +----------------+       +--------------+       +------------------+
+ *
+ *
+ * After successful [init], you must call [cleanup] on this object
+ * once you are done with it so that allocated resources can be freed.
  */
 class VncClient(
         /**
@@ -27,18 +31,17 @@ class VncClient(
     /**
      * Value of the pointer to native 'rfbClient'.
      */
-    val nativePtr: Long
+    private val nativePtr: Long
 
     /**
-     * Holds information about the current connection.
+     * Information related to this client.
+     *
+     * Whenever this value is changed, [observer] is notified via [Observer.onClientInfoChanged].
      */
-    private var connectionInfo: ConnectionInfo? = null
+    var info = Info(); private set
 
     /**
      * Constructor.
-     *
-     * After successful construction, you must call cleanup() on this object
-     * once you are done with it so that allocated resources can be freed.
      */
     init {
         nativePtr = nativeClientCreate()
@@ -65,8 +68,18 @@ class VncClient(
      * @return true if initialization was successful
      */
     fun init(host: String, port: Int): Boolean {
-        connectionInfo = null
-        return nativeInit(nativePtr, host, port)
+        if (info.state != State.Created)
+            return false
+
+        setState(State.Initializing)
+
+        if (nativeInit(nativePtr, host, port)) {
+            refreshInfo(State.Connected)
+            return true
+        } else {
+            setDisconnected()
+            return false
+        }
     }
 
     /**
@@ -75,10 +88,18 @@ class VncClient(
      *
      * @param uSecTimeout Timeout in microseconds.
      * @return true if message was successfully handled or no message was received within timeout,
-     * false otherwise.
+     *         false otherwise.
      */
     fun processServerMessage(uSecTimeout: Int): Boolean {
-        return nativeProcessServerMessage(nativePtr, uSecTimeout)
+        if (info.state != State.Connected)
+            return false
+
+        if (!nativeProcessServerMessage(nativePtr, uSecTimeout)) {
+            setDisconnected() //Msg processing will fail on irrecoverable errors
+            return false
+        }
+
+        return true
     }
 
     /**
@@ -88,9 +109,7 @@ class VncClient(
      * @param isDown Whether it is an DOWN or UP event
      * @return true if sent successfully, false otherwise
      */
-    fun sendKeyEvent(key: Long, isDown: Boolean): Boolean {
-        return nativeSendKeyEvent(nativePtr, key, isDown)
-    }
+    fun sendKeyEvent(key: Int, isDown: Boolean, translate: Boolean) = nativeSendKeyEvent(nativePtr, key.toLong(), isDown, translate)
 
     /**
      * Sends pointer event to remote server.
@@ -100,115 +119,120 @@ class VncClient(
      * @param mask Button mask to identify which button was pressed.
      * @return true if sent successfully, false otherwise
      */
-    fun sendPointerEvent(x: Int, y: Int, mask: Int): Boolean {
-        return nativeSendPointerEvent(nativePtr, x, y, mask)
-    }
+    fun sendPointerEvent(x: Int, y: Int, mask: Int) = nativeSendPointerEvent(nativePtr, x, y, mask)
+
 
     /**
      * Sends text to remote desktop's clipboard.
+     * TODO: Hook with clipboard.
      *
      * @param text Text to send
      * @return Whether sent successfully.
      */
-    fun sendCutText(text: String): Boolean {
-        return nativeSendCutText(nativePtr, text)
-    }
+    fun sendCutText(text: String) = nativeSendCutText(nativePtr, text)
 
     /**
      * Sends a request for full frame buffer update to remote server.
      *
      * @return Whether sent successfully
      */
-    fun refreshFrameBuffer(): Boolean {
-        return nativeSendFrameBufferUpdateRequest(nativePtr,
-                0,
-                0,
-                getConnectionInfo().frameWidth,
-                getConnectionInfo().frameHeight,
-                true)
-    }
+    fun refreshFrameBuffer() = nativeRefreshFrameBuffer(nativePtr)
+
+    /**
+     * Puts framebuffer contents in currently active OpenGL texture.
+     * Must be called from an OpenGL ES context (i.e. from renderer thread).
+     */
+    fun uploadFrameTexture() = nativeUploadFrameTexture(nativePtr)
+
+    /**
+     * Marks this client as 'disconnected'.
+     *
+     * This doesn't actually disconnects from server but only updates the
+     * state. Then [processServerMessage] will notice this change and will
+     * return false to allow normal cleanup.
+     *
+     */
+    fun setDisconnected() = setState(State.Disconnected)
 
     /**
      * Releases all resource (native & managed) currently held.
-     * After cleanup, this object should not be used any more.
+     * After cleanup, this client MUST NOT be used any more.
      */
     fun cleanup() {
+        if (info.state == State.Destroyed)
+            return
+
+        setState(State.Destroyed)
         nativeCleanup(nativePtr)
     }
 
     /**
-     * Returns information about current connection.
-     *
-     * @return
+     * Set current information to given value and notifies observer.
      */
-    fun getConnectionInfo(): ConnectionInfo {
-        return getConnectionInfo(false)
+    private fun setInfo(newInfo: Info) {
+        info = newInfo
+        observer.onClientInfoChanged(info)
     }
 
     /**
-     * Returns information about current connection.
-     *
-     * @param refresh Whether information should be reloaded from native rfbClient.
+     * Changes state to given value.
      */
-    fun getConnectionInfo(refresh: Boolean): ConnectionInfo {
-        var info = connectionInfo
-        if (info == null || refresh) {
-            info = nativeGetConnectionInfo(nativePtr)
-            connectionInfo = info
-        }
-        return info
-    }
+    private fun setState(newState: State) = setInfo(info.copy(state = newState))
 
     /**
-     * This class is used for representing information about the current connection.
-     *
-     * Note: This class is instantiated by the native code. Any change in fields & constructor
-     * arguments should be synchronized with native side.
-     *
-     * TODO: Should we make this a standalone class?
-     * TODO: Add info about encoding etc.
+     * Refresh current information from native side.
+     * Optionally allows to specify a new state.
      */
-    class ConnectionInfo @Keep constructor(val desktopName: String, val frameWidth: Int, val frameHeight: Int, val isEncrypted: Boolean)
+    private fun refreshInfo(newState: State? = null) {
+        val newInfo = info.copy(state = newState ?: info.state,
+                serverName = nativeGetDesktopName(nativePtr),
+                frameWidth = nativeGetWidth(nativePtr),
+                frameHeight = nativeGetHeight(nativePtr),
+                isEncrypted = nativeIsEncrypted(nativePtr))
+
+        setInfo(newInfo)
+    }
 
     private external fun nativeClientCreate(): Long
     private external fun nativeInit(clientPtr: Long, host: String, port: Int): Boolean
     private external fun nativeProcessServerMessage(clientPtr: Long, uSecTimeout: Int): Boolean
-    private external fun nativeSendKeyEvent(clientPtr: Long, key: Long, isDown: Boolean): Boolean
+    private external fun nativeSendKeyEvent(clientPtr: Long, key: Long, isDown: Boolean, translate: Boolean): Boolean
     private external fun nativeSendPointerEvent(clientPtr: Long, x: Int, y: Int, mask: Int): Boolean
     private external fun nativeSendCutText(clientPtr: Long, text: String): Boolean
-    private external fun nativeSendFrameBufferUpdateRequest(clientPtr: Long, x: Int, y: Int, w: Int, h: Int, incremental: Boolean): Boolean
-    private external fun nativeGetConnectionInfo(clientPtr: Long): ConnectionInfo
+    private external fun nativeRefreshFrameBuffer(clientPtr: Long): Boolean
+    private external fun nativeGetDesktopName(clientPtr: Long): String
+    private external fun nativeGetWidth(clientPtr: Long): Int
+    private external fun nativeGetHeight(clientPtr: Long): Int
+    private external fun nativeIsEncrypted(clientPtr: Long): Boolean
+    private external fun nativeUploadFrameTexture(clientPtr: Long)
     private external fun nativeCleanup(clientPtr: Long)
 
     @Keep
     private fun cbGetPassword(): String {
+        setState(State.Authenticating)
         return observer.rfbGetPassword()
     }
 
     @Keep
     private fun cbGetCredential(): UserCredential {
+        setState(State.Authenticating)
         return observer.rfbGetCredential()
     }
 
     @Keep
-    private fun cbBell() {
-        observer.rfbBell()
-    }
+    private fun cbBell() = observer.rfbBell()
 
     @Keep
-    private fun cbGotXCutText(text: String) {
-        observer.rfbGotXCutText(text)
-    }
+    private fun cbGotXCutText(text: String) = observer.rfbGotXCutText(text)
 
     @Keep
-    private fun cbHandleCursorPos(x: Int, y: Int): Boolean {
-        return observer.rfbHandleCursorPos(x, y)
-    }
+    private fun cbHandleCursorPos(x: Int, y: Int) = observer.rfbHandleCursorPos(x, y)
 
     @Keep
-    private fun cbFinishedFrameBufferUpdate() {
-        observer.rfbFinishedFrameBufferUpdate()
-    }
+    private fun cbFinishedFrameBufferUpdate() = observer.rfbFinishedFrameBufferUpdate()
+
+    @Keep
+    private fun cbFrameBufferSizeChanged() = refreshInfo()
 
     /**
      * Interface for RFB callback listener.
@@ -220,6 +244,50 @@ class VncClient(
         fun rfbGotXCutText(text: String)
         fun rfbFinishedFrameBufferUpdate()
         fun rfbHandleCursorPos(x: Int, y: Int): Boolean
+        fun onClientInfoChanged(info: Info)
     }
 
+    /**
+     * Lifecycle state:
+     *
+     *            CREATED ---------------+
+     *               |                   |
+     *               v                   |
+     *          INITIALIZING --------+   |
+     *               |               |   |
+     *               v               |   |
+     *         AUTHENTICATING -------+   |
+     *               |               |   |
+     *               v               |   |
+     *           CONNECTED           |   |
+     *               |               |   |
+     *               v               |   |
+     *          DISCONNECTED <-------+   |
+     *               |                   |
+     *               v                   |
+     *           DESTROYED <-------------+
+     *
+     *
+     */
+    enum class State {
+        Created,
+        Initializing,
+        Authenticating,
+        Connected,
+        Disconnected,
+        Destroyed
+    }
+
+    /**
+     * This class is used for representing information about this client.
+     *
+     * Properties (except [state]) are valid iff [state] == [State.Connected].
+     */
+    data class Info(
+            val state: State = State.Created,
+            val serverName: String = "",
+            val frameWidth: Int = 0,
+            val frameHeight: Int = 0,
+            val isEncrypted: Boolean = false
+    )
 }

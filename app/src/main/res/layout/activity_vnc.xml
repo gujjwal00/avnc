@@ -7,21 +7,72 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
+        <import type="com.gaurav.avnc.vnc.VncClient.State" />
+
+        <variable
+            name="viewModel"
+            type="com.gaurav.avnc.viewmodel.VncViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusableInTouchMode="true"
         tools:context="com.gaurav.avnc.ui.vnc.VncActivity">
 
-        <TextView
-            android:id="@+id/msg"
+        <com.gaurav.avnc.ui.vnc.FrameView
+            android:id="@+id/frame_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:focusableInTouchMode="true" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--Status-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:isVisible="@{viewModel.clientInfo.state != State.Connected}">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:indeterminate="true"
+                android:padding="@dimen/padding_small"
+                app:isVisible="@{viewModel.clientInfo.state != State.Disconnected}"
+                app:layout_constraintBottom_toTopOf="@id/client_state"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_warning"
+                android:tint="?attr/errorIconTint"
+                app:isVisible="@{viewModel.clientInfo.state == State.Disconnected}"
+                app:layout_constraintBottom_toTopOf="@id/client_state"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:contentDescription="@string/description_disconnected_icon" />
+
+            <TextView
+                android:id="@+id/client_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_normal"
+                android:text="@{viewModel.clientInfo.state.toString()}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
 </layout>

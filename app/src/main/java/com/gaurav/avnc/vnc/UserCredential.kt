@@ -12,9 +12,6 @@ package com.gaurav.avnc.vnc
  * This class is used for returning user credentials from callbacks.
  */
 data class UserCredential(
-        @JvmField
-        var username: String = "",
-
-        @JvmField
-        var password: String = ""
+        @JvmField var username: String = "",
+        @JvmField var password: String = ""
 )

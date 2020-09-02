@@ -12,7 +12,10 @@
 #include <errno.h>
 #include <jni.h>
 #include <android/log.h>
+#include <GLES2/gl2.h>
 #include <rfb/rfbclient.h>
+
+#include "keymap.h"
 
 /******************************************************************************
  * Logging
@@ -213,6 +216,39 @@ static void onFinishedFrameBufferUpdate(rfbClient *client) {
 }
 
 /**
+ * We need to use our own allocator to know when frame size has changed.
+ */
+static rfbBool onMallocFrameBuffer(rfbClient *client) {
+
+    if (client->frameBuffer)
+        free(client->frameBuffer);
+
+    auto allocSize = (uint64_t) client->width * client->height * client->format.bitsPerPixel / 8;
+
+    if (allocSize >= SIZE_MAX) {
+        rfbClientErr("CRITICAL: cannot allocate frameBuffer, requested size is too large\n");
+        return FALSE;
+    }
+
+    client->frameBuffer = static_cast<uint8_t *>(malloc((size_t) allocSize));
+
+    if (client->frameBuffer == nullptr) {
+        rfbClientErr("CRITICAL: frameBuffer allocation failed\n");
+        return FALSE;
+    }
+
+
+    auto obj = getManagedClient(client);
+    auto env = context.getEnv();
+    auto cls = context.managedCls;
+
+    auto mid = env->GetMethodID(cls, "cbFrameBufferSizeChanged", "()V");
+    env->CallVoidMethod(obj, mid);
+
+    return TRUE;
+}
+
+/**
  * Hooks callbacks to rfbClient.
  */
 static void setCallbacks(rfbClient *client) {
@@ -222,6 +258,7 @@ static void setCallbacks(rfbClient *client) {
     client->GotXCutText = onGotXCutText;
     client->HandleCursorPos = onHandleCursorPos;
     client->FinishedFrameBufferUpdate = onFinishedFrameBufferUpdate;
+    client->MallocFrameBuffer = onMallocFrameBuffer;
 }
 
 
@@ -234,6 +271,7 @@ JNIEXPORT jlong JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeClientCreate(JNIEnv *env, jobject thiz) {
     rfbClient *client = rfbGetClient(8, 3, 4);
     setCallbacks(client);
+    client->canHandleNewFBSize = TRUE;
 
     //Attach reference to managed object
     auto obj = env->NewGlobalRef(thiz);
@@ -295,61 +333,75 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeProcessServerMessage(JNIEnv *env, jobje
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeSendKeyEvent(JNIEnv *env, jobject thiz, jlong client_ptr,
-                                                      jlong key, jboolean is_down) {
+                                                      jlong key, jboolean is_down, jboolean translate) {
+    if (translate && key < KEYMAP_LENGTH) {
+        key = KEYMAP[key];
+    }
+
     return (jboolean) SendKeyEvent((rfbClient *) client_ptr, (uint32_t) key, is_down);
 }
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_gaurav_avnc_vnc_VncClient_nativeSendPointerEvent(JNIEnv *env, jobject thiz,
-                                                          jlong client_ptr, jint x, jint y,
+Java_com_gaurav_avnc_vnc_VncClient_nativeSendPointerEvent(JNIEnv *env, jobject thiz, jlong client_ptr, jint x, jint y,
                                                           jint mask) {
     return (jboolean) SendPointerEvent((rfbClient *) client_ptr, x, y, mask);
 }
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_gaurav_avnc_vnc_VncClient_nativeSendCutText(JNIEnv *env, jobject thiz, jlong client_ptr,
-                                                     jstring text) {
+Java_com_gaurav_avnc_vnc_VncClient_nativeSendCutText(JNIEnv *env, jobject thiz, jlong client_ptr, jstring text) {
     char *cText = getNativeStrCopy(env, text);
     rfbBool result = SendClientCutText((rfbClient *) client_ptr, cText, strlen(cText));
     free(cText);
     return (jboolean) result;
 }
 
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_gaurav_avnc_vnc_VncClient_nativeRefreshFrameBuffer(JNIEnv *env, jobject thiz, jlong clientPtr) {
+    auto client = (rfbClient *) clientPtr;
+    return (jboolean) SendFramebufferUpdateRequest(client, 0, 0, client->width, client->height, FALSE);
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_gaurav_avnc_vnc_VncClient_nativeGetDesktopName(JNIEnv *env, jobject thiz, jlong client_ptr) {
+    auto client = (rfbClient *) client_ptr;
+    return env->NewStringUTF(client->desktopName ? client->desktopName : "");
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_gaurav_avnc_vnc_VncClient_nativeGetWidth(JNIEnv *env, jobject thiz, jlong client_ptr) {
+    return ((rfbClient *) client_ptr)->width;
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_gaurav_avnc_vnc_VncClient_nativeGetHeight(JNIEnv *env, jobject thiz, jlong client_ptr) {
+    return ((rfbClient *) client_ptr)->height;
+}
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_gaurav_avnc_vnc_VncClient_nativeSendFrameBufferUpdateRequest(JNIEnv *env, jobject thiz,
-                                                                      jlong clientPtr,
-                                                                      jint x, jint y, jint w,
-                                                                      jint h,
-                                                                      jboolean incremental) {
-    return (jboolean) SendFramebufferUpdateRequest((rfbClient *) clientPtr, x, y, w, h,
-                                                   incremental);
+Java_com_gaurav_avnc_vnc_VncClient_nativeIsEncrypted(JNIEnv *env, jobject thiz, jlong client_ptr) {
+    return ((rfbClient *) client_ptr)->tlsSession ? JNI_TRUE : JNI_FALSE;
 }
 
-
 extern "C"
-JNIEXPORT jobject JNICALL
-Java_com_gaurav_avnc_vnc_VncClient_nativeGetConnectionInfo(JNIEnv *env,
-                                                           jobject thiz,
-                                                           jlong clientPtr) {
-    auto client = (rfbClient *) clientPtr;
+JNIEXPORT void JNICALL
+Java_com_gaurav_avnc_vnc_VncClient_nativeUploadFrameTexture(JNIEnv *env, jobject thiz,
+                                                            jlong client_ptr) {
+    auto client = (rfbClient *) client_ptr;
 
-    jclass infoClass = env->FindClass("com/gaurav/avnc/vnc/VncClient$ConnectionInfo");
-    jmethodID ctorId = env->GetMethodID(infoClass, "<init>", "(Ljava/lang/String;IIZ)V");
-    if (ctorId == nullptr) {
-        Logger::e("Could not find the constructor for 'ConnectionInfo'. "
-                  "Constructor signature may be incorrect");
-    }
-
-    // Important: Keep the arguments in sync with 'ConnectionInfo' constructor.
-    jobject infoObject = env->NewObject(infoClass, ctorId,
-                                        env->NewStringUTF(client->desktopName),     // desktopName
-                                        client->width,                              // frameWidth
-                                        client->height,                             // frameHeight
-                                        client->tlsSession ? JNI_TRUE : JNI_FALSE); // isEncrypted
-
-    return infoObject;
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,
+                 GL_RGBA,
+                 client->width,
+                 client->height,
+                 0,
+                 GL_RGBA,
+                 GL_UNSIGNED_BYTE,
+                 client->frameBuffer);
 }

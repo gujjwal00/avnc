@@ -9,19 +9,20 @@
 package com.gaurav.avnc.viewmodel
 
 import android.app.Application
-import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.VncProfile
+import com.gaurav.avnc.ui.vnc.FrameState
 import com.gaurav.avnc.ui.vnc.FrameView
+import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
-import java.util.concurrent.Executors
 import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.TimeUnit
 
 /**
  * ViewModel for VncActivity
@@ -33,15 +34,19 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     /**
-     * Current client instance
+     * Current client instance.
      */
-    val client by lazy { VncClient(this) }
+    val client = VncClient(this)
+
+    /**
+     * Information about client.
+     */
+    val clientInfo = MutableLiveData(VncClient.Info())
 
     /**
      * Profile used for current connection.
-     * Only valid after [init] has been called.
      */
-    lateinit var profile: VncProfile
+    var profile = VncProfile()
 
     /**
      * Fired when [VncClient] has asked for credential. It is used to
@@ -78,69 +83,103 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     var frameViewRef = WeakReference<FrameView>(null)
 
     /**
+     * Holds information about scaling, translation etc.
+     */
+    val frameState = FrameState()
+
+    /**
      * Used for sending events to remote server.
      */
-    private val sender = Executors.newSingleThreadExecutor()
+    lateinit var messenger: Messenger
 
     /**
      * Whether connection has been initialized.
      */
     private var initialized = false
 
+    /**************************************************************************
+     * Connection management
+     **************************************************************************/
 
     /**
      * Initialize VNC connection using given profile.
      */
-    fun init(profile: VncProfile) {
+    fun connect(profile: VncProfile) {
         if (initialized)
             return
 
         initialized = true
         this.profile = profile
 
+        launchConnection()
+    }
+
+    /**
+     * Connects to VNC server and then runs the message loop.
+     */
+    private fun launchConnection() {
         viewModelScope.launch(Dispatchers.IO) {
-            client.init(profile.host, profile.port)
 
-            while (isActive) {
-                client.processServerMessage(1000 * 1000)
+            if (client.init(profile.host, profile.port)) {
+
+                try {
+                    messenger = Messenger(client)
+
+                    while (isActive && client.processServerMessage(1000 * 1000)) {
+                        //Message Loop
+                    }
+
+                    messenger.shutdownNow()
+
+                    delay(24 * 3600 * 1000)  //Wait for ViewModel cleanup
+                } finally {
+                    client.cleanup()
+                }
             }
-
-            cleanup()
         }
     }
 
     /**
-     * Releases all resources and terminates the connection.
-     *
-     * It is called from receiver coroutine.
+     * Disconnect VNC client.
      */
-    private fun cleanup() {
-        sender.shutdownNow()
+    fun disconnect() = client.setDisconnected()
 
-        if (!sender.isTerminated) try {
-            sender.awaitTermination(5, TimeUnit.SECONDS)
-        } catch (t: Throwable) {
-            Log.w(TAG, "Failed to wait for sender termination.", t)
-        }
+    /**
+     * Called when activity is destroyed
+     */
+    override fun onCleared() {
+        super.onCleared()
 
-        if (!sender.isTerminated)
-            Log.e(TAG, "Could not shutdown sender thread.")
-
-        client.cleanup()
+        //Put something in credential queue (just in case background thread is
+        //stuck waiting for credentials)
+        credentialQueue.offer(UserCredential())
     }
 
+    /**************************************************************************
+     * Frame management
+     **************************************************************************/
 
-    fun sendPointerEvent(x: Int, y: Int, mask: Int) = sender.execute {
-        client.sendPointerEvent(x, y, mask)
+    fun updateZoom(scaleFactor: Float, fx: Float, fy: Float) {
+        val appliedScaleFactor = frameState.updateZoom(scaleFactor)
+
+        //Calculate how much the focus would shift after scaling
+        val dfx = (fx - frameState.translateX) * (appliedScaleFactor - 1)
+        val dfy = (fy - frameState.translateY) * (appliedScaleFactor - 1)
+
+        //Translate in opposite direction to keep focus fixed
+        frameState.pan(-dfx, -dfy)
+
+        frameViewRef.get()?.requestRender()
     }
 
-    fun sendKeyEvent(key: Long, isDown: Boolean) = sender.execute {
-        client.sendKeyEvent(key, isDown)
+    fun panFrame(deltaX: Float, deltaY: Float) {
+        frameState.pan(deltaX, deltaY)
+        frameViewRef.get()?.requestRender()
     }
 
-    fun sendCutText(text: String) = sender.execute {
-        client.sendCutText(text)
-    }
+    /**************************************************************************
+     * [VncClient.Observer] Implementation
+     **************************************************************************/
 
     /**
      * Called when remote server has asked for password.
@@ -164,8 +203,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
     /**
      * Used for obtaining credentials from user.
-     * This is a blocking operation and will wait until credential dialog
-     * is finished.
+     * This is a blocking operation and will wait until credential dialog is finished.
      */
     private fun obtainCredential(usernameRequired: Boolean): UserCredential {
         credentialQueue.clear()
@@ -177,8 +215,16 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         frameViewRef.get()?.requestRender()
     }
 
-    override fun rfbBell() {} //Implement
+    override fun rfbBell() {} //Nothing yet
+
     override fun rfbGotXCutText(text: String) = toClipboard(text)
+
     override fun rfbHandleCursorPos(x: Int, y: Int): Boolean = true
 
+    override fun onClientInfoChanged(info: VncClient.Info) {
+        viewModelScope.launch(Dispatchers.Main) {
+            clientInfo.value = info
+            frameState.setFramebufferSize(info.frameWidth.toFloat(), info.frameHeight.toFloat())
+        }
+    }
 }
