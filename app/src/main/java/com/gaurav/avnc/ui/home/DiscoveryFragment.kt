@@ -43,12 +43,7 @@ class DiscoveryFragment : Fragment() {
 
     private val discoveryListener = DiscoveryListener()
 
-    private val discoveryAdapter by lazy { DiscoveryAdapter(viewModel) }
-
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentDiscoveryBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel

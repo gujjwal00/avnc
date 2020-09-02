@@ -24,10 +24,7 @@ class HeaderFragment : Fragment() {
     private lateinit var binding: FragmentHeaderBinding
     private val viewModel by activityViewModels<HomeViewModel>()
 
-    override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHeaderBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel

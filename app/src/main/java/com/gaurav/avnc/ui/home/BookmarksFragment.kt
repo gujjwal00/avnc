@@ -29,11 +29,7 @@ class BookmarksFragment : Fragment() {
     val viewModel by activityViewModels<HomeViewModel>()
     private lateinit var binding: FragmentBookmarksBinding
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bookmarks, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
@@ -49,6 +45,4 @@ class BookmarksFragment : Fragment() {
 
         return binding.root
     }
-
-
 }

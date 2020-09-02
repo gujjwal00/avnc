@@ -23,20 +23,15 @@ import com.gaurav.avnc.viewmodel.HomeViewModel
 class RecentsFragment : Fragment() {
     val viewModel by activityViewModels<HomeViewModel>()
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentRecentsBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-
 
         val adapter = RecentsAdapter(viewModel)
         binding.recentsRv.layoutManager = LinearLayoutManager(context)
         binding.recentsRv.adapter = adapter
         binding.recentsRv.setHasFixedSize(true)
-
 
         viewModel.recents.observe(viewLifecycleOwner, Observer { adapter.submitList(it) })
 
