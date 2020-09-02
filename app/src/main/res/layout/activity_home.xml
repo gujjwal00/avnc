@@ -39,7 +39,8 @@
             android:id="@+id/nav_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?colorPrimary"
+            android:paddingTop="@dimen/padding_small"
+            app:elevation="1dp"
             app:itemIconTint="@color/nav_item_text_color"
             app:itemTextColor="@color/nav_item_text_color"
             app:menu="@menu/bottom_nav_menu" />

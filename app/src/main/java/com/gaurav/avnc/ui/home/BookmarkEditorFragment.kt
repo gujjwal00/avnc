@@ -11,13 +11,13 @@ package com.gaurav.avnc.ui.home
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.FragmentBookmarkEditorBinding
 import com.gaurav.avnc.model.Bookmark
 import com.gaurav.avnc.viewmodel.HomeViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /**
  * Editor fragment used for creating and editing bookmarks.
@@ -38,7 +38,7 @@ class BookmarkEditorFragment : DialogFragment() {
         val binding = FragmentBookmarkEditorBinding.inflate(layoutInflater, null, false)
         binding.viewModel = viewModel
 
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext())
                 .setView(binding.root)
                 .setTitle(getTitle())
                 .setPositiveButton(R.string.title_save) { _, _ -> onSave() }

@@ -8,16 +8,28 @@
 
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat">
-        <!--Colors-->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="AppTheme" parent="Theme.MaterialComponents">
+
+        <!--TODO: Update colors during UI polishing-->
+        <!--   <item name="colorPrimary">@color/primaryColor</item>
+           <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+           <item name="colorPrimaryVariant">@color/primaryLightColor</item>
+           <item name="colorOnPrimary">@color/primaryTextColor</item>
+           <item name="colorSecondary">@color/secondaryColor</item>
+           <item name="colorSecondaryVariant">@color/secondaryDarkColor</item>
+           <item name="colorOnSecondary">@color/secondaryTextColor</item>-->
+
+        <item name="materialAlertDialogTheme">@style/AlertDialogTheme</item>
+    </style>
 
 
-        <!--Controls-->
-        <item name="buttonBarButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
-        <item name="buttonBarPositiveButtonStyle">@style/Widget.AppCompat.Button</item>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="colorPrimary">?attr/colorSecondary</item>
     </style>
 
     <style name="FormLabel" parent="Widget.AppCompat.TextView">

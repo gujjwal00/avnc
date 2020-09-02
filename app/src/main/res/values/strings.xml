@@ -40,4 +40,6 @@
     <string name="title_cancel">Cancel</string>
     <string name="desc_connect_btn">Connect to this URL</string>
     <string name="hint_optional">Optional</string>
+    <string name="title_credentials_required">Credentials required</string>
+    <string name="description_disconnected_icon">Disconnected state indicator icon</string>
 </resources>

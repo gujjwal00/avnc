@@ -44,9 +44,11 @@
 
                 <TextView
                     style="@style/FormLabel"
+                    android:labelFor="@id/bookmark_name"
                     android:text="@string/label_name" />
 
                 <EditText
+                    android:id="@+id/bookmark_name"
                     style="@style/FormField"
                     android:importantForAutofill="no"
                     android:inputType="text"
@@ -73,9 +75,11 @@
 
                 <TextView
                     style="@style/FormLabel"
+                    android:labelFor="@id/port"
                     android:text="@string/label_port" />
 
                 <EditText
+                    android:id="@+id/port"
                     style="@style/FormField"
                     android:importantForAutofill="no"
                     android:inputType="number"
