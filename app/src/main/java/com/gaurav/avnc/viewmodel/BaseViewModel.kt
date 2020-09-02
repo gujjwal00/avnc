@@ -41,10 +41,12 @@ open class BaseViewModel(app: Application) : AndroidViewModel(app) {
      * Puts given text on clipboard.
      */
     fun toClipboard(text: String) {
-        try {
-            clipboard.text = text
-        } catch (t: Throwable) {
-            Log.e(javaClass.simpleName, "Could not copy text to clipboard.", t)
+        viewModelScope.launch(Dispatchers.Main) {
+            try {
+                clipboard.text = text
+            } catch (t: Throwable) {
+                Log.e(javaClass.simpleName, "Could not copy text to clipboard.", t)
+            }
         }
     }
 
