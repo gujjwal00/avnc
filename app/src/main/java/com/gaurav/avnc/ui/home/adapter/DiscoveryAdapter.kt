@@ -12,7 +12,8 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ItemServerBinding
 import com.gaurav.avnc.model.Bookmark
@@ -20,9 +21,7 @@ import com.gaurav.avnc.model.VncProfile
 import com.gaurav.avnc.viewmodel.HomeViewModel
 
 class DiscoveryAdapter(val viewModel: HomeViewModel) :
-        RecyclerView.Adapter<DiscoveryAdapter.ViewHolder>() {
-
-    override fun getItemCount() = viewModel.discoveredServers.size
+        ListAdapter<VncProfile, DiscoveryAdapter.ViewHolder>(Differ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -31,7 +30,7 @@ class DiscoveryAdapter(val viewModel: HomeViewModel) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(viewModel.discoveredServers[position])
+        holder.bind(getItem(position))
     }
 
     inner class ViewHolder(binding: ItemServerBinding) :
@@ -56,5 +55,10 @@ class DiscoveryAdapter(val viewModel: HomeViewModel) :
 
             return true
         }
+    }
+
+    object Differ : DiffUtil.ItemCallback<VncProfile>() {
+        override fun areItemsTheSame(old: VncProfile, new: VncProfile) = (old.host == new.host)
+        override fun areContentsTheSame(old: VncProfile, new: VncProfile) = (old == new)
     }
 }

@@ -15,6 +15,7 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.gaurav.avnc.R
@@ -50,6 +51,9 @@ class HomeActivity : AppCompatActivity() {
         viewModel.bookmarkEditEvent.observe(this) { showBookmarkEditor() }
         viewModel.bookmarkDeletedEvent.observe(this) { showBookmarkDeletedMsg(it) }
         viewModel.newConnectionEvent.observe(this) { startVncActivity(it) }
+        viewModel.discovery.servers.observe(this, Observer { updateDiscoveryBadge(it) })
+
+        viewModel.startDiscovery()
     }
 
     /**
@@ -102,5 +106,19 @@ class HomeActivity : AppCompatActivity() {
         val intent = Intent(this, VncActivity::class.java)
         intent.putExtra(VncActivity.KEY.PROFILE, vncProfile)
         startActivity(intent)
+    }
+
+    /**
+     * Show number of found servers as badge.
+     */
+    private fun updateDiscoveryBadge(list: List<VncProfile>) {
+        val badge = binding.navView.getOrCreateBadge(R.id.nav_discovery)
+        if (list.isNotEmpty()) {
+            badge.number = list.size
+            badge.isVisible = true
+        } else {
+            badge.clearNumber()
+            badge.isVisible = false
+        }
     }
 }

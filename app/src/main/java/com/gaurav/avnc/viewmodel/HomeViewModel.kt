@@ -10,11 +10,13 @@ package com.gaurav.avnc.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.Bookmark
 import com.gaurav.avnc.model.Recent
 import com.gaurav.avnc.model.VncProfile
+import com.gaurav.avnc.vnc.Discovery
 
-class HomeViewModel(application: Application) : BaseViewModel(application) {
+class HomeViewModel(app: Application) : BaseViewModel(app) {
     /**
      * Vnc server url. Used by the top URL box.
      */
@@ -31,14 +33,9 @@ class HomeViewModel(application: Application) : BaseViewModel(application) {
     val recents by lazy { recentDao.getAll() }
 
     /**
-     * List of discovered servers
+     * Used to find new servers.
      */
-    val discoveredServers = ArrayList<VncProfile>()
-
-    /**
-     * Whether we are currently searching for new servers using AutoDiscovery.
-     */
-    val isDiscoveringServers = MutableLiveData(false)
+    val discovery by lazy { Discovery(app) }
 
     /**
      * This event is used for editing/creating bookmarks.
@@ -64,7 +61,6 @@ class HomeViewModel(application: Application) : BaseViewModel(application) {
      * Starts creating a new bookmark based on the given source.
      */
     fun onNewBookmark(source: Bookmark = Bookmark()) = onEditBookmark(source)
-
 
     /**
      * Starts editing given bookmark.
@@ -107,5 +103,8 @@ class HomeViewModel(application: Application) : BaseViewModel(application) {
      */
     fun deleteRecent(recent: Recent) = async { recentDao.delete(recent) }
 
-
+    /**
+     * Starts discovery service
+     */
+    fun startDiscovery() = discovery.start(viewModelScope)
 }
