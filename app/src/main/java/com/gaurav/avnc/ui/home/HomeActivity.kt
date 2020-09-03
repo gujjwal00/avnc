@@ -112,13 +112,12 @@ class HomeActivity : AppCompatActivity() {
      * Show number of found servers as badge.
      */
     private fun updateDiscoveryBadge(list: List<VncProfile>) {
-        val badge = binding.navView.getOrCreateBadge(R.id.nav_discovery)
         if (list.isNotEmpty()) {
-            badge.number = list.size
-            badge.isVisible = true
+            binding.navView.getOrCreateBadge(R.id.nav_discovery).number = list.size
         } else {
-            badge.clearNumber()
-            badge.isVisible = false
+            //Ideally we would just hide the badge but due to a bug we have to remove it.
+            //https://github.com/material-components/material-components-android/issues/1247
+            binding.navView.removeBadge(R.id.nav_discovery)
         }
     }
 }
