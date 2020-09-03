@@ -13,7 +13,7 @@
 
         <variable
             name="viewModel"
-            type="com.gaurav.avnc.viewmodel.HomeViewModel" />
+            type="com.gaurav.avnc.model.Bookmark" />
 
         <variable
             name="showAll"
@@ -32,7 +32,7 @@
             android:layout_height="0px"
             android:layout_weight="1"
             app:showAll="@{showAll}"
-            app:viewModel="@{viewModel.bookmarkEditEvent.profile}" />
+            app:viewModel="@{viewModel.profile}" />
         <!--
                 <RelativeLayout
                     android:layout_width="match_parent"
