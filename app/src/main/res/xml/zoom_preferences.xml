@@ -1,0 +1,43 @@
+<!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SeekBarPreference
+        android:max="100"
+        app:defaultValue="50"
+        app:iconSpaceReserved="false"
+        app:key="pref_zoom_min"
+        app:min="10"
+        app:showSeekBarValue="true"
+        app:title="@string/title_pref_zoom_min" />
+
+    <SeekBarPreference
+        android:max="1000"
+        app:defaultValue="500"
+        app:iconSpaceReserved="false"
+        app:key="pref_zoom_max"
+        app:min="100"
+        app:showSeekBarValue="true"
+        app:title="@string/title_pref_zoom_max" />
+
+
+    <SwitchPreference
+        app:defaultValue="false"
+        app:iconSpaceReserved="false"
+        app:key="pref_zoom_show_level"
+        app:title="@string/title_pref_zoom_show_level" />
+
+    <SwitchPreference
+        app:defaultValue="false"
+        app:iconSpaceReserved="false"
+        app:key="pref_zoom_quick"
+        app:title="@string/title_pref_zoom_quick" />
+
+</PreferenceScreen>

@@ -23,7 +23,7 @@ class FrameView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context
     constructor(context: Context?) : this(context, null)
 
     /**
-     * Set by VncActivity.
+     * Set by [VncActivity].
      */
     lateinit var activity: VncActivity
 
@@ -32,9 +32,6 @@ class FrameView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context
         activity.viewModel.frameState.setViewportSize(w.toFloat(), h.toFloat())
     }
 
-    override fun onCheckIsTextEditor(): Boolean {
-        return true
-    }
 
     override fun onCreateInputConnection(outAttrs: EditorInfo): InputConnection {
         outAttrs.imeOptions = outAttrs.imeOptions or (EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_FULLSCREEN)

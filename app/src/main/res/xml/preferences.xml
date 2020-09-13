@@ -1,0 +1,23 @@
+<!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Gesture"
+        app:icon="@drawable/ic_gesture"
+        app:key="gesture"
+        app:title="@string/title_pref_gesture" />
+
+    <Preference
+        app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Zoom"
+        app:icon="@drawable/ic_zoom_in"
+        app:key="zoom"
+        app:title="@string/title_pref_zoom" />
+
+</PreferenceScreen>

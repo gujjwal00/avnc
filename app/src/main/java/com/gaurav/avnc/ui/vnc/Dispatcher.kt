@@ -11,6 +11,8 @@ package com.gaurav.avnc.ui.vnc
 import android.graphics.PointF
 import android.view.KeyEvent
 import com.gaurav.avnc.viewmodel.VncViewModel
+import com.gaurav.avnc.vnc.PointerButton
+import kotlin.math.abs
 
 /**
  * This class is responsible for executing an action in response to events
@@ -21,24 +23,52 @@ import com.gaurav.avnc.viewmodel.VncViewModel
  */
 class Dispatcher(private val viewModel: VncViewModel) {
 
-    private val messenger by lazy { viewModel.messenger }
+    private val messenger get() = viewModel.messenger
+    private val prefs get() = viewModel.pref
+
+    //Used for remote scrolling
+    private var accumulatedDx = 0F
+    private var accumulatedDy = 0F
+    private val deltaPerScroll = 20F //For how much dx/dy, one scroll event will be sent
 
     /**************************************************************************
      * Action configuration
      **************************************************************************/
 
-    val scaleAction = ::doScale
-    val scrollAction = ::doPan
-    val tapAction = ::doLeftClick
-    val doubleTapAction = ::doDoubleClick
-    val longPressAction = ::doRightClick
+    val swipe1Action by lazy { selectSwipeAction(prefs.gesture.swipe1) }
+    val swipe2Action by lazy { selectSwipeAction(prefs.gesture.swipe2) }
+
+    val tapAction by lazy { selectPointerAction(prefs.gesture.singleTap) }
+    val doubleTapAction by lazy { selectPointerAction(prefs.gesture.doubleTap) }
+    val longPressAction by lazy { selectPointerAction(prefs.gesture.longPress) }
+
+    private fun selectPointerAction(actionName: String): (PointF) -> Unit {
+        return when (actionName) {
+            "left-click" -> { p -> doClick(PointerButton.Left, p) }
+            "double-click" -> { p -> doDoubleClick(PointerButton.Left, p) }
+            "middle-click" -> { p -> doClick(PointerButton.Middle, p) }
+            "right-click" -> { p -> doClick(PointerButton.Right, p) }
+            "move-pointer" -> { p -> doMovePointer(p) }
+            else -> { _ -> } //Nothing
+        }
+    }
+
+    private fun selectSwipeAction(actionName: String): (PointF, Float, Float) -> Unit {
+        return when (actionName) {
+            "remote-scroll" -> { sp, dx, dy -> doRemoteScroll(sp, dx, dy) }
+            "pan" -> { sp, dx, dy -> doPan(dx, dy) }
+            else -> { _, _, _ -> } //Nothing
+        }
+    }
+
 
     /**************************************************************************
      * Event receivers
      **************************************************************************/
 
-    fun onScale(scaleFactor: Float, fx: Float, fy: Float) = scaleAction(scaleFactor, fx, fy)
-    fun onScroll(dx: Float, dy: Float) = scrollAction(dx, dy)
+    fun onScale(scaleFactor: Float, fx: Float, fy: Float) = doScale(scaleFactor, fx, fy)
+    fun onSwipe1(startPoint: PointF, dx: Float, dy: Float) = swipe1Action(startPoint, dx, dy)
+    fun onSwipe2(startPoint: PointF, dx: Float, dy: Float) = swipe2Action(startPoint, dx, dy)
     fun onTap(p: PointF) = tapAction(p)
     fun onDoubleTap(p: PointF) = doubleTapAction(p)
     fun onLongPress(p: PointF) = longPressAction(p)
@@ -60,42 +90,83 @@ class Dispatcher(private val viewModel: VncViewModel) {
         viewModel.panFrame(dx, dy)
     }
 
-    private fun doLeftClick(p: PointF) {
-        val fbp = viewModel.frameState.toFb(p)
+    private fun doRemoteScroll(focus: PointF, dx: Float, dy: Float) {
+        accumulatedDx += dx
+        accumulatedDy += dy
 
-        if (fbp != null) {
-            messenger.sendLeftClick(fbp)
+        //Drain horizontal shift
+        while (abs(accumulatedDx) > deltaPerScroll) {
+            if (accumulatedDx > 0) {
+                doClick(PointerButton.WheelLeft, focus)
+                accumulatedDx -= deltaPerScroll
+            } else {
+                doClick(PointerButton.WheelRight, focus)
+                accumulatedDx += deltaPerScroll
+            }
+        }
+
+        //Drain vertical shift
+        while (abs(accumulatedDy) > deltaPerScroll) {
+            if (accumulatedDy > 0) {
+                doClick(PointerButton.WheelUp, focus)
+                accumulatedDy -= deltaPerScroll
+            } else {
+                doClick(PointerButton.WheelDown, focus)
+                accumulatedDy += deltaPerScroll
+            }
         }
     }
 
-    private fun doDoubleClick(p: PointF) {
+    private fun doClick(button: PointerButton, p: PointF) {
         val fbp = viewModel.frameState.toFb(p)
 
         if (fbp != null) {
-            messenger.sendLeftClick(fbp)
-            messenger.sendLeftClick(fbp)
+            messenger.sendClick(button, fbp)
         }
     }
 
-    private fun doRightClick(p: PointF) {
-        val fbp = viewModel.frameState.toFb(p)
-
-        if (fbp != null) {
-            messenger.sendRightClick(fbp)
-        }
+    private fun doDoubleClick(button: PointerButton, p: PointF) {
+        doClick(button, p)
+        doClick(button, p)
     }
 
+    private fun doMovePointer(p: PointF) {
+        doClick(PointerButton.None, p)
+    }
+
+    /**
+     * Key handling in RFB protocol is messed up. It works on 'key symbols' instead of
+     * key-codes/scan-codes which makes it dependent on keyboard layout. VNC servers
+     * implement various heuristics to compensate for this & maximize portability.
+     *
+     * Then there is the issue of Unicode support.
+     *
+     * Our implementation is derived after testing with some popular servers. It is not
+     * perfect and does not handle all of the edge cases but is a good enough start.
+     *
+     * We separate key events in two categories:
+     *
+     *   With unicode char: When android tells us that there is Unicode character available
+     *                      for the event, we send that directly. This works well with servers
+     *                      which ignore the state of Shift key.
+     *
+     *   Without unicode char: In this case we use key code. But before sending them they
+     *                      are translated to X KeySyms in native code.
+     *
+     * Note: [KeyEvent.KEYCODE_ENTER] is treated specially because Android returns a
+     *       Unicode symbol for it.
+     */
     private fun doSendKey(event: KeyEvent) {
         when (event.action) {
             KeyEvent.ACTION_DOWN -> {
-                if (event.unicodeChar != 0)
+                if (event.unicodeChar != 0 && event.keyCode != KeyEvent.KEYCODE_ENTER)
                     messenger.sendKeyDown(event.unicodeChar, false)
                 else
                     messenger.sendKeyDown(event.keyCode, true)
             }
 
             KeyEvent.ACTION_UP -> {
-                if (event.unicodeChar != 0)
+                if (event.unicodeChar != 0 && event.keyCode != KeyEvent.KEYCODE_ENTER)
                     messenger.sendKeyUp(event.unicodeChar, false)
                 else
                     messenger.sendKeyUp(event.keyCode, true)

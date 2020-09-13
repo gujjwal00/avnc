@@ -50,7 +50,7 @@ class Messenger(private val client: VncClient) {
         execute { client.sendPointerEvent(p.x.toInt(), p.y.toInt(), mask) }
     }
 
-    private fun sendClick(button: PointerButton, p: PointF) {
+    fun sendClick(button: PointerButton, p: PointF) {
         sendPointerButtonDown(button, p)
         sendPointerButtonUp(button, p)
     }

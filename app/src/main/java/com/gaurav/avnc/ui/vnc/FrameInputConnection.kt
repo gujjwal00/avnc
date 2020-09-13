@@ -17,8 +17,8 @@ import android.view.inputmethod.BaseInputConnection
  *
  * It allows us to do two things:
  *
- *  1. [FrameView] can pretend to be an editor which allows us to
- *     specify customize IMEs (ex: disabling fullscreen edit mode)
+ *  1. [FrameView] can pretend to be an editor which allows us to customize IMEs.
+ *     (ex: disabling fullscreen edit mode)
  *
  *  2. We can avoid receiving key events which are not intended for [FrameView].
  */

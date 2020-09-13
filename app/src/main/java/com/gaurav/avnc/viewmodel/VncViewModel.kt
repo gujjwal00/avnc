@@ -85,21 +85,30 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     /**
      * Holds information about scaling, translation etc.
      */
-    val frameState = FrameState()
+    val frameState = FrameState(pref)
 
     /**
      * Used for sending events to remote server.
+     * Only valid after VNC connection has been established.
+     *
      */
     lateinit var messenger: Messenger
+
+    /**
+     * Textual representation of [FrameState.zoomScale], updated during scale gesture.
+     *
+     * Setting its value to empty string will hide zoom level.
+     */
+    val zoomLevelText = MutableLiveData("")
+
+    /**************************************************************************
+     * Connection management
+     **************************************************************************/
 
     /**
      * Whether connection has been initialized.
      */
     private var initialized = false
-
-    /**************************************************************************
-     * Connection management
-     **************************************************************************/
 
     /**
      * Initialize VNC connection using given profile.

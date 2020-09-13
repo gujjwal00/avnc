@@ -42,4 +42,19 @@
     <string name="hint_optional">Optional</string>
     <string name="title_credentials_required">Credentials required</string>
     <string name="description_disconnected_icon">Disconnected state indicator icon</string>
+
+    <!-- Preference -->
+    <string name="title_pref_activity">Settings</string>
+    <string name="title_pref_gesture">Gestures</string>
+    <string name="title_pref_zoom">Zoom</string>
+    <string name="title_pref_category_1finger">1 Finger</string>
+    <string name="title_pref_category_2finger">2 Fingers</string>
+    <string name="title_pref_single_tap">Single Tap</string>
+    <string name="title_pref_double_tap">Double Tap</string>
+    <string name="title_pref_long_press">Long Press</string>
+    <string name="title_pref_swipe">Swipe</string>
+    <string name="title_pref_zoom_min">Minimum Zoom</string>
+    <string name="title_pref_zoom_max">Maximum Zoom</string>
+    <string name="title_pref_zoom_show_level">Show Zoom level</string>
+    <string name="title_pref_zoom_quick">Zoom on Double-Tap-Swipe</string>
 </resources>

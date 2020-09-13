@@ -1,0 +1,73 @@
+<!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<resources>
+
+    <string-array name="single_tap_action_entries">
+        <item>None</item>
+        <item>Left Click</item>
+        <item>Move Pointer</item>
+    </string-array>
+    <string-array name="single_tap_action_values">
+        <item>none</item>
+        <item>left-click</item>
+        <item>move-pointer</item>
+    </string-array>
+
+    <string-array name="double_tap_action_entries">
+        <item>None</item>
+        <item>Double Click</item>
+        <item>Middle Click</item>
+        <item>Right Click</item>
+        <item>Move Pointer</item>
+    </string-array>
+    <string-array name="double_tap_action_values">
+        <item>none</item>
+        <item>double-click</item>
+        <item>middle-click</item>
+        <item>right-click</item>
+        <item>move-pointer</item>
+    </string-array>
+
+    <string-array name="long_press_action_entries">
+        <item>None</item>
+        <item>Double Click</item>
+        <item>Middle Click</item>
+        <item>Right Click</item>
+        <item>Move Pointer</item>
+    </string-array>
+    <string-array name="long_press_action_values">
+        <item>none</item>
+        <item>double-click</item>
+        <item>middle-click</item>
+        <item>right-click</item>
+        <item>move-pointer</item>
+    </string-array>
+
+    <string-array name="swipe1_action_entries">
+        <item>None</item>
+        <item>Pan Frame</item>
+        <item>Scroll Remote Content</item>
+    </string-array>
+    <string-array name="swipe1_action_values">
+        <item>none</item>
+        <item>pan</item>
+        <item>remote-scroll</item>
+    </string-array>
+
+    <string-array name="swipe2_action_entries">
+        <item>None</item>
+        <item>Pan Frame</item>
+        <item>Scroll Remote Content</item>
+    </string-array>
+    <string-array name="swipe2_action_values">
+        <item>none</item>
+        <item>pan</item>
+        <item>remote-scroll</item>
+    </string-array>
+</resources>

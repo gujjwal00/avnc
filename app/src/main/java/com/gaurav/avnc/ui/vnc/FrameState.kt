@@ -9,6 +9,7 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.graphics.PointF
+import com.gaurav.avnc.util.AppPreferences
 import kotlin.math.max
 import kotlin.math.min
 
@@ -26,15 +27,15 @@ import kotlin.math.min
  *                outdated instances which may put pressure on garbage collector. So
  *                there should be some sort of caching.
  */
-class FrameState(private val minScale: Float = .1F, private val maxScale: Float = 5F) {
+class FrameState(prefs: AppPreferences) {
 
     /**
      * We have two types of scaling.
-     *    1. Base Scale: At this scale frame will be visible completely (in landscape)
+     *   1. Base Scale: At this scale frame will be visible completely (in landscape)
      *            and at least one side (width or height) of frame will match the
      *            corresponding side of viewport.
      *
-     *    2. Zoom Scale: This value represents 'zoom level' and is modified by the user
+     *   2. Zoom Scale: This value represents 'zoom level' and is modified by the user
      *            during scaling gestures. It works 'on top of' base scale.
      *
      * Effective scale is calculated as the product of these two values.
@@ -53,6 +54,9 @@ class FrameState(private val minScale: Float = .1F, private val maxScale: Float 
     //Viewport/FrameView size
     var vpWidth = 0F; private set
     var vpHeight = 0F; private set
+
+    private val minZoomScale = prefs.zoom.min
+    private val maxZoomScale = prefs.zoom.max
 
     fun setFramebufferSize(w: Float, h: Float) {
         fbWidth = w
@@ -131,7 +135,7 @@ class FrameState(private val minScale: Float = .1F, private val maxScale: Float 
      * Makes sure that state values are within constraints.
      */
     private fun coerceValues() {
-        zoomScale = zoomScale.coerceIn(minScale, maxScale)
+        zoomScale = zoomScale.coerceIn(minZoomScale, maxZoomScale)
         translateX = coerceTranslate(translateX, vpWidth, fbWidth)
         translateY = coerceTranslate(translateY, vpHeight, fbHeight)
     }

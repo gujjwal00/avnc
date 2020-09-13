@@ -15,6 +15,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.db.MainDb
+import com.gaurav.avnc.util.AppPreferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -35,6 +36,8 @@ open class BaseViewModel(app: Application) : AndroidViewModel(app) {
     protected val recentDao by lazy { db.recentDao }
 
     protected val clipboard by lazy { app.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager }
+
+    val pref by lazy { AppPreferences(app) }
 
 
     /**

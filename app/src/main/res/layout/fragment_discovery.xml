@@ -32,11 +32,6 @@
             android:layout_margin="@dimen/margin_normal"
             android:animateLayoutChanges="true">
 
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:isInVisible="@{!viewModel.discovery.isRunning}" />
-
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/discover_fab"
                 style="@style/Widget.Design.FloatingActionButton"
@@ -44,6 +39,11 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_refresh"
                 app:isInVisible="@{viewModel.discovery.isRunning}" />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:isInVisible="@{!viewModel.discovery.isRunning}" />
         </FrameLayout>
 
     </FrameLayout>

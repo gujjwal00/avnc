@@ -8,20 +8,27 @@
 
 package com.gaurav.avnc.ui.vnc
 
-import android.content.Context
 import android.graphics.PointF
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
+import com.gaurav.avnc.viewmodel.VncViewModel
 
 /**
  * Handles different input events.
+ *
+ * TODO: Reduce [PointF] garbage
  */
-class InputHandler(private val context: Context, private val dispatcher: Dispatcher)
+class InputHandler(private val viewModel: VncViewModel, private val dispatcher: Dispatcher)
     : ScaleGestureDetector.OnScaleGestureListener, GestureDetector.SimpleOnGestureListener() {
 
-    private val scaleDetector = ScaleGestureDetector(context, this)
-    private val gestureDetector = GestureDetector(context, this)
+    private val scaleDetector = ScaleGestureDetector(viewModel.getApplication(), this)
+    private val gestureDetector = GestureDetector(viewModel.getApplication(), this)
+    private val showZoomLevel = viewModel.pref.zoom.showLevel
+
+    init {
+        scaleDetector.isQuickScaleEnabled = viewModel.pref.zoom.quick
+    }
 
     /**
      * Touch event receiver.
@@ -34,9 +41,17 @@ class InputHandler(private val context: Context, private val dispatcher: Dispatc
     override fun onDown(e: MotionEvent) = true
 
     override fun onScaleBegin(detector: ScaleGestureDetector) = true
-    override fun onScaleEnd(detector: ScaleGestureDetector) {}
+    override fun onScaleEnd(detector: ScaleGestureDetector) {
+        viewModel.zoomLevelText.value = ""
+    }
+
     override fun onScale(detector: ScaleGestureDetector): Boolean {
         dispatcher.onScale(detector.scaleFactor, detector.focusX, detector.focusY)
+
+        if (showZoomLevel) {
+            val zoomPercent = (viewModel.frameState.zoomScale * 100).toInt()
+            viewModel.zoomLevelText.value = "${zoomPercent}%"
+        }
         return true
     }
 
@@ -45,7 +60,13 @@ class InputHandler(private val context: Context, private val dispatcher: Dispatc
     }
 
     override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
-        dispatcher.onScroll(-distanceX, -distanceY)
+        val startPoint = PointF(e1.x, e1.y)
+
+        when (e2.pointerCount) {
+            1 -> dispatcher.onSwipe1(startPoint, -distanceX, -distanceY)
+            2 -> dispatcher.onSwipe2(startPoint, -distanceX, -distanceY)
+        }
+
         return true
     }
 

@@ -8,8 +8,10 @@
 
 package com.gaurav.avnc.ui.vnc
 
+import android.content.Context
 import android.opengl.GLSurfaceView
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -37,7 +39,7 @@ class VncActivity : AppCompatActivity() {
     val viewModel by viewModels<VncViewModel>()
     lateinit var binding: ActivityVncBinding
     val dispatcher by lazy { Dispatcher(viewModel) }
-    val inputHandler by lazy { InputHandler(this, dispatcher) }
+    val inputHandler by lazy { InputHandler(viewModel, dispatcher) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +60,8 @@ class VncActivity : AppCompatActivity() {
 
         //Should be called after observers has been installed
         viewModel.connect(profile)
+
+        binding.kbToggle.setOnClickListener { toggleKb() }
     }
 
     /**
@@ -73,5 +77,12 @@ class VncActivity : AppCompatActivity() {
 
     private fun showCredentialDialog() {
         CredentialFragment().show(supportFragmentManager, "CredentialDialog")
+    }
+
+    private fun toggleKb() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        binding.frameView.requestFocus()
+        imm.showSoftInput(binding.frameView, 0)
     }
 }
