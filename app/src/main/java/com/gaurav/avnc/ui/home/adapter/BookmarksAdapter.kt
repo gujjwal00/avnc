@@ -42,7 +42,7 @@ class BookmarksAdapter(val viewModel: HomeViewModel)
         override val menuId = R.menu.bookmark_item_menu
 
         override fun onClick(view: View) {
-            viewModel.startConnection(binding.viewModel!!.profile)
+            viewModel.startConnection(binding.viewModel!!)
         }
 
         /**

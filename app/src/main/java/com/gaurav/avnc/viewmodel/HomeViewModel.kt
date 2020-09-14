@@ -55,7 +55,7 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     /**
      * Used for starting new VNC connections.
      */
-    val newConnectionEvent = LiveEvent<VncProfile>()
+    val newConnectionEvent = LiveEvent<Bookmark>()
 
     /**
      * Starts creating a new bookmark based on the given source.
@@ -79,7 +79,12 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     /**
      * Starts new connection to given profile.
      */
-    fun startConnection(vncProfile: VncProfile) = newConnectionEvent.set(vncProfile)
+    fun startConnection(vncProfile: VncProfile) = startConnection(Bookmark(profile = vncProfile))
+
+    /**
+     * Starts new connection to given bookmark.
+     */
+    fun startConnection(bookmark: Bookmark) = newConnectionEvent.set(bookmark)
 
     /**
      * Inserts given bookmark in database asynchronously.

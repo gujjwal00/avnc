@@ -8,14 +8,17 @@
 
 package com.gaurav.avnc.model
 
+import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
 /**
  * Bookmark entity
  */
 @Entity(tableName = "bookmarks")
+@Parcelize
 data class Bookmark(
 
         @PrimaryKey(autoGenerate = true)
@@ -23,7 +26,7 @@ data class Bookmark(
 
         @Embedded
         var profile: VncProfile = VncProfile()
-) {
+) : Parcelable {
     /**
      * Creates a new `Recent` instance form this bookmark.
      */

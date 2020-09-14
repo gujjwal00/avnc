@@ -101,11 +101,11 @@ class HomeActivity : AppCompatActivity() {
     }
 
     /**
-     * Starts VNC Activity with given profile.
+     * Starts VNC Activity with given bookmark.
      */
-    private fun startVncActivity(vncProfile: VncProfile) {
+    private fun startVncActivity(bookmark: Bookmark) {
         val intent = Intent(this, VncActivity::class.java)
-        intent.putExtra(VncActivity.KEY.PROFILE, vncProfile)
+        intent.putExtra(VncActivity.KEY.BOOKMARK, bookmark)
         startActivity(intent)
     }
 

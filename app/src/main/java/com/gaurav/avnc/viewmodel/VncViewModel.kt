@@ -11,7 +11,7 @@ package com.gaurav.avnc.viewmodel
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.gaurav.avnc.model.VncProfile
+import com.gaurav.avnc.model.Bookmark
 import com.gaurav.avnc.ui.vnc.FrameState
 import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.vnc.Messenger
@@ -22,6 +22,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
+import java.util.*
 import java.util.concurrent.LinkedBlockingQueue
 
 /**
@@ -44,9 +45,21 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     val clientInfo = MutableLiveData(VncClient.Info())
 
     /**
+     * Bookmark which triggered this connection.
+     *
+     * Even though only [profile] is required for connection, we require that all
+     * connection request to [connect] comes in form of a [Bookmark]. This unifies
+     * information flow from HomeActivity to VncActivity.
+     *
+     * For connection which are not started from a real bookmark (ex: from Recent)
+     * this will simply wrap that profile.
+     */
+    var bookmark = Bookmark()
+
+    /**
      * Profile used for current connection.
      */
-    var profile = VncProfile()
+    var profile = bookmark.profile
 
     /**
      * Fired when [VncClient] has asked for credential. It is used to
@@ -101,6 +114,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      */
     val zoomLevelText = MutableLiveData("")
 
+
     /**************************************************************************
      * Connection management
      **************************************************************************/
@@ -111,14 +125,15 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     private var initialized = false
 
     /**
-     * Initialize VNC connection using given profile.
+     * Initialize VNC connection using profile from given bookmark.
      */
-    fun connect(profile: VncProfile) {
+    fun connect(bookmark: Bookmark) {
         if (initialized)
             return
 
         initialized = true
-        this.profile = profile
+        this.bookmark = bookmark
+        this.profile = bookmark.profile
 
         launchConnection()
     }

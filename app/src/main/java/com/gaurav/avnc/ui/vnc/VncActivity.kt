@@ -18,7 +18,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
-import com.gaurav.avnc.model.VncProfile
+import com.gaurav.avnc.model.Bookmark
 import com.gaurav.avnc.ui.vnc.gl.Renderer
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.VncClient
@@ -27,13 +27,13 @@ import java.lang.ref.WeakReference
 /**
  * This activity handle the VNC connection to a server.
  *
- * A VncProfile MUST be passed to this activity (via Intent) which will be
+ * A [Bookmark] MUST be passed to this activity (via Intent) which will be
  * used to establish VNC connection.
  */
 class VncActivity : AppCompatActivity() {
 
     object KEY {
-        const val PROFILE = "com.gaurav.avnc.profile"
+        const val BOOKMARK = "com.gaurav.avnc.bookmark"
     }
 
     val viewModel by viewModels<VncViewModel>()
@@ -43,7 +43,6 @@ class VncActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val profile = getProfile()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_vnc)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
@@ -59,7 +58,7 @@ class VncActivity : AppCompatActivity() {
         viewModel.clientInfo.observe(this, Observer { processClientInfo(it) })
 
         //Should be called after observers has been installed
-        viewModel.connect(profile)
+        viewModel.connect(getBookmark())
 
         binding.kbToggle.setOnClickListener { toggleKb() }
     }
@@ -67,8 +66,8 @@ class VncActivity : AppCompatActivity() {
     /**
      * Extracts profile from Intent.
      */
-    private fun getProfile(): VncProfile = intent.getParcelableExtra(KEY.PROFILE)
-            ?: throw IllegalStateException("No profile was passed to VncActivity")
+    private fun getBookmark(): Bookmark = intent.getParcelableExtra(KEY.BOOKMARK)
+            ?: throw IllegalStateException("No bookmark was passed to VncActivity")
 
 
     private fun processClientInfo(info: VncClient.Info) {
