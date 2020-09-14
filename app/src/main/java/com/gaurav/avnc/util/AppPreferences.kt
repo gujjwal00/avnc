@@ -37,4 +37,10 @@ class AppPreferences(private val context: Context) {
     }
 
     val gesture = Gesture()
+
+    inner class Credential {
+        val autocomplete; get() = prefs.getBoolean("pref_cred_autocomplete", true)
+    }
+
+    val cred = Credential()
 }

@@ -20,4 +20,10 @@
         app:key="zoom"
         app:title="@string/title_pref_zoom" />
 
+    <Preference
+        app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Credential"
+        app:icon="@drawable/ic_key"
+        app:key="cred"
+        app:title="@string/title_pref_credential" />
+
 </PreferenceScreen>

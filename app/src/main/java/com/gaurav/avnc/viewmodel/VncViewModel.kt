@@ -81,6 +81,14 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     val credentialQueue = LinkedBlockingQueue<UserCredential>()
 
     /**
+     * List of known credentials. Used for providing suggestion when
+     * new credentials are required.
+     *
+     * For simplicity, we are only retrieving credentials from bookmarks table.
+     */
+    val knownCredentials by lazy { bookmarkDao.getCredentials() }
+
+    /**
      * Holds a weak reference to [FrameView] instance.
      *
      * This is used to tell [FrameView] to re-render its content when VncClient's
@@ -249,6 +257,17 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         viewModelScope.launch(Dispatchers.Main) {
             clientInfo.value = info
             frameState.setFramebufferSize(info.frameWidth.toFloat(), info.frameHeight.toFloat())
+        }
+
+        if (info.state == VncClient.State.Connected) {
+            async {
+                recentDao.insert(bookmark.toRecent().apply { connectedAt = Date().time })
+
+                //Save credentials to bookmark if required
+                if (bookmark.ID != 0L) {
+                    bookmarkDao.update(bookmark)
+                }
+            }
         }
     }
 }

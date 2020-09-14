@@ -97,4 +97,11 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
             setPreferencesFromResource(R.xml.zoom_preferences, rootKey)
         }
     }
+
+    @Keep
+    class Credential : PreferenceFragmentCompat() {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            setPreferencesFromResource(R.xml.credential_preferences, rootKey)
+        }
+    }
 }

@@ -10,12 +10,13 @@ package com.gaurav.avnc.model
 
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
  * Entity to represent recent connections.
  */
-@Entity(tableName = "recents")
+@Entity(tableName = "recents", indices = [Index(value = ["displayName", "host", "port"], unique = true)])
 data class Recent(
 
         @PrimaryKey(autoGenerate = true)
