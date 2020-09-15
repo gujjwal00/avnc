@@ -38,7 +38,7 @@ class Discovery(private val context: Context) {
     val isRunning = MutableLiveData(false)
 
 
-    private val nsdManager by lazy { context.getSystemService(Context.NSD_SERVICE) as NsdManager }
+    private var nsdManager: NsdManager? = null
     private val listener = DiscoveryListener()
 
     /**
@@ -79,14 +79,21 @@ class Discovery(private val context: Context) {
 
         isRunning.value = true
         servers.value = ArrayList() //Forget known servers
-        nsdManager.discoverServices(Config.SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, listener)
+
+        //Construction NSD manager is done on a background thread because it appears to be quite heavy.
+        scope.launch(Dispatchers.Default) {
+            if (nsdManager == null)
+                nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
+
+            nsdManager?.discoverServices(Config.SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, listener)
+        }
 
         scope.launch(Dispatchers.Main) {
             try {
                 delay(Config.TIMEOUT)
             } finally {
                 if (isRunning.value == true) {
-                    nsdManager.stopServiceDiscovery(listener)
+                    nsdManager?.stopServiceDiscovery(listener)
                 }
             }
         }
@@ -130,7 +137,7 @@ class Discovery(private val context: Context) {
      */
     private inner class DiscoveryListener : NsdManager.DiscoveryListener {
         override fun onServiceFound(serviceInfo: NsdServiceInfo?) {
-            nsdManager.resolveService(serviceInfo, ResolveListener())
+            nsdManager?.resolveService(serviceInfo, ResolveListener())
         }
 
         override fun onServiceLost(serviceInfo: NsdServiceInfo) {
