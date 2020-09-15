@@ -11,6 +11,7 @@ package com.gaurav.avnc.ui.vnc
 import android.content.Context
 import android.opengl.GLSurfaceView
 import android.os.Bundle
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -19,16 +20,15 @@ import androidx.lifecycle.Observer
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.model.Bookmark
+import com.gaurav.avnc.model.VncProfile
 import com.gaurav.avnc.ui.vnc.gl.Renderer
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.VncClient
+import com.gaurav.avnc.vnc.VncUri
 import java.lang.ref.WeakReference
 
 /**
  * This activity handle the VNC connection to a server.
- *
- * A [Bookmark] MUST be passed to this activity (via Intent) which will be
- * used to establish VNC connection.
  */
 class VncActivity : AppCompatActivity() {
 
@@ -64,11 +64,28 @@ class VncActivity : AppCompatActivity() {
     }
 
     /**
-     * Extracts profile from Intent.
+     * Extracts Bookmark from Intent.
+     *
+     * Currently there are two sources of [VncActivity] start:
+     *  1. HomeActivity
+     *  2. VNC Uri Intent
      */
-    private fun getBookmark(): Bookmark = intent.getParcelableExtra(KEY.BOOKMARK)
-            ?: throw IllegalStateException("No bookmark was passed to VncActivity")
+    private fun getBookmark(): Bookmark {
 
+        val bookmark = intent.getParcelableExtra<Bookmark>(KEY.BOOKMARK)
+        if (bookmark != null) {
+            return bookmark
+        }
+
+        if (intent.data?.scheme == "vnc") {
+            val vncProfile = VncProfile(VncUri(intent.data!!))
+            return Bookmark(profile = vncProfile)
+        }
+
+        //TODO Show something in UI
+        Log.e(javaClass.simpleName, "No connection information was passed through Intent.")
+        return Bookmark()
+    }
 
     private fun processClientInfo(info: VncClient.Info) {
 
