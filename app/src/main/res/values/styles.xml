@@ -19,17 +19,11 @@
            <item name="colorSecondaryVariant">@color/secondaryDarkColor</item>
            <item name="colorOnSecondary">@color/secondaryTextColor</item>-->
 
-        <item name="materialAlertDialogTheme">@style/AlertDialogTheme</item>
     </style>
-
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="colorPrimary">?attr/colorSecondary</item>
     </style>
 
     <style name="FormLabel" parent="Widget.AppCompat.TextView">
