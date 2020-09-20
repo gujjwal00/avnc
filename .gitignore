@@ -33,3 +33,6 @@ vcs.xml
 
 # Android Profiling
 *.hprof
+
+#SIMD tester
+gastest.o

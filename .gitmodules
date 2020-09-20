@@ -1,3 +1,9 @@
-[submodule "libvncserver"]
-	path = libvncserver
-	url = https://github.com/gujjwal00/libvncserver.git
+[submodule "extern/libvncserver"]
+	path = extern/libvncserver
+	url = ../../gujjwal00/libvncserver.git
+[submodule "extern/libressl"]
+	path = extern/libressl
+	url = ../../libressl-portable/portable.git
+[submodule "extern/libjpeg-turbo"]
+	path = extern/libjpeg-turbo
+	url = ../../libjpeg-turbo/libjpeg-turbo

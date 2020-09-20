@@ -27,13 +27,36 @@ android {
     }
 
     buildTypes {
+
+        debug {
+            applicationIdSuffix ".debug"
+        }
+
+        debugAll {
+            initWith(debug)
+
+            externalNativeBuild {
+                cmake {
+                    arguments '-DAVNC_BUILD_ALL=ON'
+                    targets 'turbojpeg-static', 'ssl', 'crypto'
+                }
+            }
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
-        debug {
-            applicationIdSuffix ".debug"
+        releseAll {
+            initWith(release)
+
+            externalNativeBuild {
+                cmake {
+                    arguments '-DAVNC_BUILD_ALL=ON'
+                    targets 'turbojpeg-static', 'ssl', 'crypto'
+                }
+            }
         }
     }
 
