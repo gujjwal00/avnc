@@ -29,14 +29,11 @@ abstract class MainDb : RoomDatabase() {
         /**
          * Returns database singleton.
          * If database is not yet created then it will be created on first call.
-         *
-         * @param context
-         * @return
          */
         @Synchronized
-        fun getInstance(context: Context?): MainDb {
+        fun getInstance(context: Context): MainDb {
             if (instance == null) {
-                instance = Room.databaseBuilder(context!!, MainDb::class.java, "main").build()
+                instance = Room.databaseBuilder(context, MainDb::class.java, "main").build()
             }
             return instance!!
         }

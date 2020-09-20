@@ -74,7 +74,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      * Used for credential transfer between credential dialog (producer)
      * and the thread doing VNC initialization (consumer).
      *
-     * After firing 'credential required' event, consumer will block
+     * After firing [credentialRequiredEvent] event, consumer will block
      * waiting for credentials. After producer has received credentials from
      * user, it will put them in this queue allowing consumer to continue.
      */
@@ -111,7 +111,6 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     /**
      * Used for sending events to remote server.
      * Only valid after VNC connection has been established.
-     *
      */
     lateinit var messenger: Messenger
 
@@ -177,7 +176,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     fun disconnect() = client.setDisconnected()
 
     /**
-     * Called when activity is destroyed
+     * Called when activity is finished.
      */
     override fun onCleared() {
         super.onCleared()
@@ -259,11 +258,14 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
             frameState.setFramebufferSize(info.frameWidth.toFloat(), info.frameHeight.toFloat())
         }
 
+        //TODO: This callback can be invoked more than once for same state.
+        //      We should make sure we are not repeatedly saving same thing
         if (info.state == VncClient.State.Connected) {
             async {
                 recentDao.insert(bookmark.toRecent().apply { connectedAt = Date().time })
 
-                //Save credentials to bookmark if required
+                //If user has asked to remember credential then Credential Dialog
+                //will put them in current profile (associated with bookmark).
                 if (bookmark.ID != 0L) {
                     bookmarkDao.update(bookmark)
                 }
