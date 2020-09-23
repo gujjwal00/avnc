@@ -22,16 +22,24 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 /**
  * Editor fragment used for creating and editing bookmarks.
  *
- * If its ID is 0, a new bookmark will be created.
- *
- * Instead of directly modifying bookmark in [HomeViewModel.bookmarkEditEvent],
- * we make a deep copy otherwise bookmarks adapter will not notice the change in
- * database.
+ * If ID in given bookmark instance is 0, a new bookmark will be created.
  */
 class BookmarkEditorFragment : DialogFragment() {
 
     private val viewModel by activityViewModels<HomeViewModel>()
-    private val bookmark by lazy { bookmarkCopy() }
+
+    /**
+     * Target of this dialog.
+     *
+     * Instead of directly modifying bookmark in [HomeViewModel.bookmarkEditEvent],
+     * we make a deep copy. This avoids some issues with adapters not noticing
+     * the change in database .
+     */
+    private val bookmark by lazy {
+        viewModel.bookmarkEditEvent.value!!.copy().apply {
+            profile = profile.copy()
+        }
+    }
 
     /**
      * Creates editor dialog.
@@ -80,12 +88,4 @@ class BookmarkEditorFragment : DialogFragment() {
      * Checks if given bookmark is new (i.e. not stored in database)
      */
     private fun isNew(bookmark: Bookmark) = (bookmark.ID == 0L)
-
-    /**
-     * Returns 'deep' copy of bookmark in editor event.
-     */
-    private fun bookmarkCopy(): Bookmark {
-        val bookmark = viewModel.bookmarkEditEvent.value!!
-        return bookmark.copy(profile = bookmark.profile.copy())
-    }
 }
