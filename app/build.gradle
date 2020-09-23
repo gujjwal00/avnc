@@ -91,6 +91,8 @@ dependencies {
     implementation 'androidx.fragment:fragment-ktx:1.2.5'
     implementation "androidx.appcompat:appcompat:$version.appCompat"
     implementation "com.google.android.material:material:$version.material"
+    implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
+
 
     implementation 'androidx.preference:preference:1.1.1'
     implementation "androidx.navigation:navigation-fragment:$version.navigation"

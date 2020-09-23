@@ -86,9 +86,21 @@ class FrameState(prefs: AppPreferences) {
         return zoomScale / oldScale //Applied scale factor
     }
 
+    /**
+     * Shift frame by given delta.
+     */
     fun pan(deltaX: Float, deltaY: Float) {
         translateX += deltaX
         translateY += deltaY
+        coerceValues()
+    }
+
+    /**
+     * Move frame to given position.
+     */
+    fun moveTo(x: Float, y: Float) {
+        translateX = x
+        translateY = y
         coerceValues()
     }
 
@@ -148,6 +160,6 @@ class FrameState(prefs: AppPreferences) {
         val diff = vp - scaledFb
 
         return if (diff >= 0) diff / 2   //Frame will be smaller than viewport, so center it
-        else current.coerceIn(diff, 0F)   //otherwise, make sure viewport is completely filled.
+        else current.coerceIn(diff, 0F)  //otherwise, make sure viewport is completely filled.
     }
 }

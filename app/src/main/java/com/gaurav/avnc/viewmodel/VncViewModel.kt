@@ -186,6 +186,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         credentialQueue.offer(UserCredential())
     }
 
+
     /**************************************************************************
      * Frame management
      **************************************************************************/
@@ -205,6 +206,11 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
     fun panFrame(deltaX: Float, deltaY: Float) {
         frameState.pan(deltaX, deltaY)
+        frameViewRef.get()?.requestRender()
+    }
+
+    fun moveFrameTo(x: Float, y: Float) {
+        frameState.moveTo(x, y)
         frameViewRef.get()?.requestRender()
     }
 

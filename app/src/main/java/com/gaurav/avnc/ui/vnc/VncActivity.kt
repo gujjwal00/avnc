@@ -82,7 +82,6 @@ class VncActivity : AppCompatActivity() {
             return Bookmark(profile = vncProfile)
         }
 
-        //TODO Show something in UI
         Log.e(javaClass.simpleName, "No connection information was passed through Intent.")
         return Bookmark()
     }

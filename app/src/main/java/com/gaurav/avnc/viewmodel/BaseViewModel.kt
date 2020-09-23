@@ -24,7 +24,7 @@ import kotlinx.coroutines.withContext
 /**
  * Base view model.
  */
-open class BaseViewModel(app: Application) : AndroidViewModel(app) {
+open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
 
     /**
      * Database instance.

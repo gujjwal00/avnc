@@ -25,6 +25,7 @@ class InputHandler(private val viewModel: VncViewModel, private val dispatcher: 
     private val scaleDetector = ScaleGestureDetector(viewModel.getApplication(), this)
     private val gestureDetector = GestureDetector(viewModel.getApplication(), this)
     private val showZoomLevel = viewModel.pref.zoom.showLevel
+    private val frameScroller = FrameScroller(viewModel) //Should it be in Dispatcher?
 
     init {
         scaleDetector.isQuickScaleEnabled = viewModel.pref.zoom.quick
@@ -38,7 +39,10 @@ class InputHandler(private val viewModel: VncViewModel, private val dispatcher: 
         return gestureDetector.onTouchEvent(event)
     }
 
-    override fun onDown(e: MotionEvent) = true
+    override fun onDown(e: MotionEvent): Boolean {
+        frameScroller.stop()
+        return true
+    }
 
     override fun onScaleBegin(detector: ScaleGestureDetector) = true
     override fun onScaleEnd(detector: ScaleGestureDetector) {
@@ -56,7 +60,8 @@ class InputHandler(private val viewModel: VncViewModel, private val dispatcher: 
     }
 
     override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-        return false
+        frameScroller.fling(velocityX, velocityY)
+        return true
     }
 
     override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
