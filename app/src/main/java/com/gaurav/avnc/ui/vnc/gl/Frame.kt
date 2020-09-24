@@ -14,8 +14,7 @@ import java.nio.ByteOrder
 import java.nio.FloatBuffer
 
 /**
- *
- * Image frame is represented as two triangles:
+ * Frame is represented as two triangles:
  *
  *     [0, fbHeight]  +-----------+  [fbWidth, fbHeight]
  *                    |          /|
@@ -87,12 +86,13 @@ internal class Frame {
      * Set size of this underlying framebuffer.
      * It is used to calculates frame vertices.
      */
-    fun updateSize(width: Float, height: Float) {
+    fun updateFbSize(width: Float, height: Float) {
         if (width == fbWidth && height == fbHeight)
             return //Nothing to do
 
         fbWidth = width
         fbHeight = height
+
         vertexData = generateVertexData()
         vertexBuffer.position(0)
         vertexBuffer.put(vertexData)

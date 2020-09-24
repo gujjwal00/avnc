@@ -38,7 +38,7 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
     }
 
     /**
-     * Draws framebuffer on screen according to current state.
+     * Draws frame on screen according to current state.
      *
      * Y-axis of coordinate system used by OpenGL is in opposite direction (upwards)
      * relative to Y-axis in screen coordinates (downwards).
@@ -46,7 +46,7 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
      * To compensate for this, we invert the Y-coordinates of drawn frame. This is
      * achieved by:
      *              1. Using clipping region [-height, 0] instead of [0, height] for Y-axis
-     *              2. Inverting sign of Y-axis translation
+     *              2. Inverting sign of Y-axis position
      *              3. Inverting sign of Y-axis scale (to flip the frame)
      *
      * So the frame is drawn as follows in OpenGL:
@@ -77,7 +77,7 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
 
         Matrix.setIdentityM(projectionMatrix, 0)
         Matrix.orthoM(projectionMatrix, 0, 0f, state.vpWidth, -state.vpHeight, 0f, -1f, 1f)
-        Matrix.translateM(projectionMatrix, 0, state.translateX, -state.translateY, 0f)
+        Matrix.translateM(projectionMatrix, 0, state.frameX, -state.frameY, 0f)
         Matrix.scaleM(projectionMatrix, 0, state.scale, -state.scale, 1f)
 
         program.useProgram()
@@ -85,7 +85,7 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
 
         viewModel.client.uploadFrameTexture()
 
-        frame.updateSize(state.fbWidth, state.fbHeight)
+        frame.updateFbSize(state.fbWidth, state.fbHeight)
         frame.bind(program)
         frame.draw()
     }

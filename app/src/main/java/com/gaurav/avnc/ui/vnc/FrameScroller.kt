@@ -23,11 +23,11 @@ class FrameScroller(val viewModel: VncViewModel) {
 
     init {
         xAnimator.addUpdateListener { _, x, _ ->
-            viewModel.moveFrameTo(x, fs.translateY)
+            viewModel.moveFrameTo(x, fs.frameY)
         }
 
         yAnimator.addUpdateListener { _, y, _ ->
-            viewModel.moveFrameTo(fs.translateX, y)
+            viewModel.moveFrameTo(fs.frameX, y)
         }
     }
 
@@ -45,8 +45,8 @@ class FrameScroller(val viewModel: VncViewModel) {
     fun fling(vx: Float, vy: Float) {
         stop()
 
-        val x = fs.translateX
-        val y = fs.translateY
+        val x = fs.frameX
+        val y = fs.frameY
 
         /**
          * Fling limits.

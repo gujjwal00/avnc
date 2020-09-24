@@ -195,8 +195,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         val appliedScaleFactor = frameState.updateZoom(scaleFactor)
 
         //Calculate how much the focus would shift after scaling
-        val dfx = (fx - frameState.translateX) * (appliedScaleFactor - 1)
-        val dfy = (fy - frameState.translateY) * (appliedScaleFactor - 1)
+        val dfx = (fx - frameState.frameX) * (appliedScaleFactor - 1)
+        val dfy = (fy - frameState.frameY) * (appliedScaleFactor - 1)
 
         //Translate in opposite direction to keep focus fixed
         frameState.pan(-dfx, -dfy)

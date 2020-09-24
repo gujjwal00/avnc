@@ -87,8 +87,8 @@ class FrameStateTest {
 
         //Because frame and viewport are of same size, we should not be able to translate
         state.pan(10f, 10f)
-        assertEquals(0f, state.translateX)
-        assertEquals(0f, state.translateY)
+        assertEquals(0f, state.frameX)
+        assertEquals(0f, state.frameY)
     }
 
 
@@ -100,8 +100,8 @@ class FrameStateTest {
         state.updateZoom(.5F)
 
         //Because frame is half in size, we should be centered
-        assertEquals(25f, state.translateX)
-        assertEquals(25f, state.translateY)
+        assertEquals(25f, state.frameX)
+        assertEquals(25f, state.frameY)
     }
 
 
@@ -116,13 +116,13 @@ class FrameStateTest {
 
         //Should not be able to move too much right/down
         state.pan(150f, 150f)
-        assertEquals(0f, state.translateX) //Left side of framebuffer and Viewport are aligned
-        assertEquals(0f, state.translateY) //Top side of framebuffer and Viewport are aligned
+        assertEquals(0f, state.frameX) //Left side of frame and Viewport are aligned
+        assertEquals(0f, state.frameY) //Top side of frame and Viewport are aligned
 
 
         //Should not be able to move too much left/up
         state.pan(-150f, -150f)
-        assertEquals(-100f, state.translateX) //Right side of framebuffer and Viewport are aligned
-        assertEquals(-100f, state.translateY) //Bottom side of framebuffer and Viewport are aligned
+        assertEquals(-100f, state.frameX) //Right side of frame and Viewport are aligned
+        assertEquals(-100f, state.frameY) //Bottom side of frame and Viewport are aligned
     }
 }

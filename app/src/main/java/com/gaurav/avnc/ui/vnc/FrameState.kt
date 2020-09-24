@@ -14,18 +14,39 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * Represent current 'view' state of the frame.
+ * Represents current 'view' state of the frame.
  *
- * Thread safety: Frame state is accessed from multiple threads. Its properties are updated
- *                in UI thread and consumed by the renderer thread. There is a "slight"
- *                chance that Renderer thread may see half-updated state. But it should
- *                "eventually" settle down because any change in frame state is usually
- *                followed by a new render request.
+ * Terminology
+ * ===========
  *
- *                We can make frame state immutable, like String, so that only fully
- *                updated instances are passed around. But we may generate a lot of
- *                outdated instances which may put pressure on garbage collector. So
- *                there should be some sort of caching.
+ * Viewport: This is the area of screen where frame is rendered. Currently,
+ * for all intent & purpose it is equal to the size of [FrameView].
+ *
+ * Framebuffer: This is the buffer holding pixel data. It resides in native memory.
+ *
+ * Frame: This is the actual content rendered on screen. It can be thought of as
+ * 'scaled framebuffer'. Its size changes based on current [scale] and its position
+ * is stored in [frameX] & [frameY].
+ *
+ *
+ * State & Coordinates
+ * ===================
+ *
+ * Both frame & viewport are in same coordinate space. Viewport is assumed to be fixed
+ * in its place with [0,0] represented by top-left corner. Only frame is scaled/moved.
+ * To make sure that frame does not move off screen, after each state change, values
+ * are coerced within range by [coerceValues].
+ *
+ * Rendering is done by [com.gaurav.avnc.ui.vnc.gl.Renderer] based on these values.
+ *
+ *
+ * Thread safety
+ * =============
+ *
+ * Frame state is accessed from multiple threads. Its properties are updated in
+ * UI thread and consumed by the renderer thread. There is a "slight" chance that
+ * Renderer thread may see half-updated state. But it should "eventually" settle down
+ * because any change in frame state is usually followed by a new render request.
  */
 class FrameState(prefs: AppPreferences) {
 
@@ -44,8 +65,9 @@ class FrameState(prefs: AppPreferences) {
     var zoomScale = 1.0F; private set
     val scale get() = baseScale * zoomScale
 
-    var translateX = 0F; private set
-    var translateY = 0F; private set
+    //Frame position, relative to top-left corner (0,0)
+    var frameX = 0F; private set
+    var frameY = 0F; private set
 
     //VNC framebuffer size
     var fbWidth = 0F; private set
@@ -75,7 +97,7 @@ class FrameState(prefs: AppPreferences) {
     /**
      * Adjust zoom scale according to give [scaleFactor].
      *
-     * @return How 'much' of the [scaleFactor] is applied (after coercing zoom scale).
+     * Returns 'how much' scale factor is actually applied (after coercing).
      */
     fun updateZoom(scaleFactor: Float): Float {
         val oldScale = zoomScale
@@ -90,8 +112,8 @@ class FrameState(prefs: AppPreferences) {
      * Shift frame by given delta.
      */
     fun pan(deltaX: Float, deltaY: Float) {
-        translateX += deltaX
-        translateY += deltaY
+        frameX += deltaX
+        frameY += deltaY
         coerceValues()
     }
 
@@ -99,8 +121,8 @@ class FrameState(prefs: AppPreferences) {
      * Move frame to given position.
      */
     fun moveTo(x: Float, y: Float) {
-        translateX = x
-        translateY = y
+        frameX = x
+        frameY = y
         coerceValues()
     }
 
@@ -110,12 +132,12 @@ class FrameState(prefs: AppPreferences) {
     fun isValidFbPoint(x: Float, y: Float) = (x >= 0F && x < fbWidth) && (y >= 0F && y < fbHeight)
 
     /**
-     * Converts given viewport point to framebuffer coordinates.
+     * Converts given viewport point to corresponding framebuffer point.
      * Returns null if given point lies outside of framebuffer.
      */
     fun toFb(vpPoint: PointF): PointF? {
-        val fbX = (vpPoint.x - translateX) / scale
-        val fbY = (vpPoint.y - translateY) / scale
+        val fbX = (vpPoint.x - frameX) / scale
+        val fbY = (vpPoint.y - frameY) / scale
 
         if (isValidFbPoint(fbX, fbY))
             return PointF(fbX, fbY)
@@ -148,14 +170,14 @@ class FrameState(prefs: AppPreferences) {
      */
     private fun coerceValues() {
         zoomScale = zoomScale.coerceIn(minZoomScale, maxZoomScale)
-        translateX = coerceTranslate(translateX, vpWidth, fbWidth)
-        translateY = coerceTranslate(translateY, vpHeight, fbHeight)
+        frameX = coercePosition(frameX, vpWidth, fbWidth)
+        frameY = coercePosition(frameY, vpHeight, fbHeight)
     }
 
     /**
-     * Coerce translation value in a direction (horizontal/vertical).
+     * Coerce position value in a direction (horizontal/vertical).
      */
-    private fun coerceTranslate(current: Float, vp: Float, fb: Float): Float {
+    private fun coercePosition(current: Float, vp: Float, fb: Float): Float {
         val scaledFb = (fb * scale)
         val diff = vp - scaledFb
 
