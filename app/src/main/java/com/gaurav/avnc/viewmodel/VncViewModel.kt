@@ -27,6 +27,42 @@ import java.util.concurrent.LinkedBlockingQueue
 
 /**
  * ViewModel for VncActivity
+ *
+ * Connection
+ * ==========
+ *
+ * At construction, we instantiate a [VncClient] referenced by [client]. Then
+ * activity starts the connection by calling [connect]. Because [connect] can
+ * be called multiple times due to activity restarts, initialization inside it
+ * is performed only once.
+ *
+ * After successful initialization, we continue to operate normally until remote
+ * server closes the connection OR [disconnect] is called. Once disconnected, we
+ * wait for the activity to finish and then cleanup any acquired resources.
+ *
+ * Currently, lifecycle of [client] is tied to this view model. So one [VncViewModel]
+ * can handle only one [VncClient].
+ *
+ *
+ * Threading
+ * =========
+ *
+ * Receiver thread :- This thread is started (as a coroutine) in [launchConnection].
+ * It handles the protocol initialization and after that processes incoming messages.
+ * Most of the callbacks of [VncClient.Observer] are invoked on this thread. In most
+ * cases it is stopped when activity is finished and this view model is cleaned up.
+ *
+ * Sender thread :- This thread is created (as an executor) by [messenger]. It is
+ * used to send messages to remote server. We use this dedicated thread instead
+ * of coroutines to preserve the order of sent messages. It is stopped after [client]
+ * is disconnected.
+ *
+ * UI thread :- Main thread of the app. Used for updating UI and controlling other
+ * Threads. This is where [frameState] is updated.
+ *
+ * Renderer thread :- This is managed by [FrameView] and used for rendering frame
+ * via OpenGL ES. [frameState] is read from this thread to decide how/where frame
+ * should be drawn.
  */
 class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
@@ -45,11 +81,12 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     val clientInfo = MutableLiveData(VncClient.Info())
 
     /**
-     * Bookmark which triggered this connection.
+     * Bookmark used for current connection.
      *
      * Even though only [profile] is required for connection, we require that all
      * connection request to [connect] comes in form of a [Bookmark]. This unifies
-     * information flow from HomeActivity to VncActivity.
+     * information flow from HomeActivity to VncActivity and allows to save
+     * credential in bookmark.
      *
      * For connection which are not started from a real bookmark (ex: from Recent)
      * this will simply wrap that profile.
@@ -76,7 +113,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      *
      * After firing [credentialRequiredEvent] event, consumer will block
      * waiting for credentials. After producer has received credentials from
-     * user, it will put them in this queue allowing consumer to continue.
+     * user, it will put them in this queue, allowing consumer to continue.
      */
     val credentialQueue = LinkedBlockingQueue<UserCredential>()
 
@@ -272,6 +309,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
                 //If user has asked to remember credential then Credential Dialog
                 //will put them in current profile (associated with bookmark).
+                //So, if bookmark is real, we save it to db.
                 if (bookmark.ID != 0L) {
                     bookmarkDao.update(bookmark)
                 }
