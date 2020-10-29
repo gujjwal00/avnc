@@ -48,7 +48,9 @@ import kotlin.math.min
  * Renderer thread may see half-updated state. But it should "eventually" settle down
  * because any change in frame state is usually followed by a new render request.
  */
-class FrameState(prefs: AppPreferences) {
+class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScale: Float = 5F) {
+
+    constructor(prefs: AppPreferences) : this(prefs.zoom.min, prefs.zoom.max)
 
     /**
      * We have two types of scaling.
@@ -77,8 +79,6 @@ class FrameState(prefs: AppPreferences) {
     var vpWidth = 0F; private set
     var vpHeight = 0F; private set
 
-    private val minZoomScale = prefs.zoom.min
-    private val maxZoomScale = prefs.zoom.max
 
     fun setFramebufferSize(w: Float, h: Float) {
         fbWidth = w

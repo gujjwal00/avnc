@@ -9,24 +9,11 @@
 package com.gaurav.avnc.ui
 
 import com.gaurav.avnc.ui.vnc.FrameState
-import com.gaurav.avnc.util.AppPreferences
-import io.mockk.every
-import io.mockk.mockk
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class FrameStateTest {
-
-    private fun getPrefMock(minZoom: Float = .5F, maxZoom: Float = 5F): AppPreferences {
-        return mockk {
-            every { zoom } returns
-                    mockk {
-                        every { min } returns minZoom
-                        every { max } returns maxZoom
-                    }
-        }
-    }
 
     @Test
     fun scalingCoerceTest() {
@@ -35,8 +22,7 @@ class FrameStateTest {
         for (limit in minMaxScale) {
             for (scaleFactor in arrayOf(0F, 0.5F, 1F, 1.5F, 2F, 2.5F, 5F, 10F)) {
 
-                val prefMock = getPrefMock(limit.first, limit.second)
-                val state = FrameState(prefMock)
+                val state = FrameState(limit.first, limit.second)
 
                 state.updateZoom(scaleFactor)
 
@@ -48,7 +34,7 @@ class FrameStateTest {
 
     @Test
     fun baseScaleTest1() {
-        val state = FrameState(getPrefMock())
+        val state = FrameState()
         state.setViewportSize(100f, 100f)
         state.setFramebufferSize(100f, 100f)  //Same as viewport
         assertEquals(1F, state.baseScale)
@@ -57,7 +43,7 @@ class FrameStateTest {
 
     @Test
     fun baseScaleTest2() {
-        val state = FrameState(getPrefMock())
+        val state = FrameState()
         state.setViewportSize(100f, 100f)
         state.setFramebufferSize(50f, 100f) //Width is half, But height is same
         assertEquals(1F, state.baseScale)
@@ -65,7 +51,7 @@ class FrameStateTest {
 
     @Test
     fun baseScaleTest3() {
-        val state = FrameState(getPrefMock())
+        val state = FrameState()
         state.setViewportSize(100f, 100f)
         state.setFramebufferSize(50f, 50f) //Half size
         assertEquals(2F, state.baseScale)
@@ -73,7 +59,7 @@ class FrameStateTest {
 
     @Test
     fun baseScaleTest4() {
-        val state = FrameState(getPrefMock())
+        val state = FrameState()
         state.setViewportSize(100f, 100f)
         state.setFramebufferSize(200f, 200f) //Double size
         assertEquals(.5F, state.baseScale)
@@ -81,7 +67,7 @@ class FrameStateTest {
 
     @Test
     fun translateCoerceTest1() {
-        val state = FrameState(getPrefMock())
+        val state = FrameState()
         state.setViewportSize(100f, 100f)
         state.setFramebufferSize(100f, 100f)
 
@@ -94,7 +80,7 @@ class FrameStateTest {
 
     @Test
     fun translateCoerceTest2() {
-        val state = FrameState(getPrefMock())
+        val state = FrameState()
         state.setViewportSize(100f, 100f)
         state.setFramebufferSize(100f, 100f)
         state.updateZoom(.5F)
@@ -107,7 +93,7 @@ class FrameStateTest {
 
     @Test
     fun translateCoerceTest3() {
-        val state = FrameState(getPrefMock())
+        val state = FrameState()
         state.setViewportSize(100f, 100f)
         state.setFramebufferSize(100f, 100f)
 
