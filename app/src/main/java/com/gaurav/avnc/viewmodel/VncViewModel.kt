@@ -193,6 +193,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
                 try {
                     messenger = Messenger(client)
 
+                    sendClipboardText()
+
                     while (isActive && client.processServerMessage(1000 * 1000)) {
                         //Message Loop
                     }
@@ -205,6 +207,17 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
                 }
             }
         }
+    }
+
+    /**
+     * Sends current clipboard text to remote server.
+     */
+    fun sendClipboardText() {
+        val isConnected = clientInfo.value?.state == VncClient.State.Connected
+        val text = clipboard.text
+
+        if (isConnected && text != null && text.isNotBlank())
+            messenger.sendClipboardText(text.toString())
     }
 
     /**

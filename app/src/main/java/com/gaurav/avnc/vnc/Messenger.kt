@@ -72,4 +72,13 @@ class Messenger(private val client: VncClient) {
     fun sendKeyUp(keyCode: Int, translate: Boolean) {
         execute { client.sendKeyEvent(keyCode, false, translate) }
     }
+
+    /**************************************************************************
+     * Misc
+     **************************************************************************/
+
+    fun sendClipboardText(text: String) {
+        execute { client.sendCutText(text) }
+    }
+
 }

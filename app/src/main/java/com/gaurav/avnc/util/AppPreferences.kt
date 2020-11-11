@@ -14,6 +14,9 @@ import androidx.preference.PreferenceManager
 
 /**
  * Utility class for accessing app preferences
+ *
+ * TODO: Planned Preferences
+ *       - Clipboard Sync (On/Off)
  */
 class AppPreferences(private val context: Context) {
 

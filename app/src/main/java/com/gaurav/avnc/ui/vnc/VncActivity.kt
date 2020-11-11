@@ -63,6 +63,11 @@ class VncActivity : AppCompatActivity() {
         binding.kbToggle.setOnClickListener { toggleKb() }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.sendClipboardText()
+    }
+
     /**
      * Extracts Bookmark from Intent.
      *
