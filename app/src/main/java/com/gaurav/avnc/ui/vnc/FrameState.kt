@@ -40,6 +40,26 @@ import kotlin.math.min
  * Rendering is done by [com.gaurav.avnc.ui.vnc.gl.Renderer] based on these values.
  *
  *
+ * Scaling
+ * =======
+ *
+ * Scaling controls the 'size' of rendered frame. Conceptually, scaling is done in two steps:
+ *
+ * 1. Base Scale [baseScale] :
+ *
+ * This is used to manage the difference between framebuffer size & viewport size.
+ * At this scale frame will be completely visible inside viewport (in landscape mode),
+ * and at least one side of frame will match the corresponding side of viewport.
+ *
+ * 2. Zoom Scale [zoomScale] :
+ *
+ * This value represents 'zoom level' requested by the user (by pinch gestures).
+ * It works 'on top of' base scale.
+ *
+ * Effective scale [scale] is calculated as the product of these two values.
+ *
+ * So:      FrameSize = (FramebufferSize * BaseScale) * ZoomScale
+ *
  * Thread safety
  * =============
  *
@@ -52,17 +72,6 @@ class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScal
 
     constructor(prefs: AppPreferences) : this(prefs.zoom.min, prefs.zoom.max)
 
-    /**
-     * We have two types of scaling.
-     *   1. Base Scale: At this scale frame will be visible completely (in landscape)
-     *            and at least one side (width or height) of frame will match the
-     *            corresponding side of viewport.
-     *
-     *   2. Zoom Scale: This value represents 'zoom level' and is modified by the user
-     *            during scaling gestures. It works 'on top of' base scale.
-     *
-     * Effective scale is calculated as the product of these two values.
-     */
     var baseScale = 0F; private set
     var zoomScale = 1.0F; private set
     val scale get() = baseScale * zoomScale
@@ -83,14 +92,14 @@ class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScal
     fun setFramebufferSize(w: Float, h: Float) {
         fbWidth = w
         fbHeight = h
-        calculateBaseScale(true)
+        calculateBaseScale()
         coerceValues()
     }
 
     fun setViewportSize(w: Float, h: Float) {
         vpWidth = w
         vpHeight = h
-        calculateBaseScale(false)
+        calculateBaseScale()
         coerceValues()
     }
 
@@ -145,23 +154,15 @@ class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScal
             return null
     }
 
-    /**
-     * Calculates base scale.
-     *
-     * We are optimizing base scale for 'landscape mode'. In landscape mode,
-     * full frame will be visible.
-     *
-     * TODO: Refactor: Allow increase in base scale if viewport size increase
-     */
-    private fun calculateBaseScale(force: Boolean) {
-        if (baseScale > 0 && !force)
-            return  //Already initialized
-
+    private fun calculateBaseScale() {
         if (fbHeight == 0F || fbWidth == 0F || vpHeight == 0F)
             return  //Not enough info yet
 
+        //Base scale is calculated as-if we are in 'Landscape' mode.
+        //So larger viewport side is treated as width and smaller as height
         val wRatio = max(vpWidth, vpHeight) / fbWidth
         val hRatio = min(vpWidth, vpHeight) / fbHeight
+
         baseScale = min(wRatio, hRatio)
     }
 

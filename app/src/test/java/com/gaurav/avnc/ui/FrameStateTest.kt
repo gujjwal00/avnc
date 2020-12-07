@@ -66,6 +66,27 @@ class FrameStateTest {
     }
 
     @Test
+    fun baseScaleTest5() {
+        val state = FrameState()
+        state.setViewportSize(100f, 100f)
+        state.setFramebufferSize(100f, 100f)
+
+        state.setViewportSize(50f, 50f)       //If viewport size is reduced
+        assertEquals(.5F, state.baseScale) //base scale should also reduce
+    }
+
+
+    @Test
+    fun baseScaleTest6() {
+        val state = FrameState()
+        state.setViewportSize(100f, 100f)
+        state.setFramebufferSize(100f, 100f)
+
+        state.setViewportSize(200f, 200f)    //If viewport size is increased
+        assertEquals(2F, state.baseScale) //base scale should also increase
+    }
+
+    @Test
     fun translateCoerceTest1() {
         val state = FrameState()
         state.setViewportSize(100f, 100f)
