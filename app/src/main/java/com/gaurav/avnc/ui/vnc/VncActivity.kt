@@ -16,14 +16,12 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.model.Bookmark
 import com.gaurav.avnc.model.VncProfile
 import com.gaurav.avnc.ui.vnc.gl.Renderer
 import com.gaurav.avnc.viewmodel.VncViewModel
-import com.gaurav.avnc.vnc.VncClient
 import com.gaurav.avnc.vnc.VncUri
 import java.lang.ref.WeakReference
 
@@ -55,7 +53,6 @@ class VncActivity : AppCompatActivity() {
 
         viewModel.frameViewRef = WeakReference(binding.frameView)
         viewModel.credentialRequiredEvent.observe(this) { showCredentialDialog() }
-        viewModel.clientInfo.observe(this, Observer { processClientInfo(it) })
 
         //Should be called after observers has been installed
         viewModel.connect(getBookmark())
@@ -89,10 +86,6 @@ class VncActivity : AppCompatActivity() {
 
         Log.e(javaClass.simpleName, "No connection information was passed through Intent.")
         return Bookmark()
-    }
-
-    private fun processClientInfo(info: VncClient.Info) {
-
     }
 
     private fun showCredentialDialog() {

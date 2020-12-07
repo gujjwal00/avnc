@@ -9,7 +9,9 @@
 package com.gaurav.avnc.vnc
 
 import android.graphics.PointF
+import android.util.Log
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 /**
  * Allows sending different types of messages to remote server.
@@ -20,12 +22,19 @@ class Messenger(private val client: VncClient) {
      * Sender thread
      **************************************************************************/
 
-    private val sender = Executors.newSingleThreadExecutor()
+    private val sender by lazy { Executors.newSingleThreadExecutor() }
 
-    fun execute(f: () -> Unit) = sender.execute(f)
+    private fun execute(action: () -> Unit) {
+        if (client.state == VncClient.State.Connected)
+            sender.execute(action)
+    }
 
-    fun shutdownNow() {
+    fun cleanup() {
         sender.shutdownNow()
+        sender.awaitTermination(60, TimeUnit.SECONDS)
+
+        if (!sender.isShutdown)
+            Log.w(this.javaClass.simpleName, "Unable to shutdown Sender thread!")
     }
 
 
@@ -80,5 +89,4 @@ class Messenger(private val client: VncClient) {
     fun sendClipboardText(text: String) {
         execute { client.sendCutText(text) }
     }
-
 }

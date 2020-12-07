@@ -72,7 +72,7 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
     override fun onDrawFrame(gl: GL10?) {
         glClear(GL_COLOR_BUFFER_BIT)
 
-        if (viewModel.clientInfo.value?.state != VncClient.State.Connected)
+        if (viewModel.client.state != VncClient.State.Connected)
             return
 
         Matrix.setIdentityM(projectionMatrix, 0)

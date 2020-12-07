@@ -32,16 +32,15 @@ import java.util.concurrent.LinkedBlockingQueue
  * ==========
  *
  * At construction, we instantiate a [VncClient] referenced by [client]. Then
- * activity starts the connection by calling [connect]. Because [connect] can
- * be called multiple times due to activity restarts, initialization inside it
- * is performed only once.
+ * activity starts the connection by calling [connect] which starts a coroutine to
+ * handle connection setup.
  *
- * After successful initialization, we continue to operate normally until remote
+ * After successful connection, we continue to operate normally until remote
  * server closes the connection OR [disconnect] is called. Once disconnected, we
  * wait for the activity to finish and then cleanup any acquired resources.
  *
  * Currently, lifecycle of [client] is tied to this view model. So one [VncViewModel]
- * can handle only one [VncClient].
+ * manages only one [VncClient].
  *
  *
  * Threading
@@ -66,19 +65,13 @@ import java.util.concurrent.LinkedBlockingQueue
  */
 class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
-    companion object {
-        const val TAG = "VncViewModel"
-    }
-
-    /**
-     * Current client instance.
-     */
     val client = VncClient(this)
 
     /**
-     * Information about client.
+     * Client state is exposed as live data here to allow dynamic data binding
+     * from layouts.
      */
-    val clientInfo = MutableLiveData(VncClient.Info())
+    val clientState = MutableLiveData(client.state)
 
     /**
      * Bookmark used for current connection.
@@ -96,13 +89,13 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     /**
      * Profile used for current connection.
      */
-    var profile = bookmark.profile
+    val profile; get() = bookmark.profile
 
     /**
      * Fired when [VncClient] has asked for credential. It is used to
      * show Credentials dialog to user.
      *
-     * Boolean value of this event is true if `username` is also required.
+     * Value of this event is true if `username` is also required.
      * It is false if only password is required.
      */
     val credentialRequiredEvent = LiveEvent<Boolean>()
@@ -147,9 +140,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
     /**
      * Used for sending events to remote server.
-     * Only valid after VNC connection has been established.
      */
-    lateinit var messenger: Messenger
+    val messenger = Messenger(client)
 
     /**
      * Textual representation of [FrameState.zoomScale], updated during scale gesture.
@@ -164,7 +156,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      **************************************************************************/
 
     /**
-     * Whether connection has been initialized.
+     * Because [connect] can be called multiple times due to activity restarts,
+     * initialization inside it is performed only once.
      */
     private var initialized = false
 
@@ -177,34 +170,29 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
         initialized = true
         this.bookmark = bookmark
-        this.profile = bookmark.profile
 
         launchConnection()
     }
 
-    /**
-     * Connects to VNC server and then runs the message loop.
-     */
     private fun launchConnection() {
         viewModelScope.launch(Dispatchers.IO) {
 
-            if (client.init(profile.host, profile.port)) {
+            try {
 
-                try {
-                    messenger = Messenger(client)
-
-                    sendClipboardText()
-
-                    while (isActive && client.processServerMessage(1000 * 1000)) {
+                if (client.connect(profile.host, profile.port)) {
+                    while (isActive && client.processServerMessage()) {
                         //Message Loop
                     }
-
-                    messenger.shutdownNow()
-
-                    delay(24 * 3600 * 1000)  //Wait for ViewModel cleanup
-                } finally {
-                    client.cleanup()
                 }
+
+                //Wait until cancellation - which will happen when activity
+                //is finished and viewmodel is cleaned up.
+                while (isActive) {
+                    delay(3600 * 1000)
+                }
+            } finally {
+                messenger.cleanup()
+                client.cleanup()
             }
         }
     }
@@ -213,7 +201,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      * Sends current clipboard text to remote server.
      */
     fun sendClipboardText() {
-        val isConnected = clientInfo.value?.state == VncClient.State.Connected
+        val isConnected = client.state == VncClient.State.Connected
         val text = clipboard.text
 
         if (isConnected && text != null && text.isNotBlank())
@@ -223,7 +211,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     /**
      * Disconnect VNC client.
      */
-    fun disconnect() = client.setDisconnected()
+    fun disconnect() = client.disconnect()
 
     /**
      * Called when activity is finished.
@@ -264,6 +252,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         frameViewRef.get()?.requestRender()
     }
 
+
     /**************************************************************************
      * [VncClient.Observer] Implementation
      **************************************************************************/
@@ -271,7 +260,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     /**
      * Called when remote server has asked for password.
      */
-    override fun rfbGetPassword(): String {
+    override fun onPasswordRequired(): String {
         if (!profile.password.isBlank())
             return profile.password
 
@@ -281,7 +270,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     /**
      * Called when remote server has asked for both username & password.
      */
-    override fun rfbGetCredential(): UserCredential {
+    override fun onCredentialRequired(): UserCredential {
         if (!profile.username.isBlank() && !profile.password.isBlank())
             return UserCredential(profile.username, profile.password)
 
@@ -298,25 +287,20 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         return credentialQueue.take()   //Blocking call
     }
 
-    override fun rfbFinishedFrameBufferUpdate() {
+    override fun onFramebufferUpdated() {
         frameViewRef.get()?.requestRender()
     }
 
-    override fun rfbBell() {} //Nothing yet
+    override fun onGotXCutText(text: String) {
+        toClipboard(text)
+    }
 
-    override fun rfbGotXCutText(text: String) = toClipboard(text)
+    override fun onClientStateChanged(newState: VncClient.State) {
+        clientState.postValue(newState)
 
-    override fun rfbHandleCursorPos(x: Int, y: Int): Boolean = true
+        if (newState == VncClient.State.Connected) {
+            sendClipboardText() //Initial sync
 
-    override fun onClientInfoChanged(info: VncClient.Info) {
-        viewModelScope.launch(Dispatchers.Main) {
-            clientInfo.value = info
-            frameState.setFramebufferSize(info.frameWidth.toFloat(), info.frameHeight.toFloat())
-        }
-
-        //TODO: This callback can be invoked more than once for same state.
-        //      We should make sure we are not repeatedly saving same thing
-        if (info.state == VncClient.State.Connected) {
             async {
                 recentDao.insert(bookmark.toRecent().apply { connectedAt = Date().time })
 
@@ -328,5 +312,9 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
                 }
             }
         }
+    }
+
+    override fun onFramebufferSizeChanged(width: Int, height: Int) {
+        frameState.setFramebufferSize(width.toFloat(), height.toFloat())
     }
 }

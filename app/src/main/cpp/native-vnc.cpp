@@ -242,8 +242,8 @@ static rfbBool onMallocFrameBuffer(rfbClient *client) {
     auto env = context.getEnv();
     auto cls = context.managedCls;
 
-    auto mid = env->GetMethodID(cls, "cbFrameBufferSizeChanged", "()V");
-    env->CallVoidMethod(obj, mid);
+    auto mid = env->GetMethodID(cls, "cbFramebufferSizeChanged", "(II)V");
+    env->CallVoidMethod(obj, mid, client->width, client->height);
 
     return TRUE;
 }
@@ -394,6 +394,19 @@ JNIEXPORT void JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeUploadFrameTexture(JNIEnv *env, jobject thiz,
                                                             jlong client_ptr) {
     auto client = (rfbClient *) client_ptr;
+
+    // There is a race condition here between renderer thread and receiver thread.
+    // Receiver thread will modify the 'frameBuffer', 'width' & 'height' members
+    // if it receives a resize request from server. Renderer thread might try to
+    // render framebuffer at the same time.
+    //
+    // There are two possible solutions:
+    // 1. Use a mutex here
+    // 2. Pause the renderer thread during framebuffer change
+    //
+    // But currently LibVNC changes 'width' & 'height' internally so we can't
+    // protect them without holding a lock for entire msg processing.
+    // TODO: Fix
 
     glTexImage2D(GL_TEXTURE_2D,
                  0,

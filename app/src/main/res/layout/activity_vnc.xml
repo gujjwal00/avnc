@@ -31,7 +31,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:keepScreenOn="true"
-            app:isVisible="@{viewModel.clientInfo.state == State.Connected}" />
+            app:isVisible="@{viewModel.clientState == State.Connected}" />
 
         <!--TODO: Remove temporary button to show keyboard-->
         <ImageButton
@@ -59,7 +59,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:isVisible="@{viewModel.clientInfo.state != State.Connected}">
+            app:isVisible="@{viewModel.clientState != State.Connected}">
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -68,7 +68,7 @@
                 android:layout_height="60dp"
                 android:indeterminate="true"
                 android:padding="@dimen/padding_small"
-                app:isVisible="@{viewModel.clientInfo.state != State.Disconnected}"
+                app:isVisible="@{viewModel.clientState != State.Disconnected}"
                 app:layout_constraintBottom_toTopOf="@id/client_state"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -79,7 +79,7 @@
                 android:contentDescription="@string/description_disconnected_icon"
                 android:src="@drawable/ic_warning"
                 android:tint="?attr/colorError"
-                app:isVisible="@{viewModel.clientInfo.state == State.Disconnected}"
+                app:isVisible="@{viewModel.clientState == State.Disconnected}"
                 app:layout_constraintBottom_toTopOf="@id/client_state"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -89,7 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_normal"
-                android:text="@{viewModel.clientInfo.state.toString()}"
+                android:text="@{viewModel.clientState.toString()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

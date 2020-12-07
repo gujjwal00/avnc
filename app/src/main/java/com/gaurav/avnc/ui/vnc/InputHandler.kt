@@ -18,6 +18,8 @@ import com.gaurav.avnc.viewmodel.VncViewModel
  * Handles different input events.
  *
  * TODO: Reduce [PointF] garbage
+ * TODO: cleanup zoom level
+ * TODO: simplify double tap zoom
  */
 class InputHandler(private val viewModel: VncViewModel, private val dispatcher: Dispatcher)
     : ScaleGestureDetector.OnScaleGestureListener, GestureDetector.SimpleOnGestureListener() {
