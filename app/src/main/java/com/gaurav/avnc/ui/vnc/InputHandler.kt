@@ -19,7 +19,6 @@ import com.gaurav.avnc.viewmodel.VncViewModel
  *
  * TODO: Reduce [PointF] garbage
  * TODO: cleanup zoom level
- * TODO: simplify double tap zoom
  */
 class InputHandler(private val viewModel: VncViewModel, private val dispatcher: Dispatcher)
     : ScaleGestureDetector.OnScaleGestureListener, GestureDetector.SimpleOnGestureListener() {
@@ -30,7 +29,7 @@ class InputHandler(private val viewModel: VncViewModel, private val dispatcher: 
     private val frameScroller = FrameScroller(viewModel) //Should it be in Dispatcher?
 
     init {
-        scaleDetector.isQuickScaleEnabled = viewModel.pref.zoom.quick
+        scaleDetector.isQuickScaleEnabled = false
     }
 
     /**

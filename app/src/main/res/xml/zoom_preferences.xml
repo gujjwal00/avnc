@@ -34,10 +34,4 @@
         app:key="pref_zoom_show_level"
         app:title="@string/title_pref_zoom_show_level" />
 
-    <SwitchPreference
-        app:defaultValue="false"
-        app:iconSpaceReserved="false"
-        app:key="pref_zoom_quick"
-        app:title="@string/title_pref_zoom_quick" />
-
 </PreferenceScreen>
