@@ -54,12 +54,12 @@ class FrameScroller(val viewModel: VncViewModel) {
          * There are two cases:
          *
          * 1) x >= 0 : It means frame is completely visible and centered horizontally.
-         *             In this case minX/maxX = x (ie. no movement possible).
+         *             In this case both minX,maxX = x (ie. no movement possible).
 
          * 2) x < 0  : Here, 'scaled frame width' > 'viewport width'. In this case
          *             minX is negative and maxX = 0.
          *
-         * minY/maxY are calculated similarly.
+         * minY,maxY are calculated similarly.
          */
         val minX = if (x >= 0) x else fs.vpWidth - (fs.fbWidth * fs.scale)
         val maxX = if (x >= 0) x else 0F

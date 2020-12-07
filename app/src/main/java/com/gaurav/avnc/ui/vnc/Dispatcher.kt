@@ -150,10 +150,10 @@ class Dispatcher(private val viewModel: VncViewModel) {
      *                      for the event, we send that directly. This works well with servers
      *                      which ignore the state of Shift key.
      *
-     *   Without unicode char: In this case we use key code. But before sending them they
+     *   Without unicode char: In this case we use key code. But before sending, they
      *                      are translated to X KeySyms in native code.
      *
-     * Note: [KeyEvent.KEYCODE_ENTER] is treated specially because Android returns a
+     * Note: [KeyEvent.KEYCODE_ENTER] is treated differently because Android returns a
      *       Unicode symbol for it.
      */
     private fun doSendKey(event: KeyEvent) {
