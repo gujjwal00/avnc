@@ -285,14 +285,9 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         if (newState == VncClient.State.Connected) {
             sendClipboardText() //Initial sync
 
-            async {
-                //If user has asked to remember credential then Credential Dialog
-                //will put them in current profile.
-                //So, if profile is not new, we save it to db.
-                //TODO: Review again
-                if (profile.ID != 0L) {
-                    serverProfileDao.update(profile)
-                }
+            //Save any changes to profile. Right now this is used to "remember" credentials.
+            if (profile.ID != 0L) async {
+                serverProfileDao.update(profile)
             }
         }
     }

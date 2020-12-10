@@ -30,4 +30,17 @@ interface ServerProfileDao {
 
     @Delete
     fun delete(profile: ServerProfile)
+
+    /**
+     * Update given profile if it already exists in database,
+     * otherwise inserts a new profile.
+     */
+    fun insertOrUpdate(profile: ServerProfile): Long {
+        if (profile.ID == 0L) {
+            return insert(profile)
+        } else {
+            update(profile)
+            return profile.ID
+        }
+    }
 }
