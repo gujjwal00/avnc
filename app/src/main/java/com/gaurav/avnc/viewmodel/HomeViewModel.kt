@@ -11,9 +11,7 @@ package com.gaurav.avnc.viewmodel
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.gaurav.avnc.model.Bookmark
-import com.gaurav.avnc.model.Recent
-import com.gaurav.avnc.model.VncProfile
+import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.vnc.Discovery
 
 class HomeViewModel(app: Application) : BaseViewModel(app) {
@@ -23,14 +21,9 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     val serverUrl = MutableLiveData("")
 
     /**
-     * Bookmark list
+     * [ServerProfile]s stored in database.
      */
-    val bookmarks by lazy { bookmarkDao.getAll() }
-
-    /**
-     * Recent connections list
-     */
-    val recents by lazy { recentDao.getAll() }
+    val serverProfiles by lazy { serverProfileDao.getAll() }
 
     /**
      * Used to find new servers.
@@ -38,75 +31,64 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     val discovery by lazy { Discovery(app) }
 
     /**
-     * This event is used for editing/creating bookmarks.
+     * This event is used for editing/creating server profiles.
      *
-     * Home activity observes this event and shows Bookmark editor when it is set.
-     * Bookmark editor will update/insert the Bookmark instance of this event to database.
+     * Home activity observes this event and starts profile editor when it is fired.
      */
-    val bookmarkEditEvent = LiveEvent<Bookmark>()
+    val profileEditEvent = LiveEvent<ServerProfile>()
 
     /**
-     * Used for notifying observers when a bookmark is deleted.
+     * Used for notifying observers when a profile is deleted.
      * This is used for notifying the user and potentially
      * undo this deletion.
      */
-    val bookmarkDeletedEvent = LiveEvent<Bookmark>()
+    val profileDeletedEvent = LiveEvent<ServerProfile>()
 
     /**
      * Used for starting new VNC connections.
      */
-    val newConnectionEvent = LiveEvent<Bookmark>()
+    val newConnectionEvent = LiveEvent<ServerProfile>()
 
     /**
-     * Starts creating a new bookmark based on the given source.
+     * Starts creating a new server profile.
      */
-    fun onNewBookmark(source: Bookmark = Bookmark()) = onEditBookmark(source)
+    fun onNewProfile(source: ServerProfile = ServerProfile()) = onEditProfile(source)
 
     /**
-     * Starts editing given bookmark.
+     * Starts editing given profile.
      */
-    fun onEditBookmark(bookmark: Bookmark) = bookmarkEditEvent.set(bookmark)
+    fun onEditProfile(profile: ServerProfile) = profileEditEvent.set(profile)
 
     /**
-     * Starts creating a copy of the given bookmark.
+     * Starts creating a copy of the given profile.
      */
-    fun onDuplicateBookmark(original: Bookmark) {
-        val duplicate = original.copy(ID = 0, profile = original.profile.copy())
-        duplicate.profile.displayName += " (Copy)"
-        onEditBookmark(duplicate)
+    fun onDuplicateProfile(original: ServerProfile) {
+        val duplicate = original.copy(ID = 0)
+        duplicate.name += " (Copy)"
+        onEditProfile(duplicate)
     }
+
+    /**
+     * Saves given profile in database asynchronously.
+     */
+    fun saveProfile(profile: ServerProfile) = async {
+        if (profile.ID == 0L)
+            serverProfileDao.insert(profile)
+        else
+            serverProfileDao.update(profile)
+    }
+
+    /**
+     * Deletes given profile
+     */
+    fun deleteProfile(profile: ServerProfile) = async({ serverProfileDao.delete(profile) }, {
+        profileDeletedEvent.set(profile)
+    })
 
     /**
      * Starts new connection to given profile.
      */
-    fun startConnection(vncProfile: VncProfile) = startConnection(Bookmark(profile = vncProfile))
-
-    /**
-     * Starts new connection to given bookmark.
-     */
-    fun startConnection(bookmark: Bookmark) = newConnectionEvent.set(bookmark)
-
-    /**
-     * Inserts given bookmark in database asynchronously.
-     */
-    fun insertBookmark(bookmark: Bookmark) = async { bookmarkDao.insert(bookmark) }
-
-    /**
-     * Updates given bookmark asynchronously.
-     */
-    fun updateBookmark(bookmark: Bookmark) = async { bookmarkDao.update(bookmark) }
-
-    /**
-     * Deletes given bookmark
-     */
-    fun deleteBookmark(bookmark: Bookmark) = async({ bookmarkDao.delete(bookmark) }, {
-        bookmarkDeletedEvent.set(bookmark)
-    })
-
-    /**
-     * Deletes given Recent entity asynchronously.
-     */
-    fun deleteRecent(recent: Recent) = async { recentDao.delete(recent) }
+    fun startConnection(profile: ServerProfile) = newConnectionEvent.set(profile)
 
     /**
      * Starts discovery service

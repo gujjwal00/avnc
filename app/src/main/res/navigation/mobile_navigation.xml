@@ -10,19 +10,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_bookmarks">
+    app:startDestination="@+id/nav_servers">
 
     <fragment
-        android:id="@+id/nav_bookmarks"
-        android:name="com.gaurav.avnc.ui.home.BookmarksFragment"
-        android:label="@string/title_bookmarks"
-        tools:layout="@layout/fragment_bookmarks" />
-
-    <fragment
-        android:id="@+id/nav_recents"
-        android:name="com.gaurav.avnc.ui.home.RecentsFragment"
-        android:label="@string/title_recents"
-        tools:layout="@layout/fragment_recents" />
+        android:id="@+id/nav_servers"
+        android:name="com.gaurav.avnc.ui.home.ServersFragment"
+        android:label="@string/title_servers"
+        tools:layout="@layout/fragment_servers" />
 
     <fragment
         android:id="@+id/nav_discovery"

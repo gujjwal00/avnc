@@ -16,12 +16,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ItemServerBinding
-import com.gaurav.avnc.model.Bookmark
-import com.gaurav.avnc.model.VncProfile
+import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.viewmodel.HomeViewModel
 
 class DiscoveryAdapter(val viewModel: HomeViewModel) :
-        ListAdapter<VncProfile, DiscoveryAdapter.ViewHolder>(Differ) {
+        ListAdapter<ServerProfile, DiscoveryAdapter.ViewHolder>(Differ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -34,7 +33,7 @@ class DiscoveryAdapter(val viewModel: HomeViewModel) :
     }
 
     inner class ViewHolder(binding: ItemServerBinding) :
-            BaseViewHolder<VncProfile, ItemServerBinding>(binding) {
+            BaseViewHolder<ServerProfile, ItemServerBinding>(binding) {
         override val menuId = R.menu.discovered_server_menu
 
         override fun onClick(view: View) {
@@ -45,20 +44,19 @@ class DiscoveryAdapter(val viewModel: HomeViewModel) :
          * Handle context menu events
          */
         override fun onContextOptionClick(item: MenuItem): Boolean {
-            val server = binding.viewModel!!
+            val profile = binding.viewModel!!
 
             when (item.itemId) {
-                R.id.add_bookmark -> viewModel.onNewBookmark(Bookmark(profile = server.copy()))
-                R.id.copy_name -> viewModel.toClipboard(server.displayName)
-                R.id.copy_address -> viewModel.toClipboard(server.host)
+                R.id.copy_name -> viewModel.toClipboard(profile.name)
+                R.id.copy_address -> viewModel.toClipboard(profile.address)
             }
 
             return true
         }
     }
 
-    object Differ : DiffUtil.ItemCallback<VncProfile>() {
-        override fun areItemsTheSame(old: VncProfile, new: VncProfile) = (old.host == new.host)
-        override fun areContentsTheSame(old: VncProfile, new: VncProfile) = (old == new)
+    object Differ : DiffUtil.ItemCallback<ServerProfile>() {
+        override fun areItemsTheSame(old: ServerProfile, new: ServerProfile) = (old.address == new.address)
+        override fun areContentsTheSame(old: ServerProfile, new: ServerProfile) = (old == new)
     }
 }

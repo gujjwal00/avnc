@@ -18,8 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
-import com.gaurav.avnc.model.Bookmark
-import com.gaurav.avnc.model.VncProfile
+import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.vnc.gl.Renderer
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.VncUri
@@ -31,7 +30,7 @@ import java.lang.ref.WeakReference
 class VncActivity : AppCompatActivity() {
 
     object KEY {
-        const val BOOKMARK = "com.gaurav.avnc.bookmark"
+        const val PROFILE = "com.gaurav.avnc.server_profile"
     }
 
     val viewModel by viewModels<VncViewModel>()
@@ -55,7 +54,7 @@ class VncActivity : AppCompatActivity() {
         viewModel.credentialRequiredEvent.observe(this) { showCredentialDialog() }
 
         //Should be called after observers has been installed
-        viewModel.connect(getBookmark())
+        viewModel.connect(getProfile())
 
         binding.kbToggle.setOnClickListener { toggleKb() }
     }
@@ -66,26 +65,25 @@ class VncActivity : AppCompatActivity() {
     }
 
     /**
-     * Extracts Bookmark from Intent.
+     * Extracts profile from Intent.
      *
      * Currently there are two sources of [VncActivity] start:
      *  1. HomeActivity
      *  2. VNC Uri Intent
      */
-    private fun getBookmark(): Bookmark {
+    private fun getProfile(): ServerProfile {
 
-        val bookmark = intent.getParcelableExtra<Bookmark>(KEY.BOOKMARK)
-        if (bookmark != null) {
-            return bookmark
+        val profile = intent.getParcelableExtra<ServerProfile>(KEY.PROFILE)
+        if (profile != null) {
+            return profile
         }
 
         if (intent.data?.scheme == "vnc") {
-            val vncProfile = VncProfile(VncUri(intent.data!!))
-            return Bookmark(profile = vncProfile)
+            return ServerProfile(VncUri(intent.data!!))
         }
 
         Log.e(javaClass.simpleName, "No connection information was passed through Intent.")
-        return Bookmark()
+        return ServerProfile()
     }
 
     private fun showCredentialDialog() {

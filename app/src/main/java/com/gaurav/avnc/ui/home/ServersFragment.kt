@@ -18,30 +18,30 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gaurav.avnc.R
-import com.gaurav.avnc.databinding.FragmentBookmarksBinding
-import com.gaurav.avnc.ui.home.adapter.BookmarksAdapter
+import com.gaurav.avnc.databinding.FragmentServersBinding
+import com.gaurav.avnc.ui.home.adapter.ServersAdapter
 import com.gaurav.avnc.viewmodel.HomeViewModel
 
 /**
- * Fragment for displaying list of bookmarks.
+ * Fragment for displaying list of known servers.
  */
-class BookmarksFragment : Fragment() {
+class ServersFragment : Fragment() {
     val viewModel by activityViewModels<HomeViewModel>()
-    private lateinit var binding: FragmentBookmarksBinding
+    private lateinit var binding: FragmentServersBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bookmarks, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_servers, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        val adapter = BookmarksAdapter(viewModel)
-        binding.bookmarksRv.layoutManager = LinearLayoutManager(context)
-        binding.bookmarksRv.adapter = adapter
-        binding.bookmarksRv.setHasFixedSize(true)
+        val adapter = ServersAdapter(viewModel)
+        binding.serversRv.layoutManager = LinearLayoutManager(context)
+        binding.serversRv.adapter = adapter
+        binding.serversRv.setHasFixedSize(true)
 
-        binding.newBookmarkFab.setOnClickListener { viewModel.onNewBookmark() }
+        binding.newProfileFab.setOnClickListener { viewModel.onNewProfile() }
 
-        viewModel.bookmarks.observe(viewLifecycleOwner, Observer { adapter.submitList(it) })
+        viewModel.serverProfiles.observe(viewLifecycleOwner, Observer { adapter.submitList(it) })
 
         return binding.root
     }

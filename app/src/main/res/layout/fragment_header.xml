@@ -60,7 +60,7 @@
                 android:layout_gravity="center"
                 android:background="@android:color/transparent"
                 android:gravity="center"
-                android:hint="@string/header_url_hint"
+                android:hint="@string/hint_header_url"
                 android:imeOptions="actionGo"
                 android:importantForAutofill="no"
                 android:inputType="textUri"

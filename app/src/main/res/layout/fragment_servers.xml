@@ -20,12 +20,12 @@
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/bookmarks_rv"
+            android:id="@+id/servers_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/new_bookmark_fab"
+            android:id="@+id/new_profile_fab"
             style="@style/Fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

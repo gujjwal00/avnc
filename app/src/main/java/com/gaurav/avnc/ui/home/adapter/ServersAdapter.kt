@@ -15,19 +15,19 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.gaurav.avnc.R
-import com.gaurav.avnc.databinding.ItemBookmarkBinding
-import com.gaurav.avnc.model.Bookmark
+import com.gaurav.avnc.databinding.ItemServerBinding
+import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.viewmodel.HomeViewModel
 
 /**
- * Adapter for Bookmarks RV
+ * Adapter for known servers
  */
-class BookmarksAdapter(val viewModel: HomeViewModel)
-    : ListAdapter<Bookmark, BookmarksAdapter.ViewHolder>(Differ) {
+class ServersAdapter(val viewModel: HomeViewModel)
+    : ListAdapter<ServerProfile, ServersAdapter.ViewHolder>(Differ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemBookmarkBinding.inflate(inflater, parent, false)
+        val binding = ItemServerBinding.inflate(inflater, parent, false)
         return ViewHolder(binding)
     }
 
@@ -36,10 +36,10 @@ class BookmarksAdapter(val viewModel: HomeViewModel)
     }
 
     /**
-     * Bookmark View Holder
+     * Profile View Holder
      */
-    inner class ViewHolder(binding: ItemBookmarkBinding) : BaseViewHolder<Bookmark, ItemBookmarkBinding>(binding) {
-        override val menuId = R.menu.bookmark_item_menu
+    inner class ViewHolder(binding: ItemServerBinding) : BaseViewHolder<ServerProfile, ItemServerBinding>(binding) {
+        override val menuId = R.menu.server_profile_menu
 
         override fun onClick(view: View) {
             viewModel.startConnection(binding.viewModel!!)
@@ -49,21 +49,21 @@ class BookmarksAdapter(val viewModel: HomeViewModel)
          * Handle context menu events
          */
         override fun onContextOptionClick(item: MenuItem): Boolean {
-            val bookmark = binding.viewModel!!
+            val profile = binding.viewModel!!
 
             when (item.itemId) {
-                R.id.edit -> viewModel.onEditBookmark(bookmark)
-                R.id.duplicate -> viewModel.onDuplicateBookmark(bookmark)
-                R.id.delete -> viewModel.deleteBookmark(bookmark)
-                R.id.copy_address -> viewModel.toClipboard(bookmark.profile.host)
+                R.id.edit -> viewModel.onEditProfile(profile)
+                R.id.duplicate -> viewModel.onDuplicateProfile(profile)
+                R.id.delete -> viewModel.deleteProfile(profile)
+                R.id.copy_address -> viewModel.toClipboard(profile.address)
             }
 
             return true
         }
     }
 
-    object Differ : DiffUtil.ItemCallback<Bookmark>() {
-        override fun areItemsTheSame(old: Bookmark, new: Bookmark) = (old.ID == new.ID)
-        override fun areContentsTheSame(old: Bookmark, new: Bookmark) = (old == new)
+    object Differ : DiffUtil.ItemCallback<ServerProfile>() {
+        override fun areItemsTheSame(old: ServerProfile, new: ServerProfile) = (old.ID == new.ID)
+        override fun areContentsTheSame(old: ServerProfile, new: ServerProfile) = (old == new)
     }
 }

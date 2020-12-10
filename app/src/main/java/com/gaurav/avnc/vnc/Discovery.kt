@@ -13,7 +13,7 @@ import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.gaurav.avnc.model.VncProfile
+import com.gaurav.avnc.model.ServerProfile
 import kotlinx.coroutines.*
 
 /**
@@ -30,7 +30,7 @@ class Discovery(private val context: Context) {
      * List of found servers.
      * This will be automatically updated as servers are found/lost.
      */
-    val servers = MutableLiveData(ArrayList<VncProfile>())
+    val servers = MutableLiveData(ArrayList<ServerProfile>())
 
     /**
      * Status of discovery.
@@ -103,9 +103,9 @@ class Discovery(private val context: Context) {
      * Adds a new profile with given details to list.
      */
     private fun addProfile(name: String, host: String, port: Int) {
-        val profile = VncProfile().apply {
-            this.displayName = name
-            this.host = host
+        val profile = ServerProfile().apply {
+            this.name = name
+            this.address = host
             this.port = port
         }
 
@@ -126,7 +126,7 @@ class Discovery(private val context: Context) {
     private fun removeProfile(name: String) {
         runBlocking(Dispatchers.Main) {
             val newList = ArrayList(servers.value!!)
-            val profiles = newList.filter { it.displayName == name }
+            val profiles = newList.filter { it.name == name }
             newList.removeAll(profiles)
             servers.value = newList
         }

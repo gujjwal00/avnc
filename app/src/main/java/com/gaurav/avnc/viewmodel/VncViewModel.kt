@@ -11,7 +11,7 @@ package com.gaurav.avnc.viewmodel
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.gaurav.avnc.model.Bookmark
+import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.vnc.FrameState
 import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.vnc.Messenger
@@ -22,7 +22,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
-import java.util.*
 import java.util.concurrent.LinkedBlockingQueue
 
 /**
@@ -74,22 +73,9 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     val clientState = MutableLiveData(client.state)
 
     /**
-     * Bookmark used for current connection.
-     *
-     * Even though only [profile] is required for connection, we require that all
-     * connection request to [connect] comes in form of a [Bookmark]. This unifies
-     * information flow from HomeActivity to VncActivity and allows to save
-     * credential in bookmark.
-     *
-     * For connection which are not started from a real bookmark (ex: from Recent)
-     * this will simply wrap that profile.
+     * [ServerProfile] used for current connection.
      */
-    var bookmark = Bookmark()
-
-    /**
-     * Profile used for current connection.
-     */
-    val profile; get() = bookmark.profile
+    var profile = ServerProfile()
 
     /**
      * Fired when [VncClient] has asked for credential. It is used to
@@ -113,10 +99,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     /**
      * List of known credentials. Used for providing suggestion when
      * new credentials are required.
-     *
-     * For simplicity, we are only retrieving credentials from bookmarks table.
      */
-    val knownCredentials by lazy { bookmarkDao.getCredentials() }
+    val knownCredentials by lazy { serverProfileDao.getCredentials() }
 
     /**
      * Holds a weak reference to [FrameView] instance.
@@ -162,14 +146,14 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     private var initialized = false
 
     /**
-     * Initialize VNC connection using profile from given bookmark.
+     * Initialize VNC connection using given profile.
      */
-    fun connect(bookmark: Bookmark) {
+    fun connect(profile: ServerProfile) {
         if (initialized)
             return
 
         initialized = true
-        this.bookmark = bookmark
+        this.profile = profile
 
         launchConnection()
     }
@@ -179,7 +163,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
             try {
 
-                if (client.connect(profile.host, profile.port)) {
+                if (client.connect(profile.address, profile.port)) {
                     while (isActive && client.processServerMessage()) {
                         //Message Loop
                     }
@@ -302,13 +286,12 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
             sendClipboardText() //Initial sync
 
             async {
-                recentDao.insert(bookmark.toRecent().apply { connectedAt = Date().time })
-
                 //If user has asked to remember credential then Credential Dialog
-                //will put them in current profile (associated with bookmark).
-                //So, if bookmark is real, we save it to db.
-                if (bookmark.ID != 0L) {
-                    bookmarkDao.update(bookmark)
+                //will put them in current profile.
+                //So, if profile is not new, we save it to db.
+                //TODO: Review again
+                if (profile.ID != 0L) {
+                    serverProfileDao.update(profile)
                 }
             }
         }

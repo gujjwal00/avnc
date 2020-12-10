@@ -76,7 +76,7 @@
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:contentDescription="@string/description_disconnected_icon"
+                android:contentDescription="@string/desc_disconnected_icon"
                 android:src="@drawable/ic_warning"
                 android:tint="?attr/colorError"
                 app:isVisible="@{viewModel.clientState == State.Disconnected}"

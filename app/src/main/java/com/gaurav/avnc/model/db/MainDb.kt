@@ -12,13 +12,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.gaurav.avnc.model.Bookmark
-import com.gaurav.avnc.model.Recent
+import com.gaurav.avnc.model.ServerProfile
 
-@Database(entities = [Bookmark::class, Recent::class], version = 1)
+@Database(entities = [ServerProfile::class], version = 1)
 abstract class MainDb : RoomDatabase() {
-    abstract val bookmarkDao: BookmarkDao
-    abstract val recentDao: RecentDao
+    abstract val serverProfileDao: ServerProfileDao
 
     companion object {
         /**

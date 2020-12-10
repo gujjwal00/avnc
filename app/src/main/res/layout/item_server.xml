@@ -12,7 +12,7 @@
 
         <variable
             name="viewModel"
-            type="com.gaurav.avnc.model.VncProfile" />
+            type="com.gaurav.avnc.model.ServerProfile" />
     </data>
 
     <FrameLayout
@@ -23,13 +23,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.displayName}" />
+            android:text="@{viewModel.name}" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="@{viewModel.host}" />
+            android:text="@{viewModel.address}" />
     </FrameLayout>
 
 </layout>

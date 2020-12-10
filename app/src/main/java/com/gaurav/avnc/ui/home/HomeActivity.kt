@@ -20,8 +20,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityHomeBinding
-import com.gaurav.avnc.model.Bookmark
-import com.gaurav.avnc.model.VncProfile
+import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.prefs.PrefsActivity
 import com.gaurav.avnc.ui.vnc.VncActivity
 import com.gaurav.avnc.viewmodel.HomeViewModel
@@ -30,8 +29,7 @@ import com.google.android.material.snackbar.Snackbar
 /**
  * Primary activity of the app.
  *
- * It Provides access to bookmarks, recently connections and automatically
- * discovered servers. Most of these tasks are delegated to separate fragments.
+ * It Provides access to saved and discovered servers.
  */
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
@@ -49,8 +47,8 @@ class HomeActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.navView, navController)
 
         //Observers
-        viewModel.bookmarkEditEvent.observe(this) { showBookmarkEditor() }
-        viewModel.bookmarkDeletedEvent.observe(this) { showBookmarkDeletedMsg(it) }
+        viewModel.profileEditEvent.observe(this) { showProfileEditor() }
+        viewModel.profileDeletedEvent.observe(this) { showProfileDeletedMsg(it) }
         viewModel.newConnectionEvent.observe(this) { startVncActivity(it) }
         viewModel.discovery.servers.observe(this, Observer { updateDiscoveryBadge(it) })
 
@@ -85,34 +83,34 @@ class HomeActivity : AppCompatActivity() {
     }
 
     /**
-     * Starts Bookmark editor dialog.
+     * Starts profile editor fragment.
      */
-    private fun showBookmarkEditor() {
-        BookmarkEditorFragment().show(supportFragmentManager, "BookmarkEditor")
+    private fun showProfileEditor() {
+        ProfileEditorFragment().show(supportFragmentManager, "ProfileEditor")
     }
 
     /**
      * Shows delete confirmation snackbar.
      */
-    private fun showBookmarkDeletedMsg(bookmark: Bookmark) {
-        Snackbar.make(binding.root, getString(R.string.msg_bookmark_deleted), Snackbar.LENGTH_LONG)
-                .setAction(getString(R.string.title_undo)) { viewModel.insertBookmark(bookmark) }
+    private fun showProfileDeletedMsg(profile: ServerProfile) {
+        Snackbar.make(binding.root, getString(R.string.msg_server_profile_deleted), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.title_undo)) { viewModel.saveProfile(profile) }
                 .show()
     }
 
     /**
-     * Starts VNC Activity with given bookmark.
+     * Starts VNC Activity with given profile.
      */
-    private fun startVncActivity(bookmark: Bookmark) {
+    private fun startVncActivity(profile: ServerProfile) {
         val intent = Intent(this, VncActivity::class.java)
-        intent.putExtra(VncActivity.KEY.BOOKMARK, bookmark)
+        intent.putExtra(VncActivity.KEY.PROFILE, profile)
         startActivity(intent)
     }
 
     /**
      * Show number of found servers as badge.
      */
-    private fun updateDiscoveryBadge(list: List<VncProfile>) {
+    private fun updateDiscoveryBadge(list: List<ServerProfile>) {
         if (list.isNotEmpty()) {
             binding.navView.getOrCreateBadge(R.id.nav_discovery).number = list.size
         } else {

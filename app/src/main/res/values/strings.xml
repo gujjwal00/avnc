@@ -8,20 +8,8 @@
 
 <resources>
     <string name="app_name">aVNC</string>
-    <string name="title_bookmarks">Bookmarks</string>
-    <string name="title_recents">Recents</string>
-    <string name="title_discovery">Discovery</string>
-    <string name="header_url_hint">Enter URL</string>
-    <string name="label_name">Name</string>
-    <string name="label_host">Host</string>
-    <string name="label_port">Port</string>
-    <string name="label_username">Username</string>
-    <string name="label_password">Password</string>
-    <string name="label_view_only_mode">View-only mode</string>
-    <string name="label_color_quality">Color quality</string>
-    <string name="label_image_quality">Image quality</string>
-    <string name="label_security_type">Security type</string>
-    <string name="title_new_bookmark">New Bookmark</string>
+
+    <string name="title_new_server_profile">New Server</string>
     <string name="title_duplicate">Duplicate</string>
     <string name="title_edit">Edit</string>
     <string name="title_delete">Delete</string>
@@ -31,17 +19,32 @@
     <string name="title_more">More</string>
     <string name="title_save">Save</string>
     <string name="title_less">Less</string>
-    <string name="hint_host">Ex: 192.168.43.10</string>
     <string name="title_settings">Settings</string>
-    <string name="msg_bookmark_deleted">Bookmark deleted.</string>
-    <string name="title_edit_bookmark">Edit Bookmark</string>
+    <string name="title_edit_server_profile">Edit Server</string>
     <string name="title_undo">Undo</string>
-    <string name="title_add_bookmark">Bookmark</string>
     <string name="title_cancel">Cancel</string>
-    <string name="desc_connect_btn">Connect to this URL</string>
-    <string name="hint_optional">Optional</string>
     <string name="title_credentials_required">Credentials required</string>
-    <string name="description_disconnected_icon">Disconnected state indicator icon</string>
+    <string name="title_remember">Remember</string>
+    <string name="title_servers">Servers</string>
+    <string name="title_discovery">Discovery</string>
+
+    <string name="label_name">Name</string>
+    <string name="label_host">Host</string>
+    <string name="label_port">Port</string>
+    <string name="label_username">Username</string>
+    <string name="label_password">Password</string>
+    <string name="label_view_only_mode">View-only mode</string>
+    <string name="label_color_quality">Color quality</string>
+    <string name="label_image_quality">Image quality</string>
+    <string name="label_security_type">Security type</string>
+
+    <string name="hint_header_url">Enter URL</string>
+    <string name="hint_host">Ex: 192.168.43.10</string>
+    <string name="hint_optional">Optional</string>
+
+    <string name="msg_server_profile_deleted">Server deleted.</string>
+    <string name="desc_disconnected_icon">Disconnected state indicator icon</string>
+    <string name="desc_connect_btn">Connect to this URL</string>
 
     <!-- Preference -->
     <string name="title_pref_activity">Settings</string>
@@ -59,5 +62,4 @@
     <string name="title_pref_credential">Credentials</string>
     <string name="title_pref_cred_autocomplete">Enable Autocomplete</string>
     <string name="title_pref_cred_autocomplete_summary">Reuse already known credentials</string>
-    <string name="title_remember">Remember</string>
 </resources>

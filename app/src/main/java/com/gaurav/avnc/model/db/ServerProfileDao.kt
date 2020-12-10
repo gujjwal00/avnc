@@ -10,24 +10,24 @@ package com.gaurav.avnc.model.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.gaurav.avnc.model.Bookmark
+import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.vnc.UserCredential
 
 @Dao
-interface BookmarkDao {
+interface ServerProfileDao {
 
-    @Query("SELECT * FROM bookmarks")
-    fun getAll(): LiveData<List<Bookmark>>
+    @Query("SELECT * FROM profiles")
+    fun getAll(): LiveData<List<ServerProfile>>
 
-    @Query("SELECT username, password FROM bookmarks")
+    @Query("SELECT username, password FROM profiles")
     fun getCredentials(): LiveData<List<UserCredential>>
 
     @Insert
-    fun insert(bookmark: Bookmark): Long
+    fun insert(profile: ServerProfile): Long
 
     @Update
-    fun update(bookmark: Bookmark)
+    fun update(profile: ServerProfile)
 
     @Delete
-    fun delete(bookmark: Bookmark)
+    fun delete(profile: ServerProfile)
 }

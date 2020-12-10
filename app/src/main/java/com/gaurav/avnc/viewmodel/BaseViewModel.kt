@@ -31,9 +31,7 @@ open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
      */
     protected val db by lazy { MainDb.getInstance(app) }
 
-    protected val bookmarkDao by lazy { db.bookmarkDao }
-
-    protected val recentDao by lazy { db.recentDao }
+    protected val serverProfileDao by lazy { db.serverProfileDao }
 
     protected val clipboard by lazy { app.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager }
 

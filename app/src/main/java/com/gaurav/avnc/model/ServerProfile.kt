@@ -9,25 +9,31 @@
 package com.gaurav.avnc.model
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.gaurav.avnc.vnc.VncUri
 import kotlinx.android.parcel.Parcelize
 
 /**
- * This class contains information about a remote VNC server.
+ * This class holds connection configuration of a remote VNC server.
  */
 @Parcelize
-data class VncProfile(
+@Entity(tableName = "profiles")
+data class ServerProfile(
+
+        @PrimaryKey(autoGenerate = true)
+        var ID: Long = 0,
 
         /**
          * Descriptive name of the server (ex: 'Kitchen PC').
          */
-        var displayName: String = "",
+        var name: String = "",
 
         /**
          * Internet address of the server. This can be hostname or IP address.
          * It does not contain the port number.
          */
-        var host: String = "",
+        var address: String = "",
 
         /**
          * Port number of the remote server.
@@ -81,8 +87,8 @@ data class VncProfile(
      * Construct from [VncUri]
      */
     constructor(uri: VncUri) : this() {
-        displayName = uri.connectionName
-        host = uri.host
+        name = uri.connectionName
+        address = uri.host
         port = uri.port
         username = uri.username
         password = uri.password

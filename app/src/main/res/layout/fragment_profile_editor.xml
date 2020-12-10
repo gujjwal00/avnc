@@ -12,13 +12,12 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="com.gaurav.avnc.model.VncProfile" />
+            name="profile"
+            type="com.gaurav.avnc.model.ServerProfile" />
 
         <variable
             name="showAll"
             type="boolean" />
-
     </data>
 
     <ScrollView
@@ -39,23 +38,23 @@
 
             <!-- ~~~~~~~~~~~~~~~~~~~~ Normal Options ~~~~~~~~~~~~~~~~~~ -->
 
-            <!--Bookmark name-->
+            <!--Name-->
             <TableRow>
 
                 <TextView
                     style="@style/FormLabel"
-                    android:labelFor="@id/bookmark_name"
+                    android:labelFor="@id/server_name"
                     android:text="@string/label_name" />
 
                 <EditText
-                    android:id="@+id/bookmark_name"
+                    android:id="@+id/server_name"
                     style="@style/FormField"
                     android:importantForAutofill="no"
                     android:inputType="text"
-                    android:text="@={viewModel.displayName}" />
+                    android:text="@={profile.name}" />
             </TableRow>
 
-            <!--Host-->
+            <!--Address-->
             <TableRow>
 
                 <TextView
@@ -67,7 +66,7 @@
                     android:hint="@string/hint_host"
                     android:importantForAutofill="no"
                     android:inputType="textUri"
-                    android:text="@={viewModel.host}" />
+                    android:text="@={profile.address}" />
             </TableRow>
 
             <!--Port-->
@@ -83,7 +82,7 @@
                     style="@style/FormField"
                     android:importantForAutofill="no"
                     android:inputType="number"
-                    android:text='@={"" +  viewModel.port}' />
+                    android:text='@={"" +  profile.port}' />
             </TableRow>
 
             <!--Username-->
@@ -98,7 +97,7 @@
                     android:autofillHints="username"
                     android:hint="@string/hint_optional"
                     android:inputType="text"
-                    android:text="@={viewModel.username}" />
+                    android:text="@={profile.username}" />
             </TableRow>
 
             <!--Password-->
@@ -113,7 +112,7 @@
                     android:autofillHints="password"
                     android:hint="@string/hint_optional"
                     android:inputType="textPassword"
-                    android:text="@={viewModel.password}" />
+                    android:text="@={profile.password}" />
             </TableRow>
 
             <!-- ~~~~~~~~~~~~~~~~~~~~ Advanced Options ~~~~~~~~~~~~~~~~~~ -->
@@ -126,7 +125,7 @@
 
                 <CheckBox
                     style="@style/FormField"
-                    android:checked="@={viewModel.viewOnly}"
+                    android:checked="@={profile.viewOnly}"
                     android:text="@string/label_view_only_mode" />
             </TableRow>
 

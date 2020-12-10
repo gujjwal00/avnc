@@ -15,7 +15,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.gaurav.avnc.databinding.FragmentHeaderBinding
-import com.gaurav.avnc.model.VncProfile
+import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.gaurav.avnc.vnc.VncUri
 
@@ -46,7 +46,7 @@ class HeaderFragment : Fragment() {
         if (uri.isBlank())
             return
 
-        val profile = VncProfile(VncUri(uri))
+        val profile = ServerProfile(VncUri(uri))
         viewModel.startConnection(profile)
     }
 }
