@@ -29,7 +29,9 @@ class CredentialFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = FragmentCredentialBinding.inflate(layoutInflater, null, false)
+
         binding.usernameRequired = viewModel.credentialRequiredEvent.value
+        binding.canRemember = viewModel.profile.ID != 0L
 
         setupAutoComplete()
 
