@@ -12,5 +12,6 @@
     <dimen name="padding_normal">10dp</dimen>
     <dimen name="padding_small">5dp</dimen>
     <dimen name="list_item_height">64dp</dimen>
+    <dimen name="action_btn_size">48dp</dimen>
 
 </resources>

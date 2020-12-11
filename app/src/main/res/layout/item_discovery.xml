@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.gaurav.avnc.model.ServerProfile" />
+    </data>
+
+    <FrameLayout
+        style="@style/ListItem"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_item_height">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.name}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="@{viewModel.address}" />
+
+        <ImageButton
+            android:id="@+id/add"
+            android:layout_width="@dimen/action_btn_size"
+            android:layout_height="@dimen/action_btn_size"
+            android:layout_gravity="end|center_vertical"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/desc_add_server_btn"
+            android:src="@drawable/ic_plus" />
+    </FrameLayout>
+</layout>

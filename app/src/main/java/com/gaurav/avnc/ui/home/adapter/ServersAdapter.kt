@@ -9,8 +9,6 @@
 package com.gaurav.avnc.ui.home.adapter
 
 import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -23,43 +21,16 @@ import com.gaurav.avnc.viewmodel.HomeViewModel
  * Adapter for known servers
  */
 class ServersAdapter(val viewModel: HomeViewModel)
-    : ListAdapter<ServerProfile, ServersAdapter.ViewHolder>(Differ) {
+    : ListAdapter<ServerProfile, ProfileViewHolder>(Differ) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemServerBinding.inflate(inflater, parent, false)
-        return ViewHolder(binding)
+        return ProfileViewHolder(viewModel, binding, R.menu.server_profile_menu)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {
         holder.bind(getItem(position))
-    }
-
-    /**
-     * Profile View Holder
-     */
-    inner class ViewHolder(binding: ItemServerBinding) : BaseViewHolder<ServerProfile, ItemServerBinding>(binding) {
-        override val menuId = R.menu.server_profile_menu
-
-        override fun onClick(view: View) {
-            viewModel.startConnection(binding.viewModel!!)
-        }
-
-        /**
-         * Handle context menu events
-         */
-        override fun onContextOptionClick(item: MenuItem): Boolean {
-            val profile = binding.viewModel!!
-
-            when (item.itemId) {
-                R.id.edit -> viewModel.onEditProfile(profile)
-                R.id.duplicate -> viewModel.onDuplicateProfile(profile)
-                R.id.delete -> viewModel.deleteProfile(profile)
-                R.id.copy_address -> viewModel.toClipboard(profile.address)
-            }
-
-            return true
-        }
     }
 
     object Differ : DiffUtil.ItemCallback<ServerProfile>() {
