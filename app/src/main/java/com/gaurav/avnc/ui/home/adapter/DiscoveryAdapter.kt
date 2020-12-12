@@ -38,11 +38,15 @@ class DiscoveryAdapter(val viewModel: HomeViewModel) : ListAdapter<ServerProfile
         init {
             binding.add.setOnClickListener { viewModel.onNewProfile(profile) }
         }
-
     }
 
+    /**
+     * This is slightly different then [ServersAdapter.Differ] because all profiles generated
+     * by service discovery have same ID (0) & all discovered servers are unique. So we
+     * compare the whole profile instead of a particular field.
+     */
     object Differ : DiffUtil.ItemCallback<ServerProfile>() {
-        override fun areItemsTheSame(old: ServerProfile, new: ServerProfile) = (old.address == new.address)
+        override fun areItemsTheSame(old: ServerProfile, new: ServerProfile) = (old == new)
         override fun areContentsTheSame(old: ServerProfile, new: ServerProfile) = (old == new)
     }
 }
