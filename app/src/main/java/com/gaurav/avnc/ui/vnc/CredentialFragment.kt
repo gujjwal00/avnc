@@ -73,8 +73,8 @@ class CredentialFragment : DialogFragment() {
             return
 
         viewModel.knownCredentials.observe(this, Observer { list ->
-            val usernames = list.map { it.username }.filter { it.isNotBlank() }
-            val passwords = list.map { it.password }.filter { it.isNotBlank() }
+            val usernames = list.map { it.username }.filter { it.isNotBlank() }.distinct()
+            val passwords = list.map { it.password }.filter { it.isNotBlank() }.distinct()
 
             val usernameAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, usernames)
             val passwordAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, passwords)
