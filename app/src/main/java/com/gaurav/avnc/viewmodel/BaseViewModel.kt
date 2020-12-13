@@ -41,7 +41,7 @@ open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
     /**
      * Puts given text on clipboard.
      */
-    fun toClipboard(text: String) {
+    fun setClipboardText(text: String) {
         viewModelScope.launch(Dispatchers.Main) {
             try {
                 clipboard.text = text

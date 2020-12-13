@@ -57,8 +57,8 @@ open class ProfileViewHolder(
             R.id.edit -> homeViewModel.onEditProfile(profile)
             R.id.duplicate -> homeViewModel.onDuplicateProfile(profile)
             R.id.delete -> homeViewModel.deleteProfile(profile)
-            R.id.copy_address -> homeViewModel.toClipboard(profile.address)
-            R.id.copy_name -> homeViewModel.toClipboard(profile.name)
+            R.id.copy_address -> homeViewModel.setClipboardText(profile.address)
+            R.id.copy_name -> homeViewModel.setClipboardText(profile.name)
         }
 
         return true

@@ -185,10 +185,9 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      * Sends current clipboard text to remote server.
      */
     fun sendClipboardText() {
-        val isConnected = client.state == VncClient.State.Connected
         val text = clipboard.text
 
-        if (isConnected && text != null && text.isNotBlank())
+        if (text != null && text.isNotBlank())
             messenger.sendClipboardText(text.toString())
     }
 
@@ -276,14 +275,16 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     override fun onGotXCutText(text: String) {
-        toClipboard(text)
+        setClipboardText(text)
     }
 
     override fun onClientStateChanged(newState: VncClient.State) {
         clientState.postValue(newState)
 
         if (newState == VncClient.State.Connected) {
-            sendClipboardText() //Initial sync
+            viewModelScope.launch(Dispatchers.Main) {
+                sendClipboardText() //Initial sync
+            }
 
             //Save any changes to profile. Right now this is used to "remember" credentials.
             if (profile.ID != 0L) async {
