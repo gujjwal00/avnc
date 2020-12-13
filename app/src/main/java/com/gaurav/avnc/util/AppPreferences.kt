@@ -25,7 +25,6 @@ class AppPreferences(private val context: Context) {
     inner class Zoom {
         val max; get() = prefs.getInt("pref_zoom_max", 500) / 100F
         val min; get() = prefs.getInt("pref_zoom_min", 50) / 100F
-        val showLevel; get() = prefs.getBoolean("pref_zoom_show_level", false)
     }
 
     val zoom = Zoom()

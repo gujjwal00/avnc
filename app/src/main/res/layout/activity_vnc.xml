@@ -42,19 +42,6 @@
             android:layout_margin="@dimen/margin_normal"
             android:src="@drawable/ic_touch" />
 
-
-        <com.google.android.material.chip.Chip
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|center"
-            android:layout_margin="@dimen/margin_normal"
-            android:backgroundTint="?attr/colorSecondary"
-            android:clickable="false"
-            android:text="@{viewModel.zoomLevelText}"
-            android:textColor="?attr/colorOnSecondary"
-            app:chipMinHeight="24dp"
-            app:isVisible="@{viewModel.zoomLevelText.length != 0}" />
-
         <!--Status-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

@@ -127,13 +127,6 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      */
     val messenger = Messenger(client)
 
-    /**
-     * Textual representation of [FrameState.zoomScale], updated during scale gesture.
-     *
-     * Setting its value to empty string will hide zoom level.
-     */
-    val zoomLevelText = MutableLiveData("")
-
 
     /**************************************************************************
      * Connection management

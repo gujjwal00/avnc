@@ -18,14 +18,12 @@ import com.gaurav.avnc.viewmodel.VncViewModel
  * Handles different input events.
  *
  * TODO: Reduce [PointF] garbage
- * TODO: cleanup zoom level
  */
 class InputHandler(private val viewModel: VncViewModel, private val dispatcher: Dispatcher)
     : ScaleGestureDetector.OnScaleGestureListener, GestureDetector.SimpleOnGestureListener() {
 
     private val scaleDetector = ScaleGestureDetector(viewModel.getApplication(), this)
     private val gestureDetector = GestureDetector(viewModel.getApplication(), this)
-    private val showZoomLevel = viewModel.pref.zoom.showLevel
     private val frameScroller = FrameScroller(viewModel) //Should it be in Dispatcher?
 
     init {
@@ -46,17 +44,10 @@ class InputHandler(private val viewModel: VncViewModel, private val dispatcher: 
     }
 
     override fun onScaleBegin(detector: ScaleGestureDetector) = true
-    override fun onScaleEnd(detector: ScaleGestureDetector) {
-        viewModel.zoomLevelText.value = ""
-    }
+    override fun onScaleEnd(detector: ScaleGestureDetector) {}
 
     override fun onScale(detector: ScaleGestureDetector): Boolean {
         dispatcher.onScale(detector.scaleFactor, detector.focusX, detector.focusY)
-
-        if (showZoomLevel) {
-            val zoomPercent = (viewModel.frameState.zoomScale * 100).toInt()
-            viewModel.zoomLevelText.value = "${zoomPercent}%"
-        }
         return true
     }
 

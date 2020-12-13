@@ -59,7 +59,6 @@
     <string name="title_pref_swipe">Swipe</string>
     <string name="title_pref_zoom_min">Minimum Zoom</string>
     <string name="title_pref_zoom_max">Maximum Zoom</string>
-    <string name="title_pref_zoom_show_level">Show Zoom level</string>
     <string name="title_pref_credential">Credentials</string>
     <string name="title_pref_cred_autocomplete">Enable Autocomplete</string>
     <string name="title_pref_cred_autocomplete_summary">Reuse already known credentials</string>
