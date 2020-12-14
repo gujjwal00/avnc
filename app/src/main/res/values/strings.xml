@@ -46,6 +46,7 @@
     <string name="desc_disconnected_icon">Disconnected state indicator icon</string>
     <string name="desc_connect_btn">Connect to this URL</string>
     <string name="desc_add_server_btn">Add Server</string>
+    <string name="desc_kb_btn">Show Keyboard</string>
 
     <!-- Preference -->
     <string name="title_pref_activity">Settings</string>

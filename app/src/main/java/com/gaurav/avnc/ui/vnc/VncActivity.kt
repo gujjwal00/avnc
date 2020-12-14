@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
@@ -44,6 +45,9 @@ class VncActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
+        //Drawers
+        binding.drawerLayout.setScrimColor(0)
+
         //Setup FrameView
         binding.frameView.activity = this
         binding.frameView.setEGLContextClientVersion(2)
@@ -53,15 +57,24 @@ class VncActivity : AppCompatActivity() {
         viewModel.frameViewRef = WeakReference(binding.frameView)
         viewModel.credentialRequiredEvent.observe(this) { showCredentialDialog() }
 
-        //Should be called after observers has been installed
-        viewModel.connect(getProfile())
+        binding.kbBtn.setOnClickListener { showKeyboard(); closeDrawers() }
 
-        binding.kbToggle.setOnClickListener { toggleKb() }
+        //Should be called after observers has been setup
+        viewModel.connect(getProfile())
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.sendClipboardText()
+    }
+
+    override fun onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START) ||
+                binding.drawerLayout.isDrawerOpen(GravityCompat.END)) {
+            binding.drawerLayout.closeDrawers()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     /**
@@ -90,10 +103,12 @@ class VncActivity : AppCompatActivity() {
         CredentialFragment().show(supportFragmentManager, "CredentialDialog")
     }
 
-    private fun toggleKb() {
+    private fun showKeyboard() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         binding.frameView.requestFocus()
         imm.showSoftInput(binding.frameView, 0)
     }
+
+    private fun closeDrawers() = binding.drawerLayout.closeDrawers()
 }
