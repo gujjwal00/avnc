@@ -26,7 +26,7 @@ class ServersAdapter(val viewModel: HomeViewModel)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemServerBinding.inflate(inflater, parent, false)
-        return ProfileViewHolder(viewModel, binding, R.menu.server_profile_menu)
+        return ProfileViewHolder(viewModel, binding, R.menu.server_profile)
     }
 
     override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {

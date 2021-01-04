@@ -33,7 +33,7 @@ class DiscoveryAdapter(val viewModel: HomeViewModel) : ListAdapter<ServerProfile
      * View holder for discovered servers.
      */
     inner class ViewHolder(binding: ItemDiscoveryBinding) :
-            ProfileViewHolder(viewModel, binding, R.menu.discovered_server_menu) {
+            ProfileViewHolder(viewModel, binding, R.menu.discovered_server) {
 
         init {
             binding.add.setOnClickListener { viewModel.onNewProfile(profile) }
