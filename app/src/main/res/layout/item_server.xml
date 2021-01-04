@@ -15,7 +15,7 @@
             type="com.gaurav.avnc.model.ServerProfile" />
     </data>
 
-    <FrameLayout
+    <com.google.android.material.card.MaterialCardView
         style="@style/ListItem"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_item_height">
@@ -30,6 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:text="@{viewModel.address}" />
-    </FrameLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </layout>

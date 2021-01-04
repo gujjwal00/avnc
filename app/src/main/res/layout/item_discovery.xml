@@ -15,7 +15,7 @@
             type="com.gaurav.avnc.model.ServerProfile" />
     </data>
 
-    <FrameLayout
+    <com.google.android.material.card.MaterialCardView
         style="@style/ListItem"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_item_height">
@@ -39,5 +39,5 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/desc_add_server_btn"
             android:src="@drawable/ic_plus" />
-    </FrameLayout>
+    </com.google.android.material.card.MaterialCardView>
 </layout>
