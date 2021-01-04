@@ -117,6 +117,11 @@ class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScal
         return zoomScale / oldScale //Applied scale factor
     }
 
+    fun resetZoom() {
+        zoomScale = 1F
+        coerceValues()
+    }
+
     /**
      * Shift frame by given delta.
      */

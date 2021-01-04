@@ -64,11 +64,15 @@
 
                 <ImageButton
                     android:id="@+id/kb_btn"
-                    android:layout_width="@dimen/action_btn_size"
-                    android:layout_height="@dimen/action_btn_size"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    style="@style/ToolbarButton"
                     android:contentDescription="@string/desc_kb_btn"
                     android:src="@drawable/ic_keyboard" />
+
+                <ImageButton
+                    android:id="@+id/zoom_reset_btn"
+                    style="@style/ToolbarButton"
+                    android:contentDescription="@string/desc_reset_zoom_btn"
+                    android:src="@drawable/ic_zoom_reset" />
 
             </LinearLayout>
 

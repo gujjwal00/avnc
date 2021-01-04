@@ -39,6 +39,17 @@
         <item name="android:layout_margin">@dimen/margin_small</item>
     </style>
 
+    <style name="ToolbarButton">
+        <item name="android:layout_width">@dimen/action_btn_size</item>
+        <item name="android:layout_height">@dimen/action_btn_size</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="ServerList">
+        <item name="android:paddingBottom">@dimen/list_item_height</item>
+        <item name="android:clipToPadding">false</item>
+    </style>
+
     <style name="ListItem">
         <item name="android:layout_marginTop">@dimen/margin_normal</item>
         <item name="android:layout_marginLeft">@dimen/margin_normal</item>

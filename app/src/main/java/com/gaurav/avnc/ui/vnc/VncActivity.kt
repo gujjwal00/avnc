@@ -45,22 +45,23 @@ class VncActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        //Drawers
-        binding.drawerLayout.setScrimColor(0)
-
-        //Setup FrameView
+        //FrameView
         binding.frameView.activity = this
         binding.frameView.setEGLContextClientVersion(2)
         binding.frameView.setRenderer(Renderer(viewModel))
         binding.frameView.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
 
+        //Drawers
+        binding.drawerLayout.setScrimColor(0)
+
+        //Drawer Buttons
+        binding.kbBtn.setOnClickListener { showKeyboard(); closeDrawers() }
+        binding.zoomResetBtn.setOnClickListener { viewModel.resetZoom(); closeDrawers() }
+
+        //ViewModel setup
         viewModel.frameViewRef = WeakReference(binding.frameView)
         viewModel.credentialRequiredEvent.observe(this) { showCredentialDialog() }
-
-        binding.kbBtn.setOnClickListener { showKeyboard(); closeDrawers() }
-
-        //Should be called after observers has been setup
-        viewModel.connect(getProfile())
+        viewModel.connect(getProfile()) //Should be called after observers has been setup
     }
 
     override fun onResume() {

@@ -218,6 +218,11 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         frameViewRef.get()?.requestRender()
     }
 
+    fun resetZoom() {
+        frameState.resetZoom()
+        frameViewRef.get()?.requestRender()
+    }
+
     fun panFrame(deltaX: Float, deltaY: Float) {
         frameState.pan(deltaX, deltaY)
         frameViewRef.get()?.requestRender()
