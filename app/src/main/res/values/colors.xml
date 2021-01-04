@@ -12,4 +12,5 @@
     <color name="colorBorder">#484848</color>
     <color name="colorAccent">#a44900</color>
     <color name="iconTintColor">#fff</color>
+    <color name="colorToolbarBackground">#2fff</color>
 </resources>

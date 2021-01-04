@@ -47,7 +47,7 @@
                 android:id="@+id/frame_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/frame_bg"
+                android:background="@drawable/bg_frame_view"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:keepScreenOn="true"

@@ -38,7 +38,7 @@
     <string name="label_image_quality">Image quality</string>
     <string name="label_security_type">Security type</string>
 
-    <string name="hint_header_url">Enter URL</string>
+    <string name="hint_toolbar">Enter URL</string>
     <string name="hint_host">Ex: 192.168.43.10</string>
     <string name="hint_optional">Optional</string>
 

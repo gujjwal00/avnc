@@ -8,7 +8,7 @@
 
 <resources>
 
-    <style name="AppTheme" parent="Theme.MaterialComponents">
+    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
 
         <!--TODO: Update colors during UI polishing-->
         <!--   <item name="colorPrimary">@color/primaryColor</item>
@@ -19,6 +19,7 @@
            <item name="colorSecondaryVariant">@color/secondaryDarkColor</item>
            <item name="colorOnSecondary">@color/secondaryTextColor</item>-->
 
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

@@ -10,14 +10,11 @@ package com.gaurav.avnc.ui.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
-import androidx.navigation.ui.NavigationUI
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityHomeBinding
 import com.gaurav.avnc.model.ServerProfile
@@ -32,8 +29,9 @@ import com.google.android.material.snackbar.Snackbar
  * It Provides access to saved and discovered servers.
  */
 class HomeActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityHomeBinding
     private val viewModel by viewModels<HomeViewModel>()
+    private lateinit var binding: ActivityHomeBinding
+    private lateinit var tabController: TabController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,9 +40,11 @@ class HomeActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
         binding.lifecycleOwner = this
 
-        //Navigation
-        val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
-        NavigationUI.setupWithNavController(binding.navView, navController)
+        tabController = TabController(supportFragmentManager, binding.pager, binding.tabs)
+        binding.drawerNav.setNavigationItemSelectedListener { onMenuItemSelected(it.itemId) }
+        binding.toolbar.setNavigationOnClickListener { binding.drawerLayout.open() }
+        binding.toolbar.setOnMenuItemClickListener { onMenuItemSelected(it.itemId) }
+        binding.toolbar.setOnClickListener { showUrlActivity() }
 
         //Observers
         viewModel.profileEditEvent.observe(this) { showProfileEditor() }
@@ -55,21 +55,18 @@ class HomeActivity : AppCompatActivity() {
         viewModel.startDiscovery()
     }
 
-    /**
-     * Inflate main menu
-     */
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
+    override fun onResume() {
+        super.onResume()
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
     }
 
     /**
-     * Handle MenuItem selection
+     * Handle drawer item selection.
      */
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+    private fun onMenuItemSelected(itemId: Int): Boolean {
+        when (itemId) {
             R.id.settings -> showSettings()
-            else -> return super.onOptionsItemSelected(item)
+            else -> return false
         }
 
         return true
@@ -80,6 +77,12 @@ class HomeActivity : AppCompatActivity() {
      */
     private fun showSettings() {
         startActivity(Intent(this, PrefsActivity::class.java))
+    }
+
+    /**
+     * Launches VNC Url activity
+     */
+    private fun showUrlActivity() {
     }
 
     /**
@@ -107,16 +110,7 @@ class HomeActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    /**
-     * Show number of found servers as badge.
-     */
     private fun updateDiscoveryBadge(list: List<ServerProfile>) {
-        if (list.isNotEmpty()) {
-            binding.navView.getOrCreateBadge(R.id.nav_discovery).number = list.size
-        } else {
-            //Ideally we would just hide the badge but due to a bug we have to remove it.
-            //https://github.com/material-components/material-components-android/issues/1247
-            binding.navView.removeBadge(R.id.nav_discovery)
-        }
+        tabController.updateDiscoveryBadge(list.size)
     }
 }
