@@ -8,13 +8,12 @@
 
 package com.gaurav.avnc.ui.home
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityUrlBinding
-import com.gaurav.avnc.ui.vnc.VncActivity
+import com.gaurav.avnc.ui.vnc.startVncActivity
 import com.gaurav.avnc.util.layoutBehindStatusBar
 import com.gaurav.avnc.vnc.VncUri
 
@@ -46,10 +45,7 @@ class UrlActivity : AppCompatActivity() {
         if (url.isBlank())
             return false
 
-        val profile = VncUri(url).toServerProfile()
-        val intent = Intent(this, VncActivity::class.java)
-        intent.putExtra(VncActivity.KEY.PROFILE, profile)
-        startActivity(intent)
+        startVncActivity(this, VncUri(url))
 
         finish()
         return true

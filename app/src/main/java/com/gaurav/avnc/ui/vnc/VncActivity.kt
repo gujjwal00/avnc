@@ -8,7 +8,9 @@
 
 package com.gaurav.avnc.ui.vnc
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.util.Log
@@ -25,14 +27,27 @@ import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.VncUri
 import java.lang.ref.WeakReference
 
+/********** [VncActivity] startup helpers *********************************/
+
+private const val PROFILE_KEY = "com.gaurav.avnc.server_profile"
+
+fun startVncActivity(source: Activity, profile: ServerProfile) {
+    val intent = Intent(source, VncActivity::class.java)
+    intent.putExtra(PROFILE_KEY, profile)
+    source.startActivity(intent)
+}
+
+fun startVncActivity(source: Activity, uri: VncUri) {
+    startVncActivity(source, uri.toServerProfile())
+}
+
+/**************************************************************************/
+
+
 /**
  * This activity handle the VNC connection to a server.
  */
 class VncActivity : AppCompatActivity() {
-
-    object KEY {
-        const val PROFILE = "com.gaurav.avnc.server_profile"
-    }
 
     val viewModel by viewModels<VncViewModel>()
     lateinit var binding: ActivityVncBinding
@@ -87,7 +102,7 @@ class VncActivity : AppCompatActivity() {
      */
     private fun getProfile(): ServerProfile {
 
-        val profile = intent.getParcelableExtra<ServerProfile>(KEY.PROFILE)
+        val profile = intent.getParcelableExtra<ServerProfile>(PROFILE_KEY)
         if (profile != null) {
             return profile
         }

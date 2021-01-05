@@ -18,7 +18,7 @@ import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityHomeBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.prefs.PrefsActivity
-import com.gaurav.avnc.ui.vnc.VncActivity
+import com.gaurav.avnc.ui.vnc.startVncActivity
 import com.gaurav.avnc.util.layoutBehindStatusBar
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -49,7 +49,7 @@ class HomeActivity : AppCompatActivity() {
         //Observers
         viewModel.profileEditEvent.observe(this) { showProfileEditor() }
         viewModel.profileDeletedEvent.observe(this) { showProfileDeletedMsg(it) }
-        viewModel.newConnectionEvent.observe(this) { startVncActivity(it) }
+        viewModel.newConnectionEvent.observe(this) { startVncActivity(this, it) }
         viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }
 
         viewModel.startDiscovery()
@@ -100,15 +100,6 @@ class HomeActivity : AppCompatActivity() {
         Snackbar.make(binding.root, getString(R.string.msg_server_profile_deleted), Snackbar.LENGTH_LONG)
                 .setAction(getString(R.string.title_undo)) { viewModel.saveProfile(profile) }
                 .show()
-    }
-
-    /**
-     * Starts VNC Activity with given profile.
-     */
-    private fun startVncActivity(profile: ServerProfile) {
-        val intent = Intent(this, VncActivity::class.java)
-        intent.putExtra(VncActivity.KEY.PROFILE, profile)
-        startActivity(intent)
     }
 
     private fun updateDiscoveryBadge(list: List<ServerProfile>) {
