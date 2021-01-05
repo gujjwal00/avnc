@@ -10,13 +10,12 @@ package com.gaurav.avnc.ui.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityUrlBinding
-import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.vnc.VncActivity
+import com.gaurav.avnc.util.layoutBehindStatusBar
 import com.gaurav.avnc.vnc.VncUri
 
 /**
@@ -40,14 +39,14 @@ class UrlActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        layoutBehindStatusBar(window.decorView)
     }
 
     private fun go(url: String): Boolean {
         if (url.isBlank())
             return false
 
-        val profile = ServerProfile(VncUri(url))
+        val profile = VncUri(url).toServerProfile()
         val intent = Intent(this, VncActivity::class.java)
         intent.putExtra(VncActivity.KEY.PROFILE, profile)
         startActivity(intent)

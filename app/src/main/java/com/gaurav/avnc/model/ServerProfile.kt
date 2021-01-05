@@ -11,7 +11,6 @@ package com.gaurav.avnc.model
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.gaurav.avnc.vnc.VncUri
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -81,20 +80,4 @@ data class ServerProfile(
          */
         var viewOnly: Boolean = false
 
-) : Parcelable {
-
-    /**
-     * Construct from [VncUri]
-     */
-    constructor(uri: VncUri) : this() {
-        name = uri.connectionName
-        address = uri.host
-        port = uri.port
-        username = uri.username
-        password = uri.password
-        securityType = uri.securityType
-        transportType = uri.channelType
-        colorQuality = uri.colorLevel
-        viewOnly = uri.viewOnly
-    }
-}
+) : Parcelable

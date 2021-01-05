@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.FragmentServersBinding
@@ -41,7 +40,7 @@ class ServersFragment : Fragment() {
 
         binding.newProfileFab.setOnClickListener { viewModel.onNewProfile() }
 
-        viewModel.serverProfiles.observe(viewLifecycleOwner, Observer { adapter.submitList(it) })
+        viewModel.serverProfiles.observe(viewLifecycleOwner) { adapter.submitList(it) }
 
         return binding.root
     }

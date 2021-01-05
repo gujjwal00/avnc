@@ -11,16 +11,15 @@ package com.gaurav.avnc.ui.home
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityHomeBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.prefs.PrefsActivity
 import com.gaurav.avnc.ui.vnc.VncActivity
+import com.gaurav.avnc.util.layoutBehindStatusBar
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
 
@@ -51,14 +50,14 @@ class HomeActivity : AppCompatActivity() {
         viewModel.profileEditEvent.observe(this) { showProfileEditor() }
         viewModel.profileDeletedEvent.observe(this) { showProfileDeletedMsg(it) }
         viewModel.newConnectionEvent.observe(this) { startVncActivity(it) }
-        viewModel.discovery.servers.observe(this, Observer { updateDiscoveryBadge(it) })
+        viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }
 
         viewModel.startDiscovery()
     }
 
     override fun onResume() {
         super.onResume()
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        layoutBehindStatusBar(window.decorView)
     }
 
     /**
@@ -69,7 +68,6 @@ class HomeActivity : AppCompatActivity() {
             R.id.settings -> showSettings()
             else -> return false
         }
-
         return true
     }
 

@@ -21,7 +21,7 @@
         android:theme="@style/AppTheme">
 
         <activity-alias
-            android:name=".AppHome"
+            android:name=".HomeActivity"
             android:targetActivity=".ui.home.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

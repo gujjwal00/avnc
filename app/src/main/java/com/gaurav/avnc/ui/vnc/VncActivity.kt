@@ -93,7 +93,7 @@ class VncActivity : AppCompatActivity() {
         }
 
         if (intent.data?.scheme == "vnc") {
-            return ServerProfile(VncUri(intent.data!!))
+            return VncUri(intent.data!!).toServerProfile()
         }
 
         Log.e(javaClass.simpleName, "No connection information was passed through Intent.")

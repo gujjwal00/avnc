@@ -13,7 +13,6 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.FragmentCredentialBinding
 import com.gaurav.avnc.viewmodel.VncViewModel
@@ -72,7 +71,7 @@ class CredentialFragment : DialogFragment() {
         if (!viewModel.pref.cred.autocomplete)
             return
 
-        viewModel.knownCredentials.observe(this, Observer { list ->
+        viewModel.knownCredentials.observe(this) { list ->
             val usernames = list.map { it.username }.filter { it.isNotBlank() }.distinct()
             val passwords = list.map { it.password }.filter { it.isNotBlank() }.distinct()
 
@@ -81,6 +80,6 @@ class CredentialFragment : DialogFragment() {
 
             binding.username.setAdapter(usernameAdapter)
             binding.password.setAdapter(passwordAdapter)
-        })
+        }
     }
 }

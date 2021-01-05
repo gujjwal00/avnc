@@ -14,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gaurav.avnc.databinding.FragmentDiscoveryBinding
 import com.gaurav.avnc.ui.home.adapter.DiscoveryAdapter
@@ -38,7 +37,7 @@ class DiscoveryFragment : Fragment() {
         binding.discoveredRv.adapter = adapter
         binding.discoveredRv.setHasFixedSize(true)
 
-        viewModel.discovery.servers.observe(viewLifecycleOwner, Observer { adapter.submitList(it) })
+        viewModel.discovery.servers.observe(viewLifecycleOwner) { adapter.submitList(it) }
 
         binding.discoverFab.setOnClickListener { viewModel.startDiscovery() }
         return binding.root

@@ -64,23 +64,23 @@ class LiveEvent<T> : LiveData<T>() {
      */
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
         //Observer given to us is wrapped in another Observer which checks current state
-        super.observe(owner, Observer {
+        super.observe(owner) {
             if (!handled && it != null) {
                 observer.onChanged(it)
                 handled = true
             }
-        })
+        }
     }
 
     /**
      * Overload of `observe` which allows directly passing a lambda.
      */
     fun observe(owner: LifecycleOwner, observer: (data: T) -> Unit) {
-        super.observe(owner, Observer {
+        super.observe(owner) {
             if (!handled && it != null) {
                 observer(it)
                 handled = true
             }
-        })
+        }
     }
 }
