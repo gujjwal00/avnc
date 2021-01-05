@@ -48,6 +48,11 @@
             android:label="@string/app_name" />
 
         <activity
+            android:name=".ui.home.UrlActivity"
+            android:parentActivityName=".ui.home.HomeActivity"
+            android:windowSoftInputMode="stateVisible" />
+
+        <activity
             android:name=".ui.vnc.VncActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
