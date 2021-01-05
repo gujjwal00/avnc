@@ -93,22 +93,10 @@ class VncActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Extracts profile from Intent.
-     *
-     * Currently there are two sources of [VncActivity] start:
-     *  1. HomeActivity
-     *  2. VNC Uri Intent
-     */
     private fun getProfile(): ServerProfile {
-
         val profile = intent.getParcelableExtra<ServerProfile>(PROFILE_KEY)
         if (profile != null) {
             return profile
-        }
-
-        if (intent.data?.scheme == "vnc") {
-            return VncUri(intent.data!!).toServerProfile()
         }
 
         Log.e(javaClass.simpleName, "No connection information was passed through Intent.")

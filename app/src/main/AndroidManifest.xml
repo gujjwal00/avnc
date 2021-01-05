@@ -30,8 +30,8 @@
         </activity-alias>
 
         <activity-alias
-            android:name=".VncUriReceiver"
-            android:targetActivity=".ui.vnc.VncActivity">
+            android:name=".UriReceiverActivity"
+            android:targetActivity=".ui.vnc.UriReceiverActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -54,6 +54,10 @@
 
         <activity
             android:name=".ui.vnc.VncActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".ui.vnc.UriReceiverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
