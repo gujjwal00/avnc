@@ -60,10 +60,4 @@
         <item name="contentPadding">@dimen/padding_normal</item>
         <item name="strokeColor">@color/colorBorder</item>
     </style>
-
-    <style name="Fab" parent="Widget.Design.FloatingActionButton">
-        <item name="android:layout_gravity">bottom|end</item>
-        <item name="android:layout_marginRight">@dimen/margin_normal</item>
-        <item name="android:layout_marginBottom">@dimen/margin_normal</item>
-    </style>
 </resources>

@@ -23,12 +23,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
             android:text="@{viewModel.name}" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_gravity="bottom|start"
             android:text="@{viewModel.address}" />
     </com.google.android.material.card.MaterialCardView>
 
