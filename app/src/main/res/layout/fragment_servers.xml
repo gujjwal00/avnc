@@ -18,7 +18,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clipChildren="false">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/servers_rv"
@@ -28,12 +29,12 @@
             tools:listitem="@layout/item_server" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/new_profile_fab"
             style="@style/Widget.Design.FloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/margin_normal"
+            android:onClick="@{()-> viewModel.onNewProfile()}"
             android:src="@drawable/ic_plus" />
     </FrameLayout>
 </layout>

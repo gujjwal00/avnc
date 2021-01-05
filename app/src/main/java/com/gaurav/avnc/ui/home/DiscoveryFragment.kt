@@ -26,7 +26,6 @@ class DiscoveryFragment : Fragment() {
 
     val viewModel by activityViewModels<HomeViewModel>()
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentDiscoveryBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
@@ -38,8 +37,6 @@ class DiscoveryFragment : Fragment() {
         binding.discoveredRv.setHasFixedSize(true)
 
         viewModel.discovery.servers.observe(viewLifecycleOwner) { adapter.submitList(it) }
-
-        binding.discoverFab.setOnClickListener { viewModel.startDiscovery() }
         return binding.root
     }
 }

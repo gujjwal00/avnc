@@ -19,7 +19,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clipChildren="false">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/discovered_rv"
@@ -36,10 +37,10 @@
             android:animateLayoutChanges="true">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/discover_fab"
                 style="@style/Widget.Design.FloatingActionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="@{()-> viewModel.startDiscovery()}"
                 android:src="@drawable/ic_refresh"
                 app:isInVisible="@{viewModel.discovery.isRunning}" />
 

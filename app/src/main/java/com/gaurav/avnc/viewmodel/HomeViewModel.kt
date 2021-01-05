@@ -52,7 +52,12 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     /**
      * Starts creating a new server profile.
      */
-    fun onNewProfile(source: ServerProfile = ServerProfile()) = onEditProfile(source)
+    fun onNewProfile() = onNewProfile(ServerProfile())
+
+    /**
+     * Starts creating a new profile using [source] as starting point.
+     */
+    fun onNewProfile(source: ServerProfile) = onEditProfile(source)
 
     /**
      * Starts editing given profile.
