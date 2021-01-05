@@ -25,7 +25,7 @@ import com.gaurav.avnc.vnc.VncUri
  * - Show suggestions from saved profiles
  * - Show suggestions from discovered servers.
  */
-class UrlActivity : AppCompatActivity() {
+class UrlBarActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

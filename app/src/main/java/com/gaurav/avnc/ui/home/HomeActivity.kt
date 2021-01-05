@@ -83,7 +83,7 @@ class HomeActivity : AppCompatActivity() {
      */
     private fun showUrlActivity() {
         val anim = ActivityOptions.makeSceneTransitionAnimation(this, binding.toolbar, "urlbar")
-        startActivity(Intent(this, UrlActivity::class.java), anim.toBundle())
+        startActivity(Intent(this, UrlBarActivity::class.java), anim.toBundle())
     }
 
     /**

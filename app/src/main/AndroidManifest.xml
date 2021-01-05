@@ -48,7 +48,7 @@
             android:label="@string/app_name" />
 
         <activity
-            android:name=".ui.home.UrlActivity"
+            android:name=".ui.home.UrlBarActivity"
             android:parentActivityName=".ui.home.HomeActivity"
             android:windowSoftInputMode="stateVisible" />
 
