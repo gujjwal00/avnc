@@ -6,10 +6,8 @@
  * See COPYING.txt for more details.
  */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <errno.h>
 #include <jni.h>
 #include <android/log.h>
 #include <GLES2/gl2.h>
@@ -322,7 +320,7 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeProcessServerMessage(JNIEnv *env, jobje
                                                               jint u_sec_timeout) {
     auto client = (rfbClient *) client_ptr;
 
-    if (WaitForMessage(client, u_sec_timeout) >= 0) {
+    if (WaitForMessage(client, static_cast<unsigned int>(u_sec_timeout)) >= 0) {
         if (HandleRFBServerMessage(client))
             return JNI_TRUE;
     }
@@ -386,7 +384,7 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeGetHeight(JNIEnv *env, jobject thiz, jl
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeIsEncrypted(JNIEnv *env, jobject thiz, jlong client_ptr) {
-    return ((rfbClient *) client_ptr)->tlsSession ? JNI_TRUE : JNI_FALSE;
+    return static_cast<jboolean>(((rfbClient *) client_ptr)->tlsSession ? JNI_TRUE : JNI_FALSE);
 }
 
 extern "C"

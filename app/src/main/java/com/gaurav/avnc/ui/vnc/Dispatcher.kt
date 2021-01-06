@@ -151,7 +151,7 @@ class Dispatcher(private val viewModel: VncViewModel) {
      *                      which ignore the state of Shift key.
      *
      *   Without unicode char: In this case we use key code. But before sending, they
-     *                      are translated to X KeySyms in native code.
+     *                      are translated to X Key-Symbols in native code.
      *
      * Note: [KeyEvent.KEYCODE_ENTER] is treated differently because Android returns a
      *       Unicode symbol for it.

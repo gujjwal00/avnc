@@ -9,16 +9,11 @@
 package com.gaurav.avnc.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.vnc.Discovery
 
 class HomeViewModel(app: Application) : BaseViewModel(app) {
-    /**
-     * Vnc server url. Used by the top URL box.
-     */
-    val serverUrl = MutableLiveData("")
 
     /**
      * [ServerProfile]s stored in database.

@@ -30,7 +30,7 @@ internal class FrameProgram {
 
     val program = ShaderCompiler.buildProgram(Shaders.VERTEX_SHADER, Shaders.FRAGMENT_SHADER)
     val a_PositionLocation = glGetAttribLocation(program, A_POSITION)
-    val a_TextureCoordLocation = glGetAttribLocation(program, A_TEXTURE_COORDINATES)
+    val a_TextureCoordinatesLocation = glGetAttribLocation(program, A_TEXTURE_COORDINATES)
     val u_ProjectionLocation = glGetUniformLocation(program, U_PROJECTION)
     val u_TexUnitLocation = glGetUniformLocation(program, U_TEXTURE_UNIT)
     val textureId = createTexture()

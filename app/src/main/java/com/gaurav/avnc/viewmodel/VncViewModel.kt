@@ -242,7 +242,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      * Called when remote server has asked for password.
      */
     override fun onPasswordRequired(): String {
-        if (!profile.password.isBlank())
+        if (profile.password.isNotBlank())
             return profile.password
 
         return obtainCredential(false).password
@@ -252,7 +252,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      * Called when remote server has asked for both username & password.
      */
     override fun onCredentialRequired(): UserCredential {
-        if (!profile.username.isBlank() && !profile.password.isBlank())
+        if (profile.username.isNotBlank() && profile.password.isNotBlank())
             return UserCredential(profile.username, profile.password)
 
         return obtainCredential(true)

@@ -8,6 +8,7 @@
 
 package com.gaurav.avnc.ui.vnc
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
@@ -38,6 +39,7 @@ class FrameView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context
         return FrameInputConnection(activity.dispatcher, this)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         return activity.inputHandler.onTouchEvent(event)
     }
