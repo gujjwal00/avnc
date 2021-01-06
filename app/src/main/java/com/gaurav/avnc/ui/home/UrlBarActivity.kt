@@ -9,6 +9,7 @@
 package com.gaurav.avnc.ui.home
 
 import android.os.Bundle
+import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.gaurav.avnc.R
@@ -29,6 +30,8 @@ class UrlBarActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
+
         val binding = DataBindingUtil.setContentView<ActivityUrlBinding>(this, R.layout.activity_url)
 
         binding.back.setOnClickListener { onBackPressed() }

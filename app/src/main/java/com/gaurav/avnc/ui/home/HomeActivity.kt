@@ -11,6 +11,7 @@ package com.gaurav.avnc.ui.home
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
+import android.view.Window
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -35,6 +36,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
 
         //View Inflation
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
