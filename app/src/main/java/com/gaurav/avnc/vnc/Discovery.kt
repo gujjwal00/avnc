@@ -23,7 +23,6 @@ class Discovery(private val context: Context) {
 
     private object Config {
         const val SERVICE_TYPE = "_rfb._tcp"
-        const val TIMEOUT = 10000L   // 10 sec
     }
 
     /**
@@ -46,7 +45,7 @@ class Discovery(private val context: Context) {
      *
      * Must be called from main thread. It will return immediately if discovery
      * is already running. Once started, discovery will be automatically stopped
-     * after [Config.TIMEOUT].
+     * after [timeout] milliseconds.
      *
      * Status changes:
      *
@@ -72,7 +71,7 @@ class Discovery(private val context: Context) {
      * for confirmation in [listener].
      * This way we don't have to track intermediate states.
      */
-    fun start(scope: CoroutineScope) {
+    fun start(scope: CoroutineScope, timeout: Long) {
         if (isRunning.value == true) {
             return
         }
@@ -90,7 +89,7 @@ class Discovery(private val context: Context) {
 
         scope.launch(Dispatchers.Main) {
             try {
-                delay(Config.TIMEOUT)
+                delay(timeout)
             } finally {
                 if (isRunning.value == true) {
                     nsdManager?.stopServiceDiscovery(listener)

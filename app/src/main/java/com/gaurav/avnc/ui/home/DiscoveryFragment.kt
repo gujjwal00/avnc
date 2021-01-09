@@ -14,10 +14,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gaurav.avnc.databinding.FragmentDiscoveryBinding
 import com.gaurav.avnc.ui.home.adapter.DiscoveryAdapter
 import com.gaurav.avnc.viewmodel.HomeViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Fragment for detecting and displaying VNC servers advertising themselves on current network.
@@ -37,6 +42,21 @@ class DiscoveryFragment : Fragment() {
         binding.discoveredRv.setHasFixedSize(true)
 
         viewModel.discovery.servers.observe(viewLifecycleOwner) { adapter.submitList(it) }
+
+        launchRestarter()
         return binding.root
+    }
+
+    private fun launchRestarter() = lifecycleScope.launch(Dispatchers.Main) {
+
+        while (true) {
+            delay(viewModel.pref.network.discoveryTimeout + viewModel.pref.network.discoveryRestartDelay)
+
+            if (activity?.lifecycle?.currentState == Lifecycle.State.RESUMED
+                    && viewModel.pref.network.discoveryAutoStart
+                    && viewModel.pref.network.discoveryRestart) {
+                viewModel.startDiscovery()
+            }
+        }
     }
 }

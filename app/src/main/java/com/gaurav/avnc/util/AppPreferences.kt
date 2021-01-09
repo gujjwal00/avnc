@@ -15,6 +15,8 @@ import androidx.preference.PreferenceManager
 /**
  * Utility class for accessing app preferences
  *
+ * - All timeouts are in milliseconds.
+ *
  * TODO: Planned Preferences
  *       - Clipboard Sync (On/Off)
  */
@@ -44,4 +46,13 @@ class AppPreferences(private val context: Context) {
     }
 
     val cred = Credential()
+
+    inner class Network {
+        val discoveryTimeout; get() = prefs.getInt("pref_discovery_timeout", 10) * 1000L
+        val discoveryAutoStart; get() = prefs.getBoolean("pref_discovery_auto_start", true)
+        val discoveryRestart; get() = prefs.getBoolean("pref_discovery_restart", false)
+        val discoveryRestartDelay; get() = prefs.getInt("pref_discovery_restart_delay", 5) * 60 * 1000L
+    }
+
+    val network = Network()
 }

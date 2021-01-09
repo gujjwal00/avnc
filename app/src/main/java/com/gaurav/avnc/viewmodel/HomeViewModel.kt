@@ -44,6 +44,11 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
      */
     val newConnectionEvent = LiveEvent<ServerProfile>()
 
+    init {
+        if (pref.network.discoveryAutoStart)
+            startDiscovery()
+    }
+
     /**
      * Starts creating a new server profile.
      */
@@ -88,5 +93,5 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     /**
      * Starts discovery service
      */
-    fun startDiscovery() = discovery.start(viewModelScope)
+    fun startDiscovery() = discovery.start(viewModelScope, pref.network.discoveryTimeout)
 }

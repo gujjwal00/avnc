@@ -1,0 +1,48 @@
+<!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/title_pref_discovery">
+
+        <SeekBarPreference
+            android:max="90"
+            app:defaultValue="10"
+            app:key="pref_discovery_timeout"
+            app:min="5"
+            app:showSeekBarValue="true"
+            app:title="@string/title_pref_discovery_timeout"
+            app:updatesContinuously="true" />
+
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="pref_discovery_auto_start"
+            app:summary="Start Discovery when App starts"
+            app:title="@string/title_pref_discovery_auto_start" />
+
+        <SwitchPreference
+            android:dependency="pref_discovery_auto_start"
+            app:defaultValue="false"
+            app:key="pref_discovery_restart"
+            app:summary="@string/title_pref_discovery_restart_summary"
+            app:title="@string/title_pref_discovery_restart" />
+
+        <SeekBarPreference
+            android:dependency="pref_discovery_restart"
+            android:max="30"
+            app:defaultValue="5"
+            app:key="pref_discovery_restart_delay"
+            app:min="1"
+            app:showSeekBarValue="true"
+            app:title="@string/title_pref_discovery_restart_delay"
+            app:updatesContinuously="true" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

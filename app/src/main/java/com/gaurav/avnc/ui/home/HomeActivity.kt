@@ -53,8 +53,6 @@ class HomeActivity : AppCompatActivity() {
         viewModel.profileDeletedEvent.observe(this) { showProfileDeletedMsg(it) }
         viewModel.newConnectionEvent.observe(this) { startVncActivity(this, it) }
         viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }
-
-        viewModel.startDiscovery()
     }
 
     override fun onResume() {

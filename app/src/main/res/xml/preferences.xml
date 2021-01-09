@@ -26,4 +26,10 @@
         app:key="cred"
         app:title="@string/title_pref_credential" />
 
+    <Preference
+        app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Network"
+        app:icon="@drawable/ic_computer"
+        app:key="network"
+        app:title="@string/title_pref_network" />
+
 </PreferenceScreen>
