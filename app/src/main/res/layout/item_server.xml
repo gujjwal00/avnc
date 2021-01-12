@@ -31,6 +31,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|start"
             android:text="@{viewModel.address}" />
+
+        <!--Experimental Feature-->
+        <View
+            android:id="@+id/indicator"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_margin="@dimen/margin_normal"
+            android:alpha="0"
+            android:background="@drawable/indicator"
+            android:visibility="gone" />
     </com.google.android.material.card.MaterialCardView>
 
 </layout>

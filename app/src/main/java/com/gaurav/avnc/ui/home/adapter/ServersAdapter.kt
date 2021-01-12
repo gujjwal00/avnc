@@ -23,6 +23,9 @@ import com.gaurav.avnc.viewmodel.HomeViewModel
 class ServersAdapter(val viewModel: HomeViewModel)
     : ListAdapter<ServerProfile, ProfileViewHolder>(Differ) {
 
+    //Experimental feature
+    var bindListener: ((ProfileViewHolder, ServerProfile) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemServerBinding.inflate(inflater, parent, false)
@@ -30,7 +33,9 @@ class ServersAdapter(val viewModel: HomeViewModel)
     }
 
     override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val profile = getItem(position)
+        holder.bind(profile)
+        bindListener?.invoke(holder, profile)
     }
 
     object Differ : DiffUtil.ItemCallback<ServerProfile>() {

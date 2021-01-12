@@ -23,7 +23,7 @@ import com.gaurav.avnc.viewmodel.HomeViewModel
  */
 open class ProfileViewHolder(
         private val homeViewModel: HomeViewModel,
-        private val binding: ViewDataBinding,
+        val binding: ViewDataBinding,
         private val menuId: Int)
     : RecyclerView.ViewHolder(binding.root) {
 

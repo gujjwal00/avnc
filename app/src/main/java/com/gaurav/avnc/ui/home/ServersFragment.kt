@@ -17,6 +17,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gaurav.avnc.databinding.FragmentServersBinding
 import com.gaurav.avnc.ui.home.adapter.ServersAdapter
+import com.gaurav.avnc.util.Experimental
 import com.gaurav.avnc.viewmodel.HomeViewModel
 
 /**
@@ -37,6 +38,10 @@ class ServersFragment : Fragment() {
         binding.serversRv.setHasFixedSize(true)
 
         viewModel.serverProfiles.observe(viewLifecycleOwner) { adapter.submitList(it) }
+
+        if (viewModel.pref.experimental.indicator) {
+            Experimental.Indicator().setup(binding, adapter)
+        }
 
         return binding.root
     }

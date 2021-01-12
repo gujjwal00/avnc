@@ -56,6 +56,7 @@
     <string name="title_pref_gesture">Gestures</string>
     <string name="title_pref_zoom">Zoom</string>
     <string name="title_pref_network">Network</string>
+    <string name="title_pref_experimental">Experimental</string>
     <string name="title_pref_category_1finger">1 Finger</string>
     <string name="title_pref_category_2finger">2 Fingers</string>
     <string name="title_pref_single_tap">Single Tap</string>
@@ -74,4 +75,8 @@
     <string name="title_pref_discovery_restart">Restart</string>
     <string name="title_pref_discovery_restart_summary">Restart Discovery after it stops</string>
     <string name="title_pref_discovery_restart_delay">Restart Delay (Minutes)</string>
+    <string name="title_pref_experimental_indicator">Availability Indicator</string>
+    <string name="title_pref_experimental_indicator_summary">Indicate saved servers which are also found by Discovery.
+        Requires App restart.
+    </string>
 </resources>

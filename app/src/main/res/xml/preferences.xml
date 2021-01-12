@@ -32,4 +32,10 @@
         app:key="network"
         app:title="@string/title_pref_network" />
 
+    <Preference
+        app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Experimental"
+        app:icon="@drawable/ic_experimental"
+        app:key="experimental"
+        app:title="@string/title_pref_experimental" />
+
 </PreferenceScreen>

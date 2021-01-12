@@ -111,4 +111,11 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
             setPreferencesFromResource(R.xml.network_preferences, rootKey)
         }
     }
+
+    @Keep
+    class Experimental : PreferenceFragmentCompat() {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            setPreferencesFromResource(R.xml.experimental_preferences, rootKey)
+        }
+    }
 }

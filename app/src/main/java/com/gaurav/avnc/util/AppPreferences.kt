@@ -55,4 +55,10 @@ class AppPreferences(private val context: Context) {
     }
 
     val network = Network()
+
+    inner class Experimental {
+        val indicator; get() = prefs.getBoolean("pref_experimental_indicator", false)
+    }
+
+    val experimental = Experimental()
 }
