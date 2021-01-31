@@ -9,6 +9,7 @@
 package com.gaurav.avnc.viewmodel
 
 import android.app.Application
+import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.util.Log
@@ -44,7 +45,7 @@ open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
     fun setClipboardText(text: String) {
         viewModelScope.launch(Dispatchers.Main) {
             try {
-                clipboard.text = text
+                clipboard.setPrimaryClip(ClipData.newPlainText(null, text))
             } catch (t: Throwable) {
                 Log.e(javaClass.simpleName, "Could not copy text to clipboard.", t)
             }

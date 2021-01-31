@@ -14,13 +14,13 @@ import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 
 
-@BindingAdapter("app:isVisible")
+@BindingAdapter("isVisible")
 fun visibilityAdapter(view: View, isVisible: Boolean) {
     view.isVisible = isVisible
 }
 
 
-@BindingAdapter("app:isInVisible")
+@BindingAdapter("isInVisible")
 fun inVisibilityAdapter(view: View, isInVisible: Boolean) {
     view.isInvisible = isInVisible
 }

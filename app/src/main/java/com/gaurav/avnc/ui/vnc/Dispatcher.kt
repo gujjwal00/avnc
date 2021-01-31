@@ -56,7 +56,7 @@ class Dispatcher(private val viewModel: VncViewModel) {
     private fun selectSwipeAction(actionName: String): (PointF, Float, Float) -> Unit {
         return when (actionName) {
             "remote-scroll" -> { sp, dx, dy -> doRemoteScroll(sp, dx, dy) }
-            "pan" -> { sp, dx, dy -> doPan(dx, dy) }
+            "pan" -> { _, dx, dy -> doPan(dx, dy) }
             else -> { _, _, _ -> } //Nothing
         }
     }
@@ -156,6 +156,7 @@ class Dispatcher(private val viewModel: VncViewModel) {
      * Note: [KeyEvent.KEYCODE_ENTER] is treated differently because Android returns a
      *       Unicode symbol for it.
      */
+    @Suppress("DEPRECATION") //Even though some events are deprecated, we still receive them in corner cases
     private fun doSendKey(event: KeyEvent) {
         when (event.action) {
             KeyEvent.ACTION_DOWN -> {
