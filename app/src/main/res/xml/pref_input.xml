@@ -6,50 +6,51 @@
   ~ See COPYING.txt for more details.
   -->
 
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="@string/pref_input">
 
-    <PreferenceCategory app:title="@string/title_pref_category_1finger">
+    <PreferenceCategory
+        app:icon="@drawable/ic_gesture"
+        app:title="@string/pref_gesture">
+
         <ListPreference
             app:defaultValue="left-click"
             app:entries="@array/single_tap_action_entries"
             app:entryValues="@array/single_tap_action_values"
-            app:key="pref_gesture_single_tap"
-            app:title="@string/title_pref_single_tap"
+            app:key="gesture_single_tap"
+            app:title="@string/pref_single_tap"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
             app:defaultValue="double-click"
             app:entries="@array/double_tap_action_entries"
             app:entryValues="@array/double_tap_action_values"
-            app:key="pref_gesture_double_tap"
-            app:title="@string/title_pref_double_tap"
+            app:key="gesture_double_tap"
+            app:title="@string/pref_double_tap"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
             app:defaultValue="right-click"
             app:entries="@array/long_press_action_entries"
             app:entryValues="@array/long_press_action_values"
-            app:key="pref_gesture_long_press"
-            app:title="@string/title_pref_long_press"
+            app:key="gesture_long_press"
+            app:title="@string/pref_long_press"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
             app:defaultValue="pan"
             app:entries="@array/swipe1_action_entries"
             app:entryValues="@array/swipe1_action_values"
-            app:key="pref_gesture_swipe1"
-            app:title="@string/title_pref_swipe"
+            app:key="gesture_swipe1"
+            app:title="@string/pref_swipe1"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/title_pref_category_2finger">
         <ListPreference
             app:defaultValue="pan"
             app:entries="@array/swipe2_action_entries"
             app:entryValues="@array/swipe2_action_values"
-            app:key="pref_gesture_swipe2"
-            app:title="@string/title_pref_swipe"
+            app:key="gesture_swipe2"
+            app:title="@string/pref_swipe2"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
-
 </PreferenceScreen>

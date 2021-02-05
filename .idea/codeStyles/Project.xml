@@ -140,6 +140,7 @@
     </codeStyleSettings>
     <codeStyleSettings language="kotlin">
       <option name="RIGHT_MARGIN" value="120" />
+      <option name="CLASS_ANNOTATION_WRAP" value="1" />
     </codeStyleSettings>
   </code_scheme>
 </component>

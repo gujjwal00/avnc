@@ -1,0 +1,42 @@
+<!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="@string/title_settings">
+
+    <Preference
+        app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Appearance"
+        app:icon="@drawable/ic_palette"
+        app:summary="@string/pref_appearance_summary"
+        app:title="@string/pref_appearance" />
+
+    <Preference
+        app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Display"
+        app:icon="@drawable/ic_video"
+        app:summary="@string/pref_display_summary"
+        app:title="@string/pref_display" />
+
+    <Preference
+        app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Input"
+        app:icon="@drawable/ic_keyboard"
+        app:summary="@string/pref_input_summary"
+        app:title="@string/pref_input" />
+
+    <Preference
+        app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Server"
+        app:icon="@drawable/ic_computer"
+        app:summary="@string/pref_server_summary"
+        app:title="@string/pref_servers" />
+
+    <Preference
+        app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Experimental"
+        app:icon="@drawable/ic_experimental"
+        app:summary="@string/pref_experimental_summary"
+        app:title="@string/pref_experimental" />
+
+</PreferenceScreen>

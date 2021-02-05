@@ -53,30 +53,40 @@
 
     <!-- Preference -->
     <string name="title_pref_activity">Settings</string>
-    <string name="title_pref_gesture">Gestures</string>
-    <string name="title_pref_zoom">Zoom</string>
-    <string name="title_pref_network">Network</string>
-    <string name="title_pref_experimental">Experimental</string>
-    <string name="title_pref_category_1finger">1 Finger</string>
-    <string name="title_pref_category_2finger">2 Fingers</string>
-    <string name="title_pref_single_tap">Single Tap</string>
-    <string name="title_pref_double_tap">Double Tap</string>
-    <string name="title_pref_long_press">Long Press</string>
-    <string name="title_pref_swipe">Swipe</string>
-    <string name="title_pref_zoom_min">Minimum Zoom</string>
-    <string name="title_pref_zoom_max">Maximum Zoom</string>
-    <string name="title_pref_credential">Credentials</string>
-    <string name="title_pref_cred_autocomplete">Enable Autocomplete</string>
-    <string name="title_pref_cred_autocomplete_summary">Reuse already known credentials</string>
-    <string name="title_pref_discovery">Service Discovery</string>
-    <string name="title_pref_discovery_summary">Find servers available on your network</string>
-    <string name="title_pref_discovery_timeout">Timeout (Seconds)</string>
-    <string name="title_pref_discovery_auto_start">Auto Start</string>
-    <string name="title_pref_discovery_restart">Restart</string>
-    <string name="title_pref_discovery_restart_summary">Restart Discovery after it stops</string>
-    <string name="title_pref_discovery_restart_delay">Restart Delay (Minutes)</string>
-    <string name="title_pref_experimental_indicator">Availability Indicator</string>
-    <string name="title_pref_experimental_indicator_summary">Indicate saved servers which are also found by Discovery.
-        Requires App restart.
-    </string>
+    <string name="pref_appearance">Appearance</string>
+    <string name="pref_appearance_summary">Look and feel</string>
+    <string name="pref_display">Remote Display</string>
+    <string name="pref_display_summary">Picture-in-Picture, Zoom</string>
+    <string name="pref_input">Input</string>
+    <string name="pref_input_summary">Gestures, Buttons</string>
+    <string name="pref_servers">Servers</string>
+    <string name="pref_server_summary">Discovery, Credentials</string>
+    <string name="pref_experimental">Experimental</string>
+    <string name="pref_experimental_summary">Extra goodies!</string>
+
+    <string name="pref_theme">Theme</string>
+    <string name="pref_gesture">Gestures</string>
+    <string name="pref_single_tap">Single Tap</string>
+    <string name="pref_double_tap">Double Tap</string>
+    <string name="pref_long_press">Long Press</string>
+    <string name="pref_swipe1">1 Finger Swipe</string>
+    <string name="pref_swipe2">2 Finger Swipe</string>
+    <string name="pref_fullscreen">Use Fullscreen</string>
+    <string name="pref_enable_pip">Enable Picture-in-Picture</string>
+    <string name="pref_zoom">Zoom</string>
+    <string name="pref_zoom_min">Minimum Zoom</string>
+    <string name="pref_zoom_max">Maximum Zoom</string>
+    <string name="pref_clipboard_sync">Clipboard Sync</string>
+    <string name="pref_credential">Credentials</string>
+    <string name="pref_cred_autocomplete">Enable Autocomplete</string>
+    <string name="pref_cred_autocomplete_summary">Suggests known credentials when connecting to a new Server</string>
+    <string name="pref_discovery">Discovery</string>
+    <string name="pref_discovery_timeout">Timeout (Seconds)</string>
+    <string name="pref_discovery_auto_start">Auto Start</string>
+    <string name="pref_discovery_auto_start_summary">Start Discovery when App starts</string>
+    <string name="pref_discovery_restart">Restart</string>
+    <string name="pref_discovery_restart_summary">Restart Discovery after it stops</string>
+    <string name="pref_discovery_restart_delay">Restart Delay (Minutes)</string>
+    <string name="pref_experimental_indicator">Availability Indicator</string>
+    <string name="pref_experimental_indicator_summary">Indicate saved servers which are also found by Discovery.\nRequires App restart.</string>
 </resources>

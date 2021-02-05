@@ -178,6 +178,9 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      * Sends current clipboard text to remote server.
      */
     fun sendClipboardText() {
+        if (!pref.server.clipboardSync)
+            return
+
         val clip = clipboard.primaryClip
         if (clip == null || clip.itemCount == 0)
             return

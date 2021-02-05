@@ -35,12 +35,12 @@ class Dispatcher(private val viewModel: VncViewModel) {
      * Action configuration
      **************************************************************************/
 
-    val swipe1Action by lazy { selectSwipeAction(prefs.gesture.swipe1) }
-    val swipe2Action by lazy { selectSwipeAction(prefs.gesture.swipe2) }
+    val swipe1Action by lazy { selectSwipeAction(prefs.input.gesture.swipe1) }
+    val swipe2Action by lazy { selectSwipeAction(prefs.input.gesture.swipe2) }
 
-    val tapAction by lazy { selectPointerAction(prefs.gesture.singleTap) }
-    val doubleTapAction by lazy { selectPointerAction(prefs.gesture.doubleTap) }
-    val longPressAction by lazy { selectPointerAction(prefs.gesture.longPress) }
+    val tapAction by lazy { selectPointerAction(prefs.input.gesture.singleTap) }
+    val doubleTapAction by lazy { selectPointerAction(prefs.input.gesture.doubleTap) }
+    val longPressAction by lazy { selectPointerAction(prefs.input.gesture.longPress) }
 
     private fun selectPointerAction(actionName: String): (PointF) -> Unit {
         return when (actionName) {

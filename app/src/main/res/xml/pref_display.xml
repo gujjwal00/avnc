@@ -1,0 +1,43 @@
+<!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="@string/pref_display">
+
+    <SwitchPreference
+        app:defaultValue="true"
+        app:key="fullscreen_display"
+        app:title="@string/pref_fullscreen" />
+
+    <SwitchPreference
+        app:defaultValue="true"
+        app:key="pip_enabled"
+        app:title="@string/pref_enable_pip" />
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_zoom_in"
+        app:title="@string/pref_zoom">
+
+        <SeekBarPreference
+            android:max="100"
+            app:defaultValue="50"
+            app:key="zoom_min"
+            app:min="10"
+            app:showSeekBarValue="true"
+            app:title="@string/pref_zoom_min" />
+
+        <SeekBarPreference
+            android:max="1000"
+            app:defaultValue="500"
+            app:key="zoom_max"
+            app:min="100"
+            app:showSeekBarValue="true"
+            app:title="@string/pref_zoom_max" />
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -43,6 +43,9 @@ open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
      * Puts given text on clipboard.
      */
     fun setClipboardText(text: String) {
+        if (!pref.server.clipboardSync)
+            return
+
         viewModelScope.launch(Dispatchers.Main) {
             try {
                 clipboard.setPrimaryClip(ClipData.newPlainText(null, text))

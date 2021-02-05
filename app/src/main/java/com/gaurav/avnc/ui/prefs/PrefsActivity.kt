@@ -11,11 +11,11 @@ package com.gaurav.avnc.ui.prefs
 import android.os.Bundle
 import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.gaurav.avnc.R
-
-private const val TITLE_TAG = "settingsActivityTitle"
 
 class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
@@ -28,33 +28,13 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
                     .beginTransaction()
                     .replace(R.id.settings, Main())
                     .commit()
-        } else {
-            title = savedInstanceState.getCharSequence(TITLE_TAG)
-        }
-
-        supportFragmentManager.addOnBackStackChangedListener {
-            if (supportFragmentManager.backStackEntryCount == 0) {
-                setTitle(R.string.title_pref_activity)
-            }
         }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putCharSequence(TITLE_TAG, title)
-    }
-
-    /**
-     * Handle 'back-press'
-     */
     override fun onSupportNavigateUp(): Boolean {
-        if (supportFragmentManager.popBackStackImmediate()) {
-            return true
-        }
-
-        finish()
+        onBackPressed()
         return true
     }
 
@@ -69,53 +49,50 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
                 .addToBackStack(null)
                 .commit()
 
-        title = pref.title
         return true
     }
+
 
     /**************************************************************************
      * Preference Fragments
      **************************************************************************/
 
-    @Keep
-    class Main : PreferenceFragmentCompat() {
+    abstract class PrefFragment(private val prefResource: Int) : PreferenceFragmentCompat() {
+
+        override fun onResume() {
+            super.onResume()
+            activity?.title = preferenceScreen.title
+        }
+
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.preferences, rootKey)
+            setPreferencesFromResource(prefResource, rootKey)
         }
     }
 
-    @Keep
-    class Gesture : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.gesture_preferences, rootKey)
+    @Keep class Main : PrefFragment(R.xml.pref_main)
+
+    @Keep class Appearance : PrefFragment(R.xml.pref_appearance) {
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+
+            val theme = findPreference<ListPreference>("theme")!!
+
+            theme.setOnPreferenceChangeListener { _, newValue ->
+                val newMode = when (newValue) {
+                    "light" -> AppCompatDelegate.MODE_NIGHT_NO
+                    "dark" -> AppCompatDelegate.MODE_NIGHT_YES
+                    else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                }
+
+                AppCompatDelegate.setDefaultNightMode(newMode)
+
+                true //Allow new value to be persisted
+            }
         }
     }
 
-    @Keep
-    class Zoom : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.zoom_preferences, rootKey)
-        }
-    }
-
-    @Keep
-    class Credential : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.credential_preferences, rootKey)
-        }
-    }
-
-    @Keep
-    class Network : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.network_preferences, rootKey)
-        }
-    }
-
-    @Keep
-    class Experimental : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.experimental_preferences, rootKey)
-        }
-    }
+    @Keep class Display : PrefFragment(R.xml.pref_display)
+    @Keep class Input : PrefFragment(R.xml.pref_input)
+    @Keep class Server : PrefFragment(R.xml.pref_server)
+    @Keep class Experimental : PrefFragment(R.xml.pref_experimental)
 }

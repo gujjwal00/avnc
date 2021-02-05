@@ -68,7 +68,7 @@ class CredentialFragment : DialogFragment() {
      * Hooks completion adapters
      */
     private fun setupAutoComplete() {
-        if (!viewModel.pref.cred.autocomplete)
+        if (!viewModel.pref.server.credAutocomplete)
             return
 
         viewModel.knownCredentials.observe(this) { list ->

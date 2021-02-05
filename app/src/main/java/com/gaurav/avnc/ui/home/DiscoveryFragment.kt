@@ -50,11 +50,11 @@ class DiscoveryFragment : Fragment() {
     private fun launchRestarter() = lifecycleScope.launch(Dispatchers.Main) {
 
         while (true) {
-            delay(viewModel.pref.network.discoveryTimeout + viewModel.pref.network.discoveryRestartDelay)
+            delay(viewModel.pref.server.discoveryTimeout + viewModel.pref.server.discoveryRestartDelay)
 
             if (activity?.lifecycle?.currentState == Lifecycle.State.RESUMED
-                    && viewModel.pref.network.discoveryAutoStart
-                    && viewModel.pref.network.discoveryRestart) {
+                    && viewModel.pref.server.discoveryAutoStart
+                    && viewModel.pref.server.discoveryRestart) {
                 viewModel.startDiscovery()
             }
         }

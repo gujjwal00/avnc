@@ -8,6 +8,18 @@
 
 <resources>
 
+    <string-array name="theme_entries">
+        <item>Follow System Theme</item>
+        <item>Dark</item>
+        <item>Light</item>
+    </string-array>
+    <string-array name="theme_values">
+        <item>system</item>
+        <item>dark</item>
+        <item>light</item>
+    </string-array>
+
+
     <string-array name="single_tap_action_entries">
         <item>None</item>
         <item>Left Click</item>

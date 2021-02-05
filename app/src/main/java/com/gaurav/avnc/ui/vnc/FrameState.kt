@@ -70,7 +70,7 @@ import kotlin.math.min
  */
 class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScale: Float = 5F) {
 
-    constructor(prefs: AppPreferences) : this(prefs.zoom.min, prefs.zoom.max)
+    constructor(prefs: AppPreferences) : this(prefs.display.zoomMin, prefs.display.zoomMax)
 
     var baseScale = 0F; private set
     var zoomScale = 1.0F; private set
