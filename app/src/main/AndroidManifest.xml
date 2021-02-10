@@ -22,8 +22,8 @@
         android:theme="@style/AppTheme">
 
         <activity-alias
-            android:name=".HomeActivity"
-            android:targetActivity=".ui.home.HomeActivity">
+            android:name=".StartupActivity"
+            android:targetActivity=".ui.home.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -43,6 +43,10 @@
                 <data android:scheme="vnc" />
             </intent-filter>
         </activity-alias>
+
+        <activity
+            android:name=".ui.home.SplashActivity"
+            android:theme="@style/SplashTheme" />
 
         <activity android:name=".ui.home.HomeActivity" />
 

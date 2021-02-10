@@ -8,6 +8,8 @@
 
 <resources>
 
+    <style name="SplashTheme" parent="Theme.MaterialComponents" />
+
     <style name="AppThemeBase" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
 
     <style name="AppTheme" parent="AppThemeBase">
