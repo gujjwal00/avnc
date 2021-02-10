@@ -8,10 +8,20 @@
 
 <resources>
 
+    <!--
+      This is used by SplashActivity and is intentionally dark theme.
+      This way we get a dark window on app start irrespective of the theme chosen by user.
+    -->
     <style name="SplashTheme" parent="Theme.MaterialComponents" />
 
+    <!--
+      This base theme is used for configuration-specific styling (ex: night mode, API 23)
+    -->
     <style name="AppThemeBase" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
 
+    <!--
+      This is the main theme.
+    -->
     <style name="AppTheme" parent="AppThemeBase">
         <item name="appBarLayoutStyle">@style/AppBarLayout</item>
     </style>
@@ -19,7 +29,6 @@
     <style name="AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:elevation">@dimen/appbar_elevation</item>
-
     </style>
 
     <style name="UrlBar" parent="Widget.MaterialComponents.Toolbar">
@@ -59,7 +68,7 @@
         <item name="android:layout_marginStart">@dimen/margin_normal</item>
         <item name="android:layout_marginEnd">@dimen/margin_normal</item>
         <item name="android:focusable">true</item>
-        <item name="cardElevation">2dp</item>
+        <item name="cardElevation">@dimen/server_card_elevation</item>
         <item name="strokeWidth">@dimen/server_card_stroke_width</item>
         <item name="contentPadding">@dimen/padding_normal</item>
         <item name="strokeColor">@color/colorBorder</item>
