@@ -9,5 +9,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <corners android:radius="@dimen/toolbar_bg_corner_radius" />
-    <solid android:color="@color/colorToolbarBackground" />
+    <solid android:color="@color/colorUrlBarBackground" />
 </shape>

@@ -20,13 +20,11 @@
             android:fitsSystemWindows="true">
 
             <LinearLayout
+                style="@style/UrlBar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_height"
-                android:layout_marginHorizontal="@dimen/margin_normal"
-                android:layout_marginTop="@dimen/margin_large"
-                android:layout_marginBottom="@dimen/margin_normal"
-                android:background="@drawable/bg_urlbar"
                 android:gravity="center"
+                android:orientation="horizontal"
                 android:transitionName="urlbar">
 
                 <ImageButton

@@ -6,7 +6,8 @@
   ~ See COPYING.txt for more details.
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -16,7 +17,7 @@
     </data>
 
     <com.google.android.material.card.MaterialCardView
-        style="@style/ListItem"
+        style="@style/ServerCard"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_item_height">
 
@@ -24,13 +25,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|start"
-            android:text="@{viewModel.name}" />
+            android:text="@{viewModel.name}"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            tools:text="Example Server Name" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|start"
-            android:text="@{viewModel.address}" />
+            android:text="@{viewModel.address}"
+            tools:text="192.168.1.1" />
 
         <!--Experimental Feature-->
         <View

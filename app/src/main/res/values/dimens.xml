@@ -16,5 +16,6 @@
     <dimen name="action_btn_size">48dp</dimen>
     <dimen name="toolbar_height">48dp</dimen>
     <dimen name="toolbar_bg_corner_radius">24dp</dimen>
-
+    <dimen name="appbar_elevation">4dp</dimen>
+    <dimen name="server_card_stroke_width">0dp</dimen>
 </resources>

@@ -21,18 +21,13 @@
 
             <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:elevation="14dp"
-                android:fitsSystemWindows="true">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/toolbar"
+                    android:id="@+id/urlbar"
+                    style="@style/UrlBar"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/toolbar_height"
-                    android:layout_marginHorizontal="@dimen/margin_normal"
-                    android:layout_marginTop="@dimen/margin_large"
-                    android:layout_marginBottom="@dimen/margin_normal"
-                    android:background="@drawable/bg_urlbar"
                     app:menu="@menu/home"
                     app:navigationIcon="@drawable/ic_menu">
 

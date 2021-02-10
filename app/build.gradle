@@ -80,7 +80,7 @@ android {
 
 dependencies {
     def version = [
-            appCompat : '1.1.0',
+            appCompat : '1.2.0',
             navigation: '2.3.0',
             lifecycle : '2.2.0',
             room      : '2.2.5',
@@ -95,8 +95,6 @@ dependencies {
 
 
     implementation 'androidx.preference:preference:1.1.1'
-    implementation "androidx.navigation:navigation-fragment:$version.navigation"
-    implementation "androidx.navigation:navigation-ui:$version.navigation"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version.lifecycle"
     implementation "androidx.room:room-runtime:$version.room"
     implementation "androidx.room:room-ktx:$version.room"

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<!--
   ~ Copyright (c) 2020  Gaurav Ujjwal.
   ~
   ~ SPDX-License-Identifier:  GPL-3.0-or-later
@@ -7,6 +7,6 @@
   -->
 
 <resources>
-    <color name="colorBorder">#484848</color>
-    <color name="colorUrlBarBackground">#E8E8E8</color>
+    <dimen name="appbar_elevation">14dp</dimen>
+    <dimen name="server_card_stroke_width">1dp</dimen>
 </resources>

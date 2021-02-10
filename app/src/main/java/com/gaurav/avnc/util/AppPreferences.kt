@@ -10,6 +10,7 @@ package com.gaurav.avnc.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 
 /**
@@ -22,7 +23,11 @@ class AppPreferences(private val context: Context) {
     private val prefs: SharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
 
     inner class Appearance {
-        val theme; get() = prefs.getString("theme", "system")
+        val nightMode = when (prefs.getString("theme", "system")) {
+            "light" -> AppCompatDelegate.MODE_NIGHT_NO
+            "dark" -> AppCompatDelegate.MODE_NIGHT_YES
+            else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        }
     }
 
     inner class Display {

@@ -44,9 +44,9 @@ class HomeActivity : AppCompatActivity() {
 
         tabController = TabController(supportFragmentManager, binding.pager, binding.tabs)
         binding.drawerNav.setNavigationItemSelectedListener { onMenuItemSelected(it.itemId) }
-        binding.toolbar.setNavigationOnClickListener { binding.drawerLayout.open() }
-        binding.toolbar.setOnMenuItemClickListener { onMenuItemSelected(it.itemId) }
-        binding.toolbar.setOnClickListener { showUrlActivity() }
+        binding.urlbar.setNavigationOnClickListener { binding.drawerLayout.open() }
+        binding.urlbar.setOnMenuItemClickListener { onMenuItemSelected(it.itemId) }
+        binding.urlbar.setOnClickListener { showUrlActivity() }
 
         //Observers
         viewModel.profileEditEvent.observe(this) { showProfileEditor() }
@@ -82,7 +82,7 @@ class HomeActivity : AppCompatActivity() {
      * Launches VNC Url activity
      */
     private fun showUrlActivity() {
-        val anim = ActivityOptions.makeSceneTransitionAnimation(this, binding.toolbar, "urlbar")
+        val anim = ActivityOptions.makeSceneTransitionAnimation(this, binding.urlbar, "urlbar")
         startActivity(Intent(this, UrlBarActivity::class.java), anim.toBundle())
     }
 
