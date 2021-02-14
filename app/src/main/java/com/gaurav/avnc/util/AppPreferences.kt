@@ -23,11 +23,12 @@ class AppPreferences(private val context: Context) {
     private val prefs: SharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
 
     inner class Appearance {
-        val nightMode = when (prefs.getString("theme", "system")) {
-            "light" -> AppCompatDelegate.MODE_NIGHT_NO
-            "dark" -> AppCompatDelegate.MODE_NIGHT_YES
-            else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-        }
+        val nightMode
+            get() = when (prefs.getString("theme", "system")) {
+                "light" -> AppCompatDelegate.MODE_NIGHT_NO
+                "dark" -> AppCompatDelegate.MODE_NIGHT_YES
+                else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            }
     }
 
     inner class Display {
