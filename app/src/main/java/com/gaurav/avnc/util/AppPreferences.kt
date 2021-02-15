@@ -9,7 +9,6 @@
 package com.gaurav.avnc.util
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 
@@ -18,9 +17,9 @@ import androidx.preference.PreferenceManager
  *
  * - All timeouts are in milliseconds.
  */
-class AppPreferences(private val context: Context) {
+class AppPreferences(context: Context) {
 
-    private val prefs: SharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
+    private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
     inner class Appearance {
         val nightMode
@@ -44,6 +43,8 @@ class AppPreferences(private val context: Context) {
         val longPress; get() = prefs.getString("gesture_long_press", "right-click")!!
         val swipe1; get() = prefs.getString("gesture_swipe1", "pan")!!
         val swipe2; get() = prefs.getString("gesture_swipe2", "pan")!!
+        val drag; get() = prefs.getString("gesture_drag", "none")!!
+        val dragEnabled; get() = (drag != "none")
     }
 
     inner class Input {

@@ -47,13 +47,13 @@ class Messenger(private val client: VncClient) {
      */
     private var pointerButtonMask: Int = 0
 
-    private fun sendPointerButtonDown(button: PointerButton, p: PointF) {
+    fun sendPointerButtonDown(button: PointerButton, p: PointF) {
         pointerButtonMask = pointerButtonMask or button.bitMask
         val mask = pointerButtonMask //Need a copy to avoid passing reference
         execute { client.sendPointerEvent(p.x.toInt(), p.y.toInt(), mask) }
     }
 
-    private fun sendPointerButtonUp(button: PointerButton, p: PointF) {
+    fun sendPointerButtonUp(button: PointerButton, p: PointF) {
         pointerButtonMask = pointerButtonMask and button.bitMask.inv()
         val mask = pointerButtonMask //Need a copy to avoid passing reference
         execute { client.sendPointerEvent(p.x.toInt(), p.y.toInt(), mask) }

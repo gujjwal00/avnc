@@ -52,5 +52,13 @@
             app:key="gesture_swipe2"
             app:title="@string/pref_swipe2"
             app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="none"
+            app:entries="@array/drag_action_entries"
+            app:entryValues="@array/drag_action_values"
+            app:key="gesture_drag"
+            app:title="@string/pref_drag"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 </PreferenceScreen>

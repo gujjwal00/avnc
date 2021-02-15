@@ -37,6 +37,7 @@ class Dispatcher(private val viewModel: VncViewModel) {
 
     val swipe1Action by lazy { selectSwipeAction(prefs.input.gesture.swipe1) }
     val swipe2Action by lazy { selectSwipeAction(prefs.input.gesture.swipe2) }
+    val dragAction by lazy { selectSwipeAction(prefs.input.gesture.drag) }
 
     val tapAction by lazy { selectPointerAction(prefs.input.gesture.singleTap) }
     val doubleTapAction by lazy { selectPointerAction(prefs.input.gesture.doubleTap) }
@@ -57,6 +58,7 @@ class Dispatcher(private val viewModel: VncViewModel) {
         return when (actionName) {
             "remote-scroll" -> { sp, dx, dy -> doRemoteScroll(sp, dx, dy) }
             "pan" -> { _, dx, dy -> doPan(dx, dy) }
+            "drag" -> { p, _, _ -> doDrag(p) }
             else -> { _, _, _ -> } //Nothing
         }
     }
@@ -72,6 +74,12 @@ class Dispatcher(private val viewModel: VncViewModel) {
     fun onTap(p: PointF) = tapAction(p)
     fun onDoubleTap(p: PointF) = doubleTapAction(p)
     fun onLongPress(p: PointF) = longPressAction(p)
+    fun onDrag(p: PointF, dx: Float, dy: Float) = dragAction(p, dx, dy)
+
+    fun onDragEnd(p: PointF) {
+        if (prefs.input.gesture.drag == "drag")
+            endDrag(p)
+    }
 
     fun onKeyEvent(event: KeyEvent) {
         doSendKey(event)
@@ -132,6 +140,22 @@ class Dispatcher(private val viewModel: VncViewModel) {
 
     private fun doMovePointer(p: PointF) {
         doClick(PointerButton.None, p)
+    }
+
+    private fun doDrag(p: PointF) {
+        val fbp = viewModel.frameState.toFb(p)
+
+        if (fbp != null) {
+            messenger.sendPointerButtonDown(PointerButton.Left, fbp)
+        }
+    }
+
+    private fun endDrag(p: PointF) {
+        val fbp = viewModel.frameState.toFb(p)
+
+        if (fbp != null) {
+            messenger.sendPointerButtonUp(PointerButton.Left, fbp)
+        }
     }
 
     /**

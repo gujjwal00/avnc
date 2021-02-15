@@ -10,6 +10,7 @@ package com.gaurav.avnc.ui.vnc
 
 import android.graphics.PointF
 import android.view.GestureDetector
+import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import com.gaurav.avnc.viewmodel.VncViewModel
@@ -25,6 +26,7 @@ class InputHandler(private val viewModel: VncViewModel, private val dispatcher: 
     private val scaleDetector = ScaleGestureDetector(viewModel.getApplication(), this)
     private val gestureDetector = GestureDetector(viewModel.getApplication(), this)
     private val frameScroller = FrameScroller(viewModel) //Should it be in Dispatcher?
+    private val dragDetector = DragDetector()
 
     init {
         scaleDetector.isQuickScaleEnabled = false
@@ -34,6 +36,7 @@ class InputHandler(private val viewModel: VncViewModel, private val dispatcher: 
      * Touch event receiver.
      */
     fun onTouchEvent(event: MotionEvent): Boolean {
+        dragDetector.onTouchEvent(event)
         scaleDetector.onTouchEvent(event)
         return gestureDetector.onTouchEvent(event)
     }
@@ -68,6 +71,11 @@ class InputHandler(private val viewModel: VncViewModel, private val dispatcher: 
     }
 
     override fun onLongPress(e: MotionEvent) {
+        viewModel.frameViewRef.get()?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+
+        if (dragDetector.onLongPress(e))
+            return
+
         dispatcher.onLongPress(PointF(e.x, e.y))
     }
 
@@ -79,5 +87,63 @@ class InputHandler(private val viewModel: VncViewModel, private val dispatcher: 
     override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
         dispatcher.onTap(PointF(e.x, e.y))
         return true
+    }
+
+    /**
+     * Small utility class for handling drag gesture (Long Press followed by Swipe/Move).
+     */
+    private inner class DragDetector {
+        private val dragEnabled = viewModel.pref.input.gesture.dragEnabled
+        private var longPressDetected = false
+        private var isDragging = false
+        private var lastX = 0F
+        private var lastY = 0F
+
+        fun onLongPress(e: MotionEvent): Boolean {
+            if (!dragEnabled)
+                return false
+
+            longPressDetected = true
+            lastX = e.x
+            lastY = e.y
+            return true
+        }
+
+        fun onTouchEvent(event: MotionEvent) {
+            if (!longPressDetected)
+                return
+
+            when (event.actionMasked) {
+                MotionEvent.ACTION_MOVE -> {
+                    isDragging = true
+                    val x = event.x
+                    val y = event.y
+
+                    dispatcher.onDrag(PointF(x, y), x - lastX, y - lastY)
+
+                    lastX = x
+                    lastY = y
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    if (isDragging)
+                        dispatcher.onDragEnd(PointF(event.x, event.y))
+                    else
+                        dispatcher.onLongPress(PointF(event.x, event.y))
+
+                    longPressDetected = false
+                    isDragging = false
+                }
+
+                MotionEvent.ACTION_POINTER_DOWN,
+                MotionEvent.ACTION_CANCEL -> {
+                    if (isDragging)
+                        dispatcher.onDragEnd(PointF(event.x, event.y))
+
+                    longPressDetected = false
+                    isDragging = false
+                }
+            }
+        }
     }
 }

@@ -71,6 +71,7 @@
     <string name="pref_long_press">Long Press</string>
     <string name="pref_swipe1">1 Finger Swipe</string>
     <string name="pref_swipe2">2 Finger Swipe</string>
+    <string name="pref_drag">Drag (Long Press then Swipe)</string>
     <string name="pref_fullscreen">Use Fullscreen</string>
     <string name="pref_enable_pip">Enable Picture-in-Picture</string>
     <string name="pref_zoom">Zoom</string>
