@@ -85,12 +85,14 @@
 
     <string-array name="drag_action_entries">
         <item>None</item>
-        <item>Drag</item>
+        <item>Drag Remote Content</item>
+        <item>Scroll Remote Content</item>
         <item>Pan</item>
     </string-array>
     <string-array name="drag_action_values">
         <item>none</item>
-        <item>drag</item>
+        <item>remote-drag</item>
+        <item>remote-scroll</item>
         <item>pan</item>
     </string-array>
 </resources>

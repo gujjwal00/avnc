@@ -31,10 +31,15 @@ class Messenger(private val client: VncClient) {
 
     fun cleanup() {
         sender.shutdownNow()
-        sender.awaitTermination(60, TimeUnit.SECONDS)
+
+        try {
+            sender.awaitTermination(60, TimeUnit.SECONDS)
+        } catch (e: InterruptedException) {
+            Log.w(javaClass.simpleName, "Interrupted while waiting for Sender thread to shutdown!")
+        }
 
         if (!sender.isShutdown)
-            Log.w(this.javaClass.simpleName, "Unable to shutdown Sender thread!")
+            Log.w(javaClass.simpleName, "Unable to shutdown Sender thread!")
     }
 
 
@@ -47,28 +52,26 @@ class Messenger(private val client: VncClient) {
      */
     private var pointerButtonMask: Int = 0
 
+    private fun sendPointerEvent(mask: Int, p: PointF) {
+        val x = p.x.toInt()
+        val y = p.y.toInt()
+        execute { client.sendPointerEvent(x, y, mask) }
+    }
+
     fun sendPointerButtonDown(button: PointerButton, p: PointF) {
         pointerButtonMask = pointerButtonMask or button.bitMask
-        val mask = pointerButtonMask //Need a copy to avoid passing reference
-        execute { client.sendPointerEvent(p.x.toInt(), p.y.toInt(), mask) }
+        sendPointerEvent(pointerButtonMask, p)
     }
 
     fun sendPointerButtonUp(button: PointerButton, p: PointF) {
         pointerButtonMask = pointerButtonMask and button.bitMask.inv()
-        val mask = pointerButtonMask //Need a copy to avoid passing reference
-        execute { client.sendPointerEvent(p.x.toInt(), p.y.toInt(), mask) }
+        sendPointerEvent(pointerButtonMask, p)
     }
 
     fun sendClick(button: PointerButton, p: PointF) {
         sendPointerButtonDown(button, p)
         sendPointerButtonUp(button, p)
     }
-
-    fun sendLeftClick(p: PointF) = sendClick(PointerButton.Left, p)
-    fun sendMiddleClick(p: PointF) = sendClick(PointerButton.Middle, p)
-    fun sendRightClick(p: PointF) = sendClick(PointerButton.Right, p)
-    fun sendWheelUp(p: PointF) = sendClick(PointerButton.WheelUp, p)
-    fun sendWheelDown(p: PointF) = sendClick(PointerButton.WheelDown, p)
 
     /**************************************************************************
      * Key events

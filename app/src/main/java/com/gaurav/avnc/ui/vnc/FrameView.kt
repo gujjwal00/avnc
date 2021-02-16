@@ -41,6 +41,6 @@ class FrameView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        return activity.inputHandler.onTouchEvent(event)
+        return activity.touchHandler.onTouchEvent(event)
     }
 }

@@ -52,7 +52,7 @@ class VncActivity : AppCompatActivity() {
     val viewModel by viewModels<VncViewModel>()
     lateinit var binding: ActivityVncBinding
     val dispatcher by lazy { Dispatcher(viewModel) }
-    val inputHandler by lazy { InputHandler(viewModel, dispatcher) }
+    val touchHandler by lazy { TouchHandler(viewModel, dispatcher) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

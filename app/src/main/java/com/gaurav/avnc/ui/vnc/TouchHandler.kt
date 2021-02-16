@@ -16,27 +16,34 @@ import android.view.ScaleGestureDetector
 import com.gaurav.avnc.viewmodel.VncViewModel
 
 /**
- * Handles different input events.
+ * Handler for touch events. It detects various gestures and notifies [dispatcher].
  *
  * TODO: Reduce [PointF] garbage
  */
-class InputHandler(private val viewModel: VncViewModel, private val dispatcher: Dispatcher)
+class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: Dispatcher)
     : ScaleGestureDetector.OnScaleGestureListener, GestureDetector.SimpleOnGestureListener() {
 
     private val scaleDetector = ScaleGestureDetector(viewModel.getApplication(), this)
     private val gestureDetector = GestureDetector(viewModel.getApplication(), this)
     private val frameScroller = FrameScroller(viewModel) //Should it be in Dispatcher?
     private val dragDetector = DragDetector()
+    private val dragEnabled = viewModel.pref.input.gesture.dragEnabled
 
     init {
         scaleDetector.isQuickScaleEnabled = false
     }
 
-    /**
-     * Touch event receiver.
-     */
+    //Extension to easily access touch position
+    private fun MotionEvent.point() = PointF(x, y)
+
+    /****************************************************************************************
+     * Touch Event receivers
+     ****************************************************************************************/
+
     fun onTouchEvent(event: MotionEvent): Boolean {
-        dragDetector.onTouchEvent(event)
+        if (dragEnabled)
+            dragDetector.onTouchEvent(event)
+
         scaleDetector.onTouchEvent(event)
         return gestureDetector.onTouchEvent(event)
     }
@@ -46,66 +53,67 @@ class InputHandler(private val viewModel: VncViewModel, private val dispatcher: 
         return true
     }
 
+    /****************************************************************************************
+     * Gestures
+     ****************************************************************************************/
+
     override fun onScaleBegin(detector: ScaleGestureDetector) = true
     override fun onScaleEnd(detector: ScaleGestureDetector) {}
-
     override fun onScale(detector: ScaleGestureDetector): Boolean {
         dispatcher.onScale(detector.scaleFactor, detector.focusX, detector.focusY)
         return true
     }
 
-    override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-        frameScroller.fling(velocityX, velocityY)
+    override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+        dispatcher.onTap(e.point())
         return true
     }
 
-    override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
-        val startPoint = PointF(e1.x, e1.y)
-
-        when (e2.pointerCount) {
-            1 -> dispatcher.onSwipe1(startPoint, -distanceX, -distanceY)
-            2 -> dispatcher.onSwipe2(startPoint, -distanceX, -distanceY)
-        }
-
+    override fun onDoubleTap(e: MotionEvent): Boolean {
+        dispatcher.onDoubleTap(e.point())
         return true
     }
 
     override fun onLongPress(e: MotionEvent) {
         viewModel.frameViewRef.get()?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
 
-        if (dragDetector.onLongPress(e))
-            return
-
-        dispatcher.onLongPress(PointF(e.x, e.y))
+        if (dragEnabled)
+            dragDetector.onLongPress(e)
+        else
+            dispatcher.onLongPress(e.point())
     }
 
-    override fun onDoubleTap(e: MotionEvent): Boolean {
-        dispatcher.onDoubleTap(PointF(e.x, e.y))
+    override fun onFling(e1: MotionEvent, e2: MotionEvent, vX: Float, vY: Float): Boolean {
+        frameScroller.fling(vX, vY)
         return true
     }
 
-    override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-        dispatcher.onTap(PointF(e.x, e.y))
+    override fun onScroll(e1: MotionEvent, e2: MotionEvent, dX: Float, dY: Float): Boolean {
+        val startPoint = e1.point()
+        val currentPoint = e2.point()
+
+        when (e2.pointerCount) {
+            1 -> dispatcher.onSwipe1(startPoint, currentPoint, -dX, -dY)
+            2 -> dispatcher.onSwipe2(startPoint, currentPoint, -dX, -dY)
+        }
+
         return true
     }
 
-    /**
-     * Small utility class for handling drag gesture (Long Press followed by Swipe/Move).
-     */
+    /***************************************************************************************
+     * Small utility class for handling drag gesture (Long Press followed by Swipe/Move)
+     **************************************************************************************/
+
     private inner class DragDetector {
-        private val dragEnabled = viewModel.pref.input.gesture.dragEnabled
         private var longPressDetected = false
         private var isDragging = false
-        private var lastX = 0F
-        private var lastY = 0F
+        private var startPoint = PointF()
+        private var lastPoint = PointF()
 
         fun onLongPress(e: MotionEvent): Boolean {
-            if (!dragEnabled)
-                return false
-
             longPressDetected = true
-            lastX = e.x
-            lastY = e.y
+            startPoint = e.point()
+            lastPoint = startPoint
             return true
         }
 
@@ -116,20 +124,17 @@ class InputHandler(private val viewModel: VncViewModel, private val dispatcher: 
             when (event.actionMasked) {
                 MotionEvent.ACTION_MOVE -> {
                     isDragging = true
-                    val x = event.x
-                    val y = event.y
 
-                    dispatcher.onDrag(PointF(x, y), x - lastX, y - lastY)
-
-                    lastX = x
-                    lastY = y
+                    val cp = event.point()
+                    dispatcher.onDrag(startPoint, cp, cp.x - lastPoint.x, cp.y - lastPoint.y)
+                    lastPoint = cp
                 }
 
                 MotionEvent.ACTION_UP -> {
                     if (isDragging)
-                        dispatcher.onDragEnd(PointF(event.x, event.y))
+                        dispatcher.onDragEnd(event.point())
                     else
-                        dispatcher.onLongPress(PointF(event.x, event.y))
+                        dispatcher.onLongPress(event.point())
 
                     longPressDetected = false
                     isDragging = false
@@ -138,7 +143,7 @@ class InputHandler(private val viewModel: VncViewModel, private val dispatcher: 
                 MotionEvent.ACTION_POINTER_DOWN,
                 MotionEvent.ACTION_CANCEL -> {
                     if (isDragging)
-                        dispatcher.onDragEnd(PointF(event.x, event.y))
+                        dispatcher.onDragEnd(event.point())
 
                     longPressDetected = false
                     isDragging = false
