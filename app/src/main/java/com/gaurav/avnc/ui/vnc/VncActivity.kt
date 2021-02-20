@@ -17,7 +17,6 @@ import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
@@ -82,15 +81,6 @@ class VncActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.sendClipboardText()
-    }
-
-    override fun onBackPressed() {
-        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START) ||
-                binding.drawerLayout.isDrawerOpen(GravityCompat.END)) {
-            binding.drawerLayout.closeDrawers()
-        } else {
-            super.onBackPressed()
-        }
     }
 
     private fun getProfile(): ServerProfile {

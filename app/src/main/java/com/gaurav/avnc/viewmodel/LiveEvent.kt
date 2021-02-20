@@ -71,16 +71,4 @@ class LiveEvent<T> : LiveData<T>() {
             }
         }
     }
-
-    /**
-     * Overload of `observe` which allows directly passing a lambda.
-     */
-    fun observe(owner: LifecycleOwner, observer: (data: T) -> Unit) {
-        super.observe(owner) {
-            if (!handled && it != null) {
-                observer(it)
-                handled = true
-            }
-        }
-    }
 }
