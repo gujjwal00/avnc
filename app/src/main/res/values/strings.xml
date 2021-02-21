@@ -43,6 +43,7 @@
     <string name="hint_optional">Optional</string>
 
     <string name="msg_server_profile_deleted">Server deleted.</string>
+    <string name="msg_pip_not_supported">Picture-in-Picture is not supported on this device</string>
     <string name="desc_disconnected_icon">Disconnected state indicator icon</string>
     <string name="desc_connect_btn">Connect to this URL</string>
     <string name="desc_add_server_btn">Add Server</string>

@@ -8,6 +8,8 @@
 
 package com.gaurav.avnc.ui.prefs
 
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +17,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreference
 import com.gaurav.avnc.R
 import com.gaurav.avnc.util.layoutBehindStatusBar
 import com.google.android.material.appbar.MaterialToolbar
@@ -99,7 +102,23 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
         }
     }
 
-    @Keep class Display : PrefFragment(R.xml.pref_display)
+    @Keep class Display : PrefFragment(R.xml.pref_display) {
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+
+            // If system does not support PiP, disable its preference
+            val hasPiPSupport = Build.VERSION.SDK_INT >= 26 &&
+                    requireActivity().packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+
+            if (!hasPiPSupport) {
+                findPreference<SwitchPreference>("pip_enabled")!!.apply {
+                    isEnabled = false
+                    summary = getString(R.string.msg_pip_not_supported)
+                }
+            }
+        }
+    }
+
     @Keep class Input : PrefFragment(R.xml.pref_input)
     @Keep class Server : PrefFragment(R.xml.pref_server)
     @Keep class Experimental : PrefFragment(R.xml.pref_experimental)

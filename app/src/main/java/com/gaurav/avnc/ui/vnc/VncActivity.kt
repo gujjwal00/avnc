@@ -9,11 +9,15 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.app.Activity
+import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.opengl.GLSurfaceView
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.util.Rational
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +27,7 @@ import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.vnc.gl.Renderer
 import com.gaurav.avnc.viewmodel.VncViewModel
+import com.gaurav.avnc.vnc.VncClient
 import com.gaurav.avnc.vnc.VncUri
 import java.lang.ref.WeakReference
 
@@ -105,4 +110,39 @@ class VncActivity : AppCompatActivity() {
     }
 
     private fun closeDrawers() = binding.drawerLayout.closeDrawers()
+
+
+    /************************************************************************************
+     * Picture-in-Picture support
+     ************************************************************************************/
+
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        enterPiPMode()
+    }
+
+    override fun onPictureInPictureModeChanged(inPiP: Boolean, newConfig: Configuration?) {
+        super.onPictureInPictureModeChanged(inPiP, newConfig)
+        if (inPiP) {
+            closeDrawers()
+            viewModel.resetZoom()
+        }
+    }
+
+    private fun enterPiPMode() {
+        val canEnter = viewModel.pref.display.pipEnabled && viewModel.client.state == VncClient.State.Connected
+
+        if (canEnter && Build.VERSION.SDK_INT >= 26) {
+
+            val fs = viewModel.frameState
+            val aspectRatio = Rational(fs.fbWidth.toInt(), fs.fbHeight.toInt())
+            val param = PictureInPictureParams.Builder().setAspectRatio(aspectRatio).build()
+
+            try {
+                enterPictureInPictureMode(param)
+            } catch (e: IllegalStateException) {
+                Log.w(javaClass.simpleName, "Cannot enter PiP mode", e)
+            }
+        }
+    }
 }

@@ -16,7 +16,7 @@
         app:title="@string/pref_fullscreen" />
 
     <SwitchPreference
-        app:defaultValue="true"
+        app:defaultValue="false"
         app:key="pip_enabled"
         app:title="@string/pref_enable_pip" />
 

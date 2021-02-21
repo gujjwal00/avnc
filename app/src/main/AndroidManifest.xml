@@ -7,6 +7,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.gaurav.avnc">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -55,7 +56,12 @@
             android:parentActivityName=".ui.home.HomeActivity"
             android:windowSoftInputMode="stateVisible" />
 
-        <activity android:name=".ui.vnc.VncActivity" />
+        <activity
+            android:name=".ui.vnc.VncActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
+            tools:ignore="UnusedAttribute" />
 
         <activity android:name=".ui.vnc.UriReceiverActivity" />
 
