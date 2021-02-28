@@ -7,7 +7,8 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -64,13 +65,13 @@
 
                 <ImageButton
                     android:id="@+id/kb_btn"
-                    style="@style/ToolbarButton"
+                    style="@style/ImageButton"
                     android:contentDescription="@string/desc_kb_btn"
                     android:src="@drawable/ic_keyboard" />
 
                 <ImageButton
                     android:id="@+id/zoom_reset_btn"
-                    style="@style/ToolbarButton"
+                    style="@style/ImageButton"
                     android:contentDescription="@string/desc_reset_zoom_btn"
                     android:src="@drawable/ic_zoom_reset" />
 
@@ -85,7 +86,6 @@
             app:isVisible="@{viewModel.clientState != State.Connected}">
 
             <ProgressBar
-                android:id="@+id/progressBar"
                 style="@style/Widget.AppCompat.ProgressBar"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
@@ -116,7 +116,20 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="State" />
+
+            <ImageButton
+                android:id="@+id/retry_connection_btn"
+                style="@style/ImageButton"
+                android:background="@drawable/bg_circular_button"
+                android:contentDescription="@string/desc_retry_connection_btn"
+                android:src="@drawable/ic_refresh"
+                app:isVisible="@{viewModel.clientState == State.Disconnected}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/client_state" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -52,7 +52,7 @@
         <item name="android:layout_margin">@dimen/margin_small</item>
     </style>
 
-    <style name="ToolbarButton">
+    <style name="ImageButton">
         <item name="android:layout_width">@dimen/action_btn_size</item>
         <item name="android:layout_height">@dimen/action_btn_size</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>

@@ -49,6 +49,7 @@
     <string name="desc_add_server_btn">Add Server</string>
     <string name="desc_kb_btn">Show Keyboard</string>
     <string name="desc_reset_zoom_btn">Reset Zoom</string>
+    <string name="desc_retry_connection_btn">Retry Connection</string>
     <string name="desc_back_btn">Go Back</string>
     <string name="desc_clear_url_btn">Clear URL</string>
 

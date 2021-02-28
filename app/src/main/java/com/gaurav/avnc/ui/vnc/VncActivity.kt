@@ -70,10 +70,10 @@ class VncActivity : AppCompatActivity() {
         binding.frameView.setRenderer(Renderer(viewModel))
         binding.frameView.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
 
+        binding.retryConnectionBtn.setOnClickListener { retryConnection() }
+
         //Drawers
         binding.drawerLayout.setScrimColor(0)
-
-        //Drawer Buttons
         binding.kbBtn.setOnClickListener { showKeyboard(); closeDrawers() }
         binding.zoomResetBtn.setOnClickListener { viewModel.resetZoom(); closeDrawers() }
 
@@ -96,6 +96,15 @@ class VncActivity : AppCompatActivity() {
 
         Log.e(javaClass.simpleName, "No connection information was passed through Intent.")
         return ServerProfile()
+    }
+
+    private fun retryConnection() {
+        //We simply create a new activity to force creation of a new ViewModel
+        //which effectively restarts the connection.
+        if (!isFinishing) {
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun showCredentialDialog() {
