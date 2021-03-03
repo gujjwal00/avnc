@@ -75,6 +75,9 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
         if (viewModel.client.state != VncClient.State.Connected)
             return
 
+        if (state.vpWidth == 0f || state.vpHeight == 0f)
+            return
+
         Matrix.setIdentityM(projectionMatrix, 0)
         Matrix.orthoM(projectionMatrix, 0, 0f, state.vpWidth, -state.vpHeight, 0f, -1f, 1f)
         Matrix.translateM(projectionMatrix, 0, state.frameX, -state.frameY, 0f)

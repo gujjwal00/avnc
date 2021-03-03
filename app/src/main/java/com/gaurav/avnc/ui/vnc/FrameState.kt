@@ -19,14 +19,32 @@ import kotlin.math.min
  * Terminology
  * ===========
  *
- * Viewport: This is the area of screen where frame is rendered. Currently,
- * for all intent & purpose it is equal to the size of [FrameView].
- *
  * Framebuffer: This is the buffer holding pixel data. It resides in native memory.
  *
  * Frame: This is the actual content rendered on screen. It can be thought of as
  * 'scaled framebuffer'. Its size changes based on current [scale] and its position
  * is stored in [frameX] & [frameY].
+ *
+ * Window: Top-level window of the application/activity.
+ *
+ * Viewport: This is the area of screen where frame is rendered. It is denoted by [FrameView].
+ *
+ *     Window denotes the 'total' area available to our activity while viewport
+ *     denotes the 'visible to user' area. Normally they would be same but
+ *     viewport can be smaller than window - for ex: If soft keyboard is visible.
+ *
+ *     +---------------------------+
+ *     |                           |
+ *     |         ViewPort          |
+ *     |                           |   Window
+ *     +---------------------------+
+ *     |      Soft Keyboard        |
+ *     +---------------------------+
+ *
+ *     Differentiating between window & viewport allows us to handle layout changes more
+ *     easily and cleanly. We use window size to calculate base scale because we don't want
+ *     to change scale when keyboard is shown/hidden. And viewport size is used for coercing
+ *     frame position so that user can pan the whole frame even if keyboard is visible.
  *
  *
  * State & Coordinates
@@ -47,9 +65,9 @@ import kotlin.math.min
  *
  * 1. Base Scale [baseScale] :
  *
- * This is used to manage the difference between framebuffer size & viewport size.
- * At this scale frame will be completely visible inside viewport (in landscape mode),
- * and at least one side of frame will match the corresponding side of viewport.
+ * This is used to manage the difference between framebuffer size & window size.
+ * At this scale frame will be completely visible inside window (in landscape mode),
+ * and at least one side of frame will match the corresponding side of window.
  *
  * 2. Zoom Scale [zoomScale] :
  *
@@ -88,6 +106,10 @@ class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScal
     var vpWidth = 0F; private set
     var vpHeight = 0F; private set
 
+    //Size of activity window
+    var windowWidth = 0F; private set
+    var windowHeight = 0F; private set
+
 
     fun setFramebufferSize(w: Float, h: Float) {
         fbWidth = w
@@ -99,6 +121,12 @@ class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScal
     fun setViewportSize(w: Float, h: Float) {
         vpWidth = w
         vpHeight = h
+        coerceValues()
+    }
+
+    fun setWindowSize(w: Float, h: Float) {
+        windowWidth = w
+        windowHeight = h
         calculateBaseScale()
         coerceValues()
     }
@@ -160,13 +188,13 @@ class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScal
     }
 
     private fun calculateBaseScale() {
-        if (fbHeight == 0F || fbWidth == 0F || vpHeight == 0F)
+        if (fbHeight == 0F || fbWidth == 0F || windowHeight == 0F)
             return  //Not enough info yet
 
         //Base scale is calculated as-if we are in 'Landscape' mode.
-        //So larger viewport side is treated as width and smaller as height
-        val wRatio = max(vpWidth, vpHeight) / fbWidth
-        val hRatio = min(vpWidth, vpHeight) / fbHeight
+        //So larger window side is treated as width and smaller as height
+        val wRatio = max(windowWidth, windowHeight) / fbWidth
+        val hRatio = min(windowWidth, windowHeight) / fbHeight
 
         baseScale = min(wRatio, hRatio)
     }

@@ -13,14 +13,17 @@ import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Rect
 import android.opengl.GLSurfaceView
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.Rational
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
@@ -64,6 +67,8 @@ class VncActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
+        setupLayout()
+
         //FrameView
         binding.frameView.activity = this
         binding.frameView.setEGLContextClientVersion(2)
@@ -86,6 +91,35 @@ class VncActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.sendClipboardText()
+    }
+
+    /**
+     * Initializes layout handling.
+     */
+    private fun setupLayout() {
+
+        if (viewModel.pref.display.fullscreen) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        }
+
+        binding.root.addOnLayoutChangeListener { v, _, _, _, _, _, _, _, _ ->
+            viewModel.frameState.setWindowSize(v.width.toFloat(), v.height.toFloat())
+        }
+
+        //This is used to handle cases where a system view (ex: soft keyboard) is covering
+        //some part of our window. We retrieve the visible area and add padding to our
+        //root view so that its content is resized to that area.
+        //This will trigger the resize of frame view allowing it to handle the available space.
+        val visibleFrame = Rect()
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+            binding.root.getWindowVisibleDisplayFrame(visibleFrame)
+
+            var paddingBottom = binding.root.bottom - visibleFrame.bottom
+            if (paddingBottom < 0)
+                paddingBottom = 0
+
+            binding.root.updatePadding(bottom = paddingBottom)
+        }
     }
 
     private fun getProfile(): ServerProfile {
