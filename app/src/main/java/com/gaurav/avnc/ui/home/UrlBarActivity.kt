@@ -48,9 +48,30 @@ class UrlBarActivity : AppCompatActivity() {
         if (url.isBlank())
             return false
 
-        startVncActivity(this, VncUri(url))
+        startVncActivity(this, VncUri(processIPv6(url)))
 
         finish()
         return true
+    }
+
+    /**
+     * For IPv6, [VncUri] expects host address to be wrapped in square brackets.
+     * We apply some heuristics to detect IPv6 address and add brackets if they
+     * are missing.
+     */
+    private fun processIPv6(url: String): String {
+        //we only want to process IP address literals without path/query
+        if (url.contains('/') || url.contains('?') || url.contains('#'))
+            return url
+
+        //might already contain brackets
+        if (url.contains('[') || url.contains(']'))
+            return url
+
+        //handle most common cases
+        if (url.contains("::") || url.count { it == ':' } > 2)
+            return "[$url]"
+
+        return url
     }
 }

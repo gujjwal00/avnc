@@ -10,6 +10,7 @@ package com.gaurav.avnc.vnc
 
 import android.net.Uri
 import com.gaurav.avnc.model.ServerProfile
+import java.net.URI
 
 /**
  * This class wraps a [Uri] and provides accessor properties for various
@@ -30,8 +31,16 @@ class VncUri(private val uri: Uri) {
                 Uri.parse("vnc://$uriString")
     )
 
-    val host; get() = uri.host ?: ""
-    val port; get() = if (uri.port == -1) 5900 else uri.port
+    /**
+     * Older versions of [Uri] does not support IPv6 address so we need to use [URI] for host & port.
+     *
+     * It also serves as a validation step because [URI] verifies that address is well-formed.
+     */
+    private val javaUri = runCatching { URI(uri.toString()) }.getOrDefault(URI(""))
+
+
+    val host; get() = javaUri.host?.trim('[', ']') ?: ""
+    val port; get() = if (javaUri.port == -1) 5900 else javaUri.port
     val connectionName; get() = uri.getQueryParameter("ConnectionName") ?: ""
     val username; get() = uri.getQueryParameter("VncUsername") ?: ""
     val password; get() = uri.getQueryParameter("VncPassword") ?: ""
