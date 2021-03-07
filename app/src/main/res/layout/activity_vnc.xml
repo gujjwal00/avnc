@@ -119,6 +119,20 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="State" />
 
+            <TextView
+                android:id="@+id/disconnect_reason"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_normal"
+                android:gravity="center"
+                android:text="@{viewModel.disconnectReason}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                app:isVisible="@{viewModel.clientState == State.Disconnected}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/client_state"
+                tools:text="( Connection refused! Server may be down or running on different port )" />
+
             <ImageButton
                 android:id="@+id/retry_connection_btn"
                 style="@style/ImageButton"
@@ -129,7 +143,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/client_state" />
+                app:layout_constraintTop_toBottomOf="@id/disconnect_reason" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

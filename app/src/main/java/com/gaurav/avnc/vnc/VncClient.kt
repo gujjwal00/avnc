@@ -190,6 +190,12 @@ class VncClient(private val observer: Observer) {
     }
 
     /**
+     * Returns a string describing last error.
+     * Only valid in disconnected state.
+     */
+    fun getLastErrorStr() = nativeGetLastErrorStr()
+
+    /**
      * Releases all resource (native & managed) currently held.
      * After cleanup, this client MUST NOT be used any more.
      */
@@ -213,6 +219,7 @@ class VncClient(private val observer: Observer) {
     private external fun nativeGetHeight(clientPtr: Long): Int
     private external fun nativeIsEncrypted(clientPtr: Long): Boolean
     private external fun nativeUploadFrameTexture(clientPtr: Long)
+    private external fun nativeGetLastErrorStr(): String
     private external fun nativeCleanup(clientPtr: Long)
 
     @Keep

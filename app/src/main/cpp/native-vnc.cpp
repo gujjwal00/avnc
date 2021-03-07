@@ -12,6 +12,8 @@
 #include <android/log.h>
 #include <GLES2/gl2.h>
 #include <rfb/rfbclient.h>
+#include <errno.h>
+#include <netdb.h>
 
 #include "keymap.h"
 
@@ -125,6 +127,44 @@ static void setManagedClient(rfbClient *client, jobject managedClient) {
     rfbClientSetClientData(client, context.managedCls, managedClient);
 }
 
+/**
+ * Converts given errno value to its description.
+ */
+static const char *errnoToStr(int e) {
+
+    // LibVNC is patched to report `getaddrinfo` errors as negative 'errno'.
+    // See ConnectClientToTcpAddr6WithTimeout() in sockets.c
+    if (e < -1000) {
+        return gai_strerror((-e) - 1000);
+    }
+
+    switch (e) {
+        case ENETDOWN:
+        case ENETRESET:
+        case ENETUNREACH:
+        case ECONNABORTED:
+        case EHOSTDOWN:
+        case EHOSTUNREACH:
+        case ETIMEDOUT:
+        case ENOMEM:
+        case EPROTO:
+        case EIO:
+            return strerror(e);
+
+        case ECONNREFUSED:
+            return "Connection refused! Server may be down or running on different port";
+
+        case ECONNRESET:
+            return "Connection closed by server";
+
+        case EACCES:
+            return "Authentication failed";
+
+        default:
+            return "";
+    }
+}
+
 /******************************************************************************
  * rfbClient Callbacks
  *****************************************************************************/
@@ -225,6 +265,7 @@ static rfbBool onMallocFrameBuffer(rfbClient *client) {
 
     if (allocSize >= SIZE_MAX) {
         rfbClientErr("CRITICAL: cannot allocate frameBuffer, requested size is too large\n");
+        errno = EPROTO;
         return FALSE;
     }
 
@@ -232,6 +273,7 @@ static rfbBool onMallocFrameBuffer(rfbClient *client) {
 
     if (client->frameBuffer == nullptr) {
         rfbClientErr("CRITICAL: frameBuffer allocation failed\n");
+        errno = ENOMEM;
         return FALSE;
     }
 
@@ -268,6 +310,9 @@ extern "C"
 JNIEXPORT jlong JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeClientCreate(JNIEnv *env, jobject thiz) {
     rfbClient *client = rfbGetClient(8, 3, 4);
+    if (client == nullptr)
+        return 0;
+
     setCallbacks(client);
     client->canHandleNewFBSize = TRUE;
 
@@ -287,12 +332,11 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeInit(JNIEnv *env, jobject thiz, jlong c
     client->serverHost = getNativeStrCopy(env, host);
     client->serverPort = port < 100 ? port + 5900 : port;
 
-    if (!rfbInitClient(client, nullptr, nullptr)) {
-        rfbClientErr("rfbInitClient() failed inside nativeInit().");
-        return JNI_FALSE;
+    if (rfbInitClient(client, nullptr, nullptr)) {
+        return JNI_TRUE;
     }
 
-    return JNI_TRUE;
+    return JNI_FALSE;
 
 }
 
@@ -326,6 +370,13 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeProcessServerMessage(JNIEnv *env, jobje
     }
 
     return JNI_FALSE;
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_gaurav_avnc_vnc_VncClient_nativeGetLastErrorStr(JNIEnv *env, jobject thiz) {
+    auto str = errnoToStr(errno);
+    return env->NewStringUTF(str);
 }
 
 extern "C"

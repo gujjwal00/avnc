@@ -73,6 +73,11 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     val clientState = MutableLiveData(client.state)
 
     /**
+     * Reason for [clientState] being [VncClient.State.Disconnected].
+     */
+    val disconnectReason = MutableLiveData("")
+
+    /**
      * [ServerProfile] used for current connection.
      */
     var profile = ServerProfile()
@@ -294,6 +299,12 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
             if (profile.ID != 0L) async {
                 serverProfileDao.update(profile)
             }
+        }
+
+        if (newState == VncClient.State.Disconnected) {
+            val reason = client.getLastErrorStr()
+            if (reason.isNotBlank())
+                disconnectReason.postValue("( $reason )")
         }
     }
 
