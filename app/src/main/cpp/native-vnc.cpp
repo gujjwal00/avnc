@@ -255,11 +255,9 @@ static void onFinishedFrameBufferUpdate(rfbClient *client) {
 
 /**
  * We need to use our own allocator to know when frame size has changed.
+ * and to acquire framebuffer lock during modification.
  */
 static rfbBool onMallocFrameBuffer(rfbClient *client) {
-
-    if (client->frameBuffer)
-        free(client->frameBuffer);
 
     auto allocSize = (uint64_t) client->width * client->height * client->format.bitsPerPixel / 8;
 
@@ -269,14 +267,29 @@ static rfbBool onMallocFrameBuffer(rfbClient *client) {
         return FALSE;
     }
 
-    client->frameBuffer = static_cast<uint8_t *>(malloc((size_t) allocSize));
+    LOCK(client->fbMutex);
+    {
+        if (client->frameBuffer)
+            free(client->frameBuffer);
+
+        client->frameBuffer = static_cast<uint8_t *>(malloc((size_t) allocSize));
+
+        if (client->frameBuffer) {
+            client->fbRealWidth = client->width;
+            client->fbRealHeight = client->height;
+            memset(client->frameBuffer, 0, allocSize); //Clear any garbage
+        } else {
+            client->fbRealWidth = 0;
+            client->fbRealHeight = 0;
+        }
+    }
+    UNLOCK(client->fbMutex);
 
     if (client->frameBuffer == nullptr) {
-        rfbClientErr("CRITICAL: frameBuffer allocation failed\n");
         errno = ENOMEM;
+        rfbClientErr("CRITICAL: frameBuffer allocation failed\n");
         return FALSE;
     }
-
 
     auto obj = getManagedClient(client);
     auto env = context.getEnv();
@@ -444,26 +457,19 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeUploadFrameTexture(JNIEnv *env, jobject
                                                             jlong client_ptr) {
     auto client = (rfbClient *) client_ptr;
 
-    // There is a race condition here between renderer thread and receiver thread.
-    // Receiver thread will modify the 'frameBuffer', 'width' & 'height' members
-    // if it receives a resize request from server. Renderer thread might try to
-    // render framebuffer at the same time.
-    //
-    // There are two possible solutions:
-    // 1. Use a mutex here
-    // 2. Pause the renderer thread during framebuffer change
-    //
-    // But currently LibVNC changes 'width' & 'height' internally so we can't
-    // protect them without holding a lock for entire msg processing.
-    // TODO: Fix
+    LOCK(client->fbMutex);
 
-    glTexImage2D(GL_TEXTURE_2D,
-                 0,
-                 GL_RGBA,
-                 client->width,
-                 client->height,
-                 0,
-                 GL_RGBA,
-                 GL_UNSIGNED_BYTE,
-                 client->frameBuffer);
+    if (client->frameBuffer) {
+        glTexImage2D(GL_TEXTURE_2D,
+                     0,
+                     GL_RGBA,
+                     client->fbRealWidth,
+                     client->fbRealHeight,
+                     0,
+                     GL_RGBA,
+                     GL_UNSIGNED_BYTE,
+                     client->frameBuffer);
+    }
+
+    UNLOCK(client->fbMutex);
 }
