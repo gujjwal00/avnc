@@ -161,6 +161,10 @@ static const char *errnoToStr(int e) {
             return "Authentication failed";
 
         default:
+            // In this case we don't want to display errno description to user
+            // because it is more likely to be misleading (ex EINTR, EAGAIN).
+            // BUT add it to logs in case LibVNC didn't.
+            Logger::e("errnoToStr: (%d %s)", errno, strerror(errno));
             return "";
     }
 }
