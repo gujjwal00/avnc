@@ -305,6 +305,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
             val reason = client.getLastErrorStr()
             if (reason.isNotBlank())
                 disconnectReason.postValue("( $reason )")
+            else if(profile.address.isBlank())
+                disconnectReason.postValue("( Invalid address )")
         }
     }
 

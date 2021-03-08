@@ -112,7 +112,7 @@ class VncClient(private val observer: Observer) {
 
         state = State.Connecting
 
-        if (nativeInit(nativePtr, host, port)) {
+        if (host.isNotBlank() && nativeInit(nativePtr, host, port)) {
             desktopName = nativeGetDesktopName(nativePtr)
             isEncrypted = nativeIsEncrypted(nativePtr)
             state = State.Connected
