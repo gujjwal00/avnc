@@ -98,7 +98,7 @@ class HomeActivity : AppCompatActivity() {
      */
     private fun showProfileDeletedMsg(profile: ServerProfile) {
         Snackbar.make(binding.root, getString(R.string.msg_server_profile_deleted), Snackbar.LENGTH_LONG)
-                .setAction(getString(R.string.title_undo)) { viewModel.saveProfile(profile) }
+                .setAction(getString(R.string.title_undo)) { viewModel.insertProfile(profile) }
                 .show()
     }
 

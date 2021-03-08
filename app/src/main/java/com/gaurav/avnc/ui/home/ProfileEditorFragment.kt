@@ -72,5 +72,7 @@ class ProfileEditorFragment : DialogFragment() {
     /**
      * Saves current profile.
      */
-    private fun onSave() = viewModel.saveProfile(profile)
+    private fun onSave() =
+            if (profile.ID == 0L) viewModel.insertProfile(profile)
+            else viewModel.updateProfile(profile)
 }

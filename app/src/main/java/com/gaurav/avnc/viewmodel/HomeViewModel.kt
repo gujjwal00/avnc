@@ -74,9 +74,14 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     }
 
     /**
-     * Saves given profile in database asynchronously.
+     * Inserts given profile in database.
      */
-    fun saveProfile(profile: ServerProfile) = async { serverProfileDao.insertOrUpdate(profile) }
+    fun insertProfile(profile: ServerProfile) = async { serverProfileDao.insert(profile) }
+
+    /**
+     * Saves given profile to database.
+     */
+    fun updateProfile(profile: ServerProfile) = async { serverProfileDao.update(profile) }
 
     /**
      * Deletes given profile
