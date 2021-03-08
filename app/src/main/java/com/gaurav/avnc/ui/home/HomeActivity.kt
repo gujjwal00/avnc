@@ -32,7 +32,7 @@ import com.google.android.material.snackbar.Snackbar
  * It Provides access to saved and discovered servers.
  */
 class HomeActivity : AppCompatActivity() {
-    private val viewModel by viewModels<HomeViewModel>()
+    val viewModel by viewModels<HomeViewModel>()
     private lateinit var binding: ActivityHomeBinding
     private lateinit var tabController: TabController
 
