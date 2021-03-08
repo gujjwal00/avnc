@@ -7,7 +7,7 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -19,29 +19,16 @@
     <com.google.android.material.card.MaterialCardView
         style="@style/ServerCard"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_height">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|start"
-            android:text="@{viewModel.name}"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            tools:text="Example Server Name" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|start"
-            android:text="@{viewModel.address}"
-            tools:text="192.168.1.1" />
+        <include
+            layout="@layout/server_profile"
+            app:profile="@{viewModel}" />
 
         <ImageButton
             android:id="@+id/add"
-            android:layout_width="@dimen/action_btn_size"
-            android:layout_height="@dimen/action_btn_size"
+            style="@style/ImageButton"
             android:layout_gravity="end|center_vertical"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/desc_add_server_btn"
             android:src="@drawable/ic_plus" />
     </com.google.android.material.card.MaterialCardView>
