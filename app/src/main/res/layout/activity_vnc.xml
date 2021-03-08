@@ -40,7 +40,8 @@
         <androidx.drawerlayout.widget.DrawerLayout
             android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:isVisible="@{viewModel.clientState == State.Connected}">
 
 
             <!--FrameView-->
@@ -51,8 +52,7 @@
                 android:background="@drawable/bg_frame_view"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:keepScreenOn="true"
-                app:isVisible="@{viewModel.clientState == State.Connected}" />
+                android:keepScreenOn="true" />
 
 
             <!--Drawers-->
