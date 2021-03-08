@@ -43,6 +43,19 @@
             app:layout_constraintTop_toBottomOf="@id/profile_name"
             tools:text="192.168.1.1 | 5901" />
 
+        <ImageView
+            android:layout_width="@dimen/server_card_hint_icon_size"
+            android:layout_height="@dimen/server_card_hint_icon_size"
+            android:layout_margin="@dimen/margin_normal"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_key"
+            android:tint="?android:textColorSecondary"
+            android:tintMode="src_in"
+            app:isVisible="@{profile.password.length() != 0}"
+            app:layout_constraintBottom_toBottomOf="@id/profile_address"
+            app:layout_constraintStart_toEndOf="@id/profile_address"
+            app:layout_constraintTop_toTopOf="@id/profile_address" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
