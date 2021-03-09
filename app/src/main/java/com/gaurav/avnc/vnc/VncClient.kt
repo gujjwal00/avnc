@@ -150,8 +150,9 @@ class VncClient(private val observer: Observer) {
      * @param isDown    true for key down, false for key up
      * @param translate Whether to convert [keySym] to corresponding X KeySym
      */
-    fun sendKeyEvent(keySym: Int, isDown: Boolean, translate: Boolean) =
-            nativeSendKeyEvent(nativePtr, keySym.toLong(), isDown, translate)
+    fun sendKeyEvent(keySym: Int, isDown: Boolean, translate: Boolean) = executeSend {
+        nativeSendKeyEvent(nativePtr, keySym.toLong(), isDown, translate)
+    }
 
     /**
      * Sends pointer event to remote server.
@@ -160,13 +161,17 @@ class VncClient(private val observer: Observer) {
      * @param y    Vertical pointer coordinate
      * @param mask Button mask to identify which button was pressed.
      */
-    fun sendPointerEvent(x: Int, y: Int, mask: Int) = nativeSendPointerEvent(nativePtr, x, y, mask)
+    fun sendPointerEvent(x: Int, y: Int, mask: Int) = executeSend {
+        nativeSendPointerEvent(nativePtr, x, y, mask)
+    }
 
 
     /**
      * Sends text to remote desktop's clipboard.
      */
-    fun sendCutText(text: String) = nativeSendCutText(nativePtr, text)
+    fun sendCutText(text: String) = executeSend {
+        nativeSendCutText(nativePtr, text)
+    }
 
     /**
      * Sends a request for full frame buffer update to remote server.
@@ -205,6 +210,15 @@ class VncClient(private val observer: Observer) {
 
         state = State.Destroyed
         nativeCleanup(nativePtr)
+    }
+
+    /**
+     * Small utility method to check for valid state before sending
+     * events to remote server.
+     */
+    private inline fun executeSend(block: () -> Unit) {
+        if (state == State.Connected)
+            block()
     }
 
     private external fun nativeClientCreate(): Long

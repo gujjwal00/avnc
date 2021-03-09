@@ -22,14 +22,16 @@ class Messenger(private val client: VncClient) {
      * Sender thread
      **************************************************************************/
 
-    private val sender by lazy { Executors.newSingleThreadExecutor() }
+    private val sender = Executors.newSingleThreadExecutor()
 
     private fun execute(action: () -> Unit) {
-        if (client.state == VncClient.State.Connected)
-            sender.execute(action)
+        sender.execute(action)
     }
 
     fun cleanup() {
+        if (sender.isShutdown)
+            return
+
         sender.shutdownNow()
 
         try {
