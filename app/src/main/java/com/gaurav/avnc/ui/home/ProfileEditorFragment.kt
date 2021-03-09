@@ -48,6 +48,8 @@ class ProfileEditorFragment : DialogFragment() {
                 .setPositiveButton(R.string.title_save) { _, _ -> onSave() }
                 .setNegativeButton(R.string.title_cancel) { _, _ -> dismiss() }
                 .setNeutralButton(R.string.title_more) { _, _ -> }
+                .setBackgroundInsetTop(0)
+                .setBackgroundInsetBottom(0)
                 .create()
 
         //Customize neutral button directly to avoid dialog dismissal on click
