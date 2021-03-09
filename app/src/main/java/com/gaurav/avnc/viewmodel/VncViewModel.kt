@@ -158,7 +158,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
     private fun launchConnection() {
         viewModelScope.launch(Dispatchers.IO) {
-            client.viewOnlyMode = profile.viewOnly
+            client.configure(profile.viewOnly)
 
             try {
 

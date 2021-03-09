@@ -8,7 +8,7 @@ import com.gaurav.avnc.vnc.VncClient.Observer
  *
  *
  * -       +------------+                                    +----------+
- * -       | Public API |                                    | Listener |
+ * -       | Public API |                                    | Observer |
  * -       +------------+                                    +-----A----+
  * -              |                                                |
  * -              |                                                |
@@ -21,10 +21,14 @@ import com.gaurav.avnc.vnc.VncClient.Observer
  *
  *
  * For every new instance of [VncClient], we create a native 'rfbClient' and
- * store its pointer in [nativePtr]. To release the resources you must call
- * [cleanup] after you are done with this instance.
+ * store its pointer in [nativePtr]. Parameters for connection can be setup using
+ * [configure]. Connection is then started using [connect]. Then incoming
+ * messages are handled by [processServerMessage].
  *
- * All callbacks in [Observer] are invoked on the thread used to call
+ * To release the resources you must call [cleanup] after you are done with
+ * this instance.
+ *
+ * Note: All callbacks in [Observer] are invoked on the thread which called
  * [processServerMessage].
  */
 class VncClient(private val observer: Observer) {
@@ -102,7 +106,18 @@ class VncClient(private val observer: Observer) {
     /**
      * In 'View-only' mode input to remote server is disabled
      */
-    var viewOnlyMode = false
+    var viewOnlyMode = false; private set
+
+    /**
+     * Setup different properties for this client.
+     * Only valid in [State.Connected] state.
+     */
+    fun configure(viewOnly: Boolean) {
+        if (state != State.Created)
+            return
+
+        viewOnlyMode = viewOnly
+    }
 
     /**
      * Initializes VNC connection.
