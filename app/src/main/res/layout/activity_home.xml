@@ -35,7 +35,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="@string/hint_toolbar"
+                        android:text="@string/hint_urlbar"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
 
                 </com.google.android.material.appbar.MaterialToolbar>

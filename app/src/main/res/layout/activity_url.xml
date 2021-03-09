@@ -46,11 +46,10 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:hint="@string/hint_toolbar"
+                    android:hint="@string/hint_host"
                     android:imeOptions="actionGo|flagNoExtractUi"
                     android:importantForAutofill="no"
                     android:inputType="textUri"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
                     android:textColorHint="@android:color/transparent" />
 
                 <ImageButton
