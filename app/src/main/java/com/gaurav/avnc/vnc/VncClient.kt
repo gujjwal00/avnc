@@ -99,6 +99,10 @@ class VncClient(private val observer: Observer) {
      */
     var isEncrypted = false; private set
 
+    /**
+     * In 'View-only' mode input to remote server is disabled
+     */
+    var viewOnlyMode = false
 
     /**
      * Initializes VNC connection.
@@ -217,7 +221,7 @@ class VncClient(private val observer: Observer) {
      * events to remote server.
      */
     private inline fun executeSend(block: () -> Unit) {
-        if (state == State.Connected)
+        if (state == State.Connected && !viewOnlyMode)
             block()
     }
 

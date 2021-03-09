@@ -158,6 +158,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
     private fun launchConnection() {
         viewModelScope.launch(Dispatchers.IO) {
+            client.viewOnlyMode = profile.viewOnly
 
             try {
 
@@ -305,7 +306,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
             val reason = client.getLastErrorStr()
             if (reason.isNotBlank())
                 disconnectReason.postValue("( $reason )")
-            else if(profile.address.isBlank())
+            else if (profile.address.isBlank())
                 disconnectReason.postValue("( Invalid address )")
         }
     }
