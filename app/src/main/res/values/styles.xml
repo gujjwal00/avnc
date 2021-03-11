@@ -31,6 +31,10 @@
         <item name="android:elevation">@dimen/appbar_elevation</item>
     </style>
 
+    <style name="DarkerDialogBackground" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:backgroundDimAmount">.6</item>
+    </style>
+
     <style name="UrlBar" parent="Widget.MaterialComponents.Toolbar">
         <item name="android:background">@drawable/bg_urlbar</item>
         <item name="android:layout_marginStart">@dimen/margin_normal</item>

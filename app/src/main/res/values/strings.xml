@@ -9,7 +9,7 @@
 <resources>
     <string name="app_name">aVNC</string>
 
-    <string name="title_new_server_profile">New Server</string>
+    <string name="title_add_server_profile">Add Server</string>
     <string name="title_duplicate">Duplicate</string>
     <string name="title_edit">Edit</string>
     <string name="title_delete">Delete</string>
@@ -39,8 +39,8 @@
     <string name="label_security_type">Security type</string>
 
     <string name="hint_urlbar">Connect to a Server</string>
-    <string name="hint_server_name">Ex: Work PC</string>
-    <string name="hint_host">Ex: 192.168.43.10</string>
+    <string name="hint_server_name">e.g. Work PC</string>
+    <string name="hint_host">e.g. 192.168.43.10</string>
     <string name="hint_optional">Optional</string>
 
     <string name="msg_server_profile_deleted">Server deleted.</string>

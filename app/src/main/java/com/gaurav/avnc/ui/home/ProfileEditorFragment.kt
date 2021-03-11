@@ -42,7 +42,7 @@ class ProfileEditorFragment : DialogFragment() {
         val binding = FragmentProfileEditorBinding.inflate(layoutInflater, null, false)
         binding.profile = profile
 
-        val dialog = MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.DarkerDialogBackground)
                 .setView(binding.root)
                 .setTitle(getTitle())
                 .setPositiveButton(R.string.title_save) { _, _ -> onSave() }
@@ -67,7 +67,7 @@ class ProfileEditorFragment : DialogFragment() {
      * Returns title string resource
      */
     private fun getTitle() =
-            if (profile.ID == 0L) R.string.title_new_server_profile
+            if (profile.ID == 0L) R.string.title_add_server_profile
             else R.string.title_edit_server_profile
 
 
