@@ -8,6 +8,22 @@
 
 <resources>
 
+    <string-array name="security_entries">
+        <item>All</item>
+        <item>None</item>
+        <item>VncAuth</item>
+        <item>TLS</item>
+        <item>VeNCrypt</item>
+    </string-array>
+    <integer-array name="security_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>18</item>
+        <item>19</item>
+    </integer-array>
+
+
     <string-array name="theme_entries">
         <item>Follow System Theme</item>
         <item>Dark</item>

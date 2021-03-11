@@ -148,15 +148,33 @@
             <!-- ~~~~~~~~~~~~~~~~~~~~ Advanced Options ~~~~~~~~~~~~~~~~~~ -->
 
             <!--View-only mode-->
-
             <CheckBox
+                android:id="@+id/view_only"
                 style="@style/FormField"
                 android:checked="@={profile.viewOnly}"
                 android:text="@string/label_view_only_mode"
-                app:isVisible="@{showAll}"
                 app:layout_constraintStart_toEndOf="@id/barrier"
                 app:layout_constraintTop_toBottomOf="@id/password" />
 
+            <!--Security Type-->
+            <TextView
+                android:id="@+id/security_label"
+                style="@style/FormLabel"
+                android:labelFor="@id/security"
+                android:text="@string/label_security_type"
+                app:layout_constraintBottom_toBottomOf="@id/security"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/security" />
+
+            <Spinner
+                android:id="@+id/security"
+                style="@style/FormField"
+                android:entries="@array/security_entries"
+                app:entryValues="@{@intArray/security_values}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/barrier"
+                app:layout_constraintTop_toBottomOf="@id/view_only"
+                app:value="@={profile.securityType}" />
 
             <!-- ~~~~~~~~~~~~~~~~~~~~~~~~  Helpers  ~~~~~~~~~~~~~~~~~~~~~ -->
 
@@ -178,6 +196,13 @@
                 app:layout_constraintStart_toStartOf="@id/real_barrier"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_percent=".08" />
+
+            <!--Group of fields initially hidden-->
+            <androidx.constraintlayout.widget.Group
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="view_only,security,security_label"
+                app:isVisible="@{showAll}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

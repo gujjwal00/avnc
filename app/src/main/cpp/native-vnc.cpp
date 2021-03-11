@@ -341,6 +341,19 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeClientCreate(JNIEnv *env, jobject thiz)
 }
 
 extern "C"
+JNIEXPORT void JNICALL
+Java_com_gaurav_avnc_vnc_VncClient_nativeConfigure(JNIEnv *env, jobject thiz, jlong client_ptr,
+                                                   jint securityType) {
+    auto client = (rfbClient *) client_ptr;
+
+    // 0 means all auth types
+    if (securityType != 0) {
+        uint32_t auth[1] = {static_cast<uint32_t>(securityType)};
+        SetClientAuthSchemes(client, auth, 1);
+    }
+}
+
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeInit(JNIEnv *env, jobject thiz, jlong client_ptr,
                                               jstring host, jint port) {

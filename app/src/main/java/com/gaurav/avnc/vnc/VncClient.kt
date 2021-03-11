@@ -111,12 +111,15 @@ class VncClient(private val observer: Observer) {
     /**
      * Setup different properties for this client.
      * Only valid in [State.Connected] state.
+     *
+     * @param securityType RFB security type to use.
      */
-    fun configure(viewOnly: Boolean) {
+    fun configure(viewOnly: Boolean, securityType: Int) {
         if (state != State.Created)
             return
 
         viewOnlyMode = viewOnly
+        nativeConfigure(nativePtr, securityType)
     }
 
     /**
@@ -241,6 +244,7 @@ class VncClient(private val observer: Observer) {
     }
 
     private external fun nativeClientCreate(): Long
+    private external fun nativeConfigure(clientPtr: Long, securityType: Int)
     private external fun nativeInit(clientPtr: Long, host: String, port: Int): Boolean
     private external fun nativeProcessServerMessage(clientPtr: Long, uSecTimeout: Int): Boolean
     private external fun nativeSendKeyEvent(clientPtr: Long, key: Long, isDown: Boolean, translate: Boolean): Boolean

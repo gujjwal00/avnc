@@ -51,8 +51,8 @@ data class ServerProfile(
         var password: String = "",
 
         /**
-         * Security type to be used when connecting to this server.
-         * Ex: VncAuth
+         * Security type to use when connecting to this server. e.g. VncAuth.
+         * 0 enables all supported types.
          */
         var securityType: Int = 0,
 
