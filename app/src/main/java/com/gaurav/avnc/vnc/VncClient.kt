@@ -96,12 +96,12 @@ class VncClient(private val observer: Observer) {
     /**
      * Name of remote desktop
      */
-    var desktopName = ""; private set
+    val desktopName; get() = nativeGetDesktopName(nativePtr)
 
     /**
      * Whether connection is encrypted
      */
-    var isEncrypted = false; private set
+    val isEncrypted; get() = nativeIsEncrypted(nativePtr)
 
     /**
      * In 'View-only' mode input to remote server is disabled
@@ -135,8 +135,6 @@ class VncClient(private val observer: Observer) {
         state = State.Connecting
 
         if (host.isNotBlank() && nativeInit(nativePtr, host, port)) {
-            desktopName = nativeGetDesktopName(nativePtr)
-            isEncrypted = nativeIsEncrypted(nativePtr)
             state = State.Connected
             return true
         } else {
