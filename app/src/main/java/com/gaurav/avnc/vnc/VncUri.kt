@@ -60,8 +60,8 @@ class VncUri(private val uri: Uri) {
             username = username,
             password = password,
             securityType = securityType,
-            transportType = channelType,
-            colorQuality = colorLevel,
+            channelType = channelType,
+            colorLevel = colorLevel,
             viewOnly = viewOnly
     )
 }

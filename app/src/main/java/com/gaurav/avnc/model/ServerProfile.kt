@@ -15,6 +15,8 @@ import kotlinx.android.parcel.Parcelize
 
 /**
  * This class holds connection configuration of a remote VNC server.
+ *
+ * Some of the fields remain unused until that feature is implemented.
  */
 @Parcelize
 @Entity(tableName = "profiles")
@@ -57,16 +59,16 @@ data class ServerProfile(
         var securityType: Int = 0,
 
         /**
-         * Transport type to be used for communicating with the server.
+         * Transport channel to be used for communicating with the server.
          * Ex: TCP, SSH Tunnel
          */
-        var transportType: Int = 0,
+        var channelType: Int = 0,
 
         /**
-         * Specifies the initial color quality of received frames.
+         * Specifies the color level of received frames.
          * This value determines the pixel-format used for framebuffer.
          */
-        var colorQuality: Int = 0,
+        var colorLevel: Int = 0,
 
         /**
          * Specifies the image quality of the frames.
@@ -78,6 +80,11 @@ data class ServerProfile(
          * Specifies whether 'View Only' mode should be used.
          * In this mode client does not send any input messages to remote server.
          */
-        var viewOnly: Boolean = false
+        var viewOnly: Boolean = false,
+
+        /**
+         * Whether the cursor should be drawn by client instead of server.
+         */
+        var useLocalCursor: Boolean = false
 
 ) : Parcelable
