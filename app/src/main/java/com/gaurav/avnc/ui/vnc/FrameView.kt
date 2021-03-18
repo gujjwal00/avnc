@@ -15,32 +15,47 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
+import com.gaurav.avnc.ui.vnc.gl.Renderer
 
 /**
  * FrameView renders the VNC framebuffer on screen.
  */
-class FrameView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context, attrs) {
+class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(context, attrs) {
 
-    constructor(context: Context?) : this(context, null)
+    private lateinit var frameState: FrameState
+    private lateinit var dispatcher: Dispatcher
+    private lateinit var touchHandler: TouchHandler
 
     /**
-     * Set by [VncActivity].
+     * Should be called from [VncActivity.onCreate].
      */
-    lateinit var activity: VncActivity
+    fun initialize(activity: VncActivity) {
+        val viewModel = activity.viewModel
+
+        frameState = viewModel.frameState
+        dispatcher = activity.dispatcher
+        touchHandler = activity.touchHandler
+
+        setEGLContextClientVersion(2)
+        setRenderer(Renderer(viewModel))
+        renderMode = RENDERMODE_WHEN_DIRTY
+    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        activity.viewModel.frameState.setViewportSize(w.toFloat(), h.toFloat())
+        frameState.setViewportSize(w.toFloat(), h.toFloat())
     }
 
 
     override fun onCreateInputConnection(outAttrs: EditorInfo): InputConnection {
-        outAttrs.imeOptions = outAttrs.imeOptions or (EditorInfo.IME_FLAG_NO_EXTRACT_UI or EditorInfo.IME_FLAG_NO_FULLSCREEN)
-        return FrameInputConnection(activity.dispatcher, this)
+        outAttrs.imeOptions = outAttrs.imeOptions or
+                EditorInfo.IME_FLAG_NO_EXTRACT_UI or
+                EditorInfo.IME_FLAG_NO_FULLSCREEN
+        return FrameInputConnection(dispatcher, this)
     }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        return activity.touchHandler.onTouchEvent(event)
+        return touchHandler.onTouchEvent(event)
     }
 }

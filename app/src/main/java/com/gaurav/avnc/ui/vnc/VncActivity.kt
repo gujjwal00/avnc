@@ -14,7 +14,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Rect
-import android.opengl.GLSurfaceView
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -28,7 +27,6 @@ import androidx.databinding.DataBindingUtil
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.model.ServerProfile
-import com.gaurav.avnc.ui.vnc.gl.Renderer
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.VncClient
 import com.gaurav.avnc.vnc.VncUri
@@ -69,12 +67,7 @@ class VncActivity : AppCompatActivity() {
 
         setupLayout()
 
-        //FrameView
-        binding.frameView.activity = this
-        binding.frameView.setEGLContextClientVersion(2)
-        binding.frameView.setRenderer(Renderer(viewModel))
-        binding.frameView.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
-
+        binding.frameView.initialize(this)
         binding.retryConnectionBtn.setOnClickListener { retryConnection() }
 
         //Drawers
@@ -91,35 +84,6 @@ class VncActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.sendClipboardText()
-    }
-
-    /**
-     * Initializes layout handling.
-     */
-    private fun setupLayout() {
-
-        if (viewModel.pref.display.fullscreen) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        }
-
-        binding.root.addOnLayoutChangeListener { v, _, _, _, _, _, _, _, _ ->
-            viewModel.frameState.setWindowSize(v.width.toFloat(), v.height.toFloat())
-        }
-
-        //This is used to handle cases where a system view (ex: soft keyboard) is covering
-        //some part of our window. We retrieve the visible area and add padding to our
-        //root view so that its content is resized to that area.
-        //This will trigger the resize of frame view allowing it to handle the available space.
-        val visibleFrame = Rect()
-        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
-            binding.root.getWindowVisibleDisplayFrame(visibleFrame)
-
-            var paddingBottom = binding.root.bottom - visibleFrame.bottom
-            if (paddingBottom < 0)
-                paddingBottom = 0
-
-            binding.root.updatePadding(bottom = paddingBottom)
-        }
     }
 
     private fun getProfile(): ServerProfile {
@@ -153,6 +117,36 @@ class VncActivity : AppCompatActivity() {
     }
 
     private fun closeDrawers() = binding.drawerLayout.closeDrawers()
+
+    /************************************************************************************
+     * Layout handling.
+     ************************************************************************************/
+
+    private fun setupLayout() {
+
+        if (viewModel.pref.display.fullscreen) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        }
+
+        binding.root.addOnLayoutChangeListener { v, _, _, _, _, _, _, _, _ ->
+            viewModel.frameState.setWindowSize(v.width.toFloat(), v.height.toFloat())
+        }
+
+        //This is used to handle cases where a system view (ex: soft keyboard) is covering
+        //some part of our window. We retrieve the visible area and add padding to our
+        //root view so that its content is resized to that area.
+        //This will trigger the resize of frame view allowing it to handle the available space.
+        val visibleFrame = Rect()
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+            binding.root.getWindowVisibleDisplayFrame(visibleFrame)
+
+            var paddingBottom = binding.root.bottom - visibleFrame.bottom
+            if (paddingBottom < 0)
+                paddingBottom = 0
+
+            binding.root.updatePadding(bottom = paddingBottom)
+        }
+    }
 
 
     /************************************************************************************
