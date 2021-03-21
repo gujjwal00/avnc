@@ -70,6 +70,12 @@
                     android:src="@drawable/ic_keyboard" />
 
                 <ImageButton
+                    android:id="@+id/vk_btn"
+                    style="@style/ImageButton"
+                    android:contentDescription="@string/desc_vk_btn"
+                    android:src="@drawable/ic_keyboard_mini" />
+
+                <ImageButton
                     android:id="@+id/zoom_reset_btn"
                     style="@style/ImageButton"
                     android:contentDescription="@string/desc_reset_zoom_btn"
@@ -79,10 +85,19 @@
 
         </androidx.drawerlayout.widget.DrawerLayout>
 
+        <!--Virtual keys-->
+        <ViewStub
+            android:id="@+id/virtual_keys_stub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout="@layout/virtual_keys" />
+
         <!--Status-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="?colorSurface"
             app:isVisible="@{viewModel.clientState != State.Connected}">
 
             <ProgressBar

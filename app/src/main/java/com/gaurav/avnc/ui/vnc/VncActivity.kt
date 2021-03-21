@@ -58,6 +58,7 @@ class VncActivity : AppCompatActivity() {
     lateinit var binding: ActivityVncBinding
     val dispatcher by lazy { Dispatcher(viewModel) }
     val touchHandler by lazy { TouchHandler(viewModel, dispatcher) }
+    private val virtualKeys by lazy { VirtualKeys(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +75,7 @@ class VncActivity : AppCompatActivity() {
         binding.drawerLayout.setScrimColor(0)
         binding.kbBtn.setOnClickListener { showKeyboard(); closeDrawers() }
         binding.zoomResetBtn.setOnClickListener { viewModel.resetZoom(); closeDrawers() }
+        binding.vkBtn.setOnClickListener { virtualKeys.show(); closeDrawers() }
 
         //ViewModel setup
         viewModel.frameViewRef = WeakReference(binding.frameView)
@@ -114,6 +116,8 @@ class VncActivity : AppCompatActivity() {
 
         binding.frameView.requestFocus()
         imm.showSoftInput(binding.frameView, 0)
+
+        virtualKeys.onKeyboardOpen()
     }
 
     private fun closeDrawers() = binding.drawerLayout.closeDrawers()
@@ -144,6 +148,10 @@ class VncActivity : AppCompatActivity() {
             if (paddingBottom < 0)
                 paddingBottom = 0
 
+            //Try to guess if keyboard is closing
+            if (paddingBottom == 0 && binding.root.paddingBottom != 0)
+                virtualKeys.onKeyboardClose()
+
             binding.root.updatePadding(bottom = paddingBottom)
         }
     }
@@ -163,6 +171,7 @@ class VncActivity : AppCompatActivity() {
         if (inPiP) {
             closeDrawers()
             viewModel.resetZoom()
+            virtualKeys.hide()
         }
     }
 

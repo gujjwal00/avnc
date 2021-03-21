@@ -118,6 +118,16 @@ class Dispatcher(private val viewModel: VncViewModel) {
     fun onKeyDown(keyCode: Int, translate: Boolean) = messenger.sendKeyDown(keyCode, translate)
     fun onKeyUp(keyCode: Int, translate: Boolean) = messenger.sendKeyUp(keyCode, translate)
 
+    //Helper methods, used by virtual key bindings
+    fun onKey(keyCode: Int) {
+        onKeyDown(keyCode, true)
+        onKeyUp(keyCode, true)
+    }
+
+    fun onKey(keyCode: Int, isDown: Boolean) {
+        if (isDown) onKeyDown(keyCode, true)
+        else onKeyUp(keyCode, true)
+    }
 
     /**************************************************************************
      * Available actions

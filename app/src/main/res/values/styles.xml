@@ -76,4 +76,21 @@
         <item name="contentPadding">@dimen/padding_normal</item>
         <item name="strokeColor">@color/colorBorder</item>
     </style>
+
+    <style name="VirtualKey">
+        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:minWidth">60dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body2</item>
+    </style>
+
+    <style name="VirtualKey.Image">
+        <item name="android:minWidth">46dp</item>
+    </style>
+
+    <style name="VirtualKey.Toggle">
+        <item name="android:background">@drawable/bg_toggle_button</item>
+    </style>
 </resources>

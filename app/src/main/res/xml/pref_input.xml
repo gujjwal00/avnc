@@ -61,4 +61,20 @@
             app:title="@string/pref_drag"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_keyboard_mini"
+        app:title="@string/pref_vk">
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="vk_open_with_keyboard"
+            app:title="@string/pref_vk_open_with_keyboard" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="vk_show_all"
+            app:title="@string/pref_vk_show_all" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

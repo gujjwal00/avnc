@@ -49,6 +49,9 @@ class AppPreferences(context: Context) {
 
     inner class Input {
         val gesture = Gesture()
+
+        val vkOpenWithKeyboard; get() = prefs.getBoolean("vk_open_with_keyboard", false)
+        val vkShowAll; get() = prefs.getBoolean("vk_show_all", false)
     }
 
     inner class Server {

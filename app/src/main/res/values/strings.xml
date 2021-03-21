@@ -49,6 +49,7 @@
     <string name="desc_connect_btn">Connect to this URL</string>
     <string name="desc_add_server_btn">Add Server</string>
     <string name="desc_kb_btn">Show Keyboard</string>
+    <string name="desc_vk_btn">Show Virtual Keys</string>
     <string name="desc_reset_zoom_btn">Reset Zoom</string>
     <string name="desc_retry_connection_btn">Retry Connection</string>
     <string name="desc_back_btn">Go Back</string>
@@ -61,7 +62,7 @@
     <string name="pref_display">Remote Display</string>
     <string name="pref_display_summary">Picture-in-Picture, Zoom</string>
     <string name="pref_input">Input</string>
-    <string name="pref_input_summary">Gestures, Buttons</string>
+    <string name="pref_input_summary">Gestures, Virtual keys</string>
     <string name="pref_servers">Servers</string>
     <string name="pref_server_summary">Discovery, Credentials</string>
     <string name="pref_experimental">Experimental</string>
@@ -75,6 +76,9 @@
     <string name="pref_swipe1">1 Finger Swipe</string>
     <string name="pref_swipe2">2 Finger Swipe</string>
     <string name="pref_drag">Drag (Long Press then Swipe)</string>
+    <string name="pref_vk">Virtual Keys</string>
+    <string name="pref_vk_show_all">Show all keys</string>
+    <string name="pref_vk_open_with_keyboard">Show when Keyboard is open</string>
     <string name="pref_fullscreen">Use Fullscreen</string>
     <string name="pref_enable_pip">Enable Picture-in-Picture</string>
     <string name="pref_zoom">Zoom</string>
