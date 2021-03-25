@@ -12,6 +12,7 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * This class holds connection configuration of a remote VNC server.
@@ -19,6 +20,7 @@ import kotlinx.android.parcel.Parcelize
  * Some of the fields remain unused until that feature is implemented.
  */
 @Parcelize
+@Serializable
 @Entity(tableName = "profiles")
 data class ServerProfile(
 

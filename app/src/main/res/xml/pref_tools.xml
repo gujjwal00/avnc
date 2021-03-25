@@ -1,0 +1,17 @@
+<!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:title="@string/pref_tools">
+
+    <Preference
+        app:fragment="com.gaurav.avnc.ui.prefs.ImportExportFragment"
+        app:defaultValue="false"
+        app:title="@string/pref_import_export" />
+
+</PreferenceScreen>

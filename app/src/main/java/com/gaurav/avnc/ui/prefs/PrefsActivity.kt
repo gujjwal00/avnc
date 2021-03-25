@@ -121,5 +121,6 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
 
     @Keep class Input : PrefFragment(R.xml.pref_input)
     @Keep class Server : PrefFragment(R.xml.pref_server)
+    @Keep class Tools : PrefFragment(R.xml.pref_tools)
     @Keep class Experimental : PrefFragment(R.xml.pref_experimental)
 }

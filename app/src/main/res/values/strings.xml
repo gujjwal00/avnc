@@ -27,6 +27,10 @@
     <string name="title_remember">Remember</string>
     <string name="title_servers">Servers</string>
     <string name="title_discovery">Discovery</string>
+    <string name="title_export">Export</string>
+    <string name="title_import">Import</string>
+    <string name="title_export_passwords">Export Passwords</string>
+    <string name="title_delete_servers_before_import">Delete current Servers before Import</string>
 
     <string name="label_name">Name</string>
     <string name="label_host">Host</string>
@@ -65,6 +69,8 @@
     <string name="pref_input_summary">Gestures, Virtual keys</string>
     <string name="pref_servers">Servers</string>
     <string name="pref_server_summary">Discovery, Credentials</string>
+    <string name="pref_tools">Tools</string>
+    <string name="pref_tools_summary">Import/Export</string>
     <string name="pref_experimental">Experimental</string>
     <string name="pref_experimental_summary">Extra goodies!</string>
 
@@ -95,6 +101,7 @@
     <string name="pref_discovery_restart">Restart</string>
     <string name="pref_discovery_restart_summary">Restart Discovery after it stops</string>
     <string name="pref_discovery_restart_delay">Restart Delay (Minutes)</string>
+    <string name="pref_import_export">Import/Export Servers</string>
     <string name="pref_experimental_indicator">Availability Indicator</string>
     <string name="pref_experimental_indicator_summary">Indicate saved servers which are also found by Discovery.\nRequires App restart.</string>
 </resources>

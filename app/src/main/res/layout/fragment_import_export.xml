@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.gaurav.avnc.viewmodel.PrefsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.gaurav.avnc.ui.backup.BackupActivity">
+
+        <Button
+            android:id="@+id/export_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:minHeight="80dp"
+            android:text="@string/title_export"
+            app:icon="@drawable/ic_upload"
+            app:layout_constraintEnd_toStartOf="@id/import_btn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent=".4" />
+
+        <Button
+            android:id="@+id/import_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="80dp"
+            android:text="@string/title_import"
+            app:icon="@drawable/ic_download"
+            app:layout_constraintBaseline_toBaselineOf="@id/export_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/export_btn"
+            app:layout_constraintWidth_percent=".4" />
+
+        <View
+            android:id="@+id/options_divider"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="30dp"
+            android:background="@color/colorBorder"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            app:layout_constraintEnd_toEndOf="@id/import_btn"
+            app:layout_constraintStart_toStartOf="@id/export_btn"
+            app:layout_constraintTop_toBottomOf="@id/export_btn" />
+
+        <CheckBox
+            android:id="@+id/exportPasswords"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="@string/title_export_passwords"
+            app:layout_constraintStart_toStartOf="@id/options_divider"
+            app:layout_constraintTop_toBottomOf="@id/options_divider" />
+
+        <CheckBox
+            android:id="@+id/deleteCurrentServers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_delete_servers_before_import"
+            app:layout_constraintStart_toStartOf="@id/options_divider"
+            app:layout_constraintTop_toBottomOf="@id/exportPasswords" />
+
+        <!-- Status -->
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:isVisible="@{viewModel.isDoingIE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/options_divider"
+            app:layout_constraintTop_toBottomOf="@id/deleteCurrentServers" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:text="@{viewModel.lastIEResult}"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            app:isVisible="@{viewModel.lastIEResult != null}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/options_divider"
+            app:layout_constraintStart_toStartOf="@id/options_divider"
+            app:layout_constraintTop_toBottomOf="@id/deleteCurrentServers"
+            tools:text="A message about export/import result" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
