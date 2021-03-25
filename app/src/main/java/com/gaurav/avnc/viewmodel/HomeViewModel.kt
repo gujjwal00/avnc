@@ -18,7 +18,7 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     /**
      * [ServerProfile]s stored in database.
      */
-    val serverProfiles by lazy { serverProfileDao.getAll() }
+    val serverProfiles by lazy { serverProfileDao.getAllLive() }
 
     /**
      * Used to find new servers.
