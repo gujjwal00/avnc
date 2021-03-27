@@ -168,12 +168,17 @@ class Dispatcher(private val viewModel: VncViewModel) {
         }
     }
 
-    private fun doClick(button: PointerButton, p: PointF) {
-        val fbp = viewModel.frameState.toFb(p)
 
-        if (fbp != null) {
-            messenger.sendClick(button, fbp)
-        }
+    private fun doPointerButtonUp(button: PointerButton, p: PointF) = inFbCoordinates(p) {
+        messenger.sendPointerButtonUp(button, it)
+    }
+
+    private fun doPointerButtonDown(button: PointerButton, p: PointF) = inFbCoordinates(p) {
+        messenger.sendPointerButtonDown(button, it)
+    }
+
+    private fun doClick(button: PointerButton, p: PointF) = inFbCoordinates(p) {
+        messenger.sendClick(button, it)
     }
 
     private fun doDoubleClick(button: PointerButton, p: PointF) {
@@ -181,23 +186,24 @@ class Dispatcher(private val viewModel: VncViewModel) {
         doClick(button, p)
     }
 
-    private fun doMovePointer(p: PointF) {
-        doClick(PointerButton.None, p)
-    }
+    private fun doMovePointer(p: PointF) = doPointerButtonDown(PointerButton.None, p)
+    private fun doDrag(p: PointF) = doPointerButtonDown(PointerButton.Left, p)
+    private fun endDrag(p: PointF) = doPointerButtonUp(PointerButton.Left, p)
 
-    private fun doDrag(p: PointF) {
+
+    /**
+     * Positions of input events received from Android are in viewport coordinates.
+     * We need to convert them into corresponding position in framebuffer.
+     * Also, some positions in viewport might not correspond to a valid framebuffer
+     * position (e.g. if zoom is less than 100%).
+     *
+     * This small utility method converts the position [p] into framebuffer
+     * coordinates and invokes [block] with it IF it is valid.
+     */
+    private inline fun inFbCoordinates(p: PointF, block: (PointF) -> Unit) {
         val fbp = viewModel.frameState.toFb(p)
-
         if (fbp != null) {
-            messenger.sendPointerButtonDown(PointerButton.Left, fbp)
-        }
-    }
-
-    private fun endDrag(p: PointF) {
-        val fbp = viewModel.frameState.toFb(p)
-
-        if (fbp != null) {
-            messenger.sendPointerButtonUp(PointerButton.Left, fbp)
+            block(fbp)
         }
     }
 }
