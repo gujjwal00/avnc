@@ -52,6 +52,8 @@ class AppPreferences(context: Context) {
 
         val vkOpenWithKeyboard; get() = prefs.getBoolean("vk_open_with_keyboard", false)
         val vkShowAll; get() = prefs.getBoolean("vk_show_all", false)
+
+        val mousePassthrough; get() = prefs.getBoolean("mouse_passthrough", true)
     }
 
     inner class Server {

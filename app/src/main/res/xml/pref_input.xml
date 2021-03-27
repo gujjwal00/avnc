@@ -63,6 +63,18 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        app:icon="@drawable/ic_mouse"
+        app:title="@string/pref_mouse">
+
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="mouse_passthrough"
+            app:summaryOff="@string/pref_mouse_passthrough_summary_off"
+            app:summaryOn="@string/pref_mouse_passthrough_summary_on"
+            app:title="@string/pref_mouse_passthrough" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         app:icon="@drawable/ic_keyboard_mini"
         app:title="@string/pref_vk">
 

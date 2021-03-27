@@ -9,11 +9,10 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.graphics.PointF
-import android.view.GestureDetector
-import android.view.HapticFeedbackConstants
-import android.view.MotionEvent
-import android.view.ScaleGestureDetector
+import android.os.Build
+import android.view.*
 import com.gaurav.avnc.viewmodel.VncViewModel
+import com.gaurav.avnc.vnc.PointerButton
 
 /**
  * Handler for touch events. It detects various gestures and notifies [dispatcher].
@@ -41,6 +40,9 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
      ****************************************************************************************/
 
     fun onTouchEvent(event: MotionEvent): Boolean {
+        if (handleMouseEvent(event))
+            return true
+
         if (dragEnabled)
             dragDetector.onTouchEvent(event)
 
@@ -48,9 +50,52 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         return gestureDetector.onTouchEvent(event)
     }
 
+    fun onGenericMotionEvent(event: MotionEvent) = handleMouseEvent(event)
+
     override fun onDown(e: MotionEvent): Boolean {
         frameScroller.stop()
         return true
+    }
+
+    /****************************************************************************************
+     * Mouse
+     ****************************************************************************************/
+    private val mousePassthrough = viewModel.pref.input.mousePassthrough
+
+    private fun handleMouseEvent(e: MotionEvent): Boolean {
+        if (Build.VERSION.SDK_INT < 23 || !mousePassthrough || !e.isFromSource(InputDevice.SOURCE_MOUSE))
+            return false
+
+        val p = e.point()
+
+        when (e.actionMasked) {
+            MotionEvent.ACTION_BUTTON_PRESS ->
+                dispatcher.onMouseButtonDown(convertButton(e.actionButton), p)
+
+            MotionEvent.ACTION_BUTTON_RELEASE ->
+                dispatcher.onMouseButtonUp(convertButton(e.actionButton), p)
+
+            MotionEvent.ACTION_SCROLL -> {
+                val hs = e.getAxisValue(MotionEvent.AXIS_HSCROLL)
+                val vs = e.getAxisValue(MotionEvent.AXIS_VSCROLL)
+                dispatcher.onMouseScroll(p, hs, vs)
+            }
+
+            MotionEvent.ACTION_MOVE,
+            MotionEvent.ACTION_HOVER_MOVE -> dispatcher.onMouseMove(p)
+        }
+
+        return true
+    }
+
+    /**
+     * Convert from [MotionEvent] button to [PointerButton]
+     */
+    private fun convertButton(button: Int) = when (button) {
+        MotionEvent.BUTTON_PRIMARY -> PointerButton.Left
+        MotionEvent.BUTTON_SECONDARY -> PointerButton.Right
+        MotionEvent.BUTTON_TERTIARY -> PointerButton.Middle
+        else -> PointerButton.None
     }
 
     /****************************************************************************************

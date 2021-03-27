@@ -129,6 +129,13 @@ class Dispatcher(private val viewModel: VncViewModel) {
         else onKeyUp(keyCode, true)
     }
 
+    fun onMouseButtonDown(button: PointerButton, p: PointF) = doPointerButtonDown(button, p)
+    fun onMouseButtonUp(button: PointerButton, p: PointF) = doPointerButtonUp(button, p)
+    fun onMouseMove(p: PointF) = doMovePointer(p)
+    fun onMouseScroll(p: PointF, hs: Float, vs: Float) {
+        doRemoteScroll(p, hs * deltaPerScroll, vs * deltaPerScroll)
+    }
+
     /**************************************************************************
      * Available actions
      **************************************************************************/

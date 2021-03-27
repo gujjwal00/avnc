@@ -66,7 +66,7 @@
     <string name="pref_display">Remote Display</string>
     <string name="pref_display_summary">Picture-in-Picture, Zoom</string>
     <string name="pref_input">Input</string>
-    <string name="pref_input_summary">Gestures, Virtual keys</string>
+    <string name="pref_input_summary">Gestures, Mouse, Virtual keys</string>
     <string name="pref_servers">Servers</string>
     <string name="pref_server_summary">Discovery, Credentials</string>
     <string name="pref_tools">Tools</string>
@@ -82,6 +82,10 @@
     <string name="pref_swipe1">1 Finger Swipe</string>
     <string name="pref_swipe2">2 Finger Swipe</string>
     <string name="pref_drag">Drag (Long Press then Swipe)</string>
+    <string name="pref_mouse">Mouse</string>
+    <string name="pref_mouse_passthrough">Mouse Passthrough</string>
+    <string name="pref_mouse_passthrough_summary_off">Mouse events are used locally for gestures</string>
+    <string name="pref_mouse_passthrough_summary_on">Mouse events are sent directly to Server</string>
     <string name="pref_vk">Virtual Keys</string>
     <string name="pref_vk_show_all">Show all keys</string>
     <string name="pref_vk_open_with_keyboard">Show when Keyboard is open</string>
