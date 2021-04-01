@@ -7,7 +7,8 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -21,24 +22,45 @@
 
             <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:keyboardNavigationCluster="false"
+                android:touchscreenBlocksFocus="false"
+                tools:ignore="UnusedAttribute">
 
-                <com.google.android.material.appbar.MaterialToolbar
+                <LinearLayout
                     android:id="@+id/urlbar"
                     style="@style/UrlBar"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/toolbar_height"
-                    app:menu="@menu/home"
-                    app:navigationIcon="@drawable/ic_menu">
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:nextFocusLeft="@id/navigation_btn"
+                    android:nextFocusRight="@id/settings_btn"
+                    android:touchscreenBlocksFocus="false">
+
+                    <ImageButton
+                        android:id="@+id/navigation_btn"
+                        style="@style/ImageButton"
+                        android:contentDescription="@string/desc_navigation_btn"
+                        android:nextFocusRight="@id/urlbar"
+                        android:src="@drawable/ic_menu" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
                         android:text="@string/hint_urlbar"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
 
-                </com.google.android.material.appbar.MaterialToolbar>
+                    <ImageButton
+                        android:id="@+id/settings_btn"
+                        style="@style/ImageButton"
+                        android:contentDescription="@string/title_settings"
+                        android:nextFocusLeft="@id/urlbar"
+                        android:src="@drawable/ic_settings" />
+
+                </LinearLayout>
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabs"

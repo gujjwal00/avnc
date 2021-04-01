@@ -44,8 +44,8 @@ class HomeActivity : AppCompatActivity() {
 
         tabController = TabController(supportFragmentManager, binding.pager, binding.tabs)
         binding.drawerNav.setNavigationItemSelectedListener { onMenuItemSelected(it.itemId) }
-        binding.urlbar.setNavigationOnClickListener { binding.drawerLayout.open() }
-        binding.urlbar.setOnMenuItemClickListener { onMenuItemSelected(it.itemId) }
+        binding.navigationBtn.setOnClickListener { binding.drawerLayout.open() }
+        binding.settingsBtn.setOnClickListener { showSettings() }
         binding.urlbar.setOnClickListener { showUrlActivity() }
 
         //Observers
