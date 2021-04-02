@@ -87,6 +87,13 @@ data class ServerProfile(
         /**
          * Whether the cursor should be drawn by client instead of server.
          */
-        var useLocalCursor: Boolean = false
+        var useLocalCursor: Boolean = false,
+
+        /**
+         * Compatibility mode used for connection.
+         * Usually denotes a server type, e.g. Vino, TigerVNC
+         * 0 = Default behaviour
+         */
+        var compatMode: Int = 0
 
 ) : Parcelable
