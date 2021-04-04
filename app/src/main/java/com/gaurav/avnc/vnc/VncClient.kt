@@ -168,10 +168,9 @@ class VncClient(private val observer: Observer) {
      *
      * @param keySym    Key symbol
      * @param isDown    true for key down, false for key up
-     * @param translate Whether to convert [keySym] to corresponding X KeySym
      */
-    fun sendKeyEvent(keySym: Int, isDown: Boolean, translate: Boolean) = executeSend {
-        nativeSendKeyEvent(nativePtr, keySym.toLong(), isDown, translate)
+    fun sendKeyEvent(keySym: Int, isDown: Boolean) = executeSend {
+        nativeSendKeyEvent(nativePtr, keySym.toLong(), isDown)
     }
 
     /**
@@ -245,7 +244,7 @@ class VncClient(private val observer: Observer) {
     private external fun nativeConfigure(clientPtr: Long, securityType: Int)
     private external fun nativeInit(clientPtr: Long, host: String, port: Int): Boolean
     private external fun nativeProcessServerMessage(clientPtr: Long, uSecTimeout: Int): Boolean
-    private external fun nativeSendKeyEvent(clientPtr: Long, key: Long, isDown: Boolean, translate: Boolean): Boolean
+    private external fun nativeSendKeyEvent(clientPtr: Long, key: Long, isDown: Boolean): Boolean
     private external fun nativeSendPointerEvent(clientPtr: Long, x: Int, y: Int, mask: Int): Boolean
     private external fun nativeSendCutText(clientPtr: Long, text: String): Boolean
     private external fun nativeRefreshFrameBuffer(clientPtr: Long): Boolean

@@ -20,7 +20,7 @@ import com.gaurav.avnc.databinding.VirtualKeysBinding
 class VirtualKeys(activity: VncActivity) {
 
     private val pref = activity.viewModel.pref.input
-    private val dispatcher = activity.dispatcher
+    private val keyHandler = activity.keyHandler
     private val stub = activity.binding.virtualKeysStub
     private var openedWithKb = false
 
@@ -54,7 +54,7 @@ class VirtualKeys(activity: VncActivity) {
 
         stub.viewStub?.inflate()
         val binding = stub.binding as VirtualKeysBinding
-        binding.d = dispatcher
+        binding.h = keyHandler
         binding.showAll = pref.vkShowAll
         binding.hideBtn.setOnClickListener { hide() }
     }

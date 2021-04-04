@@ -18,6 +18,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.Rational
+import android.view.KeyEvent
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
@@ -58,6 +59,7 @@ class VncActivity : AppCompatActivity() {
     lateinit var binding: ActivityVncBinding
     val dispatcher by lazy { Dispatcher(viewModel) }
     val touchHandler by lazy { TouchHandler(viewModel, dispatcher) }
+    val keyHandler by lazy { KeyHandler(dispatcher) }
     private val virtualKeys by lazy { VirtualKeys(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -190,5 +192,21 @@ class VncActivity : AppCompatActivity() {
                 Log.w(javaClass.simpleName, "Cannot enter PiP mode", e)
             }
         }
+    }
+
+    /************************************************************************************
+     * Input
+     ************************************************************************************/
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        return keyHandler.onKeyEvent(event) || super.onKeyDown(keyCode, event)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
+        return keyHandler.onKeyEvent(event) || super.onKeyUp(keyCode, event)
+    }
+
+    override fun onKeyMultiple(keyCode: Int, repeatCount: Int, event: KeyEvent): Boolean {
+        return keyHandler.onKeyEvent(event) || super.onKeyMultiple(keyCode, repeatCount, event)
     }
 }

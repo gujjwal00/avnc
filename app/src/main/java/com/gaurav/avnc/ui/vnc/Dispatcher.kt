@@ -20,24 +20,24 @@ import kotlin.math.abs
  *
  * Input handling overview:
  *
- *-     +----------------+     +------------------------+     +--------------+
- *-     |  Touch events  |     |       Key events       |     | Virtual keys |
- *-     +----------------+     +------------------------+     +--------------+
- *-             |                          |                          |
- *-             v                          v                          |
- *-     +----------------+     +------------------------+             |
- *-     | [TouchHandler] |     | [FrameInputConnection] |             |
- *-     +----------------+     +------------------------+             |
- *-             |                          |                          |
- *-             |                          v                          |
- *-             |              +------------------------+             |
- *-             +------------->+      [Dispatcher]      +<------------+
- *-                            +------------------------+
- *-                                |                |
- *-                                v                v
- *-                     +---------------+       +----------------+
- *-                     |  [Messenger]  |       | [VncViewModel] |
- *-                     +---------------+       +----------------+
+ *-     +----------------+     +--------------------+     +--------------+
+ *-     |  Touch events  |     |     Key events     |     | Virtual keys |
+ *-     +----------------+     +--------------------+     +--------------+
+ *-             |                        |                        |
+ *-             v                        v                        |
+ *-     +----------------+     +--------------------+             |
+ *-     | [TouchHandler] |     |    [KeyHandler]    |<------------+
+ *-     +----------------+     +--------------------+
+ *-             |                        |
+ *-             |                        v
+ *-             |              +--------------------+
+ *-             +------------->+    [Dispatcher]    +
+ *-                            +--------------------+
+ *-                                |             |
+ *-                                v             v
+ *-                     +---------------+    +----------------+
+ *-                     |  [Messenger]  |    | [VncViewModel] |
+ *-                     +---------------+    +----------------+
  *-
  *-
  *
@@ -115,19 +115,8 @@ class Dispatcher(private val viewModel: VncViewModel) {
             endDrag(p)
     }
 
-    fun onKeyDown(keyCode: Int, translate: Boolean) = messenger.sendKeyDown(keyCode, translate)
-    fun onKeyUp(keyCode: Int, translate: Boolean) = messenger.sendKeyUp(keyCode, translate)
-
-    //Helper methods, used by virtual key bindings
-    fun onKey(keyCode: Int) {
-        onKeyDown(keyCode, true)
-        onKeyUp(keyCode, true)
-    }
-
-    fun onKey(keyCode: Int, isDown: Boolean) {
-        if (isDown) onKeyDown(keyCode, true)
-        else onKeyUp(keyCode, true)
-    }
+    fun onKeyDown(keySym: Int) = messenger.sendKey(keySym, true)
+    fun onKeyUp(keySym: Int) = messenger.sendKey(keySym, false)
 
     fun onMouseButtonDown(button: PointerButton, p: PointF) = doPointerButtonDown(button, p)
     fun onMouseButtonUp(button: PointerButton, p: PointF) = doPointerButtonUp(button, p)

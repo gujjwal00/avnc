@@ -12,9 +12,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
+import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.inputmethod.BaseInputConnection
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputConnection
 import com.gaurav.avnc.ui.vnc.gl.Renderer
 
 /**
@@ -23,8 +24,17 @@ import com.gaurav.avnc.ui.vnc.gl.Renderer
 class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(context, attrs) {
 
     private lateinit var frameState: FrameState
-    private lateinit var dispatcher: Dispatcher
     private lateinit var touchHandler: TouchHandler
+    private lateinit var keyHandler: KeyHandler
+
+    /**
+     * Input connection used for intercepting key events
+     */
+    inner class InputConnection : BaseInputConnection(this, false) {
+        override fun sendKeyEvent(event: KeyEvent): Boolean {
+            return keyHandler.onKeyEvent(event) || super.sendKeyEvent(event)
+        }
+    }
 
     /**
      * Should be called from [VncActivity.onCreate].
@@ -33,8 +43,8 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
         val viewModel = activity.viewModel
 
         frameState = viewModel.frameState
-        dispatcher = activity.dispatcher
         touchHandler = activity.touchHandler
+        keyHandler = activity.keyHandler
 
         setEGLContextClientVersion(2)
         setRenderer(Renderer(viewModel))
@@ -51,7 +61,7 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
         outAttrs.imeOptions = outAttrs.imeOptions or
                 EditorInfo.IME_FLAG_NO_EXTRACT_UI or
                 EditorInfo.IME_FLAG_NO_FULLSCREEN
-        return FrameInputConnection(dispatcher, this)
+        return InputConnection()
     }
 
     @SuppressLint("ClickableViewAccessibility")

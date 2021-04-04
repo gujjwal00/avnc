@@ -46,7 +46,7 @@ class Messenger(private val client: VncClient) {
 
 
     /**************************************************************************
-     * Pointer events
+     * Input events
      **************************************************************************/
 
     /**
@@ -75,16 +75,8 @@ class Messenger(private val client: VncClient) {
         sendPointerButtonUp(button, p)
     }
 
-    /**************************************************************************
-     * Key events
-     **************************************************************************/
-
-    fun sendKeyDown(keyCode: Int, translate: Boolean) {
-        execute { client.sendKeyEvent(keyCode, true, translate) }
-    }
-
-    fun sendKeyUp(keyCode: Int, translate: Boolean) {
-        execute { client.sendKeyEvent(keyCode, false, translate) }
+    fun sendKey(keySym: Int, isDown: Boolean) {
+        execute { client.sendKeyEvent(keySym, isDown) }
     }
 
     /**************************************************************************

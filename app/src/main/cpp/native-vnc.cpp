@@ -15,7 +15,6 @@
 #include <errno.h>
 #include <netdb.h>
 
-#include "keymap.h"
 
 /******************************************************************************
  * Logging
@@ -412,11 +411,7 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeGetLastErrorStr(JNIEnv *env, jobject th
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeSendKeyEvent(JNIEnv *env, jobject thiz, jlong client_ptr,
-                                                      jlong key, jboolean is_down, jboolean translate) {
-    if (translate && key < KEYMAP_LENGTH) {
-        key = KEYMAP[key];
-    }
-
+                                                      jlong key, jboolean is_down) {
     return (jboolean) SendKeyEvent((rfbClient *) client_ptr, (uint32_t) key, is_down);
 }
 

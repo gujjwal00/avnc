@@ -20,8 +20,8 @@
             type="boolean" />
 
         <variable
-            name="d"
-            type="com.gaurav.avnc.ui.vnc.Dispatcher" />
+            name="h"
+            type="com.gaurav.avnc.ui.vnc.KeyHandler" />
     </data>
 
     <HorizontalScrollView
@@ -53,31 +53,31 @@
                 android:textOff="Shift"
                 android:textOn="Shift"
                 app:isVisible="@{showAll}"
-                app:onCheckedChangeListener="@{(v,checked) -> d.onKey(KeyEvent.KEYCODE_SHIFT_RIGHT, checked)}" />
+                app:onCheckedChangeListener="@{(v,checked) -> h.onKeyEvent(KeyEvent.KEYCODE_SHIFT_RIGHT, checked)}" />
 
             <ToggleButton
                 android:id="@+id/vk_ctrl"
                 style="@style/VirtualKey.Toggle"
                 android:textOff="Ctrl"
                 android:textOn="Ctrl"
-                app:onCheckedChangeListener="@{(v,checked) -> d.onKey(KeyEvent.KEYCODE_CTRL_RIGHT, checked)}" />
+                app:onCheckedChangeListener="@{(v,checked) -> h.onKeyEvent(KeyEvent.KEYCODE_CTRL_RIGHT, checked)}" />
 
             <ToggleButton
                 android:id="@+id/vk_alt"
                 style="@style/VirtualKey.Toggle"
                 android:textOff="Alt"
                 android:textOn="Alt"
-                app:onCheckedChangeListener="@{(v,checked) -> d.onKey(KeyEvent.KEYCODE_ALT_RIGHT, checked)}" />
+                app:onCheckedChangeListener="@{(v,checked) -> h.onKeyEvent(KeyEvent.KEYCODE_ALT_RIGHT, checked)}" />
 
             <!--AppCompatButton is used instead of Button to disable Material styles-->
             <androidx.appcompat.widget.AppCompatButton
                 style="@style/VirtualKey"
-                android:onClick="@{() -> d.onKey(KeyEvent.KEYCODE_TAB)}"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_TAB)}"
                 android:text="Tab" />
 
             <androidx.appcompat.widget.AppCompatButton
                 style="@style/VirtualKey"
-                android:onClick="@{() -> d.onKey(KeyEvent.KEYCODE_ESCAPE)}"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_ESCAPE)}"
                 android:text="Esc"
                 app:isVisible="@{showAll}" />
 
@@ -85,22 +85,22 @@
             <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~ Arrow keys ~~~~~~~~~~~~~~~~~~~~~~~-->
             <ImageButton
                 style="@style/VirtualKey.Image"
-                android:onClick="@{() -> d.onKey(KeyEvent.KEYCODE_DPAD_UP)}"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_DPAD_UP)}"
                 android:src="@drawable/ic_keyboard_arrow_up" />
 
             <ImageButton
                 style="@style/VirtualKey.Image"
-                android:onClick="@{() -> d.onKey(KeyEvent.KEYCODE_DPAD_DOWN)}"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_DPAD_DOWN)}"
                 android:src="@drawable/ic_keyboard_arrow_down" />
 
             <ImageButton
                 style="@style/VirtualKey.Image"
-                android:onClick="@{() -> d.onKey(KeyEvent.KEYCODE_DPAD_LEFT)}"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_DPAD_LEFT)}"
                 android:src="@drawable/ic_keyboard_arrow_left" />
 
             <ImageButton
                 style="@style/VirtualKey.Image"
-                android:onClick="@{() -> d.onKey(KeyEvent.KEYCODE_DPAD_RIGHT)}"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_DPAD_RIGHT)}"
                 android:src="@drawable/ic_keyboard_arrow_right" />
 
 
@@ -108,37 +108,37 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 style="@style/VirtualKey"
-                android:onClick="@{() -> d.onKey(KeyEvent.KEYCODE_MOVE_HOME)}"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_MOVE_HOME)}"
                 android:text="Home"
                 app:isVisible="@{showAll}" />
 
             <androidx.appcompat.widget.AppCompatButton
                 style="@style/VirtualKey"
-                android:onClick="@{() -> d.onKey(KeyEvent.KEYCODE_MOVE_END)}"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_MOVE_END)}"
                 android:text="End"
                 app:isVisible="@{showAll}" />
 
             <androidx.appcompat.widget.AppCompatButton
                 style="@style/VirtualKey"
-                android:onClick="@{() -> d.onKey(KeyEvent.KEYCODE_PAGE_UP)}"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_PAGE_UP)}"
                 android:text="PgUp"
                 app:isVisible="@{showAll}" />
 
             <androidx.appcompat.widget.AppCompatButton
                 style="@style/VirtualKey"
-                android:onClick="@{() -> d.onKey(KeyEvent.KEYCODE_PAGE_DOWN)}"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_PAGE_DOWN)}"
                 android:text="PgDn"
                 app:isVisible="@{showAll}" />
 
             <androidx.appcompat.widget.AppCompatButton
                 style="@style/VirtualKey"
-                android:onClick="@{() -> d.onKey(KeyEvent.KEYCODE_INSERT)}"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_INSERT)}"
                 android:text="Insert"
                 app:isVisible="@{showAll}" />
 
             <androidx.appcompat.widget.AppCompatButton
                 style="@style/VirtualKey"
-                android:onClick="@{() -> d.onKey(KeyEvent.KEYCODE_FORWARD_DEL)}"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_FORWARD_DEL)}"
                 android:text="Delete"
                 app:isVisible="@{showAll}" />
 
