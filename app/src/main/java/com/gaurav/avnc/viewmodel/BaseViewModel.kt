@@ -43,16 +43,27 @@ open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
      * Puts given text on clipboard.
      */
     fun setClipboardText(text: String) {
-        if (!pref.server.clipboardSync)
-            return
-
-        viewModelScope.launch(Dispatchers.Main) {
-            try {
-                clipboard.setPrimaryClip(ClipData.newPlainText(null, text))
-            } catch (t: Throwable) {
-                Log.e(javaClass.simpleName, "Could not copy text to clipboard.", t)
-            }
+        try {
+            clipboard.setPrimaryClip(ClipData.newPlainText(null, text))
+        } catch (t: Throwable) {
+            Log.e(javaClass.simpleName, "Could not copy text to clipboard.", t)
         }
+    }
+
+
+    /**
+     * Returns current clipboard text.
+     */
+    fun getClipboardText(): String? {
+        val clip = clipboard.primaryClip
+        if (clip == null || clip.itemCount == 0)
+            return null
+
+        val text = clip.getItemAt(0).text
+        if (text == null || text.isBlank())
+            return null
+
+        return text.toString()
     }
 
     /**

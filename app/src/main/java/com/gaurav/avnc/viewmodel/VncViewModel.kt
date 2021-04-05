@@ -52,8 +52,7 @@ import java.util.concurrent.LinkedBlockingQueue
  *
  * Sender thread :- This thread is created (as an executor) by [messenger]. It is
  * used to send messages to remote server. We use this dedicated thread instead
- * of coroutines to preserve the order of sent messages. It is stopped after [client]
- * is disconnected.
+ * of coroutines to preserve the order of sent messages.
  *
  * UI thread :- Main thread of the app. Used for updating UI and controlling other
  * Threads. This is where [frameState] is updated.
@@ -181,22 +180,6 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     /**
-     * Sends current clipboard text to remote server.
-     */
-    fun sendClipboardText() {
-        if (!pref.server.clipboardSync)
-            return
-
-        val clip = clipboard.primaryClip
-        if (clip == null || clip.itemCount == 0)
-            return
-
-        val text = clip.getItemAt(0).text
-        if (text != null && text.isNotBlank())
-            messenger.sendClipboardText(text.toString())
-    }
-
-    /**
      * Disconnect VNC client.
      */
     fun disconnect() = client.disconnect()
@@ -245,6 +228,23 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         frameViewRef.get()?.requestRender()
     }
 
+    /**************************************************************************
+     * Clipboard Sync
+     **************************************************************************/
+
+    fun sendClipboardText() {
+        viewModelScope.launch(Dispatchers.Main) {
+            if (pref.server.clipboardSync)
+                getClipboardText()?.let { messenger.sendClipboardText(it) }
+        }
+    }
+
+    private fun receiveClipboardText(text: String) {
+        viewModelScope.launch(Dispatchers.Main) {
+            if (pref.server.clipboardSync)
+                setClipboardText(text)
+        }
+    }
 
     /**************************************************************************
      * [VncClient.Observer] Implementation
@@ -285,16 +285,14 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     override fun onGotXCutText(text: String) {
-        setClipboardText(text)
+        receiveClipboardText(text)
     }
 
     override fun onClientStateChanged(newState: VncClient.State) {
         clientState.postValue(newState)
 
         if (newState == VncClient.State.Connected) {
-            viewModelScope.launch(Dispatchers.Main) {
-                sendClipboardText() //Initial sync
-            }
+            sendClipboardText() //Initial sync
 
             //Save any changes to profile. Right now this is used to "remember" credentials.
             if (profile.ID != 0L) async {
