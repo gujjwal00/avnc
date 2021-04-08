@@ -49,6 +49,7 @@
 
     <string name="msg_server_profile_deleted">Server deleted.</string>
     <string name="msg_pip_not_supported">Picture-in-Picture is not supported on this device</string>
+    <string name="msg_loading">Loading …</string>
     <string name="desc_navigation_btn">Open Navigation Drawer</string>
     <string name="desc_disconnected_icon">Disconnected state indicator icon</string>
     <string name="desc_connect_btn">Connect to this URL</string>
@@ -71,7 +72,7 @@
     <string name="pref_servers">Servers</string>
     <string name="pref_server_summary">Discovery, Credentials</string>
     <string name="pref_tools">Tools</string>
-    <string name="pref_tools_summary">Import/Export</string>
+    <string name="pref_tools_summary">Import/Export, Debugging</string>
     <string name="pref_experimental">Experimental</string>
     <string name="pref_experimental_summary">Extra goodies!</string>
 
@@ -107,6 +108,9 @@
     <string name="pref_discovery_restart_summary">Restart Discovery after it stops</string>
     <string name="pref_discovery_restart_delay">Restart Delay (Minutes)</string>
     <string name="pref_import_export">Import/Export Servers</string>
+    <string name="pref_debugging">Debugging</string>
+    <string name="pref_logs">Logs</string>
+    <string name="pref_keycode_map">Keycode Map</string>
     <string name="pref_experimental_indicator">Availability Indicator</string>
     <string name="pref_experimental_indicator_summary">Indicate saved servers which are also found by Discovery.\nRequires App restart.</string>
 </resources>

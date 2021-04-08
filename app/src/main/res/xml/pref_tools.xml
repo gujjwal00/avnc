@@ -11,7 +11,18 @@
 
     <Preference
         app:fragment="com.gaurav.avnc.ui.prefs.ImportExportFragment"
-        app:defaultValue="false"
         app:title="@string/pref_import_export" />
 
+    <PreferenceCategory
+        app:icon="@drawable/ic_bug"
+        app:title="@string/pref_debugging">
+
+        <Preference
+            app:fragment="com.gaurav.avnc.ui.prefs.LogsFragment"
+            app:title="@string/pref_logs" />
+
+        <Preference
+            app:fragment="com.gaurav.avnc.ui.prefs.KeyCodeMapFragment"
+            app:title="@string/pref_keycode_map" />
+    </PreferenceCategory>
 </PreferenceScreen>
