@@ -116,6 +116,7 @@ class KeyHandler(private val dispatcher: Dispatcher) {
         when (event.keyCode) {
             KeyEvent.KEYCODE_ENTER,
             KeyEvent.KEYCODE_NUMPAD_ENTER,
+            KeyEvent.KEYCODE_SPACE,
             KeyEvent.KEYCODE_TAB -> return true
         }
 
