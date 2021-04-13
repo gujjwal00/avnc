@@ -33,7 +33,7 @@ class CredentialFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = FragmentCredentialBinding.inflate(layoutInflater, null, false)
 
-        binding.usernameRequired = viewModel.credentialRequiredEvent.value
+        binding.usernameRequired = viewModel.credentialRequest.value
         binding.canRemember = viewModel.profile.ID != 0L
 
         setupAutoComplete()
@@ -52,17 +52,19 @@ class CredentialFragment : DialogFragment() {
                 .setView(binding.root)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
                     val cred = UserCredential(binding.username.text.toString(), binding.password.text.toString())
-                    viewModel.credentialQueue.offer(cred)
+                    viewModel.credentialRequest.offerResponse(cred)
 
                     if (binding.remember.isChecked) {
                         //Put credentials in current profile, which will be saved by the
                         //Viewmodel after connection is successful.
+                        //We don't want to save them here because they might be wrong/mistyped.
+
                         viewModel.profile.username = cred.username
                         viewModel.profile.password = cred.password
                     }
                 }
                 .setNegativeButton(android.R.string.cancel) { _, _ ->
-                    viewModel.credentialQueue.offer(UserCredential())
+                    viewModel.credentialRequest.offerResponse(UserCredential())
                     requireActivity().finish()
                 }
                 .create()

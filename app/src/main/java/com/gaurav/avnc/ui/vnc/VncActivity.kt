@@ -81,7 +81,7 @@ class VncActivity : AppCompatActivity() {
 
         //ViewModel setup
         viewModel.frameViewRef = WeakReference(binding.frameView)
-        viewModel.credentialRequiredEvent.observe(this) { showCredentialDialog() }
+        viewModel.credentialRequest.observe(this) { showCredentialDialog() }
         viewModel.connect(getProfile()) //Should be called after observers has been setup
     }
 

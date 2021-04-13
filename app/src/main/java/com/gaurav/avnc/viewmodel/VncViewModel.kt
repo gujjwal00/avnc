@@ -22,7 +22,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
-import java.util.concurrent.LinkedBlockingQueue
 
 /**
  * ViewModel for VncActivity
@@ -83,22 +82,13 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
     /**
      * Fired when [VncClient] has asked for credential. It is used to
-     * show Credentials dialog to user.
+     * show Credentials dialog to user and return the result to receiver
+     * thread.
      *
-     * Value of this event is true if `username` is also required.
-     * It is false if only password is required.
+     * Value of this request is true if username & password are required
+     * and false if only password is required.
      */
-    val credentialRequiredEvent = LiveEvent<Boolean>()
-
-    /**
-     * Used for credential transfer between credential dialog (producer)
-     * and the thread doing VNC initialization (consumer).
-     *
-     * After firing [credentialRequiredEvent] event, consumer will block
-     * waiting for credentials. After producer has received credentials from
-     * user, it will put them in this queue, allowing consumer to continue.
-     */
-    val credentialQueue = LinkedBlockingQueue<UserCredential>()
+    val credentialRequest = LiveRequest<Boolean, UserCredential>()
 
     /**
      * List of known credentials. Used for providing suggestion when
@@ -190,9 +180,9 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     override fun onCleared() {
         super.onCleared()
 
-        //Put something in credential queue (just in case background thread is
+        //Put something in credential request (just in case background thread is
         //stuck waiting for credentials)
-        credentialQueue.offer(UserCredential())
+        credentialRequest.offerResponse(UserCredential())
     }
 
 
@@ -275,9 +265,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      * This is a blocking operation and will wait until credential dialog is finished.
      */
     private fun obtainCredential(usernameRequired: Boolean): UserCredential {
-        credentialQueue.clear()
-        credentialRequiredEvent.post(usernameRequired)
-        return credentialQueue.take()   //Blocking call
+        credentialRequest.post(usernameRequired)
+        return credentialRequest.takeResponse()   //Blocking call
     }
 
     override fun onFramebufferUpdated() {

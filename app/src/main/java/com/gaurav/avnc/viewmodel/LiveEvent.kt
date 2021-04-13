@@ -22,7 +22,7 @@ import androidx.lifecycle.Observer
  * LiveEvent tracks whether someone has handled the current value/change in LiveData.
  * Once handled, observers will not be notified for the same value.
  */
-class LiveEvent<T> : LiveData<T>() {
+open class LiveEvent<T> : LiveData<T>() {
 
     /**
      * Whether current value has been handled.
@@ -42,7 +42,7 @@ class LiveEvent<T> : LiveData<T>() {
      *
      * This must be called on main thread.
      */
-    fun set(value: T) {
+    open fun set(value: T) {
         setValue(value)
     }
 
