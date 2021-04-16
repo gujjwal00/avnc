@@ -9,7 +9,8 @@
 <resources>
 
     <style name="AppThemeBase" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
+        <!-- Surface color is White-->
+        <item name="android:statusBarColor">?colorSurface</item>
     </style>
 </resources>

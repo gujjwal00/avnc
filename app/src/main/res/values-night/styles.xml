@@ -9,6 +9,7 @@
 <resources>
 
     <style name="AppThemeBase" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!-- This matches with appbar background at 4dp elevation-->
+        <item name="android:statusBarColor">#272727</item>
     </style>
 </resources>

@@ -20,7 +20,6 @@ import com.gaurav.avnc.databinding.ActivityHomeBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.prefs.PrefsActivity
 import com.gaurav.avnc.ui.vnc.startVncActivity
-import com.gaurav.avnc.util.layoutBehindStatusBar
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
 
@@ -53,11 +52,6 @@ class HomeActivity : AppCompatActivity() {
         viewModel.profileDeletedEvent.observe(this) { showProfileDeletedMsg(it) }
         viewModel.newConnectionEvent.observe(this) { startVncActivity(this, it) }
         viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        layoutBehindStatusBar(window.decorView)
     }
 
     /**

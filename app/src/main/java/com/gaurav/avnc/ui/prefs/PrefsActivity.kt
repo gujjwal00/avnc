@@ -19,7 +19,6 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.gaurav.avnc.R
-import com.gaurav.avnc.util.layoutBehindStatusBar
 import com.google.android.material.appbar.MaterialToolbar
 
 class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -37,11 +36,6 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
 
         setSupportActionBar(findViewById<MaterialToolbar>(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        layoutBehindStatusBar(window.decorView)
     }
 
     override fun onSupportNavigateUp(): Boolean {

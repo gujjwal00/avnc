@@ -15,7 +15,6 @@ import androidx.databinding.DataBindingUtil
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityUrlBinding
 import com.gaurav.avnc.ui.vnc.startVncActivity
-import com.gaurav.avnc.util.layoutBehindStatusBar
 import com.gaurav.avnc.vnc.VncUri
 
 /**
@@ -42,11 +41,6 @@ class UrlBarActivity : AppCompatActivity() {
             else
                 binding.url.setText("")
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        layoutBehindStatusBar(window.decorView)
     }
 
     private fun go(url: String): Boolean {

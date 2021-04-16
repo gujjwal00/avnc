@@ -23,15 +23,10 @@
       This is the main theme.
     -->
     <style name="AppTheme" parent="AppThemeBase">
-        <item name="appBarLayoutStyle">@style/AppBarLayout</item>
+        <item name="appBarLayoutStyle">@style/Widget.MaterialComponents.AppBarLayout.Surface</item>
     </style>
 
-    <style name="AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">
-        <item name="android:fitsSystemWindows">true</item>
-        <item name="android:elevation">@dimen/appbar_elevation</item>
-    </style>
-
-    <style name="DarkerDialogBackground" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+    <style name="AlertDialog.Dimmed" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="android:backgroundDimAmount">.6</item>
     </style>
 

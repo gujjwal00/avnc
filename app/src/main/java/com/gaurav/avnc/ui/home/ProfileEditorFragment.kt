@@ -42,7 +42,7 @@ class ProfileEditorFragment : DialogFragment() {
         val binding = FragmentProfileEditorBinding.inflate(layoutInflater, null, false)
         binding.profile = profile
 
-        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.DarkerDialogBackground)
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialog_Dimmed)
                 .setView(binding.root)
                 .setTitle(getTitle())
                 .setPositiveButton(R.string.title_save) { _, _ -> onSave() }
