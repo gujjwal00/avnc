@@ -13,16 +13,17 @@ import com.gaurav.avnc.model.ServerProfile
 import java.net.URI
 
 /**
- * This class wraps a [Uri] and provides accessor properties for various
- * components specific to [vnc URI Scheme](https://tools.ietf.org/html/rfc7869).
+ * This class implements the `vnc` URI scheme.
+ * Reference: https://tools.ietf.org/html/rfc7869
  *
- * Note: Some more parameter (SSH related) are specified in RFC but they are not implemented yet.
+ * If `host` in URI is an IPv6 address, it MUST be wrapped in square brackets.
+ * (This requirement come from using Java [URI] internally.)
  */
 class VncUri(private val uri: Uri) {
 
     /**
-     * Allows creating new instance from string.
-     * Also adds schema if missing.
+     * Create new instance from URI string.
+     * VNC schema will be added if missing.
      */
     constructor(uriString: String) : this(
             if (uriString.startsWith("vnc://"))
@@ -32,23 +33,27 @@ class VncUri(private val uri: Uri) {
     )
 
     /**
-     * Older versions of [Uri] does not support IPv6 address so we need to use [URI] for host & port.
+     * Older versions of Android [Uri] does not support IPv6 so we need to use Java [URI] for host & port.
      *
      * It also serves as a validation step because [URI] verifies that address is well-formed.
      */
     private val javaUri = runCatching { URI(uri.toString()) }.getOrDefault(URI(""))
 
 
-    val host; get() = javaUri.host?.trim('[', ']') ?: ""
-    val port; get() = if (javaUri.port == -1) 5900 else javaUri.port
-    val connectionName; get() = uri.getQueryParameter("ConnectionName") ?: ""
-    val username; get() = uri.getQueryParameter("VncUsername") ?: ""
-    val password; get() = uri.getQueryParameter("VncPassword") ?: ""
-    val securityType; get() = uri.getQueryParameter("SecurityType")?.toIntOrNull() ?: 0
-    val channelType; get() = uri.getQueryParameter("ChannelType")?.toIntOrNull() ?: 0
-    val colorLevel; get() = uri.getQueryParameter("ColorLevel")?.toIntOrNull() ?: 7
-    val viewOnly; get() = uri.getBooleanQueryParameter("ViewOnly", false)
-    val saveConnection; get() = uri.getBooleanQueryParameter("SaveConnection", false)
+    val host = javaUri.host?.trim('[', ']') ?: ""
+    val port = if (javaUri.port == -1) 5900 else javaUri.port
+    val connectionName = uri.getQueryParameter("ConnectionName") ?: ""
+    val username = uri.getQueryParameter("VncUsername") ?: ""
+    val password = uri.getQueryParameter("VncPassword") ?: ""
+    val securityType = uri.getQueryParameter("SecurityType")?.toIntOrNull() ?: 0
+    val channelType = uri.getQueryParameter("ChannelType")?.toIntOrNull() ?: ServerProfile.CHANNEL_TCP
+    val colorLevel = uri.getQueryParameter("ColorLevel")?.toIntOrNull() ?: 7
+    val viewOnly = uri.getBooleanQueryParameter("ViewOnly", false)
+    val saveConnection = uri.getBooleanQueryParameter("SaveConnection", false)
+    val sshHost = uri.getQueryParameter("SshHost") ?: host
+    val sshPort = uri.getQueryParameter("SshPort")?.toIntOrNull() ?: 22
+    val sshUsername = uri.getQueryParameter("SshUsername") ?: ""
+    val sshPassword = uri.getQueryParameter("SshPassword") ?: ""
 
     /**
      * Generates a [ServerProfile] using this instance.
@@ -62,6 +67,11 @@ class VncUri(private val uri: Uri) {
             securityType = securityType,
             channelType = channelType,
             colorLevel = colorLevel,
-            viewOnly = viewOnly
+            viewOnly = viewOnly,
+            sshHost = sshHost,
+            sshPort = sshPort,
+            sshUsername = sshUsername,
+            sshAuthType = ServerProfile.SSH_AUTH_PASSWORD,
+            sshPassword = sshPassword
     )
 }

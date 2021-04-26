@@ -69,6 +69,7 @@
     <string name="msg_loading">Loading …</string>
     <string name="msg_imported">Imported Successfully</string>
     <string name="msg_invalid_key_file">File is not a valid private key!</string>
+    <string name="msg_invalid_vnc_uri">Invalid VNC URI</string>
     <string name="desc_navigation_btn">Open Navigation Drawer</string>
     <string name="desc_disconnected_icon">Disconnected state indicator icon</string>
     <string name="desc_connect_btn">Connect to this URL</string>

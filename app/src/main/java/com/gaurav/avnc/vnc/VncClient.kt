@@ -137,7 +137,7 @@ class VncClient(private val observer: Observer) {
 
         state = State.Connecting
 
-        if (host.isNotBlank() && nativeInit(nativePtr, host, port)) {
+        if (nativeInit(nativePtr, host, port)) {
             state = State.Connected
             return true
         } else {

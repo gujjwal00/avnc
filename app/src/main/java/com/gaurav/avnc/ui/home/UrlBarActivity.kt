@@ -10,6 +10,7 @@ package com.gaurav.avnc.ui.home
 
 import android.os.Bundle
 import android.view.Window
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.gaurav.avnc.R
@@ -47,8 +48,15 @@ class UrlBarActivity : AppCompatActivity() {
         if (url.isBlank())
             return false
 
-        startVncActivity(this, VncUri(processIPv6(url)))
+        val processed = processIPv6(url)
+        val uri = VncUri(processed)
 
+        if (uri.host.isEmpty()) {
+            Toast.makeText(this, R.string.msg_invalid_vnc_uri, Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        startVncActivity(this, uri)
         finish()
         return true
     }

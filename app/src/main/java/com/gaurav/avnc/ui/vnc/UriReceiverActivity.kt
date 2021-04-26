@@ -9,7 +9,9 @@ package com.gaurav.avnc.ui.vnc
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.gaurav.avnc.R
 import com.gaurav.avnc.vnc.VncUri
 
 /**
@@ -25,7 +27,11 @@ class UriReceiverActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val uri = getUri()
-        startVncActivity(this, uri)
+
+        if (uri.host.isEmpty())
+            Toast.makeText(this, R.string.msg_invalid_vnc_uri, Toast.LENGTH_LONG).show()
+        else
+            startVncActivity(this, uri)
 
         finish()
     }

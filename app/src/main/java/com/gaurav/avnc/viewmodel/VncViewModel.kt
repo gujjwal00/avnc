@@ -183,10 +183,14 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     private fun connect() {
+        val channel = profile.channelType
+        if (channel != ServerProfile.CHANNEL_TCP && channel != ServerProfile.CHANNEL_SSH_TUNNEL)
+            throw IOException("Unsupported Channel: $channel")
+
         var host = profile.address
         var port = profile.port
 
-        if (profile.channelType == ServerProfile.CHANNEL_SSH_TUNNEL) {
+        if (channel == ServerProfile.CHANNEL_SSH_TUNNEL) {
             sshTunnel.open()
             host = sshTunnel.localHost
             port = sshTunnel.localPort
