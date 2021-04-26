@@ -8,17 +8,29 @@
 
 package com.gaurav.avnc.viewmodel
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.launch
 import java.util.concurrent.LinkedBlockingQueue
 
 /**
- * Extension of [LiveEvent] to facilitate passing some response back to caller.
+ * Extension of [LiveEvent] to facilitate awaiting some response from observers.
  *
  * This simplifies the cases where we need some value from User (UI thread)
  * and we want the background thread to block until that value is available.
+ *
+ * If request is canceled then [requestResponse] will return [cancellationValue].
+ *
+ * @param scope can be specified to auto-cancel this request on scope cancellation.
  */
-class LiveRequest<RequestType, ResponseType> : LiveEvent<RequestType>() {
+class LiveRequest<RequestType, ResponseType>(private val cancellationValue: ResponseType, scope: CoroutineScope?)
+    : LiveEvent<RequestType>() {
 
     private val responses = LinkedBlockingQueue<ResponseType>()
+
+    init {
+        scope?.launch { awaitCancellation() }?.invokeOnCompletion { cancelRequest() }
+    }
 
     /**
      * Fire this request with given value and returns the response.
@@ -35,4 +47,9 @@ class LiveRequest<RequestType, ResponseType> : LiveEvent<RequestType>() {
      * Sets response for current request.
      */
     fun offerResponse(response: ResponseType) = responses.offer(response)
+
+    /**
+     * Cancels any pending request.
+     */
+    fun cancelRequest() = responses.offer(cancellationValue)
 }

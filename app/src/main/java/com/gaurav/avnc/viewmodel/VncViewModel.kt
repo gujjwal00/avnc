@@ -90,7 +90,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      * Value of this request is true if username & password are required
      * and false if only password is required.
      */
-    val credentialRequest = LiveRequest<Boolean, UserCredential>()
+    val credentialRequest = LiveRequest<Boolean, UserCredential>(UserCredential(), viewModelScope)
 
     /**
      * List of known credentials. Used for providing suggestion when
@@ -128,7 +128,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     /**
      * Used to confirm unknown hosts.
      */
-    val sshHostKeyVerifyRequest = LiveRequest<HostKey, Boolean>()
+    val sshHostKeyVerifyRequest = LiveRequest<HostKey, Boolean>(false, viewModelScope)
 
     /**************************************************************************
      * Connection management
@@ -213,18 +213,6 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         client.cleanup()
         sshTunnel.close()
     }
-
-    /**
-     * Called when activity is finished.
-     */
-    override fun onCleared() {
-        super.onCleared()
-
-        //Put something in credential request (just in case receiver thread is
-        //stuck waiting for credentials)
-        credentialRequest.offerResponse(UserCredential())
-    }
-
 
     /**************************************************************************
      * Frame management

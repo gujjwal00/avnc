@@ -64,7 +64,7 @@ class CredentialFragment : DialogFragment() {
                     }
                 }
                 .setNegativeButton(android.R.string.cancel) { _, _ ->
-                    viewModel.credentialRequest.offerResponse(UserCredential())
+                    viewModel.credentialRequest.cancelRequest()
                     requireActivity().finish()
                 }
                 .create()
