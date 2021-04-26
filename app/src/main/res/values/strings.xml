@@ -16,11 +16,12 @@
     <string name="title_copy">Copy</string>
     <string name="title_copy_address">Copy Address</string>
     <string name="title_copy_name">Copy Name</string>
-    <string name="title_more">More</string>
+    <string name="title_advanced">Advanced</string>
     <string name="title_save">Save</string>
     <string name="title_less">Less</string>
     <string name="title_settings">Settings</string>
     <string name="title_edit_server_profile">Edit Server</string>
+    <string name="title_ssh_tunnel">SSH Tunnel</string>
     <string name="title_undo">Undo</string>
     <string name="title_cancel">Cancel</string>
     <string name="title_credentials_required">Credentials required</string>
@@ -45,16 +46,29 @@
     <string name="label_view_only_mode">View-only mode</string>
     <string name="label_color_quality">Color quality</string>
     <string name="label_image_quality">Image quality</string>
-    <string name="label_security_type">Security type</string>
+    <string name="label_security_type">Security</string>
+    <string name="label_use_repeater">Use Repeater</string>
+    <string name="label_repeater_id">ID</string>
+    <string name="label_private_key">Private Key</string>
+    <string name="label_key_password">Key Password</string>
+    <string name="label_auth_type">Auth Type</string>
 
     <string name="hint_urlbar">Connect to a Server</string>
-    <string name="hint_server_name">e.g. Work PC</string>
-    <string name="hint_host">e.g. 192.168.43.10</string>
-    <string name="hint_optional">Optional</string>
+    <string name="hint_server_name">Name (e.g. Work PC)</string>
+    <string name="hint_host">Host</string>
+    <string name="hint_repeater_host">Repeater Host</string>
+    <string name="hint_port">Port</string>
+    <string name="hint_server_id">Server ID</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_private_key">Private Key</string>
+    <string name="hint_key_password">Key Password</string>
 
     <string name="msg_server_profile_deleted">Server deleted.</string>
     <string name="msg_pip_not_supported">Picture-in-Picture is not supported on this device</string>
     <string name="msg_loading">Loading …</string>
+    <string name="msg_imported">Imported Successfully</string>
+    <string name="msg_invalid_key_file">File is not a valid private key!</string>
     <string name="desc_navigation_btn">Open Navigation Drawer</string>
     <string name="desc_disconnected_icon">Disconnected state indicator icon</string>
     <string name="desc_connect_btn">Connect to this URL</string>

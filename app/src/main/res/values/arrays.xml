@@ -9,10 +9,10 @@
 <resources>
 
     <string-array name="security_entries">
-        <item>All</item>
+        <item>Default Security</item>
         <item>None</item>
         <item>VncAuth</item>
-        <item>TLS</item>
+        <item>AnonTLS</item>
         <item>VeNCrypt</item>
     </string-array>
     <integer-array name="security_values">

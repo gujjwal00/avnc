@@ -8,8 +8,6 @@
 
 package com.gaurav.avnc.ui.prefs
 
-import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,21 +19,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.FragmentImportExportBinding
+import com.gaurav.avnc.util.OpenableDocument
 import com.gaurav.avnc.viewmodel.PrefsViewModel
 import java.text.DateFormat
 import java.util.*
 
 @Keep
 class ImportExportFragment : Fragment() {
-
-    /**
-     * Contract for openable documents
-     */
-    private class OpenableDocument : ActivityResultContracts.OpenDocument() {
-        override fun createIntent(context: Context, input: Array<out String>): Intent {
-            return super.createIntent(context, input).addCategory(Intent.CATEGORY_OPENABLE)
-        }
-    }
 
     private val importFilePicker = registerForActivityResult(OpenableDocument()) { import(it) }
     private val exportFilePicker = registerForActivityResult(ActivityResultContracts.CreateDocument()) { export(it) }

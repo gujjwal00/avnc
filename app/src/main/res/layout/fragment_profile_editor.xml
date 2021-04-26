@@ -6,19 +6,13 @@
   ~ See COPYING.txt for more details.
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
         <variable
             name="profile"
             type="com.gaurav.avnc.model.ServerProfile" />
-
-        <variable
-            name="showAll"
-            type="boolean" />
     </data>
 
     <ScrollView
@@ -26,183 +20,70 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_normal">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
-            tools:ignore="LabelFor">
-
-            <!--
-               These fields are divided into two sections:
-                   Normal: These are 'normal' options which user will edit most frequently
-                   Advanced: These options are modified less frequently. They  are hidden by default
-                             and user will have to explicitly un-hide them.
-            -->
-
-            <!-- ~~~~~~~~~~~~~~~~~~~~ Normal Options ~~~~~~~~~~~~~~~~~~ -->
+            android:orientation="vertical">
 
             <!--Name-->
-            <TextView
-                android:id="@+id/name_label"
-                style="@style/FormLabel"
-                android:labelFor="@id/name"
-                android:text="@string/label_name"
-                app:layout_constraintBaseline_toBaselineOf="@id/name"
-                app:layout_constraintStart_toStartOf="parent" />
-
             <EditText
-                android:id="@+id/name"
-                style="@style/FormField"
+                style="@style/FormField.EditText"
+                android:layout_width="match_parent"
+                android:drawableStart="@drawable/ic_bookmark"
                 android:hint="@string/hint_server_name"
                 android:importantForAutofill="no"
                 android:inputType="text"
-                android:text="@={profile.name}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/barrier"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:text="@={profile.name}" />
 
 
-            <!--Address-->
-            <TextView
-                android:id="@+id/host_label"
-                style="@style/FormLabel"
-                android:labelFor="@id/host"
-                android:text="@string/label_host"
-                app:layout_constraintBaseline_toBaselineOf="@id/host"
-                app:layout_constraintStart_toStartOf="parent" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/host"
-                style="@style/FormField"
-                android:hint="@string/hint_host"
-                android:importantForAutofill="no"
-                android:inputType="textUri"
-                android:text="@={profile.address}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/barrier"
-                app:layout_constraintTop_toBottomOf="@id/name" />
+                <!--Host-->
+                <EditText
+                    android:id="@+id/host"
+                    style="@style/FormField.EditText"
+                    android:layout_weight=".8"
+                    android:drawableStart="@{profile.useRepeater ? @drawable/ic_swap :  @drawable/ic_computer}"
+                    android:hint="@string/hint_host"
+                    android:importantForAutofill="no"
+                    android:inputType="textUri"
+                    android:text="@={profile.address}" />
 
-
-            <!--Port-->
-            <TextView
-                android:id="@+id/port_label"
-                style="@style/FormLabel"
-                android:labelFor="@id/port"
-                android:text="@string/label_port"
-                app:layout_constraintBaseline_toBaselineOf="@id/port"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <EditText
-                android:id="@+id/port"
-                style="@style/FormField"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                android:text='@={"" +  profile.port}'
-                app:layout_constraintStart_toEndOf="@id/barrier"
-                app:layout_constraintTop_toBottomOf="@id/host"
-                app:layout_constraintWidth_percent=".35" />
-
-
-            <!--Username-->
-            <TextView
-                android:id="@+id/username_label"
-                style="@style/FormLabel"
-                android:labelFor="@id/username"
-                android:text="@string/label_username"
-                app:layout_constraintBaseline_toBaselineOf="@id/username"
-                app:layout_constraintStart_toStartOf="parent" />
+                <!--Port-->
+                <EditText
+                    android:id="@+id/port"
+                    style="@style/FormField.EditText"
+                    android:layout_marginStart="0dp"
+                    android:layout_weight=".2"
+                    android:hint="@string/hint_port"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:text='@={"" +  profile.port}' />
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/username"
-                style="@style/FormField"
+                style="@style/FormField.EditText"
+                android:layout_width="match_parent"
                 android:autofillHints="username"
-                android:hint="@string/hint_optional"
+                android:drawableStart="@drawable/ic_person"
+                android:hint="@string/hint_username"
                 android:inputType="text"
-                android:text="@={profile.username}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/barrier"
-                app:layout_constraintTop_toBottomOf="@id/port" />
-
-
-            <!--Password-->
-            <TextView
-                android:id="@+id/password_label"
-                style="@style/FormLabel"
-                android:labelFor="@id/password"
-                android:text="@string/label_password"
-                app:layout_constraintBaseline_toBaselineOf="@id/password"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:text="@={profile.username}" />
 
             <EditText
                 android:id="@+id/password"
-                style="@style/FormField"
+                style="@style/FormField.EditText"
+                android:layout_width="match_parent"
                 android:autofillHints="password"
-                android:hint="@string/hint_optional"
+                android:drawableStart="@drawable/ic_password"
+                android:hint="@string/hint_password"
                 android:inputType="textPassword"
-                android:text="@={profile.password}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/barrier"
-                app:layout_constraintTop_toBottomOf="@id/username" />
-
-
-            <!-- ~~~~~~~~~~~~~~~~~~~~ Advanced Options ~~~~~~~~~~~~~~~~~~ -->
-
-            <!--View-only mode-->
-            <CheckBox
-                android:id="@+id/view_only"
-                style="@style/FormField"
-                android:checked="@={profile.viewOnly}"
-                android:text="@string/label_view_only_mode"
-                app:layout_constraintStart_toEndOf="@id/barrier"
-                app:layout_constraintTop_toBottomOf="@id/password" />
-
-            <!--Security Type-->
-            <TextView
-                android:id="@+id/security_label"
-                style="@style/FormLabel"
-                android:labelFor="@id/security"
-                android:text="@string/label_security_type"
-                app:layout_constraintBottom_toBottomOf="@id/security"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/security" />
-
-            <Spinner
-                android:id="@+id/security"
-                style="@style/FormField"
-                android:entries="@array/security_entries"
-                app:entryValues="@{@intArray/security_values}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/barrier"
-                app:layout_constraintTop_toBottomOf="@id/view_only"
-                app:value="@={profile.securityType}" />
-
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~  Helpers  ~~~~~~~~~~~~~~~~~~~~~ -->
-
-            <!--Barrier used for aligning with largest label -->
-            <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/real_barrier"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:barrierDirection="end"
-                app:constraint_referenced_ids="name_label,host_label,port_label,username_label,password_label" />
-
-            <!--Used for adding flexible padding between labels and fields-->
-            <View
-                android:id="@+id/barrier"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@id/real_barrier"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent=".08" />
-
-            <!--Group of fields initially hidden-->
-            <androidx.constraintlayout.widget.Group
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="view_only,security,security_label"
-                app:isVisible="@{showAll}" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:text="@={profile.password}" />
+        </LinearLayout>
     </ScrollView>
 </layout>

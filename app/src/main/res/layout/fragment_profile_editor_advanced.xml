@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="profile"
+            type="com.gaurav.avnc.model.ServerProfile" />
+
+        <variable
+            name="isPrivateKeyEncrypted"
+            type="boolean" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?colorSurface"
+        android:orientation="vertical">
+
+        <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+        <!-- Appbar                                                     -->
+        <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/toolbar_height"
+                app:navigationContentDescription="@string/desc_back_btn"
+                app:navigationIcon="@drawable/ic_arrow_back">
+
+                <Button
+                    android:id="@+id/save_btn"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="@string/title_save" />
+            </com.google.android.material.appbar.MaterialToolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:padding="@dimen/padding_normal"
+                android:paddingBottom="30dp">
+
+
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <!-- VNC Server                                                 -->
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+                <EditText
+                    android:id="@+id/name"
+                    style="@style/FormField.EditText"
+                    android:drawableStart="@drawable/ic_bookmark"
+                    android:hint="@string/hint_server_name"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:text="@={profile.name}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!--Host-->
+                <EditText
+                    android:id="@+id/host"
+                    style="@style/FormField.EditText"
+                    android:drawableStart="@{useRepeater.checked ? @drawable/ic_swap :  @drawable/ic_computer}"
+                    android:hint="@{useRepeater.checked ? @string/hint_repeater_host : @string/hint_host}"
+                    android:importantForAutofill="no"
+                    android:inputType="textUri"
+                    android:text="@={profile.address}"
+                    app:layout_constraintEnd_toStartOf="@id/port"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/name" />
+
+
+                <!--Port-->
+                <EditText
+                    android:id="@+id/port"
+                    style="@style/FormField.EditText"
+                    android:layout_marginStart="0dp"
+                    android:hint="@string/hint_port"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:text='@={"" +  profile.port}'
+                    app:layout_constraintBottom_toBottomOf="@id/host"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/host"
+                    app:layout_constraintTop_toTopOf="@id/host"
+                    app:layout_constraintWidth_percent=".2" />
+
+                <!--Repeater-->
+                <CheckBox
+                    android:id="@+id/use_repeater"
+                    style="@style/FormField"
+                    android:text="@string/label_use_repeater"
+                    app:layout_constraintEnd_toStartOf="@id/id_on_repeater"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/host" />
+
+                <EditText
+                    android:id="@+id/id_on_repeater"
+                    style="@style/FormField.EditText"
+                    android:hint="@string/hint_server_id"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    android:minWidth="100dp"
+                    app:isVisible="@{useRepeater.checked}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/use_repeater"
+                    app:layout_constraintTop_toBottomOf="@id/host" />
+
+
+                <!--View-only mode-->
+                <CheckBox
+                    android:id="@+id/view_only"
+                    style="@style/FormField"
+                    android:checked="@={profile.viewOnly}"
+                    android:text="@string/label_view_only_mode"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/use_repeater" />
+
+
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <!-- Security                                                   -->
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+                <ImageView
+                    android:id="@+id/security_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_shield"
+                    android:tint="?colorControlNormal"
+                    android:tintMode="src_in"
+                    app:layout_constraintBottom_toBottomOf="@id/security"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/security" />
+
+                <Spinner
+                    android:id="@+id/security"
+                    style="@style/FormField"
+                    android:entries="@array/security_entries"
+                    android:minHeight="40dp"
+                    android:padding="@dimen/padding_small"
+                    app:entryValues="@{@intArray/security_values}"
+                    app:layout_constraintStart_toEndOf="@id/security_icon"
+                    app:layout_constraintTop_toBottomOf="@id/view_only"
+                    app:layout_constraintWidth_percent=".6"
+                    app:value="@={profile.securityType}" />
+
+                <!--Username-->
+                <EditText
+                    android:id="@+id/username"
+                    style="@style/FormField.EditText"
+                    android:autofillHints="username"
+                    android:drawableStart="@drawable/ic_person"
+                    android:hint="@string/hint_username"
+                    android:inputType="text"
+                    android:text="@={profile.username}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/security" />
+
+
+                <!--Password-->
+                <EditText
+                    android:id="@+id/password"
+                    style="@style/FormField.EditText"
+                    android:autofillHints="password"
+                    android:drawableStart="@drawable/ic_password"
+                    android:hint="@string/hint_password"
+                    android:inputType="textPassword"
+                    android:text="@={profile.password}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/username" />
+
+
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <!-- SSH Tunnel                                                 -->
+                <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+                <CheckBox
+                    android:id="@+id/use_ssh_tunnel"
+                    style="@style/FormField"
+                    android:text="@string/title_use_ssh_tunnel"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/password" />
+
+                <!--SSH Options-->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    style="@style/FormField"
+                    app:isVisible="@{useSshTunnel.checked}"
+                    android:animateLayoutChanges="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/use_ssh_tunnel">
+
+                    <!--SSH Host-->
+                    <EditText
+                        android:id="@+id/ssh_host"
+                        style="@style/FormField.EditText"
+                        android:drawableStart="@drawable/ic_computer"
+                        android:hint='@{"SSH " + @string/hint_host}'
+                        android:importantForAutofill="no"
+                        android:inputType="textUri"
+                        android:text="@={profile.sshHost}"
+                        app:layout_constraintEnd_toStartOf="@id/ssh_port"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <!--Port-->
+                    <EditText
+                        android:id="@+id/ssh_port"
+                        style="@style/FormField.EditText"
+                        android:hint='@{"SSH " + @string/hint_port}'
+                        android:importantForAutofill="no"
+                        android:inputType="number"
+                        android:text='@={"" + profile.sshPort}'
+                        app:layout_constraintBottom_toBottomOf="@id/ssh_host"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/ssh_host"
+                        app:layout_constraintTop_toTopOf="@id/ssh_host"
+                        app:layout_constraintWidth_percent=".2" />
+
+                    <!--Username-->
+                    <EditText
+                        android:id="@+id/ssh_username"
+                        style="@style/FormField.EditText"
+                        android:autofillHints="username"
+                        android:drawableStart="@drawable/ic_person"
+                        android:hint="@string/hint_username"
+                        android:inputType="text"
+                        android:text="@={profile.sshUsername}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ssh_host" />
+
+                    <!--Auth Type-->
+                    <RadioGroup
+                        android:id="@+id/ssh_auth_type"
+                        style="@style/FormField"
+                        android:orientation="horizontal"
+                        android:paddingTop="@dimen/padding_small"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ssh_username">
+
+                        <RadioButton
+                            android:id="@+id/ssh_auth_type_key"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_private_key" />
+
+                        <RadioButton
+                            android:id="@+id/ssh_auth_type_password"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_password" />
+                    </RadioGroup>
+
+                    <!--Password-->
+                    <EditText
+                        android:id="@+id/ssh_password"
+                        style="@style/FormField.EditText"
+                        android:autofillHints="password"
+                        android:drawableStart="@drawable/ic_password"
+                        android:hint="@string/hint_password"
+                        android:inputType="textPassword"
+                        android:text="@={profile.sshPassword}"
+                        app:isVisible="@{sshAuthTypePassword.checked}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ssh_auth_type" />
+
+                    <!--Private Key Import-->
+                    <Button
+                        android:id="@+id/key_import_btn"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_normal"
+                        android:text="@{profile.sshPrivateKey.empty ? @string/title_import : @string/title_change}"
+                        app:icon="@drawable/ic_file"
+                        app:isVisible="@{sshAuthTypeKey.checked}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ssh_auth_type" />
+
+                    <!--Key Password-->
+                    <EditText
+                        android:id="@+id/ssh_key_password"
+                        style="@style/FormField.EditText"
+                        android:autofillHints="password"
+                        android:drawableStart="@drawable/ic_password"
+                        android:hint="@string/hint_key_password"
+                        android:inputType="textPassword"
+                        android:text="@={profile.sshPrivateKeyPassword}"
+                        app:isVisible="@{sshAuthTypeKey.checked &amp;&amp; isPrivateKeyEncrypted}"
+                        app:layout_constraintBaseline_toBaselineOf="@id/key_import_btn"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/key_import_btn" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </LinearLayout>
+</layout>

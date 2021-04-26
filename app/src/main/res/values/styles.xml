@@ -6,7 +6,7 @@
   ~ See COPYING.txt for more details.
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!--
       This is used by SplashActivity and is intentionally dark theme.
@@ -48,6 +48,12 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/margin_small</item>
+    </style>
+
+    <style name="FormField.EditText">
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:drawablePadding">20dp</item>
+        <item name="android:drawableTint" tools:ignore="NewApi">@color/control_icon</item>
     </style>
 
     <style name="ImageButton">

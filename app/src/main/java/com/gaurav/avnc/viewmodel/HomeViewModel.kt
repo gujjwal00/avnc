@@ -26,13 +26,6 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     val discovery by lazy { Discovery(app) }
 
     /**
-     * This event is used for editing/creating server profiles.
-     *
-     * Home activity observes this event and starts profile editor when it is fired.
-     */
-    val profileEditEvent = LiveEvent<ServerProfile>()
-
-    /**
      * Used for notifying observers when a profile is deleted.
      * This is used for notifying the user and potentially
      * undo this deletion.
@@ -50,6 +43,13 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     }
 
     /**
+     * This event is used for editing/creating server profiles.
+     * Home activity observes this event and starts profile editor when it is fired.
+     */
+    val profileEditEvent = LiveEvent<ServerProfile>()
+
+
+    /**
      * Starts creating a new server profile.
      */
     fun onNewProfile() = onNewProfile(ServerProfile())
@@ -62,7 +62,7 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     /**
      * Starts editing given profile.
      */
-    fun onEditProfile(profile: ServerProfile) = profileEditEvent.set(profile)
+    fun onEditProfile(profile: ServerProfile) = profileEditEvent.set(profile.copy())
 
     /**
      * Starts creating a copy of the given profile.
