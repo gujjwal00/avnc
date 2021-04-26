@@ -29,6 +29,11 @@
     <string name="title_discovery">Discovery</string>
     <string name="title_export">Export</string>
     <string name="title_import">Import</string>
+    <string name="title_change">Change</string>
+    <string name="title_use_ssh_tunnel">Use SSH Tunnel</string>
+    <string name="title_unknown_ssh_host">Unknown SSH Host</string>
+    <string name="title_ssh_host_key_changed">Host Key changed!</string>
+    <string name="title_continue">Continue</string>
     <string name="title_export_passwords">Export Passwords</string>
     <string name="title_delete_servers_before_import">Delete current Servers before Import</string>
 

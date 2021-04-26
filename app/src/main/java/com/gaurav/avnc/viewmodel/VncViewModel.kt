@@ -9,6 +9,7 @@
 package com.gaurav.avnc.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.ServerProfile
@@ -18,9 +19,10 @@ import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.io.IOException
 import java.lang.ref.WeakReference
 
 /**
@@ -30,11 +32,11 @@ import java.lang.ref.WeakReference
  * ==========
  *
  * At construction, we instantiate a [VncClient] referenced by [client]. Then
- * activity starts the connection by calling [connect] which starts a coroutine to
+ * activity starts the connection by calling [initConnection] which starts a coroutine to
  * handle connection setup.
  *
  * After successful connection, we continue to operate normally until remote
- * server closes the connection OR [disconnect] is called. Once disconnected, we
+ * server closes the connection OR an error occurs. Once disconnected, we
  * wait for the activity to finish and then cleanup any acquired resources.
  *
  * Currently, lifecycle of [client] is tied to this view model. So one [VncViewModel]
@@ -121,13 +123,19 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      */
     val messenger = Messenger(client)
 
+    private val sshTunnel = SshTunnel(this)
+
+    /**
+     * Used to confirm unknown hosts.
+     */
+    val sshHostKeyVerifyRequest = LiveRequest<HostKey, Boolean>()
 
     /**************************************************************************
      * Connection management
      **************************************************************************/
 
     /**
-     * Because [connect] can be called multiple times due to activity restarts,
+     * Because [initConnection] can be called multiple times due to activity restarts,
      * initialization inside it is performed only once.
      */
     private var initialized = false
@@ -135,7 +143,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     /**
      * Initialize VNC connection using given profile.
      */
-    fun connect(profile: ServerProfile) {
+    fun initConnection(profile: ServerProfile) {
         if (initialized)
             return
 
@@ -147,32 +155,60 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
     private fun launchConnection() {
         viewModelScope.launch(Dispatchers.IO) {
-            client.configure(profile.viewOnly, profile.securityType)
 
-            try {
+            runCatching {
 
-                if (client.connect(profile.address, profile.port)) {
-                    while (isActive && client.processServerMessage()) {
-                        //Message Loop
-                    }
-                }
+                configureClient()
+                connect()
+                processMessages()
 
-                //Wait until cancellation - which will happen when activity
-                //is finished and viewmodel is cleaned up.
-                while (isActive) {
-                    delay(3600 * 1000)
-                }
-            } finally {
-                messenger.cleanup()
-                client.cleanup()
+            }.onFailure {
+                client.disconnect()
+                if (it is IOException)
+                    disconnectReason.postValue(it.message)
+                Log.e("ReceiverCoroutine", "Connection failed", it)
             }
+
+            //Wait until activity is finished and viewmodel is cleaned up.
+            runCatching { awaitCancellation() }
+            cleanup()
         }
     }
 
-    /**
-     * Disconnect VNC client.
-     */
-    fun disconnect() = client.disconnect()
+    private fun configureClient() {
+        client.configure(profile.viewOnly, profile.securityType)
+
+        if (profile.useRepeater)
+            client.setupRepeater(profile.idOnRepeater)
+    }
+
+    private fun connect() {
+        var host = profile.address
+        var port = profile.port
+
+        if (profile.channelType == ServerProfile.CHANNEL_SSH_TUNNEL) {
+            sshTunnel.open()
+            host = sshTunnel.localHost
+            port = sshTunnel.localPort
+        }
+
+        if (!client.connect(host, port))
+            throw IOException(client.getLastErrorStr())
+    }
+
+    private fun processMessages() {
+        while (viewModelScope.isActive && client.processServerMessage()) {
+            //Message Loop
+        }
+
+        disconnectReason.postValue(client.getLastErrorStr())
+    }
+
+    private fun cleanup() {
+        messenger.cleanup()
+        client.cleanup()
+        sshTunnel.close()
+    }
 
     /**
      * Called when activity is finished.
@@ -180,7 +216,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     override fun onCleared() {
         super.onCleared()
 
-        //Put something in credential request (just in case background thread is
+        //Put something in credential request (just in case receiver thread is
         //stuck waiting for credentials)
         credentialRequest.offerResponse(UserCredential())
     }
@@ -260,10 +296,6 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         return obtainCredential(true)
     }
 
-    /**
-     * Used for obtaining credentials from user.
-     * This is a blocking operation and will wait until credential dialog is finished.
-     */
     private fun obtainCredential(usernameRequired: Boolean): UserCredential {
         credentialRequest.post(usernameRequired)
         return credentialRequest.takeResponse()   //Blocking call
@@ -287,14 +319,6 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
             if (profile.ID != 0L) async {
                 serverProfileDao.update(profile)
             }
-        }
-
-        if (newState == VncClient.State.Disconnected) {
-            val reason = client.getLastErrorStr()
-            if (reason.isNotBlank())
-                disconnectReason.postValue("( $reason )")
-            else if (profile.address.isBlank())
-                disconnectReason.postValue("( Invalid address )")
         }
     }
 

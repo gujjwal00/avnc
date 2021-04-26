@@ -353,6 +353,15 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeConfigure(JNIEnv *env, jobject thiz, jl
 }
 
 extern "C"
+JNIEXPORT void JNICALL
+Java_com_gaurav_avnc_vnc_VncClient_nativeSetDest(JNIEnv *env, jobject thiz, jlong client_ptr,
+                                                 jstring host, jint port) {
+    auto client = (rfbClient *) client_ptr;
+    client->destHost = getNativeStrCopy(env, host);
+    client->destPort = port;
+}
+
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeInit(JNIEnv *env, jobject thiz, jlong client_ptr,
                                               jstring host, jint port) {

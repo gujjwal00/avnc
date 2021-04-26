@@ -122,9 +122,12 @@ class VncClient(private val observer: Observer) {
         nativeConfigure(nativePtr, securityType)
     }
 
+    fun setupRepeater(serverId: Int) {
+        nativeSetDest(nativePtr, "ID", serverId)
+    }
+
     /**
      * Initializes VNC connection.
-     * TODO: Add Repeater support
      *
      * @return true if initialization was successful
      */
@@ -243,6 +246,7 @@ class VncClient(private val observer: Observer) {
     private external fun nativeClientCreate(): Long
     private external fun nativeConfigure(clientPtr: Long, securityType: Int)
     private external fun nativeInit(clientPtr: Long, host: String, port: Int): Boolean
+    private external fun nativeSetDest(clientPtr: Long, host: String, port: Int)
     private external fun nativeProcessServerMessage(clientPtr: Long, uSecTimeout: Int): Boolean
     private external fun nativeSendKeyEvent(clientPtr: Long, key: Long, isDown: Boolean): Boolean
     private external fun nativeSendPointerEvent(clientPtr: Long, x: Int, y: Int, mask: Int): Boolean

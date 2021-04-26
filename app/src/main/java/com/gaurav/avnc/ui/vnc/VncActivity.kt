@@ -82,7 +82,8 @@ class VncActivity : AppCompatActivity() {
         //ViewModel setup
         viewModel.frameViewRef = WeakReference(binding.frameView)
         viewModel.credentialRequest.observe(this) { showCredentialDialog() }
-        viewModel.connect(getProfile()) //Should be called after observers has been setup
+        viewModel.sshHostKeyVerifyRequest.observe(this) { showHostKeyDialog() }
+        viewModel.initConnection(getProfile()) //Should be called after observers has been setup
     }
 
     override fun onResume() {
@@ -111,6 +112,10 @@ class VncActivity : AppCompatActivity() {
 
     private fun showCredentialDialog() {
         CredentialFragment().show(supportFragmentManager, "CredentialDialog")
+    }
+
+    private fun showHostKeyDialog() {
+        HostKeyFragment().show(supportFragmentManager, "HostKeyFragment")
     }
 
     private fun showKeyboard() {

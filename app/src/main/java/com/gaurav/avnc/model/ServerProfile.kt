@@ -64,7 +64,7 @@ data class ServerProfile(
          * Transport channel to be used for communicating with the server.
          * Ex: TCP, SSH Tunnel
          */
-        var channelType: Int = 0,
+        var channelType: Int = CHANNEL_TCP,
 
         /**
          * Specifies the color level of received frames.
@@ -94,6 +94,40 @@ data class ServerProfile(
          * Usually denotes a server type, e.g. Vino, TigerVNC
          * 0 = Default behaviour
          */
-        var compatMode: Int = 0
+        var compatMode: Int = 0,
 
-) : Parcelable
+        /**
+         * Whether UltraVNC Repeater is used for connections.
+         * When repeater is used, [address] & [port] identifies the repeater.
+         */
+        var useRepeater: Boolean = false,
+
+        /**
+         * When using a repeater, this value identifies the VNC server.
+         * Valid IDs: [0, 999999999].
+         */
+        var idOnRepeater: Int = 0,
+
+        /**
+         * These values are used for SSH Tunnel
+         */
+        var sshHost: String = "",
+        var sshPort: Int = 22,
+        var sshUsername: String = "",
+        var sshAuthType: Int = SSH_AUTH_KEY,
+        var sshPassword: String = "",
+        var sshPrivateKey: String = "",
+        var sshPrivateKeyPassword: String = ""
+
+) : Parcelable {
+
+    companion object {
+        // Channel types (from RFC 7869)
+        const val CHANNEL_TCP = 1
+        const val CHANNEL_SSH_TUNNEL = 24
+
+        //SSH auth types
+        const val SSH_AUTH_PASSWORD = 1
+        const val SSH_AUTH_KEY = 2
+    }
+}
