@@ -13,59 +13,84 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 
 /**
- * This class extends LiveData by implementing the concept of events.
+ * This class implements the concept of single-fire observable events.
+ * It is based on [LiveData] which does the heavy lifting for us.
  *
- * LiveData can invoke the observer multiple times for the same change. It can
- * happen if observer is detached and attached again (ex. during Activity restart).
- * But there are some 'events' which should be handled only once.
+ * Single-shot
+ * ===========
+ * When this event is fired, it will notify all active observers (if any).
+ * If there is no active observer we will queue the event and will fire
+ * it when we have active observers. After that, it will be marked as 'handled'
+ * and any observers attached in future will not be notified.
  *
- * LiveEvent tracks whether someone has handled the current value/change in LiveData.
- * Once handled, observers will not be notified for the same value.
+ * This is the main difference between [LiveEvent] & [LiveData]. [LiveData] will
+ * notify the future observers to bring them up-to date. This mainly happens during
+ * Activity restarts where old observers are detached and new ones are attached.
+ *
+ * But there are some 'events' which should be handled only once (e.g starting
+ * a fragment). This class is used used for those 'events'.
+ *
+ * Currently, [observeForever] & [removeObserver] are not implemented because we
+ * are not using them.
  */
 open class LiveEvent<T> : LiveData<T>() {
 
     /**
-     * Whether current value has been handled.
+     * Whether we are currently firring the event. Observers will be notified
+     * only when this is true.
      */
-    private var handled = false
+    private var firing = false
 
     /**
-     * Override to reset state.
+     * Whether someone has handled the last event fired.
+     * This is used to implement the "queuing"  behaviour:
+     *
+     * 1. When event is fired, set this to false
+     * 2. If observers are invoked, set this to true
+     * 3. In [onActive], if this is still false, re-fire
      */
-    override fun setValue(value: T) {
+    private var handled = true
+
+
+    /**
+     * Fire this event with given value.
+     * MUST be called from Main thread.
+     */
+    open fun fire(value: T?) = setValue(value)
+
+    /**
+     * Same as [fire], but can be called from any thread.
+     */
+    fun fireAsync(value: T?) = postValue(value)
+
+    /**
+     * Overridden to manage event state.
+     */
+    override fun setValue(value: T?) {
+        firing = true
         handled = false
         super.setValue(value)
+        firing = false
     }
 
     /**
-     * Sets new value for this event.
-     *
-     * This must be called on main thread.
+     * Overridden to check for queued event.
      */
-    open fun set(value: T) {
-        setValue(value)
-    }
+    override fun onActive() {
+        super.onActive()
 
-    /**
-     * Sets new value for this event.
-     *
-     * This can be called from other threads.
-     */
-    fun post(value: T) {
-        postValue(value)
+        if (!handled)
+            fire(value)
     }
-
 
     /**
      * Registers an observer for this event.
-     *
-     * Observer will only be called if event is not yet handled and
-     * new value in not null.
      */
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
-        //Observer given to us is wrapped in another Observer which checks current state
+        // Observer given to us is wrapped in another Observer
+        // which checks current state before invoking given observer.
         super.observe(owner) {
-            if (!handled && it != null) {
+            if (firing) {
                 observer.onChanged(it)
                 handled = true
             }

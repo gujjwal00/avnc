@@ -297,8 +297,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     private fun obtainCredential(usernameRequired: Boolean): UserCredential {
-        credentialRequest.post(usernameRequired)
-        return credentialRequest.takeResponse()   //Blocking call
+        return credentialRequest.requestResponse(usernameRequired)   //Blocking call
     }
 
     override fun onFramebufferUpdated() {

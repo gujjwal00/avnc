@@ -59,8 +59,7 @@ class HostKeyVerifier(private val viewModel: VncViewModel) : ServerHostKeyVerifi
         val isKnownHost = (verification == KnownHosts.HOSTKEY_HAS_CHANGED)
         val hostKey = HostKey(hostname, isKnownHost, keyAlgorithm, key)
 
-        viewModel.sshHostKeyVerifyRequest.post(hostKey)
-        if (viewModel.sshHostKeyVerifyRequest.takeResponse()) {
+        if (viewModel.sshHostKeyVerifyRequest.requestResponse(hostKey)) {
             //User has confirmed the key so remember it.
             KnownHosts.addHostkeyToFile(knownHostsFile, arrayOf(hostname), keyAlgorithm, key)
             return true

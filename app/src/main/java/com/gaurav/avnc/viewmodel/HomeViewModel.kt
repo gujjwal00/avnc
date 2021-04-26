@@ -62,7 +62,7 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     /**
      * Starts editing given profile.
      */
-    fun onEditProfile(profile: ServerProfile) = profileEditEvent.set(profile.copy())
+    fun onEditProfile(profile: ServerProfile) = profileEditEvent.fire(profile.copy())
 
     /**
      * Starts creating a copy of the given profile.
@@ -87,13 +87,13 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
      * Deletes given profile
      */
     fun deleteProfile(profile: ServerProfile) = async({ serverProfileDao.delete(profile) }, {
-        profileDeletedEvent.set(profile)
+        profileDeletedEvent.fire(profile)
     })
 
     /**
      * Starts new connection to given profile.
      */
-    fun startConnection(profile: ServerProfile) = newConnectionEvent.set(profile)
+    fun startConnection(profile: ServerProfile) = newConnectionEvent.fire(profile)
 
     /**
      * Starts discovery service
