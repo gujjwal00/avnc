@@ -28,6 +28,8 @@ class AppPreferences(context: Context) {
                 "dark" -> AppCompatDelegate.MODE_NIGHT_YES
                 else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
             }
+
+        val showTips; get() = prefs.getBoolean("show_tips", true)
     }
 
     inner class Display {

@@ -6,9 +6,10 @@
   ~ See COPYING.txt for more details.
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -35,22 +36,18 @@
                     android:contentDescription="@string/desc_back_btn"
                     android:src="@drawable/ic_arrow_back" />
 
-                <!--
-                Hint color is transparent to make it invisible but still available for accessibility.
-                This way we avoid the appearance of hint jumping from middle to left when
-                transitioning from HomeActivity.
-                -->
                 <EditText
                     android:id="@+id/url"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:hint="@string/hint_host"
+                    android:contentDescription="@string/desc_server_url"
                     android:imeOptions="actionGo|flagNoExtractUi"
                     android:importantForAutofill="no"
                     android:inputType="textUri"
-                    android:textColorHint="@android:color/transparent" />
+                    android:textColorHint="@android:color/transparent"
+                    tools:ignore="LabelFor" />
 
                 <ImageButton
                     android:id="@+id/clear"
@@ -61,5 +58,10 @@
                     android:src="@drawable/ic_clear" />
             </LinearLayout>
         </com.google.android.material.appbar.AppBarLayout>
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/url_tip"
+            style="@style/TipView"
+            android:text="@string/tip_urlbar" />
+    </FrameLayout>
 </layout>

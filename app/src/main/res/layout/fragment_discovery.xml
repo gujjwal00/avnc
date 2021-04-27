@@ -29,6 +29,14 @@
             android:layout_height="match_parent"
             tools:listitem="@layout/item_discovery" />
 
+        <TextView
+            style="@style/TipView"
+            android:text="@string/tip_discovery"
+            android:visibility="gone"
+            app:isVisible="@{viewModel.pref.appearance.showTips &amp;&amp; !viewModel.discovery.isRunning &amp;&amp; viewModel.discovery.servers.empty}"
+            tools:visibility="visible" />
+
+
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

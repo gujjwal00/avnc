@@ -7,6 +7,7 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -27,6 +28,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/item_server" />
+
+        <TextView
+            style="@style/TipView"
+            android:text="@string/tip_empty_server_list"
+            android:visibility="gone"
+            app:isVisible="@{viewModel.pref.appearance.showTips &amp;&amp; viewModel.serverProfiles.empty}"
+            tools:visibility="visible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             style="@style/Widget.Design.FloatingActionButton"

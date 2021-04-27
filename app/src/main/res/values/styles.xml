@@ -38,10 +38,12 @@
         <item name="android:layout_marginBottom">@dimen/margin_normal</item>
     </style>
 
-    <style name="FormLabel" parent="Widget.AppCompat.TextView">
+    <style name="TipView" parent="Widget.AppCompat.TextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">@dimen/margin_normal</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawableTop">@drawable/ic_lightbulb</item>
     </style>
 
     <style name="FormField">
