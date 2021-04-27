@@ -37,9 +37,9 @@
 
 
     <string-array name="single_tap_action_entries">
-        <item>None</item>
-        <item>Left Click</item>
-        <item>Move Pointer</item>
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_left_click</item>
+        <item>@string/pref_gesture_action_move_pointer</item>
     </string-array>
     <string-array name="single_tap_action_values">
         <item>none</item>
@@ -48,11 +48,11 @@
     </string-array>
 
     <string-array name="double_tap_action_entries">
-        <item>None</item>
-        <item>Double Click</item>
-        <item>Middle Click</item>
-        <item>Right Click</item>
-        <item>Move Pointer</item>
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_double_click</item>
+        <item>@string/pref_gesture_action_middle_click</item>
+        <item>@string/pref_gesture_action_right_click</item>
+        <item>@string/pref_gesture_action_move_pointer</item>
     </string-array>
     <string-array name="double_tap_action_values">
         <item>none</item>
@@ -63,11 +63,11 @@
     </string-array>
 
     <string-array name="long_press_action_entries">
-        <item>None</item>
-        <item>Double Click</item>
-        <item>Middle Click</item>
-        <item>Right Click</item>
-        <item>Move Pointer</item>
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_double_click</item>
+        <item>@string/pref_gesture_action_middle_click</item>
+        <item>@string/pref_gesture_action_right_click</item>
+        <item>@string/pref_gesture_action_move_pointer</item>
     </string-array>
     <string-array name="long_press_action_values">
         <item>none</item>
@@ -78,9 +78,9 @@
     </string-array>
 
     <string-array name="swipe1_action_entries">
-        <item>None</item>
-        <item>Pan Frame</item>
-        <item>Scroll Remote Content</item>
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_pan</item>
+        <item>@string/pref_gesture_action_remote_scroll</item>
     </string-array>
     <string-array name="swipe1_action_values">
         <item>none</item>
@@ -89,9 +89,9 @@
     </string-array>
 
     <string-array name="swipe2_action_entries">
-        <item>None</item>
-        <item>Pan Frame</item>
-        <item>Scroll Remote Content</item>
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_pan</item>
+        <item>@string/pref_gesture_action_remote_scroll</item>
     </string-array>
     <string-array name="swipe2_action_values">
         <item>none</item>
@@ -100,15 +100,15 @@
     </string-array>
 
     <string-array name="drag_action_entries">
-        <item>None</item>
-        <item>Drag Remote Content</item>
-        <item>Scroll Remote Content</item>
-        <item>Pan</item>
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_remote_drag</item>
+        <item>@string/pref_gesture_action_pan</item>
+        <item>@string/pref_gesture_action_remote_scroll</item>
     </string-array>
     <string-array name="drag_action_values">
         <item>none</item>
         <item>remote-drag</item>
-        <item>remote-scroll</item>
         <item>pan</item>
+        <item>remote-scroll</item>
     </string-array>
 </resources>
