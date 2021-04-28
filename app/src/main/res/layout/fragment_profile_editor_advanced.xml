@@ -91,7 +91,7 @@
                     android:hint="@{useRepeater.checked ? @string/hint_repeater_host : @string/hint_host}"
                     android:importantForAutofill="no"
                     android:inputType="textUri"
-                    android:text="@={profile.address}"
+                    android:text="@={profile.host}"
                     app:layout_constraintEnd_toStartOf="@id/port"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/name" />

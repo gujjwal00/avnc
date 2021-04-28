@@ -51,7 +51,7 @@
                     android:hint="@{profile.useRepeater ? @string/hint_repeater_host : @string/hint_host}"
                     android:importantForAutofill="no"
                     android:inputType="textUri"
-                    android:text="@={profile.address}" />
+                    android:text="@={profile.host}" />
 
                 <!--Port-->
                 <EditText

@@ -104,7 +104,7 @@ class Discovery(private val context: Context) {
     private fun addProfile(name: String, host: String, port: Int) {
         val profile = ServerProfile().apply {
             this.name = name
-            this.address = host
+            this.host = host
             this.port = port
         }
 

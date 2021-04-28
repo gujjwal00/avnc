@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small"
-            android:text='@{profile.address + (profile.port == 5900 ? "" :  " | " + profile.port) }'
+            android:text='@{profile.host + (profile.port == 5900 ? "" :  " | " + profile.port) }'
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/profile_name"
             tools:text="192.168.1.1 | 5901" />

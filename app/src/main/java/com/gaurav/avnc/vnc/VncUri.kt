@@ -60,7 +60,7 @@ class VncUri(private val uri: Uri) {
      */
     fun toServerProfile() = ServerProfile(
             name = connectionName,
-            address = host,
+            host = host,
             port = port,
             username = username,
             password = password,

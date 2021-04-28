@@ -187,7 +187,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         if (channel != ServerProfile.CHANNEL_TCP && channel != ServerProfile.CHANNEL_SSH_TUNNEL)
             throw IOException("Unsupported Channel: $channel")
 
-        var host = profile.address
+        var host = profile.host
         var port = profile.port
 
         if (channel == ServerProfile.CHANNEL_SSH_TUNNEL) {

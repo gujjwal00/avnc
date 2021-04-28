@@ -14,8 +14,8 @@
         android:id="@+id/duplicate"
         android:title="@string/title_duplicate" />
     <item
-        android:id="@+id/copy_address"
-        android:title="@string/title_copy_address" />
+        android:id="@+id/copy_host"
+        android:title="@string/title_copy_host" />
     <item
         android:id="@+id/delete"
         android:title="@string/title_delete" />

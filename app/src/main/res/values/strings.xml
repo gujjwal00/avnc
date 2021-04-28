@@ -14,7 +14,7 @@
     <string name="title_edit">Edit</string>
     <string name="title_delete">Delete</string>
     <string name="title_copy">Copy</string>
-    <string name="title_copy_address">Copy Address</string>
+    <string name="title_copy_host">Copy Host</string>
     <string name="title_copy_name">Copy Name</string>
     <string name="title_advanced">Advanced</string>
     <string name="title_save">Save</string>

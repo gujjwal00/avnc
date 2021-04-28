@@ -11,6 +11,6 @@
         android:id="@+id/copy_name"
         android:title="@string/title_copy_name" />
     <item
-        android:id="@+id/copy_address"
-        android:title="@string/title_copy_address" />
+        android:id="@+id/copy_host"
+        android:title="@string/title_copy_host" />
 </menu>

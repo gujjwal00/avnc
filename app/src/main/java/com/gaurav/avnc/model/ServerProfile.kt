@@ -36,7 +36,7 @@ data class ServerProfile(
          * Internet address of the server. This can be hostname or IP address.
          * It does not contain the port number.
          */
-        var address: String = "",
+        var host: String = "",
 
         /**
          * Port number of the remote server.
@@ -98,7 +98,7 @@ data class ServerProfile(
 
         /**
          * Whether UltraVNC Repeater is used for connections.
-         * When repeater is used, [address] & [port] identifies the repeater.
+         * When repeater is used, [host] & [port] identifies the repeater.
          */
         var useRepeater: Boolean = false,
 

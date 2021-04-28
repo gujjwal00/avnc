@@ -124,7 +124,7 @@ class Experimental {
         }
 
         private fun isServerDiscovered(p: ServerProfile): Boolean {
-            return discoveredServers?.find { p.address == it.address && p.port == it.port } != null
+            return discoveredServers?.find { p.host == it.host && p.port == it.port } != null
         }
 
         private fun updateAnimator() {
