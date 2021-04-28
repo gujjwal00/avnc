@@ -48,7 +48,7 @@
                     style="@style/FormField.EditText"
                     android:layout_weight=".8"
                     android:drawableStart="@{profile.useRepeater ? @drawable/ic_swap :  @drawable/ic_computer}"
-                    android:hint="@string/hint_host"
+                    android:hint="@{profile.useRepeater ? @string/hint_repeater_host : @string/hint_host}"
                     android:importantForAutofill="no"
                     android:inputType="textUri"
                     android:text="@={profile.address}" />
