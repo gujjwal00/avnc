@@ -48,7 +48,7 @@ class HomeActivity : AppCompatActivity() {
         binding.urlbar.setOnClickListener { showUrlActivity() }
 
         //Observers
-        viewModel.profileEditEvent.observe(this) { showProfileEditor() }
+        viewModel.editProfileEvent.observe(this) { showProfileEditor() }
         viewModel.profileDeletedEvent.observe(this) { showProfileDeletedMsg(it) }
         viewModel.newConnectionEvent.observe(this) { startVncActivity(this, it) }
         viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }

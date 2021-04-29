@@ -26,69 +26,33 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     val discovery by lazy { Discovery(app) }
 
     /**
-     * Used for notifying observers when a profile is deleted.
-     * This is used for notifying the user and potentially
-     * undo this deletion.
-     */
-    val profileDeletedEvent = LiveEvent<ServerProfile>()
-
-    /**
      * Used for starting new VNC connections.
      */
     val newConnectionEvent = LiveEvent<ServerProfile>()
-
-    init {
-        if (pref.server.discoveryAutoStart)
-            startDiscovery()
-    }
 
     /**
      * This event is used for editing/creating server profiles.
      * Home activity observes this event and starts profile editor when it is fired.
      */
-    val profileEditEvent = LiveEvent<ServerProfile>()
-
-
-    /**
-     * Starts creating a new server profile.
-     */
-    fun onNewProfile() = onNewProfile(ServerProfile())
+    val editProfileEvent = LiveEvent<ServerProfile>()
 
     /**
-     * Starts creating a new profile using [source] as starting point.
+     * Fired when a new profile is saved to database.
+     * Can be used to highlight the profile in UI.
      */
-    fun onNewProfile(source: ServerProfile) = onEditProfile(source)
+    val profileInsertedEvent = LiveEvent<ServerProfile>()
 
     /**
-     * Starts editing given profile.
+     * Fired when a profile is deleted from database.
+     * This is used for notifying the user and potentially undo the deletion.
      */
-    fun onEditProfile(profile: ServerProfile) = profileEditEvent.fire(profile.copy())
+    val profileDeletedEvent = LiveEvent<ServerProfile>()
 
-    /**
-     * Starts creating a copy of the given profile.
-     */
-    fun onDuplicateProfile(original: ServerProfile) {
-        val duplicate = original.copy(ID = 0)
-        duplicate.name += " (Copy)"
-        onEditProfile(duplicate)
+
+    init {
+        if (pref.server.discoveryAutoStart)
+            startDiscovery()
     }
-
-    /**
-     * Inserts given profile in database.
-     */
-    fun insertProfile(profile: ServerProfile) = async { serverProfileDao.insert(profile) }
-
-    /**
-     * Saves given profile to database.
-     */
-    fun updateProfile(profile: ServerProfile) = async { serverProfileDao.update(profile) }
-
-    /**
-     * Deletes given profile
-     */
-    fun deleteProfile(profile: ServerProfile) = async({ serverProfileDao.delete(profile) }, {
-        profileDeletedEvent.fire(profile)
-    })
 
     /**
      * Starts new connection to given profile.
@@ -99,4 +63,40 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
      * Starts discovery service
      */
     fun startDiscovery() = discovery.start(viewModelScope, pref.server.discoveryTimeout)
+
+
+    /**************************************************************************
+     * Profile editing/creating
+     *
+     * These are invoked from UI on user actions. We simply fire [editProfileEvent]
+     * with appropriate profile, causing the profile editor to be shown.
+     *
+     * NOTE: We need to make a copy of given profile because the instance
+     * given to [editProfileEvent] can be modified by editor.
+     **************************************************************************/
+
+    fun onNewProfile() = editProfileEvent.fire(ServerProfile())
+    fun onNewProfile(source: ServerProfile) = editProfileEvent.fire(source.copy(ID = 0))
+    fun onEditProfile(profile: ServerProfile) = editProfileEvent.fire(profile.copy())
+
+    fun onDuplicateProfile(profile: ServerProfile) {
+        val duplicate = profile.copy(ID = 0)
+        duplicate.name += " (Copy)"
+        editProfileEvent.fire(duplicate)
+    }
+
+    /**************************************************************************
+     * Profile persistence
+     *
+     * These operations are executed on background thread.
+     **************************************************************************/
+
+    fun insertProfile(profile: ServerProfile) = asyncIO({ serverProfileDao.insert(profile) }, {
+        profileInsertedEvent.fire(profile)
+    })
+
+    fun updateProfile(profile: ServerProfile) = asyncIO { serverProfileDao.update(profile) }
+    fun deleteProfile(profile: ServerProfile) = asyncIO({ serverProfileDao.delete(profile) }, {
+        profileDeletedEvent.fire(profile)
+    })
 }

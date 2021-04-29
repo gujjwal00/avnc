@@ -307,7 +307,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
             sendClipboardText() //Initial sync
 
             //Save any changes to profile. Right now this is used to "remember" credentials.
-            if (profile.ID != 0L) async {
+            if (profile.ID != 0L) asyncIO {
                 serverProfileDao.update(profile)
             }
         }

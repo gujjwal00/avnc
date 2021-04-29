@@ -67,26 +67,20 @@ open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     /**
-     * Executes given method asynchronously on IO thread
+     * Executes given [block] asynchronously on IO thread.
      */
-    protected fun async(method: () -> Unit): Job {
-        return viewModelScope.launch(Dispatchers.IO) {
-            method()
-        }
-    }
+    protected fun asyncIO(block: () -> Unit) = asyncIO(block, {})
 
     /**
-     * Executes given method asynchronously on IO thread
-     *
-     * Once given method has completed, 'afterMethod' will be executed
-     * on main thread.
+     * Executes given [block] asynchronously on IO thread.
+     * After [block] has completed, [onFinish] will be executed on Main thread.
      */
-    protected fun async(method: () -> Unit, afterMethod: () -> Unit): Job {
+    protected fun asyncIO(block: () -> Unit, onFinish: () -> Unit): Job {
         return viewModelScope.launch(Dispatchers.Main) {
             withContext(Dispatchers.IO) {
-                method()
+                block()
             }
-            afterMethod()
+            onFinish()
         }
     }
 }

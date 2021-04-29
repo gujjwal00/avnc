@@ -54,7 +54,7 @@ class ProfileEditorFragment : DialogFragment() {
 
     private fun loadProfile(savedInstanceState: Bundle?) {
         profile = savedInstanceState?.getParcelable("EditorProfile")
-                ?: viewModel.profileEditEvent.value
+                ?: viewModel.editProfileEvent.value
                         ?: profile
     }
 
