@@ -63,7 +63,7 @@ abstract class InfoFragment : Fragment() {
 
     private fun copyToClipboard() {
         activityViewModels<PrefsViewModel>().value.setClipboardText(text)
-        Snackbar.make(requireView(), "Copied!", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireView(), R.string.msg_copied_to_clipboard, Snackbar.LENGTH_SHORT).show()
     }
 
     abstract fun getInfo(): String

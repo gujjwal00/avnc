@@ -17,6 +17,7 @@ import com.gaurav.avnc.BR
 import com.gaurav.avnc.R
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.viewmodel.HomeViewModel
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * ViewHolder for [ServerProfile].
@@ -57,11 +58,22 @@ open class ProfileViewHolder(
             R.id.edit -> homeViewModel.onEditProfile(profile)
             R.id.duplicate -> homeViewModel.onDuplicateProfile(profile)
             R.id.delete -> homeViewModel.deleteProfile(profile)
-            R.id.copy_host -> homeViewModel.setClipboardText(profile.host)
-            R.id.copy_name -> homeViewModel.setClipboardText(profile.name)
+
+            R.id.copy_host -> {
+                homeViewModel.setClipboardText(profile.host)
+                showCopiedMsg()
+            }
+            R.id.copy_name -> {
+                homeViewModel.setClipboardText(profile.name)
+                showCopiedMsg()
+            }
         }
 
         return true
+    }
+
+    private fun showCopiedMsg() {
+        Snackbar.make(binding.root, R.string.msg_copied_to_clipboard, Snackbar.LENGTH_SHORT).show()
     }
 
     /**
