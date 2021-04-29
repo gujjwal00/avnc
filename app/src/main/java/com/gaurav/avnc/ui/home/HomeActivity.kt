@@ -49,6 +49,7 @@ class HomeActivity : AppCompatActivity() {
 
         //Observers
         viewModel.editProfileEvent.observe(this) { showProfileEditor() }
+        viewModel.profileInsertedEvent.observe(this) { onProfileInserted() }
         viewModel.profileDeletedEvent.observe(this) { showProfileDeletedMsg(it) }
         viewModel.newConnectionEvent.observe(this) { startVncActivity(this, it) }
         viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }
@@ -87,11 +88,16 @@ class HomeActivity : AppCompatActivity() {
         ProfileEditorFragment().show(supportFragmentManager, "ProfileEditor")
     }
 
+    private fun onProfileInserted() {
+        tabController.showSavedServers()
+        Snackbar.make(binding.root, R.string.msg_server_profile_inserted, Snackbar.LENGTH_SHORT).show()
+    }
+
     /**
      * Shows delete confirmation snackbar.
      */
     private fun showProfileDeletedMsg(profile: ServerProfile) {
-        Snackbar.make(binding.root, getString(R.string.msg_server_profile_deleted), Snackbar.LENGTH_LONG)
+        Snackbar.make(binding.root, R.string.msg_server_profile_deleted, Snackbar.LENGTH_LONG)
                 .setAction(getString(R.string.title_undo)) { viewModel.insertProfile(profile) }
                 .show()
     }

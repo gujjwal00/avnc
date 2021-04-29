@@ -18,7 +18,7 @@ import com.google.android.material.tabs.TabLayout
 /**
  * Controls tabs and associated pager in home activity.
  */
-class TabController(val fragMgr: FragmentManager, pager: ViewPager, tabLayout: TabLayout) {
+class TabController(val fragMgr: FragmentManager, private val pager: ViewPager, tabLayout: TabLayout) {
 
     private data class PageInfo(
             val fragment: Fragment,
@@ -47,6 +47,10 @@ class TabController(val fragMgr: FragmentManager, pager: ViewPager, tabLayout: T
         pageList.forEachIndexed { i, p ->
             tabLayout.getTabAt(i)?.icon = tabLayout.context.getDrawable(p.tabIconId)
         }
+    }
+
+    fun showSavedServers() {
+        pager.setCurrentItem(0, true)
     }
 
     fun updateDiscoveryBadge(count: Int) {
