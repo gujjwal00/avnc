@@ -59,45 +59,42 @@
             app:layout_constraintTop_toBottomOf="@id/export_btn" />
 
         <CheckBox
-            android:id="@+id/exportPasswords"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:text="@string/title_export_passwords"
-            app:layout_constraintStart_toStartOf="@id/options_divider"
-            app:layout_constraintTop_toBottomOf="@id/options_divider" />
-
-        <CheckBox
             android:id="@+id/deleteCurrentServers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_delete_servers_before_import"
             app:layout_constraintStart_toStartOf="@id/options_divider"
-            app:layout_constraintTop_toBottomOf="@id/exportPasswords" />
-
-        <!-- Status -->
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            app:isVisible="@{viewModel.isDoingIE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@id/options_divider"
-            app:layout_constraintTop_toBottomOf="@id/deleteCurrentServers" />
+            app:layout_constraintTop_toBottomOf="@id/options_divider" />
 
         <TextView
+            android:id="@+id/ie_error"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_large"
-            android:text="@{viewModel.lastIEResult}"
+            android:text='@{"Error: " + viewModel.importExportError}'
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            app:isVisible="@{viewModel.lastIEResult != null}"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="?colorError"
+            app:isVisible="@{viewModel.importExportError != null}"
+            app:layout_constraintBottom_toTopOf="@id/export_auth_msg"
             app:layout_constraintEnd_toEndOf="@id/options_divider"
             app:layout_constraintStart_toStartOf="@id/options_divider"
             app:layout_constraintTop_toBottomOf="@id/deleteCurrentServers"
             tools:text="A message about export/import result" />
+
+        <TextView
+            android:id="@+id/export_auth_msg"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:drawablePadding="@dimen/padding_normal"
+            android:text="@{viewModel.canAuthenticateUser ? @string/msg_export_auth_required : @string/msg_export_auth_missing}"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            app:drawableStartCompat="@drawable/ic_info"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/options_divider"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@id/options_divider"
+            tools:text="@string/msg_export_auth_missing" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

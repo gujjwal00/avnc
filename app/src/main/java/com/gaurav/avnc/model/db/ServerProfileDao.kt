@@ -40,10 +40,4 @@ interface ServerProfileDao {
 
     @Query("DELETE FROM profiles")
     fun deleteAll()
-
-    @Transaction
-    fun overwriteTable(newProfiles: List<ServerProfile>) {
-        deleteAll()
-        insert(newProfiles)
-    }
 }

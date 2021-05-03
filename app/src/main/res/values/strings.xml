@@ -69,6 +69,9 @@
     <string name="msg_pip_not_supported">Picture-in-Picture is not supported on this device</string>
     <string name="msg_loading">Loading …</string>
     <string name="msg_imported">Imported Successfully</string>
+    <string name="msg_exported">Exported Successfully</string>
+    <string name="msg_export_auth_required">Authentication is required before Export.</string>
+    <string name="msg_export_auth_missing">Your device is not secured. Turn on screen lock to enable authentication before Export.</string>
     <string name="msg_invalid_key_file">File is not a valid private key!</string>
     <string name="msg_invalid_vnc_uri">Invalid VNC URI</string>
     <string name="msg_copied_to_clipboard">Copied!</string>
