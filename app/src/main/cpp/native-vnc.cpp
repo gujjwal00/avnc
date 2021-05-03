@@ -342,7 +342,7 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeClientCreate(JNIEnv *env, jobject thiz)
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeConfigure(JNIEnv *env, jobject thiz, jlong client_ptr,
-                                                   jint securityType) {
+                                                   jint securityType, jboolean use_local_cursor) {
     auto client = (rfbClient *) client_ptr;
 
     // 0 means all auth types
@@ -350,6 +350,8 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeConfigure(JNIEnv *env, jobject thiz, jl
         uint32_t auth[1] = {static_cast<uint32_t>(securityType)};
         SetClientAuthSchemes(client, auth, 1);
     }
+
+    client->appData.useRemoteCursor = use_local_cursor;
 }
 
 extern "C"

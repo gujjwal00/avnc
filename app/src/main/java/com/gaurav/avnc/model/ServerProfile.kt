@@ -86,6 +86,7 @@ data class ServerProfile(
 
         /**
          * Whether the cursor should be drawn by client instead of server.
+         * Currently, only hides the remote cursor.
          */
         var useLocalCursor: Boolean = false,
 

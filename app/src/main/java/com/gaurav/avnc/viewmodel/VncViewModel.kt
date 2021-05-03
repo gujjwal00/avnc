@@ -176,7 +176,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     private fun configureClient() {
-        client.configure(profile.viewOnly, profile.securityType)
+        client.configure(profile.viewOnly, profile.securityType, profile.useLocalCursor)
 
         if (profile.useRepeater)
             client.setupRepeater(profile.idOnRepeater)

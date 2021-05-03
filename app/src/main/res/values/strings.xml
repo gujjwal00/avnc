@@ -43,7 +43,8 @@
     <string name="label_port">Port</string>
     <string name="label_username">Username</string>
     <string name="label_password">Password</string>
-    <string name="label_view_only_mode">View-only mode</string>
+    <string name="label_view_only_mode">View-only Mode</string>
+    <string name="label_hide_remote_cursor">Hide Remote Cursor</string>
     <string name="label_color_quality">Color quality</string>
     <string name="label_image_quality">Image quality</string>
     <string name="label_security_type">Security</string>

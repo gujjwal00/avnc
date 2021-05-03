@@ -145,6 +145,17 @@
                     app:layout_constraintTop_toBottomOf="@id/use_repeater" />
 
 
+                <!--Local cursor mode (Currently it is only used for 'hiding' remote cursor)-->
+                <CheckBox
+                    android:id="@+id/use_local_cursor"
+                    style="@style/FormField"
+                    android:checked="@={profile.useLocalCursor}"
+                    android:text="@string/label_hide_remote_cursor"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view_only" />
+
+
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                 <!-- Security                                                   -->
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -170,7 +181,7 @@
                     android:padding="@dimen/padding_small"
                     app:entryValues="@{@intArray/security_values}"
                     app:layout_constraintStart_toEndOf="@id/security_icon"
-                    app:layout_constraintTop_toBottomOf="@id/view_only"
+                    app:layout_constraintTop_toBottomOf="@id/use_local_cursor"
                     app:layout_constraintWidth_percent=".6"
                     app:value="@={profile.securityType}" />
 
@@ -217,8 +228,8 @@
                 <!--SSH Options-->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     style="@style/FormField"
-                    app:isVisible="@{useSshTunnel.checked}"
                     android:animateLayoutChanges="true"
+                    app:isVisible="@{useSshTunnel.checked}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/use_ssh_tunnel">

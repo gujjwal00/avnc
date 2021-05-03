@@ -114,12 +114,12 @@ class VncClient(private val observer: Observer) {
      *
      * @param securityType RFB security type to use.
      */
-    fun configure(viewOnly: Boolean, securityType: Int) {
+    fun configure(viewOnly: Boolean, securityType: Int, useLocalCursor: Boolean) {
         if (state != State.Created)
             return
 
         viewOnlyMode = viewOnly
-        nativeConfigure(nativePtr, securityType)
+        nativeConfigure(nativePtr, securityType, useLocalCursor)
     }
 
     fun setupRepeater(serverId: Int) {
@@ -244,7 +244,7 @@ class VncClient(private val observer: Observer) {
     }
 
     private external fun nativeClientCreate(): Long
-    private external fun nativeConfigure(clientPtr: Long, securityType: Int)
+    private external fun nativeConfigure(clientPtr: Long, securityType: Int, useLocalCursor: Boolean)
     private external fun nativeInit(clientPtr: Long, host: String, port: Int): Boolean
     private external fun nativeSetDest(clientPtr: Long, host: String, port: Int)
     private external fun nativeProcessServerMessage(clientPtr: Long, uSecTimeout: Int): Boolean
