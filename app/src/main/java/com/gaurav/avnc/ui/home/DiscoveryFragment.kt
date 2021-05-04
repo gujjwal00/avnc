@@ -52,9 +52,9 @@ class DiscoveryFragment : Fragment() {
         while (true) {
             delay(viewModel.pref.server.discoveryTimeout + viewModel.pref.server.discoveryRestartDelay)
 
-            if (activity?.lifecycle?.currentState == Lifecycle.State.RESUMED
-                    && viewModel.pref.server.discoveryAutoStart
-                    && viewModel.pref.server.discoveryRestart) {
+            if (activity?.lifecycle?.currentState == Lifecycle.State.RESUMED &&
+                viewModel.pref.server.discoveryAutoStart &&
+                viewModel.pref.server.discoveryRestart) {
                 viewModel.startDiscovery()
             }
         }

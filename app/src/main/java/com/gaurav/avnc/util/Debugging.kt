@@ -52,7 +52,7 @@ object Debugging {
             val e = KeyEvent(KeyEvent.ACTION_DOWN, i)
 
             val s = String.format("%4d  %-40s  %5d %5b  %c      \n",
-                    i, KeyEvent.keyCodeToString(i), e.unicodeChar, e.isPrintingKey, e.displayLabel)
+                                  i, KeyEvent.keyCodeToString(i), e.unicodeChar, e.isPrintingKey, e.displayLabel)
 
             builder.append(s)
         }

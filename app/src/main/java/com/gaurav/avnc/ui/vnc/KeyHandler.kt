@@ -67,8 +67,8 @@ class KeyHandler(private val dispatcher: Dispatcher) {
     //Let the System handle these
     private fun isIgnoredKeyCode(key: Int): Boolean {
         return key == KeyEvent.KEYCODE_BACK ||
-                key == KeyEvent.KEYCODE_MENU ||
-                key == KeyEvent.KEYCODE_HOME
+               key == KeyEvent.KEYCODE_MENU ||
+               key == KeyEvent.KEYCODE_HOME
     }
 
 

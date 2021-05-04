@@ -102,7 +102,7 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
 
             // If system does not support PiP, disable its preference
             val hasPiPSupport = Build.VERSION.SDK_INT >= 26 &&
-                    requireActivity().packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+                                requireActivity().packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
 
             if (!hasPiPSupport) {
                 findPreference<SwitchPreference>("pip_enabled")!!.apply {
