@@ -23,8 +23,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_normal"
                 android:text="@string/msg_loading"
-                android:typeface="monospace"
-                android:textSize="12sp"/>
+                android:textSize="12sp"
+                android:typeface="monospace" />
         </HorizontalScrollView>
     </ScrollView>
 </layout>

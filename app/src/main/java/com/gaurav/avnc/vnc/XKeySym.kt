@@ -1,4 +1,4 @@
-@file:Suppress("unused","SpellCheckingInspection")
+@file:Suppress("unused", "SpellCheckingInspection")
 
 /**
  * X Key Symbols.

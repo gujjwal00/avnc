@@ -167,11 +167,11 @@
                     android:layout_marginStart="@dimen/margin_normal"
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_shield"
-                    android:tint="?colorControlNormal"
                     android:tintMode="src_in"
                     app:layout_constraintBottom_toBottomOf="@id/security"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/security" />
+                    app:layout_constraintTop_toTopOf="@id/security"
+                    app:tint="?colorControlNormal" />
 
                 <Spinner
                     android:id="@+id/security"

@@ -116,11 +116,11 @@
                 android:layout_height="60dp"
                 android:contentDescription="@string/desc_disconnected_icon"
                 android:src="@drawable/ic_warning"
-                android:tint="?attr/colorError"
                 app:isVisible="@{viewModel.clientState == State.Disconnected}"
                 app:layout_constraintBottom_toTopOf="@id/client_state"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:tint="?attr/colorError" />
 
             <TextView
                 android:id="@+id/client_state"

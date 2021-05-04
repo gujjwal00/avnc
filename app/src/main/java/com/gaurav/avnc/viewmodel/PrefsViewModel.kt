@@ -39,8 +39,7 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
      * Currently we are only exporting server profiles but preferences can be
      * exported in future.
      *
-     * Importing/Exporting is done in background and [isDoingIE], [lastIEResult]
-     * are used to track the work.
+     * Importing/Exporting is done on background thread.
      **************************************************************************/
 
     @Serializable

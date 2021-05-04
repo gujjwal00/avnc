@@ -8,6 +8,7 @@
 
 package com.gaurav.avnc.ui.home
 
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -45,7 +46,7 @@ class TabController(val fragMgr: FragmentManager, private val pager: ViewPager, 
         discoveryTab = tabLayout.getTabAt(1)!!
 
         pageList.forEachIndexed { i, p ->
-            tabLayout.getTabAt(i)?.icon = tabLayout.context.getDrawable(p.tabIconId)
+            tabLayout.getTabAt(i)?.icon = ContextCompat.getDrawable(tabLayout.context, p.tabIconId)
         }
     }
 

@@ -7,7 +7,6 @@
   -->
 
 <resources>
-    <dimen name="appbar_elevation">14dp</dimen>
     <dimen name="server_card_elevation">1dp</dimen>
     <dimen name="server_card_stroke_width">1dp</dimen>
 </resources>

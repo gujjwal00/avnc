@@ -13,21 +13,16 @@
     <string name="title_duplicate">Duplicate</string>
     <string name="title_edit">Edit</string>
     <string name="title_delete">Delete</string>
-    <string name="title_copy">Copy</string>
     <string name="title_copy_host">Copy Host</string>
     <string name="title_copy_name">Copy Name</string>
     <string name="title_advanced">Advanced</string>
     <string name="title_save">Save</string>
-    <string name="title_less">Less</string>
     <string name="title_settings">Settings</string>
     <string name="title_edit_server_profile">Edit Server</string>
-    <string name="title_ssh_tunnel">SSH Tunnel</string>
     <string name="title_undo">Undo</string>
     <string name="title_cancel">Cancel</string>
     <string name="title_credentials_required">Credentials required</string>
     <string name="title_remember">Remember</string>
-    <string name="title_servers">Servers</string>
-    <string name="title_discovery">Discovery</string>
     <string name="title_export">Export</string>
     <string name="title_import">Import</string>
     <string name="title_change">Change</string>
@@ -35,24 +30,14 @@
     <string name="title_unknown_ssh_host">Unknown SSH Host</string>
     <string name="title_ssh_host_key_changed">Host Key changed!</string>
     <string name="title_continue">Continue</string>
-    <string name="title_export_passwords">Export Passwords</string>
     <string name="title_delete_servers_before_import">Delete current Servers before Import</string>
 
-    <string name="label_name">Name</string>
-    <string name="label_host">Host</string>
-    <string name="label_port">Port</string>
     <string name="label_username">Username</string>
     <string name="label_password">Password</string>
     <string name="label_view_only_mode">View-only Mode</string>
     <string name="label_hide_remote_cursor">Hide Remote Cursor</string>
-    <string name="label_color_quality">Color quality</string>
-    <string name="label_image_quality">Image quality</string>
-    <string name="label_security_type">Security</string>
     <string name="label_use_repeater">Use Repeater</string>
-    <string name="label_repeater_id">ID</string>
     <string name="label_private_key">Private Key</string>
-    <string name="label_key_password">Key Password</string>
-    <string name="label_auth_type">Auth Type</string>
 
     <string name="hint_urlbar">Connect to a Server</string>
     <string name="hint_server_name">Name (e.g. Work PC)</string>
@@ -62,7 +47,6 @@
     <string name="hint_server_id">Server ID</string>
     <string name="hint_username">Username</string>
     <string name="hint_password">Password</string>
-    <string name="hint_private_key">Private Key</string>
     <string name="hint_key_password">Key Password</string>
 
     <string name="msg_server_profile_inserted">Server added.</string>
@@ -78,7 +62,6 @@
     <string name="msg_copied_to_clipboard">Copied!</string>
     <string name="desc_navigation_btn">Open Navigation Drawer</string>
     <string name="desc_disconnected_icon">Disconnected state indicator icon</string>
-    <string name="desc_connect_btn">Connect to this URL</string>
     <string name="desc_add_server_btn">Add Server</string>
     <string name="desc_kb_btn">Show Keyboard</string>
     <string name="desc_vk_btn">Show Virtual Keys</string>
@@ -92,7 +75,6 @@
     <string name="tip_discovery">Discovery can automatically find supported servers\nrunning on your network.</string>
 
     <!-- Preference -->
-    <string name="title_pref_activity">Settings</string>
     <string name="pref_appearance">Appearance</string>
     <string name="pref_appearance_summary">Look and feel</string>
     <string name="pref_display">Remote Display</string>

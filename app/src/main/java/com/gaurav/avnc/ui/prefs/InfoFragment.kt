@@ -58,7 +58,7 @@ abstract class InfoFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.add(getString(android.R.string.copy))
                 .setOnMenuItemClickListener { copyToClipboard(); true }
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
     }
 
     private fun copyToClipboard() {

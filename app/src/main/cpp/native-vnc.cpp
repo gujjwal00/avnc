@@ -262,20 +262,22 @@ static void onFinishedFrameBufferUpdate(rfbClient *client) {
  */
 static rfbBool onMallocFrameBuffer(rfbClient *client) {
 
-    auto allocSize = (uint64_t) client->width * client->height * client->format.bitsPerPixel / 8;
+    auto requestedSize = (uint64_t) client->width * client->height * client->format.bitsPerPixel / 8;
 
-    if (allocSize >= SIZE_MAX) {
+    if (requestedSize >= SIZE_MAX) {
         rfbClientErr("CRITICAL: cannot allocate frameBuffer, requested size is too large\n");
         errno = EPROTO;
         return FALSE;
     }
+
+    auto allocSize = (size_t) requestedSize;
 
     LOCK(client->fbMutex);
     {
         if (client->frameBuffer)
             free(client->frameBuffer);
 
-        client->frameBuffer = static_cast<uint8_t *>(malloc((size_t) allocSize));
+        client->frameBuffer = static_cast<uint8_t *>(malloc(allocSize));
 
         if (client->frameBuffer) {
             client->fbRealWidth = client->width;
