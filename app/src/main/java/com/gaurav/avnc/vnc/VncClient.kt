@@ -280,6 +280,7 @@ class VncClient(private val observer: Observer) {
     private fun cbBell() = Unit // observer.onBell()
 
     @Keep
+    @Suppress("UNUSED_PARAMETER")
     private fun cbHandleCursorPos(x: Int, y: Int) = true //observer.onCursorMoved(x, y)
 
 

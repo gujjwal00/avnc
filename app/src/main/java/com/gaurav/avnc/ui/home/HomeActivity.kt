@@ -49,7 +49,7 @@ class HomeActivity : AppCompatActivity() {
 
         //Observers
         viewModel.editProfileEvent.observe(this) { showProfileEditor() }
-        viewModel.profileInsertedEvent.observe(this) { onProfileInserted() }
+        viewModel.profileInsertedEvent.observe(this) { onProfileInserted(it) }
         viewModel.profileDeletedEvent.observe(this) { showProfileDeletedMsg(it) }
         viewModel.newConnectionEvent.observe(this) { startVncActivity(this, it) }
         viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }
@@ -88,9 +88,12 @@ class HomeActivity : AppCompatActivity() {
         ProfileEditorFragment().show(supportFragmentManager, "ProfileEditor")
     }
 
-    private fun onProfileInserted() {
+    private fun onProfileInserted(profile: ServerProfile) {
         tabController.showSavedServers()
-        Snackbar.make(binding.root, R.string.msg_server_profile_inserted, Snackbar.LENGTH_SHORT).show()
+
+        // Only show snackbar for new servers
+        if (profile.ID == 0L)
+            Snackbar.make(binding.root, R.string.msg_server_profile_inserted, Snackbar.LENGTH_SHORT).show()
     }
 
     /**

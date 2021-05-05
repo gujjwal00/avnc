@@ -72,7 +72,7 @@
     <string name="desc_back_btn">Go Back</string>
     <string name="desc_clear_url_btn">Clear URL</string>
     <string name="desc_server_url">Enter address of VNC server</string>
-    <string name="tip_empty_server_list">Server list is empty.\nUse the \'<b>+</b>\' button to add a Server, or\nUse the top urlbar to directly connect to a server.</string>
+    <string name="tip_empty_server_list">Server list is empty.\nUse the \'<b>+</b>\' button to add a Server, or\nUse the top Urlbar to directly connect to a server.</string>
     <string name="tip_urlbar">You can enter hostname or IP address.\n\'vnc://\' URIs are also supported.</string>
     <string name="tip_discovery">Discovery can automatically find supported servers\nrunning on your network.</string>
 
