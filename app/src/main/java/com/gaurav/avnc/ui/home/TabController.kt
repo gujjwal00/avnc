@@ -8,32 +8,34 @@
 
 package com.gaurav.avnc.ui.home
 
-import androidx.core.content.ContextCompat
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.gaurav.avnc.R
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 /**
  * Controls tabs and associated pager in home activity.
  */
-class TabController(val fragMgr: FragmentManager, private val pager: ViewPager, tabLayout: TabLayout) {
+class TabController(val activity: HomeActivity, private val pager: ViewPager2, tabLayout: TabLayout) {
 
     private data class PageInfo(
             val fragment: Fragment,
-            val tabIconId: Int,
+            @DrawableRes val iconId: Int,
+            @StringRes val descriptionId: Int
     )
 
     private val pageList = listOf(
-            PageInfo(ServersFragment(), R.drawable.ic_computer),
-            PageInfo(DiscoveryFragment(), R.drawable.ic_search),
+            PageInfo(ServersFragment(), R.drawable.ic_computer, R.string.desc_saved_servers_tab),
+            PageInfo(DiscoveryFragment(), R.drawable.ic_search, R.string.desc_discovered_servers_tab),
     )
 
-    private inner class PagerAdapter : FragmentPagerAdapter(fragMgr, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-        override fun getCount() = pageList.size
-        override fun getItem(position: Int) = pageList[position].fragment
+    private inner class PagerAdapter : FragmentStateAdapter(activity) {
+        override fun getItemCount() = pageList.size
+        override fun createFragment(position: Int) = pageList[position].fragment
     }
 
 
@@ -42,12 +44,13 @@ class TabController(val fragMgr: FragmentManager, private val pager: ViewPager, 
     init {
         pager.adapter = PagerAdapter()
 
-        tabLayout.setupWithViewPager(pager)
-        discoveryTab = tabLayout.getTabAt(1)!!
-
-        pageList.forEachIndexed { i, p ->
-            tabLayout.getTabAt(i)?.icon = ContextCompat.getDrawable(tabLayout.context, p.tabIconId)
+        val mediator = TabLayoutMediator(tabLayout, pager, true, true) { tab, position ->
+            tab.setIcon(pageList[position].iconId)
+            tab.setContentDescription(pageList[position].descriptionId)
         }
+
+        mediator.attach()
+        discoveryTab = tabLayout.getTabAt(1)!!
     }
 
     fun showSavedServers() {

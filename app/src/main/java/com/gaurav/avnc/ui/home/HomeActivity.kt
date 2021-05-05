@@ -41,7 +41,7 @@ class HomeActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
         binding.lifecycleOwner = this
 
-        tabController = TabController(supportFragmentManager, binding.pager, binding.tabs)
+        tabController = TabController(this, binding.pager, binding.tabs)
         binding.drawerNav.setNavigationItemSelectedListener { onMenuItemSelected(it.itemId) }
         binding.navigationBtn.setOnClickListener { binding.drawerLayout.open() }
         binding.settingsBtn.setOnClickListener { showSettings() }

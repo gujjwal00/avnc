@@ -62,6 +62,8 @@
     <string name="msg_copied_to_clipboard">Copied!</string>
     <string name="desc_navigation_btn">Open Navigation Drawer</string>
     <string name="desc_disconnected_icon">Disconnected state indicator icon</string>
+    <string name="desc_saved_servers_tab">Saved Servers</string>
+    <string name="desc_discovered_servers_tab">Discovered Servers</string>
     <string name="desc_add_server_btn">Add Server</string>
     <string name="desc_kb_btn">Show Keyboard</string>
     <string name="desc_vk_btn">Show Virtual Keys</string>
