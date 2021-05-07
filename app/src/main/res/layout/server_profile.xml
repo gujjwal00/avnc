@@ -12,6 +12,8 @@
 
     <data>
 
+        <import type="com.gaurav.avnc.model.ServerProfile" />
+
         <variable
             name="profile"
             type="com.gaurav.avnc.model.ServerProfile" />
@@ -58,6 +60,7 @@
             app:tint="?android:textColorSecondary" />
 
         <ImageView
+            android:id="@+id/view_only_hint_icon"
             android:layout_width="@dimen/server_card_hint_icon_size"
             android:layout_height="@dimen/server_card_hint_icon_size"
             android:layout_margin="@dimen/margin_normal"
@@ -67,6 +70,19 @@
             app:isVisible="@{profile.viewOnly}"
             app:layout_constraintBottom_toBottomOf="@id/profile_address"
             app:layout_constraintStart_toEndOf="@id/password_hint_icon"
+            app:layout_constraintTop_toTopOf="@id/profile_address"
+            app:tint="?android:textColorSecondary" />
+
+        <ImageView
+            android:layout_width="@dimen/server_card_hint_icon_size"
+            android:layout_height="@dimen/server_card_hint_icon_size"
+            android:layout_margin="@dimen/margin_normal"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_ssh"
+            android:tintMode="src_in"
+            app:isVisible="@{profile.channelType == ServerProfile.CHANNEL_SSH_TUNNEL}"
+            app:layout_constraintBottom_toBottomOf="@id/profile_address"
+            app:layout_constraintStart_toEndOf="@id/view_only_hint_icon"
             app:layout_constraintTop_toTopOf="@id/profile_address"
             app:tint="?android:textColorSecondary" />
 
