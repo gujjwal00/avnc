@@ -18,6 +18,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.Rational
+import android.view.Gravity
 import android.view.KeyEvent
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -28,6 +29,7 @@ import androidx.databinding.DataBindingUtil
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.util.Experimental
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.VncClient
 import com.gaurav.avnc.vnc.VncUri
@@ -78,6 +80,8 @@ class VncActivity : AppCompatActivity() {
         binding.kbBtn.setOnClickListener { showKeyboard(); closeDrawers() }
         binding.zoomResetBtn.setOnClickListener { viewModel.resetZoom(); closeDrawers() }
         binding.vkBtn.setOnClickListener { virtualKeys.show(); closeDrawers() }
+        if (viewModel.pref.experimental.swipeCloseToolbar)
+            Experimental.setupDrawerCloseOnScrimSwipe(binding.drawerLayout, Gravity.START)
 
         //ViewModel setup
         viewModel.frameViewRef = WeakReference(binding.frameView)

@@ -70,6 +70,7 @@ class AppPreferences(context: Context) {
 
     inner class Experimental {
         val indicator; get() = prefs.getBoolean("experimental_indicator", false)
+        val swipeCloseToolbar; get() = prefs.getBoolean("experimental_vnc_toolbar_swipe_close", true)
     }
 
     val appearance = Appearance()

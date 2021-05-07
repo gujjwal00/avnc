@@ -136,6 +136,8 @@
     <string name="pref_debugging">Debugging</string>
     <string name="pref_logs">Logs</string>
     <string name="pref_keycode_map">Keycode Map</string>
+    <string name="pref_experimental_toolbar_swipe_close">Swipe to close Toolbar Drawer</string>
+    <string name="pref_experimental_toolbar_swipe_close_summary">During a remote session, you can swipe to close currently open Toolbar</string>
     <string name="pref_experimental_indicator">Availability Indicator</string>
     <string name="pref_experimental_indicator_summary">Indicate saved servers which are also found by Discovery.\nRequires App restart.</string>
 </resources>

@@ -9,9 +9,15 @@
 package com.gaurav.avnc.util
 
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.util.Log
+import android.view.GestureDetector
+import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.Keep
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -24,7 +30,7 @@ import com.gaurav.avnc.ui.home.adapter.ServersAdapter
 /**
  * All of the experimental stuff is dumped here.
  */
-class Experimental {
+object Experimental {
 
     /**
      * This feature allows us to show indicator (small pulsating circle) for already
@@ -144,5 +150,63 @@ class Experimental {
                 }
             }
         }
+    }
+
+
+    /**
+     * Normally, drawers in [DrawerLayout] are closed by two gestures:
+     * 1. Swipe 'on' the drawer
+     * 2. Tap inside Scrim (dimmed region outside of drawer)
+     *
+     * Notably, swiping inside scrim are does NOT hide the drawer. This can be jarring
+     * to users if drawer is relatively small and most of the layout area acts as scrim.
+     *
+     * The toolbar drawer used in [com.gaurav.avnc.ui.vnc.VncActivity] is affected by
+     * this issue.
+     *
+     * This function attempts to detect these swipe gestures and close the drawer
+     * when they happen.
+     *
+     * Note: It will set a custom TouchListener on [drawerLayout].
+     *
+     * Why Experimental: Because I don't know if it handles all corner cases.
+     */
+    @SuppressLint("ClickableViewAccessibility", "RtlHardcoded")
+    fun setupDrawerCloseOnScrimSwipe(drawerLayout: DrawerLayout, drawerGravity: Int) {
+
+        drawerLayout.setOnTouchListener(object : View.OnTouchListener {
+            var detectingSwipe = false
+            var drawerClosed = true
+
+            val detector = GestureDetector(drawerLayout.context, object : GestureDetector.SimpleOnGestureListener() {
+
+                override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, dx: Float, dy: Float): Boolean {
+                    if (drawerClosed)
+                        return true
+
+                    val absGravity = GravityCompat.getAbsoluteGravity(drawerGravity, drawerLayout.layoutDirection)
+                    if ((absGravity == Gravity.LEFT && dx > 0) || (absGravity == Gravity.RIGHT && dx < 0)) {
+                        drawerLayout.closeDrawer(drawerGravity)
+                        drawerClosed = true
+                    }
+
+                    return true
+                }
+            })
+
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+
+                if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+                    val isDrawerOpen = drawerLayout.isDrawerOpen(drawerGravity)
+                    detectingSwipe = isDrawerOpen
+                    drawerClosed = !isDrawerOpen
+                }
+
+                if (detectingSwipe)
+                    detector.onTouchEvent(event)
+
+                return false
+            }
+        })
     }
 }
