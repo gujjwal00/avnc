@@ -30,6 +30,7 @@ class AppPreferences(context: Context) {
             }
 
         val showTips; get() = prefs.getBoolean("show_tips", true)
+        val preferAdvancedEditor; get() = prefs.getBoolean("prefer_advanced_editor", false)
     }
 
     inner class Display {

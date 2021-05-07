@@ -22,4 +22,10 @@
         app:key="show_tips"
         app:title="@string/pref_show_tips" />
 
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="prefer_advanced_editor"
+        app:summary="@string/pref_prefer_advanced_editor_summary"
+        app:title="@string/pref_prefer_advanced_editor" />
+
 </PreferenceScreen>

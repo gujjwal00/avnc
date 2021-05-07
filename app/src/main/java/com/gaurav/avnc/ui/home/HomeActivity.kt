@@ -85,7 +85,10 @@ class HomeActivity : AppCompatActivity() {
      * Starts profile editor fragment.
      */
     private fun showProfileEditor() {
-        ProfileEditorFragment().show(supportFragmentManager, "ProfileEditor")
+        if (viewModel.pref.appearance.preferAdvancedEditor)
+            ProfileEditorFragment().showAdvanced(supportFragmentManager)
+        else
+            ProfileEditorFragment().show(supportFragmentManager)
     }
 
     private fun onProfileInserted(profile: ServerProfile) {

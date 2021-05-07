@@ -79,6 +79,10 @@ class ProfileEditorFragment : DialogFragment() {
      * Normal Mode (Dialog)
      **************************************************************************/
 
+    fun show(manager: FragmentManager) {
+        show(manager, "ProfileEditor")
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val binding = FragmentProfileEditorBinding.inflate(layoutInflater, null, false)
 
@@ -126,9 +130,9 @@ class ProfileEditorFragment : DialogFragment() {
     /**
      * Shows Profile Editor in advanced mode
      */
-    private fun showAdvanced(manager: FragmentManager) {
+    fun showAdvanced(manager: FragmentManager) {
         manager.beginTransaction()
-                .replace(android.R.id.content, ProfileEditorFragment(), "EditorAdvanced")
+                .replace(android.R.id.content, ProfileEditorFragment(), "ProfileEditorAdvanced")
                 .addToBackStack(null)
                 .commit()
     }
