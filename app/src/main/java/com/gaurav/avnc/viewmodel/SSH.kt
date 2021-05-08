@@ -12,6 +12,7 @@ import android.util.Base64
 import com.gaurav.avnc.model.ServerProfile
 import com.trilead.ssh2.Connection
 import com.trilead.ssh2.KnownHosts
+import com.trilead.ssh2.LocalPortForwarder
 import com.trilead.ssh2.ServerHostKeyVerifier
 import java.io.File
 import java.io.IOException
@@ -60,7 +61,7 @@ class HostKeyVerifier(private val viewModel: VncViewModel) : ServerHostKeyVerifi
         val hostKey = HostKey(hostname, isKnownHost, keyAlgorithm, key)
 
         if (viewModel.sshHostKeyVerifyRequest.requestResponse(hostKey)) {
-            //User has confirmed the key so remember it.
+            //User has confirmed the key, so remember it.
             KnownHosts.addHostkeyToFile(knownHostsFile, arrayOf(hostname), keyAlgorithm, key)
             return true
         }
@@ -74,7 +75,9 @@ class HostKeyVerifier(private val viewModel: VncViewModel) : ServerHostKeyVerifi
  */
 class SshTunnel(private val viewModel: VncViewModel) {
 
-    var connection: Connection? = null
+    private var connection: Connection? = null
+    private var forwarder: LocalPortForwarder? = null
+
     val localHost = "localhost"
     var localPort = 0
 
@@ -106,7 +109,7 @@ class SshTunnel(private val viewModel: VncViewModel) {
             val ss = ServerSocket(0)
             ss.close()
             try {
-                connection.createLocalPortForwarder(ss.localPort, profile.host, profile.port)
+                forwarder = connection.createLocalPortForwarder(ss.localPort, profile.host, profile.port)
                 localPort = ss.localPort
             } catch (e: IOException) {
                 //Retry
@@ -117,5 +120,8 @@ class SshTunnel(private val viewModel: VncViewModel) {
             throw IOException("Cannot find a local port for SSH Tunnel")
     }
 
-    fun close() = connection?.close()
+    fun close() {
+        forwarder?.close()
+        connection?.close()
+    }
 }
