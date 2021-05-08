@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/margin_normal"
+            android:contentDescription="@string/desc_add_new_server_btn"
             android:onClick="@{()-> viewModel.onNewProfile()}"
             android:src="@drawable/ic_plus" />
     </FrameLayout>

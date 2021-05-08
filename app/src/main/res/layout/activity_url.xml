@@ -20,7 +20,7 @@
             <LinearLayout
                 style="@style/UrlBar"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_height"
+                android:layout_height="@dimen/urlbar_height"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:transitionName="urlbar">

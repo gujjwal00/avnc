@@ -29,7 +29,7 @@
             android:id="@+id/add"
             style="@style/ImageButton"
             android:layout_gravity="end|center_vertical"
-            android:contentDescription="@string/desc_add_server_btn"
+            android:contentDescription="@string/desc_save_discovered_server_btn"
             android:src="@drawable/ic_plus" />
     </com.google.android.material.card.MaterialCardView>
 </layout>

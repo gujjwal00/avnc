@@ -11,7 +11,7 @@
     android:color="?colorControlHighlight">
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="@dimen/toolbar_bg_corner_radius" />
+            <corners android:radius="@dimen/urlbar_bg_corner_radius" />
             <solid android:color="@color/colorUrlBarBackground" />
         </shape>
     </item>

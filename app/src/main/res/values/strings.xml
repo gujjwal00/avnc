@@ -10,34 +10,32 @@
     <string name="app_name">aVNC</string>
 
     <string name="title_add_server_profile">Add Server</string>
+    <string name="title_edit_server_profile">Edit Server</string>
     <string name="title_duplicate">Duplicate</string>
     <string name="title_edit">Edit</string>
     <string name="title_delete">Delete</string>
     <string name="title_copy_host">Copy Host</string>
     <string name="title_copy_name">Copy Name</string>
     <string name="title_advanced">Advanced</string>
-    <string name="title_save">Save</string>
-    <string name="title_settings">Settings</string>
-    <string name="title_edit_server_profile">Edit Server</string>
-    <string name="title_undo">Undo</string>
     <string name="title_cancel">Cancel</string>
+    <string name="title_save">Save</string>
+    <string name="title_undo">Undo</string>
+    <string name="title_settings">Settings</string>
     <string name="title_credentials_required">Credentials required</string>
     <string name="title_remember">Remember</string>
     <string name="title_export">Export</string>
     <string name="title_import">Import</string>
-    <string name="title_change">Change</string>
+    <string name="title_view_only_mode">View-only Mode</string>
+    <string name="title_hide_remote_cursor">Hide Remote Cursor</string>
     <string name="title_use_ssh_tunnel">Use SSH Tunnel</string>
     <string name="title_unknown_ssh_host">Unknown SSH Host</string>
     <string name="title_ssh_host_key_changed">Host Key changed!</string>
     <string name="title_continue">Continue</string>
     <string name="title_delete_servers_before_import">Delete current Servers before Import</string>
-
-    <string name="label_username">Username</string>
-    <string name="label_password">Password</string>
-    <string name="label_view_only_mode">View-only Mode</string>
-    <string name="label_hide_remote_cursor">Hide Remote Cursor</string>
-    <string name="label_use_repeater">Use Repeater</string>
-    <string name="label_private_key">Private Key</string>
+    <string name="title_password">Password</string>
+    <string name="title_use_repeater">Use Repeater</string>
+    <string name="title_private_key">Private Key</string>
+    <string name="title_change">Change</string>
 
     <string name="hint_urlbar">Connect to a Server</string>
     <string name="hint_server_name">Name (e.g. Work PC)</string>
@@ -60,26 +58,32 @@
     <string name="msg_invalid_key_file">File is not a valid private key!</string>
     <string name="msg_invalid_vnc_uri">Invalid VNC URI</string>
     <string name="msg_copied_to_clipboard">Copied!</string>
-    <string name="desc_navigation_btn">Open Navigation Drawer</string>
-    <string name="desc_disconnected_icon">Disconnected state indicator icon</string>
-    <string name="desc_saved_servers_tab">Saved Servers</string>
-    <string name="desc_discovered_servers_tab">Discovered Servers</string>
-    <string name="desc_add_server_btn">Add Server</string>
-    <string name="desc_kb_btn">Show Keyboard</string>
-    <string name="desc_vk_btn">Show Virtual Keys</string>
-    <string name="desc_reset_zoom_btn">Reset Zoom</string>
-    <string name="desc_retry_connection_btn">Retry Connection</string>
-    <string name="desc_back_btn">Go Back</string>
-    <string name="desc_clear_url_btn">Clear URL</string>
-    <string name="desc_server_url">Enter address of VNC server</string>
+
     <string name="tip_empty_server_list">Server list is empty.\nUse the \'<b>+</b>\' button to add a Server, or\nUse the top Urlbar to directly connect to a server.</string>
     <string name="tip_urlbar">You can enter hostname or IP address.\n\'vnc://\' URIs are also supported.</string>
     <string name="tip_discovery">Discovery can automatically find supported servers\nrunning on your network.</string>
 
+    <!-- Accessibility descriptions -->
+    <string name="desc_navigation_btn">Open Navigation Drawer</string>
+    <string name="desc_settings_btn">Open Settings</string>
+    <string name="desc_saved_servers_tab">Saved Servers</string>
+    <string name="desc_discovered_servers_tab">Discovered Servers</string>
+    <string name="desc_add_new_server_btn">Add new Server</string>
+    <string name="desc_save_discovered_server_btn">Save this Server</string>
+    <string name="desc_discovery_btn">Start Server Discovery</string>
+    <string name="desc_discovery_running">Discovering Servers on you network</string>
+    <string name="desc_kb_btn">Show Keyboard</string>
+    <string name="desc_vk_btn">Show Virtual Keys</string>
+    <string name="desc_reset_zoom_btn">Reset Zoom to 100%</string>
+    <string name="desc_retry_connection_btn">Retry Connection</string>
+    <string name="desc_back_btn">Go Back</string>
+    <string name="desc_clear_url_btn">Clear URL</string>
+    <string name="desc_server_url">Enter address of VNC server</string>
+
     <!-- Preference -->
     <string name="pref_appearance">Appearance</string>
     <string name="pref_appearance_summary">Look and feel</string>
-    <string name="pref_display">Remote Display</string>
+    <string name="pref_display">Local Display</string>
     <string name="pref_display_summary">Picture-in-Picture, Zoom</string>
     <string name="pref_input">Input</string>
     <string name="pref_input_summary">Gestures, Mouse, Virtual keys</string>
@@ -96,7 +100,7 @@
     <string name="pref_gesture_action_right_click">Right Click</string>
     <string name="pref_gesture_action_double_click">Double Click</string>
     <string name="pref_gesture_action_move_pointer">Move Pointer</string>
-    <string name="pref_gesture_action_pan">Scroll Local Display</string>
+    <string name="pref_gesture_action_pan">Move Local Display</string>
     <string name="pref_gesture_action_remote_scroll">Scroll Remote Content</string>
     <string name="pref_gesture_action_remote_drag">Drag Remote Content</string>
 
@@ -140,6 +144,6 @@
     <string name="pref_keycode_map">Keycode Map</string>
     <string name="pref_experimental_toolbar_swipe_close">Swipe to close Toolbar Drawer</string>
     <string name="pref_experimental_toolbar_swipe_close_summary">During a remote session, you can swipe to close currently open Toolbar</string>
-    <string name="pref_experimental_indicator">Availability Indicator</string>
-    <string name="pref_experimental_indicator_summary">Indicate saved servers which are also found by Discovery.\nRequires App restart.</string>
+    <string name="pref_experimental_indicator">Discovery indicator for saved Servers</string>
+    <string name="pref_experimental_indicator_summary">Highlights already saved servers which are also found by Discovery.\nRequires App restart.</string>
 </resources>

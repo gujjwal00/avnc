@@ -40,7 +40,7 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_height"
+                android:layout_height="@dimen/urlbar_height"
                 app:navigationContentDescription="@string/desc_back_btn"
                 app:navigationIcon="@drawable/ic_arrow_back">
 
@@ -116,7 +116,7 @@
                 <CheckBox
                     android:id="@+id/use_repeater"
                     style="@style/FormField"
-                    android:text="@string/label_use_repeater"
+                    android:text="@string/title_use_repeater"
                     app:layout_constraintEnd_toStartOf="@id/id_on_repeater"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/host" />
@@ -139,7 +139,7 @@
                     android:id="@+id/view_only"
                     style="@style/FormField"
                     android:checked="@={profile.viewOnly}"
-                    android:text="@string/label_view_only_mode"
+                    android:text="@string/title_view_only_mode"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/use_repeater" />
@@ -150,7 +150,7 @@
                     android:id="@+id/use_local_cursor"
                     style="@style/FormField"
                     android:checked="@={profile.useLocalCursor}"
-                    android:text="@string/label_hide_remote_cursor"
+                    android:text="@string/title_hide_remote_cursor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view_only" />
@@ -289,14 +289,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/label_private_key" />
+                            android:text="@string/title_private_key" />
 
                         <RadioButton
                             android:id="@+id/ssh_auth_type_password"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/label_password" />
+                            android:text="@string/title_password" />
                     </RadioGroup>
 
                     <!--Password-->

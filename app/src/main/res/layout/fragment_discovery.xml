@@ -48,6 +48,7 @@
                 style="@style/Widget.Design.FloatingActionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/desc_discovery_btn"
                 android:onClick="@{()-> viewModel.startDiscovery()}"
                 android:src="@drawable/ic_refresh"
                 app:isInVisible="@{viewModel.discovery.isRunning}" />
@@ -55,6 +56,7 @@
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/desc_discovery_running"
                 app:isInVisible="@{!viewModel.discovery.isRunning}" />
         </FrameLayout>
     </FrameLayout>

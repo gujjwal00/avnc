@@ -12,11 +12,11 @@
     <dimen name="margin_large">20dp</dimen>
     <dimen name="padding_normal">10dp</dimen>
     <dimen name="padding_small">5dp</dimen>
-    <dimen name="list_item_height">64dp</dimen>
     <dimen name="action_btn_size">48dp</dimen>
-    <dimen name="toolbar_height">48dp</dimen>
-    <dimen name="toolbar_bg_corner_radius">24dp</dimen>
+    <dimen name="urlbar_height">48dp</dimen>
+    <dimen name="urlbar_bg_corner_radius">24dp</dimen>
     <dimen name="server_card_elevation">2dp</dimen>
+    <dimen name="server_card_min_height">68dp</dimen>
     <dimen name="server_card_stroke_width">0dp</dimen>
     <dimen name="server_card_hint_icon_size">16dp</dimen>
 </resources>

@@ -31,7 +31,7 @@
                     android:id="@+id/urlbar"
                     style="@style/UrlBar"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/toolbar_height"
+                    android:layout_height="@dimen/urlbar_height"
                     android:focusable="true"
                     android:gravity="center"
                     android:nextFocusLeft="@id/navigation_btn"
@@ -56,7 +56,7 @@
                     <ImageButton
                         android:id="@+id/settings_btn"
                         style="@style/ImageButton"
-                        android:contentDescription="@string/title_settings"
+                        android:contentDescription="@string/desc_settings_btn"
                         android:nextFocusLeft="@id/urlbar"
                         android:src="@drawable/ic_settings" />
 

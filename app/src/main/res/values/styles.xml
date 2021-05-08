@@ -65,7 +65,7 @@
     </style>
 
     <style name="ServerList">
-        <item name="android:paddingBottom">@dimen/list_item_height</item>
+        <item name="android:paddingBottom">@dimen/server_card_min_height</item>
         <item name="android:clipToPadding">false</item>
     </style>
 
@@ -74,6 +74,7 @@
         <item name="android:layout_marginStart">@dimen/margin_normal</item>
         <item name="android:layout_marginEnd">@dimen/margin_normal</item>
         <item name="android:focusable">true</item>
+        <item name="android:minHeight">@dimen/server_card_min_height</item>
         <item name="cardElevation">@dimen/server_card_elevation</item>
         <item name="strokeWidth">@dimen/server_card_stroke_width</item>
         <item name="contentPadding">@dimen/padding_normal</item>

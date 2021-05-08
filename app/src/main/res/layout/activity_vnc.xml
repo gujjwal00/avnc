@@ -114,7 +114,7 @@
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:contentDescription="@string/desc_disconnected_icon"
+                android:importantForAccessibility="no"
                 android:src="@drawable/ic_warning"
                 app:isVisible="@{viewModel.clientState == State.Disconnected}"
                 app:layout_constraintBottom_toTopOf="@id/client_state"
