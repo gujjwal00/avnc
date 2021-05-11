@@ -127,9 +127,9 @@ data class ServerProfile(
         const val CHANNEL_TCP = 1
         const val CHANNEL_SSH_TUNNEL = 24
 
-        //SSH auth types
-        const val SSH_AUTH_PASSWORD = 1
-        const val SSH_AUTH_KEY = 2
+        // SSH auth types
+        const val SSH_AUTH_KEY = 1
+        const val SSH_AUTH_PASSWORD = 2
 
         // Compatibility modes flags
         const val COMPAT_MODE_LEGACY_KEYSYM = 0x1
