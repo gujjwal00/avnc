@@ -115,8 +115,7 @@ class Dispatcher(private val viewModel: VncViewModel) {
             endDrag(p)
     }
 
-    fun onKeyDown(keySym: Int) = messenger.sendKey(keySym, true)
-    fun onKeyUp(keySym: Int) = messenger.sendKey(keySym, false)
+    fun onXKeySym(keySym: Int, isDown: Boolean) = messenger.sendKey(keySym, isDown)
 
     fun onMouseButtonDown(button: PointerButton, p: PointF) = doPointerButtonDown(button, p)
     fun onMouseButtonUp(button: PointerButton, p: PointF) = doPointerButtonUp(button, p)

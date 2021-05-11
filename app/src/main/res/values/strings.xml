@@ -27,6 +27,7 @@
     <string name="title_import">Import</string>
     <string name="title_view_only_mode">View-only Mode</string>
     <string name="title_hide_remote_cursor">Hide Remote Cursor</string>
+    <string name="title_key_compat_mode">Keyboard Compatibility Mode</string>
     <string name="title_use_ssh_tunnel">Use SSH Tunnel</string>
     <string name="title_unknown_ssh_host">Unknown SSH Host</string>
     <string name="title_ssh_host_key_changed">Host Key changed!</string>

@@ -92,10 +92,10 @@ data class ServerProfile(
 
         /**
          * Compatibility mode used for connection.
-         * Usually denotes a server type, e.g. Vino, TigerVNC
-         * 0 = Default behaviour
+         * Currently used to decide how key events are sent to server.
+         * Set to 0 to disable compatibility mode.
          */
-        var compatMode: Int = 0,
+        var compatMode: Int = COMPAT_MODE_LEGACY_KEYSYM,
 
         /**
          * Whether UltraVNC Repeater is used for connections.
@@ -130,5 +130,8 @@ data class ServerProfile(
         //SSH auth types
         const val SSH_AUTH_PASSWORD = 1
         const val SSH_AUTH_KEY = 2
+
+        // Compatibility modes flags
+        const val COMPAT_MODE_LEGACY_KEYSYM = 0x1
     }
 }

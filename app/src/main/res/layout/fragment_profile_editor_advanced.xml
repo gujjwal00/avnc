@@ -156,6 +156,15 @@
                     app:layout_constraintTop_toBottomOf="@id/view_only" />
 
 
+                <!--Compatibility mode-->
+                <CheckBox
+                    android:id="@+id/key_compat_mode"
+                    style="@style/FormField"
+                    android:text="@string/title_key_compat_mode"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/use_local_cursor" />
+
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                 <!-- Security                                                   -->
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -181,7 +190,7 @@
                     android:padding="@dimen/padding_small"
                     app:entryValues="@{@intArray/security_values}"
                     app:layout_constraintStart_toEndOf="@id/security_icon"
-                    app:layout_constraintTop_toBottomOf="@id/use_local_cursor"
+                    app:layout_constraintTop_toBottomOf="@id/key_compat_mode"
                     app:layout_constraintWidth_percent=".6"
                     app:value="@={profile.securityType}" />
 

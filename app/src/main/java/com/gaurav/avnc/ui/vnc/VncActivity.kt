@@ -57,11 +57,12 @@ fun startVncActivity(source: Activity, uri: VncUri) {
  */
 class VncActivity : AppCompatActivity() {
 
+    private val profile by lazy { loadProfile() }
     val viewModel by viewModels<VncViewModel>()
     lateinit var binding: ActivityVncBinding
-    val dispatcher by lazy { Dispatcher(viewModel) }
+    private val dispatcher by lazy { Dispatcher(viewModel) }
     val touchHandler by lazy { TouchHandler(viewModel, dispatcher) }
-    val keyHandler by lazy { KeyHandler(dispatcher) }
+    val keyHandler by lazy { KeyHandler(dispatcher, profile.compatMode) }
     private val virtualKeys by lazy { VirtualKeys(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,7 +88,7 @@ class VncActivity : AppCompatActivity() {
         viewModel.frameViewRef = WeakReference(binding.frameView)
         viewModel.credentialRequest.observe(this) { showCredentialDialog() }
         viewModel.sshHostKeyVerifyRequest.observe(this) { showHostKeyDialog() }
-        viewModel.initConnection(getProfile()) //Should be called after observers has been setup
+        viewModel.initConnection(profile) //Should be called after observers has been setup
     }
 
     override fun onResume() {
@@ -95,7 +96,7 @@ class VncActivity : AppCompatActivity() {
         viewModel.sendClipboardText()
     }
 
-    private fun getProfile(): ServerProfile {
+    private fun loadProfile(): ServerProfile {
         val profile = intent.getParcelableExtra<ServerProfile>(PROFILE_KEY)
         if (profile != null) {
             return profile

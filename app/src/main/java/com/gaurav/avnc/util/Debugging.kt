@@ -47,7 +47,7 @@ object Debugging {
     fun keyCodeMap(): String {
         val builder = StringBuilder()
 
-        builder.append("#   Keycode   Unicode   Printing?   Label\n")
+        builder.append("#   KeyCode   Unicode   Printing?   Label\n")
         for (i in 0..KeyEvent.getMaxKeyCode()) {
             val e = KeyEvent(KeyEvent.ACTION_DOWN, i)
 
