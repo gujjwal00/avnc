@@ -65,7 +65,7 @@ class AppPreferences(context: Context) {
         val discoveryRestart; get() = prefs.getBoolean("discovery_restart", false)
         val discoveryRestartDelay; get() = prefs.getInt("discovery_restart_delay", 5) * 60 * 1000L
 
-        val credAutocomplete; get() = prefs.getBoolean("cred_autocomplete", false)
+        val credAutocomplete; get() = prefs.getBoolean("cred_autocomplete", true)
         val clipboardSync; get() = prefs.getBoolean("clipboard_sync", true)
     }
 

@@ -21,7 +21,7 @@
         app:title="@string/pref_credential">
 
         <SwitchPreference
-            app:defaultValue="false"
+            app:defaultValue="true"
             app:key="cred_autocomplete"
             app:summary="@string/pref_cred_autocomplete_summary"
             app:title="@string/pref_cred_autocomplete" />

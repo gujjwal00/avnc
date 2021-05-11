@@ -22,6 +22,7 @@ import com.gaurav.avnc.databinding.FragmentCredentialBinding
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.UserCredential
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputLayout
 
 /**
  * Allows user to enter credentials for remote server.
@@ -72,10 +73,17 @@ class CredentialFragment : DialogFragment() {
 
     /**
      * Hooks completion adapters
+     *
+     * This feature might not be that useful to end-users but it saves a lot of time
+     * during development because I have to frequently install/uninstall app, test
+     * different servers running on different addresses/ports.
      */
     private fun setupAutoComplete() {
-        if (!viewModel.pref.server.credAutocomplete)
+        if (!viewModel.pref.server.credAutocomplete) {
+            binding.usernameLayout.endIconMode = TextInputLayout.END_ICON_NONE
+            binding.passwordLayout.endIconMode = TextInputLayout.END_ICON_NONE
             return
+        }
 
         viewModel.knownCredentials.observe(this) { list ->
             val usernames = list.map { it.username }.filter { it.isNotBlank() }.distinct()
@@ -101,7 +109,7 @@ class CredentialFragment : DialogFragment() {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = super.getView(position, convertView, parent) as TextView
 
-            val obfuscated = "******" + view.text.takeLast(2)
+            val obfuscated = "**********" + view.text.takeLast(2)
             view.text = obfuscated
 
             return view
