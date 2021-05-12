@@ -27,6 +27,7 @@ import com.gaurav.avnc.model.ServerProfile.Companion.CHANNEL_SSH_TUNNEL
 import com.gaurav.avnc.model.ServerProfile.Companion.CHANNEL_TCP
 import com.gaurav.avnc.model.ServerProfile.Companion.SSH_AUTH_KEY
 import com.gaurav.avnc.model.ServerProfile.Companion.SSH_AUTH_PASSWORD
+import com.gaurav.avnc.util.MsgDialog
 import com.gaurav.avnc.util.OpenableDocument
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -156,6 +157,9 @@ class ProfileEditorFragment : DialogFragment() {
             saveBtn.setOnClickListener { saveAdvanced() }
             toolbar.setNavigationOnClickListener { dismiss() }
             keyImportBtn.setOnClickListener { keyFilePicker.launch(arrayOf("*/*")) }
+            keyCompatModeHelpBtn.setOnClickListener {
+                MsgDialog.show(parentFragmentManager, R.string.title_key_compat_mode, R.string.msg_key_compat_mode_help)
+            }
 
             // Setup initial values of some CheckBox views.
             // We can't use Data Binding to initialize these because it breaks
