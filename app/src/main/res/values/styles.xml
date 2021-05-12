@@ -54,8 +54,12 @@
 
     <style name="FormField.EditText">
         <item name="android:paddingTop">15dp</item>
-        <item name="android:drawablePadding">20dp</item>
+        <item name="android:drawablePadding">15dp</item>
         <item name="android:drawableTint" tools:ignore="NewApi">@color/control_icon</item>
+    </style>
+
+    <style name="FormField.CheckBox">
+        <item name="android:paddingStart">11dp</item>
     </style>
 
     <style name="ImageButton">

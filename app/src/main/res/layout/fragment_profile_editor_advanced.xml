@@ -115,7 +115,7 @@
                 <!--Repeater-->
                 <CheckBox
                     android:id="@+id/use_repeater"
-                    style="@style/FormField"
+                    style="@style/FormField.CheckBox"
                     android:text="@string/title_use_repeater"
                     app:layout_constraintEnd_toStartOf="@id/id_on_repeater"
                     app:layout_constraintStart_toStartOf="parent"
@@ -137,7 +137,7 @@
                 <!--View-only mode-->
                 <CheckBox
                     android:id="@+id/view_only"
-                    style="@style/FormField"
+                    style="@style/FormField.CheckBox"
                     android:checked="@={profile.viewOnly}"
                     android:text="@string/title_view_only_mode"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -148,7 +148,7 @@
                 <!--Local cursor mode (Currently it is only used for 'hiding' remote cursor)-->
                 <CheckBox
                     android:id="@+id/use_local_cursor"
-                    style="@style/FormField"
+                    style="@style/FormField.CheckBox"
                     android:checked="@={profile.useLocalCursor}"
                     android:text="@string/title_hide_remote_cursor"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -159,7 +159,7 @@
                 <!--Compatibility mode-->
                 <CheckBox
                     android:id="@+id/key_compat_mode"
-                    style="@style/FormField"
+                    style="@style/FormField.CheckBox"
                     android:text="@string/title_key_compat_mode"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -197,7 +197,8 @@
                     style="@style/FormField"
                     android:entries="@array/security_entries"
                     android:minHeight="40dp"
-                    android:padding="@dimen/padding_small"
+                    android:paddingTop="@dimen/padding_small"
+                    android:paddingBottom="@dimen/padding_small"
                     app:entryValues="@{@intArray/security_values}"
                     app:layout_constraintStart_toEndOf="@id/security_icon"
                     app:layout_constraintTop_toBottomOf="@id/key_compat_mode"
@@ -238,7 +239,7 @@
 
                 <CheckBox
                     android:id="@+id/use_ssh_tunnel"
-                    style="@style/FormField"
+                    style="@style/FormField.CheckBox"
                     android:text="@string/title_use_ssh_tunnel"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
