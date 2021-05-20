@@ -21,7 +21,7 @@ class AppPreferences(context: Context) {
 
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
-    inner class Appearance {
+    inner class UI {
         val nightMode
             get() = when (prefs.getString("theme", "system")) {
                 "light" -> AppCompatDelegate.MODE_NIGHT_NO
@@ -74,7 +74,7 @@ class AppPreferences(context: Context) {
         val swipeCloseToolbar; get() = prefs.getBoolean("experimental_vnc_toolbar_swipe_close", true)
     }
 
-    val appearance = Appearance()
+    val ui = UI()
     val display = Display()
     val input = Input()
     val server = Server()

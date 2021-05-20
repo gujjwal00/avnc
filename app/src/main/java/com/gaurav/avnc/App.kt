@@ -17,7 +17,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val nightMode = AppPreferences(this).appearance.nightMode
+        val nightMode = AppPreferences(this).ui.nightMode
         AppCompatDelegate.setDefaultNightMode(nightMode)
     }
 }

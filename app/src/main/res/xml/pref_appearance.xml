@@ -7,7 +7,7 @@
   -->
 
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:title="@string/pref_appearance">
+    app:title="@string/pref_ui">
 
     <ListPreference
         app:defaultValue="system"

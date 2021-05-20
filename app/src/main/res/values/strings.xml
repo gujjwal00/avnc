@@ -83,7 +83,7 @@
     <string name="desc_help_btn">Show Help</string>
 
     <!-- Preference -->
-    <string name="pref_appearance">Appearance</string>
+    <string name="pref_ui">User Interface</string>
     <string name="pref_appearance_summary">Look and feel</string>
     <string name="pref_display">Local Display</string>
     <string name="pref_display_summary">Picture-in-Picture, Zoom</string>

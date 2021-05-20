@@ -33,7 +33,7 @@
             style="@style/TipView"
             android:text="@string/tip_discovery"
             android:visibility="gone"
-            app:isVisible="@{viewModel.pref.appearance.showTips &amp;&amp; !viewModel.discovery.isRunning &amp;&amp; viewModel.discovery.servers.empty}"
+            app:isVisible="@{viewModel.pref.ui.showTips &amp;&amp; !viewModel.discovery.isRunning &amp;&amp; viewModel.discovery.servers.empty}"
             tools:visibility="visible" />
 
 

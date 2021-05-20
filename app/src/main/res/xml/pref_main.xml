@@ -13,7 +13,7 @@
         app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Appearance"
         app:icon="@drawable/ic_palette"
         app:summary="@string/pref_appearance_summary"
-        app:title="@string/pref_appearance" />
+        app:title="@string/pref_ui" />
 
     <Preference
         app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Display"

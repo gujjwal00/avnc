@@ -45,7 +45,7 @@ class UrlBarActivity : AppCompatActivity() {
                 binding.url.setText("")
         }
 
-        binding.urlTip.isVisible = AppPreferences(this).appearance.showTips
+        binding.urlTip.isVisible = AppPreferences(this).ui.showTips
     }
 
     private fun go(url: String): Boolean {

@@ -33,7 +33,7 @@
             style="@style/TipView"
             android:text="@string/tip_empty_server_list"
             android:visibility="gone"
-            app:isVisible="@{viewModel.pref.appearance.showTips &amp;&amp; viewModel.serverProfiles.empty}"
+            app:isVisible="@{viewModel.pref.ui.showTips &amp;&amp; viewModel.serverProfiles.empty}"
             tools:visibility="visible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -85,7 +85,7 @@ class HomeActivity : AppCompatActivity() {
      * Starts profile editor fragment.
      */
     private fun showProfileEditor() {
-        if (viewModel.pref.appearance.preferAdvancedEditor)
+        if (viewModel.pref.ui.preferAdvancedEditor)
             ProfileEditorFragment().showAdvanced(supportFragmentManager)
         else
             ProfileEditorFragment().show(supportFragmentManager)
