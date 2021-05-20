@@ -73,7 +73,7 @@ object Experimental {
          * Animator for 'alpha' property of indicator views.
          */
         private val animator = ValueAnimator.ofFloat(0F, 1F).apply {
-            duration = 1200
+            duration = 1000
             repeatCount = ValueAnimator.INFINITE
             repeatMode = ValueAnimator.REVERSE
             addUpdateListener { onAnimationUpdate() }
@@ -134,9 +134,10 @@ object Experimental {
         }
 
         private fun updateAnimator() {
-            if (discoveredServers?.isNotEmpty() == true && !animator.isStarted)
-                animator.start()
-            else
+            if (discoveredServers?.isNotEmpty() == true) {
+                if (!animator.isStarted)
+                    animator.start()
+            } else
                 animator.end()
         }
 
