@@ -99,7 +99,9 @@ class VncActivity : AppCompatActivity() {
     private fun loadProfile(): ServerProfile {
         val profile = intent.getParcelableExtra<ServerProfile>(PROFILE_KEY)
         if (profile != null) {
-            return profile
+            // Make a copy to avoid modifying intent's instance,
+            // because we may need the original if we have to retry connection.
+            return profile.copy()
         }
 
         Log.e(javaClass.simpleName, "No connection information was passed through Intent.")

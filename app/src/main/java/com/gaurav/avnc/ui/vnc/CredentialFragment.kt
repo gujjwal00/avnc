@@ -21,6 +21,7 @@ import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.FragmentCredentialBinding
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.UserCredential
+import com.gaurav.avnc.vnc.VncClient
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 
@@ -52,23 +53,42 @@ class CredentialFragment : DialogFragment() {
                 .setTitle(R.string.title_credentials_required)
                 .setView(binding.root)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
-                    val cred = UserCredential(binding.username.text.toString(), binding.password.text.toString())
+                    val cred = UserCredential(binding.username.text.toString(),
+                                              binding.password.text.toString())
+
                     viewModel.credentialRequest.offerResponse(cred)
 
-                    if (binding.remember.isChecked) {
-                        //Put credentials in current profile, which will be saved by the
-                        //Viewmodel after connection is successful.
-                        //We don't want to save them here because they might be wrong/mistyped.
-
-                        viewModel.profile.username = cred.username
-                        viewModel.profile.password = cred.password
-                    }
+                    if (binding.remember.isChecked)
+                        scheduleCredentialSave(viewModel, cred)
                 }
                 .setNegativeButton(android.R.string.cancel) { _, _ ->
                     viewModel.credentialRequest.cancelRequest()
                     requireActivity().finish()
                 }
                 .create()
+    }
+
+    companion object {
+
+        /**
+         * If user has asked to remember credentials, we need to save them
+         * to database. But we don't want to save them immediately because
+         * user might have mistyped them. So, we wait until successful
+         * connection before saving them.
+         *
+         * This method is 'static' to avoid any accidental leak of fragment instance.
+         */
+        private fun scheduleCredentialSave(viewModel: VncViewModel, cred: UserCredential) {
+            with(viewModel) {
+                clientState.observeForever {
+                    if (it == VncClient.State.Connected) {
+                        profile.username = cred.username
+                        profile.password = cred.password
+                        saveProfile()
+                    }
+                }
+            }
+        }
     }
 
     /**

@@ -214,6 +214,14 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         sshTunnel.close()
     }
 
+    /**
+     * Can be used to persist any changes made to [profile]
+     */
+    fun saveProfile() {
+        if (profile.ID != 0L)
+            asyncIO { serverProfileDao.update(profile) }
+    }
+
     /**************************************************************************
      * Frame management
      **************************************************************************/
@@ -303,14 +311,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     override fun onClientStateChanged(newState: VncClient.State) {
         clientState.postValue(newState)
 
-        if (newState == VncClient.State.Connected) {
+        if (newState == VncClient.State.Connected)
             sendClipboardText() //Initial sync
-
-            //Save any changes to profile. Right now this is used to "remember" credentials.
-            if (profile.ID != 0L) asyncIO {
-                serverProfileDao.update(profile)
-            }
-        }
     }
 
     override fun onFramebufferSizeChanged(width: Int, height: Int) {
