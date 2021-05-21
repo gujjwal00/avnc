@@ -247,7 +247,8 @@
 
                 <!--SSH Options-->
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    style="@style/FormField"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:animateLayoutChanges="true"
                     app:isVisible="@{useSshTunnel.checked}"
                     app:layout_constraintEnd_toEndOf="parent"
