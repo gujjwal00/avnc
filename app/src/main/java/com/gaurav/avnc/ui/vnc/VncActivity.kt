@@ -26,6 +26,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.model.ServerProfile
@@ -33,6 +34,7 @@ import com.gaurav.avnc.util.Experimental
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.VncClient
 import com.gaurav.avnc.vnc.VncUri
+import kotlinx.coroutines.delay
 import java.lang.ref.WeakReference
 
 /********** [VncActivity] startup helpers *********************************/
@@ -88,6 +90,7 @@ class VncActivity : AppCompatActivity() {
         viewModel.frameViewRef = WeakReference(binding.frameView)
         viewModel.credentialRequest.observe(this) { showCredentialDialog() }
         viewModel.sshHostKeyVerifyRequest.observe(this) { showHostKeyDialog() }
+        viewModel.clientState.observe(this) { onClientStateChanged(it) }
         viewModel.initConnection(profile) //Should be called after observers has been setup
     }
 
@@ -135,6 +138,23 @@ class VncActivity : AppCompatActivity() {
     }
 
     private fun closeDrawers() = binding.drawerLayout.closeDrawers()
+
+    private fun onClientStateChanged(newState: VncClient.State) {
+        if (newState == VncClient.State.Connected) {
+
+            if (!viewModel.pref.runInfo.hasConnectedSuccessfully) {
+                viewModel.pref.runInfo.hasConnectedSuccessfully = true
+
+                // Highlight drawer for first time users
+                binding.drawerLayout.open()
+                lifecycleScope.launchWhenCreated {
+                    delay(1500)
+                    binding.drawerLayout.close()
+                }
+            }
+
+        }
+    }
 
     /************************************************************************************
      * Layout handling.

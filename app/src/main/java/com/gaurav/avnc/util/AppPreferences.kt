@@ -20,6 +20,7 @@ import androidx.preference.PreferenceManager
 class AppPreferences(context: Context) {
 
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+    private val editor = prefs.edit()
 
     inner class UI {
         val nightMode
@@ -74,9 +75,20 @@ class AppPreferences(context: Context) {
         val swipeCloseToolbar; get() = prefs.getBoolean("experimental_vnc_toolbar_swipe_close", true)
     }
 
+    /**
+     * These are used for one-time features/tips.
+     * These are not exposed to user.
+     */
+    inner class RunInfo {
+        var hasConnectedSuccessfully: Boolean
+            get() = prefs.getBoolean("run_info_has_connected_successfully", false)
+            set(value) = editor.putBoolean("run_info_has_connected_successfully", value).apply()
+    }
+
     val ui = UI()
     val display = Display()
     val input = Input()
     val server = Server()
     val experimental = Experimental()
+    val runInfo = RunInfo()
 }
