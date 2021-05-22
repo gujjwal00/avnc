@@ -44,7 +44,7 @@ class TabController(val activity: HomeActivity, private val pager: ViewPager2, t
     init {
         pager.adapter = PagerAdapter()
 
-        val mediator = TabLayoutMediator(tabLayout, pager, true, true) { tab, position ->
+        val mediator = TabLayoutMediator(tabLayout, pager) { tab, position ->
             tab.setIcon(pageList[position].iconId)
             tab.setContentDescription(pageList[position].descriptionId)
         }
