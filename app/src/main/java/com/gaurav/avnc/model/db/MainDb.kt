@@ -14,7 +14,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.gaurav.avnc.model.ServerProfile
 
-@Database(entities = [ServerProfile::class], version = 1, exportSchema = false)
+@Database(entities = [ServerProfile::class], version = 1, exportSchema = true)
 abstract class MainDb : RoomDatabase() {
     abstract val serverProfileDao: ServerProfileDao
 
