@@ -8,7 +8,10 @@
 
 package com.gaurav.avnc.util
 
+import android.net.Uri
+import android.os.Build
 import android.view.KeyEvent
+import com.gaurav.avnc.BuildConfig
 
 /**
  * Utilities to aid in debugging
@@ -58,5 +61,24 @@ object Debugging {
         }
 
         return builder.toString()
+    }
+
+    /**
+     * Generates a query parameter string which can be used with GitHub issue url.
+     * Currently, only `body` parameter is generated
+     */
+    fun bugReportUrlParams(): String {
+        val body = """
+            |**Description**
+            |
+            |
+            |
+            |
+            |**Additional Info**
+            |- App Version: ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})
+            |- Android Version: ${Build.VERSION.RELEASE} (${Build.VERSION.SDK_INT})
+        """.trimMargin()
+
+        return "?body=${Uri.encode(body)}"
     }
 }

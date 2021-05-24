@@ -10,6 +10,7 @@ package com.gaurav.avnc.ui.home
 
 import android.app.ActivityOptions
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Window
 import androidx.activity.viewModels
@@ -18,8 +19,10 @@ import androidx.databinding.DataBindingUtil
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityHomeBinding
 import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.ui.about.AboutActivity
 import com.gaurav.avnc.ui.prefs.PrefsActivity
 import com.gaurav.avnc.ui.vnc.startVncActivity
+import com.gaurav.avnc.util.Debugging
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
 
@@ -61,8 +64,11 @@ class HomeActivity : AppCompatActivity() {
     private fun onMenuItemSelected(itemId: Int): Boolean {
         when (itemId) {
             R.id.settings -> showSettings()
+            R.id.about -> showAbout()
+            R.id.report_bug -> launchBugReport()
             else -> return false
         }
+        binding.drawerLayout.close()
         return true
     }
 
@@ -71,6 +77,15 @@ class HomeActivity : AppCompatActivity() {
      */
     private fun showSettings() {
         startActivity(Intent(this, PrefsActivity::class.java))
+    }
+
+    private fun showAbout() {
+        startActivity(Intent(this, AboutActivity::class.java))
+    }
+
+    private fun launchBugReport() {
+        val url = AboutActivity.BUG_REPORT_URL + Debugging.bugReportUrlParams()
+        runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))) }
     }
 
     /**

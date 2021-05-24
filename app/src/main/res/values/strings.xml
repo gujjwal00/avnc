@@ -37,6 +37,11 @@
     <string name="title_use_repeater">Use Repeater</string>
     <string name="title_private_key">Private Key</string>
     <string name="title_change">Change</string>
+    <string name="title_about">About</string>
+    <string name="title_license">Licence</string>
+    <string name="title_open_source_libraries">Open Source Libraries</string>
+    <string name="title_report_bug">Report a Bug</string>
+    <string name="title_github_repo">Github Repo</string>
 
     <string name="hint_urlbar">Connect to a Server</string>
     <string name="hint_server_name">Name (e.g. Work PC)</string>
@@ -48,6 +53,7 @@
     <string name="hint_password">Password</string>
     <string name="hint_key_password">Key Password</string>
 
+    <string name="msg_about_app">aVNC is an open-source VNC client for Android. It allows you to remotely control any device running a VNC server.</string>
     <string name="msg_server_profile_inserted">Server added.</string>
     <string name="msg_server_profile_deleted">Server deleted.</string>
     <string name="msg_pip_not_supported">Picture-in-Picture is not supported on this device</string>

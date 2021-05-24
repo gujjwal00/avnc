@@ -11,4 +11,15 @@
         android:id="@+id/settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/title_settings" />
+
+    <item
+        android:id="@+id/about"
+        android:icon="@drawable/ic_info"
+        android:title="@string/title_about" />
+
+    <item
+        android:id="@+id/report_bug"
+        android:icon="@drawable/ic_bug"
+        android:title="@string/title_report_bug" />
+
 </menu>

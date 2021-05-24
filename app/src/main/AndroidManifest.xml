@@ -66,6 +66,8 @@
         <activity android:name=".ui.vnc.UriReceiverActivity" />
 
         <activity android:name=".ui.prefs.PrefsActivity" />
+
+        <activity android:name=".ui.about.AboutActivity" />
     </application>
 
 </manifest>
