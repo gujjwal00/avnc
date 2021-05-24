@@ -47,6 +47,8 @@ import kotlinx.coroutines.launch
  * ========
  * We show a fullscreen fragment attached to content root.
  * All available options are shown in this mode. Use [showAdvanced] to open this.
+ *
+ * TODO: Cleanup this complex mess
  */
 class ProfileEditorFragment : DialogFragment() {
 
@@ -171,6 +173,17 @@ class ProfileEditorFragment : DialogFragment() {
             sshAuthTypeKey.isChecked = (p.sshAuthType == SSH_AUTH_KEY)
 
             isPrivateKeyEncrypted = isKeyEncrypted(p.sshPrivateKey)
+
+            // TODO Move it to proper place
+            val securityTypes = mapOf(
+                    "Default Security" to 0,
+                    "None" to 1,
+                    "VncAuth" to 2,
+                    "AnonTLS" to 18,
+                    "VeNCrypt" to 19
+            )
+
+            security.setEntries(securityTypes, p.securityType) { p.securityType = it }
         }
 
         return binding.root

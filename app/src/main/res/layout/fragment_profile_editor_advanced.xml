@@ -192,18 +192,16 @@
                     app:layout_constraintTop_toTopOf="@id/security"
                     app:tint="?colorControlNormal" />
 
-                <Spinner
+                <com.gaurav.avnc.util.SpinnerEx
                     android:id="@+id/security"
-                    style="@style/FormField"
-                    android:entries="@array/security_entries"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:minHeight="40dp"
                     android:paddingTop="@dimen/padding_small"
                     android:paddingBottom="@dimen/padding_small"
-                    app:entryValues="@{@intArray/security_values}"
                     app:layout_constraintStart_toEndOf="@id/security_icon"
                     app:layout_constraintTop_toBottomOf="@id/key_compat_mode"
-                    app:layout_constraintWidth_percent=".6"
-                    app:value="@={profile.securityType}" />
+                    app:layout_constraintWidth_percent=".6" />
 
                 <!--Username-->
                 <EditText
