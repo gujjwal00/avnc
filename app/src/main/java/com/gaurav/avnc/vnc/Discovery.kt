@@ -169,12 +169,12 @@ class Discovery(private val context: Context) {
      */
     private inner class ResolveListener : NsdManager.ResolveListener {
         override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
-            Log.d(javaClass.simpleName, "Resolved service: ${serviceInfo.serviceName}")
+            Log.d(javaClass.simpleName, "Resolved service: ${serviceInfo.serviceName.take(3)}*******")
             addProfile(serviceInfo.serviceName, serviceInfo.host.hostAddress, serviceInfo.port)
         }
 
         override fun onResolveFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
-            Log.w(javaClass.simpleName, "Service resolution failed for '${serviceInfo}'")
+            Log.w(javaClass.simpleName, "Service resolution failed for '${serviceInfo}' [E: $errorCode]")
         }
     }
 }
