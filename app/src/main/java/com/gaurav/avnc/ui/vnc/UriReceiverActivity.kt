@@ -7,10 +7,10 @@
  */
 package com.gaurav.avnc.ui.vnc
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.gaurav.avnc.R
 import com.gaurav.avnc.vnc.VncUri
 
@@ -21,7 +21,7 @@ import com.gaurav.avnc.vnc.VncUri
  * - Add a prompt before connecting.
  * - Add ability to save connection info.
  */
-class UriReceiverActivity : AppCompatActivity() {
+class UriReceiverActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

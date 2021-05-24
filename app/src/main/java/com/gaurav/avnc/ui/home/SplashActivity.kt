@@ -8,9 +8,9 @@
 
 package com.gaurav.avnc.ui.home
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 
 /**
  * For now, only purpose of this activity is to have a dark theme.
@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
  * In future this can show a real splash screen or maybe show a welcome screen
  * on first app start.
  */
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
