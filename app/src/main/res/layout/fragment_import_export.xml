@@ -53,7 +53,6 @@
             android:layout_height="2dp"
             android:layout_marginTop="30dp"
             android:background="@color/colorBorder"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             app:layout_constraintEnd_toEndOf="@id/import_btn"
             app:layout_constraintStart_toStartOf="@id/export_btn"
             app:layout_constraintTop_toBottomOf="@id/export_btn" />
