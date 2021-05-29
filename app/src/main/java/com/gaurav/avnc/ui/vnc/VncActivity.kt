@@ -163,6 +163,7 @@ class VncActivity : AppCompatActivity() {
     private fun setupLayout() {
 
         if (viewModel.pref.display.fullscreen) {
+            @Suppress("DEPRECATION")
             window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         }
 
