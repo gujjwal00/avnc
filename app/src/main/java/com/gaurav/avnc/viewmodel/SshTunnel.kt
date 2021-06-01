@@ -100,7 +100,7 @@ class SshTunnel(private val viewModel: VncViewModel) {
             throw IOException("SSH authentication failed")
 
 
-        // Currently SSHLib does not expose internal ServerSocket used for local port forwarder.
+        // SSHLib does not expose internal ServerSocket used for local port forwarder.
         // Hence, if we pass 0 as local port to let the system pick a port for us, we have no way
         // to know the port system picked.
         // So we create a temporary ServerSocket, close it immediately and try to use its port.

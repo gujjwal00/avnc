@@ -94,7 +94,7 @@ class CredentialFragment : DialogFragment() {
     /**
      * Hooks completion adapters
      *
-     * This feature might not be that useful to end-users but it saves a lot of time
+     * This feature might not be that useful to end-users, but it saves a lot of time
      * during development because I have to frequently install/uninstall app, test
      * different servers running on different addresses/ports.
      */
@@ -119,7 +119,7 @@ class CredentialFragment : DialogFragment() {
 
     /**
      * Specialized adapter for password completion. We don't want to show plaintext password
-     * in completion list so we partially obfuscate it.
+     * in completion list, so we partially obfuscate it.
      *
      * @param layout Must point to a resource with [TextView] as root
      */

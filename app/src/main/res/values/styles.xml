@@ -9,13 +9,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!--
-      This is used by SplashActivity and is intentionally dark theme.
+      This is used by SplashActivity and is intentionally a dark theme.
       This way we get a dark window on app start irrespective of the theme chosen by user.
     -->
     <style name="SplashTheme" parent="Theme.MaterialComponents" />
 
     <!--
-      This base theme is used for configuration-specific styling (ex: night mode, API 23)
+      This base theme is used for configuration-specific styling (e.g. night mode, API 23)
     -->
     <style name="AppThemeBase" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
 

@@ -20,10 +20,10 @@ import com.gaurav.avnc.vnc.XKeySymUnicode
  * Key handling in RFB protocol works on 'key symbols' instead of key-codes/scan-codes
  * which makes it dependent on keyboard layout. VNC servers implement various heuristics
  * to compensate for this & maximize portability. Our implementation is derived after
- * testing with some popular servers. It might not handle all of the edge cases.
+ * testing with some popular servers. It might not handle all the edge cases.
  *
  *
- * Basically, job of this class is is to convert a received [KeyEvent] into a 'KeySym'.
+ * Basically, job of this class is to convert a received [KeyEvent] into a 'KeySym'.
  * That KeySym will be sent to the server.
  *
  *-      [KeyEvent]     +----------------+    KeySym     +----------------+
@@ -180,7 +180,7 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Int
 
 
         // If we are generating legacy KeySym and the character is uppercase,
-        // we need fake press the Shift key. Otherwise most servers can't
+        // we need to fake press the Shift key. Otherwise, most servers can't
         // handle them. This is just a compat shim and ideally server should
         // support Unicode KeySym.
         val shouldFakeShift = uKeySym in 0x100..0xfffe && uChar.toChar().isUpperCase()
@@ -207,7 +207,7 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Int
     }
 
     /************************************************************************************
-     * Covert String to Array of Unicode code-point
+     * Convert String to Array of Unicode code-point
      ***********************************************************************************/
 
     private val cpCache = intArrayOf(0)
@@ -220,7 +220,7 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Int
         if (Build.VERSION.SDK_INT >= 24)
             return string.codePoints().toArray()
 
-        //Otherwise do simple conversion (will be incorrect non-MBP code points)
+        //Otherwise, do simple conversion (will be incorrect non-MBP code points)
         return string.map { it.toInt() }.toIntArray()
     }
 }

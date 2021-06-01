@@ -31,7 +31,7 @@ import kotlin.math.min
  *
  *     Window denotes the 'total' area available to our activity while viewport
  *     denotes the 'visible to user' area. Normally they would be same but
- *     viewport can be smaller than window - for ex: If soft keyboard is visible.
+ *     viewport can be smaller than window (e.g. if soft keyboard is visible).
  *
  *     +---------------------------+
  *     |                           |
@@ -52,8 +52,8 @@ import kotlin.math.min
  *
  * Both frame & viewport are in same coordinate space. Viewport is assumed to be fixed
  * in its place with [0,0] represented by top-left corner. Only frame is scaled/moved.
- * To make sure that frame does not move off screen, after each state change, values
- * are coerced within range by [coerceValues].
+ * To make sure frame does not move off-screen, after each state change, values are
+ * coerced within range by [coerceValues].
  *
  * Rendering is done by [com.gaurav.avnc.ui.vnc.gl.Renderer] based on these values.
  *
@@ -200,7 +200,7 @@ class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScal
     }
 
     /**
-     * Makes sure that state values are within constraints.
+     * Makes sure state values are within constraints.
      */
     private fun coerceValues() {
         zoomScale = zoomScale.coerceIn(minZoomScale, maxZoomScale)

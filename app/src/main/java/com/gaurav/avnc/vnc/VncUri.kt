@@ -33,7 +33,7 @@ class VncUri(private val uri: Uri) {
     )
 
     /**
-     * Older versions of Android [Uri] does not support IPv6 so we need to use Java [URI] for host & port.
+     * Older versions of Android [Uri] does not support IPv6, so we need to use Java [URI] for host & port.
      *
      * It also serves as a validation step because [URI] verifies that address is well-formed.
      */

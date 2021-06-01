@@ -25,7 +25,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * Fragment for detecting and displaying VNC servers advertising themselves on current network.
+ * Fragment for displaying VNC servers found by Discovery.
  */
 class DiscoveryFragment : Fragment() {
 

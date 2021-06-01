@@ -83,8 +83,8 @@ internal class Frame {
     }
 
     /**
-     * Set size of this underlying framebuffer.
-     * It is used to calculates frame vertices.
+     * Should be called whenever the size of framebuffer is changed.
+     * This size will be used to calculate frame vertices.
      */
     fun updateFbSize(width: Float, height: Float) {
         if (width == fbWidth && height == fbHeight)

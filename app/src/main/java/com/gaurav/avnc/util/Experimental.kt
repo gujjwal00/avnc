@@ -28,7 +28,7 @@ import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.home.adapter.ServersAdapter
 
 /**
- * All of the experimental stuff is dumped here.
+ * All the experimental stuff is dumped here.
  */
 object Experimental {
 
@@ -38,16 +38,16 @@ object Experimental {
      * immediately know about reachable servers.
      *
      * Why Experimental:
-     * - For this to be most useful the user needs to run Discovery frequently. Otherwise
-     *   indicators will become stale.
-     * - Because of Discovery and and animation we will consume slightly more battery.
+     * - For this to be most useful the user needs to run Discovery frequently.
+     *   Otherwise, indicators will become stale.
+     * - Because of Discovery & animation we will consume slightly more battery.
      *
      * One other approach for this implementation is to have a field in [ServerProfile],
      * update that field in [com.gaurav.avnc.viewmodel.HomeViewModel] and let Data Binding
      * automatically render the indicator. But that approach has some disadvantages:
      *
      * - It complicates code in other classes too much.
-     * - Because each Indicator view has independent animator, they pulse out of sync.
+     * - Because each Indicator view has an independent animator, they pulse out of sync.
      * - I simply don't like that approach.
      */
     class Indicator {
@@ -160,7 +160,7 @@ object Experimental {
      * 2. Tap inside Scrim (dimmed region outside of drawer)
      *
      * Notably, swiping inside scrim are does NOT hide the drawer. This can be jarring
-     * to users if drawer is relatively small and most of the layout area acts as scrim.
+     * to users if drawer is relatively small & most of the layout area acts as scrim.
      *
      * The toolbar drawer used in [com.gaurav.avnc.ui.vnc.VncActivity] is affected by
      * this issue.

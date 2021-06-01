@@ -35,8 +35,8 @@ import java.lang.ref.WeakReference
  * activity starts the connection by calling [initConnection] which starts a coroutine to
  * handle connection setup.
  *
- * After successful connection, we continue to operate normally until remote
- * server closes the connection OR an error occurs. Once disconnected, we
+ * After successful connection, we continue to operate normally until the remote
+ * server closes the connection, or an error occurs. Once disconnected, we
  * wait for the activity to finish and then cleanup any acquired resources.
  *
  * Currently, lifecycle of [client] is tied to this view model. So one [VncViewModel]
@@ -102,7 +102,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      * Holds a weak reference to [FrameView] instance.
      *
      * This is used to tell [FrameView] to re-render its content when VncClient's
-     * framebuffer is updated. Instead of of using LiveData/LiveEvent, we keep a
+     * framebuffer is updated. Instead of using LiveData/LiveEvent, we keep a
      * weak reference because:
      *
      *      1. It avoids a context-switch to UI thread. Rendering request to

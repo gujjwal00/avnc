@@ -18,7 +18,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 /**
- * Controls tabs and associated pager in home activity.
+ * Controls tab layout and associated pager in home activity.
  */
 class TabController(val activity: HomeActivity, private val pager: ViewPager2, tabLayout: TabLayout) {
 
@@ -58,7 +58,7 @@ class TabController(val activity: HomeActivity, private val pager: ViewPager2, t
     }
 
     fun updateDiscoveryBadge(count: Int) {
-        //Currently we are not showing the actual count in the badge.
+        //Currently, we are not showing the actual count in the badge.
         //But maybe we could implement a preference???
         discoveryTab.getOrCreateBadge().isVisible = (count != 0)
     }

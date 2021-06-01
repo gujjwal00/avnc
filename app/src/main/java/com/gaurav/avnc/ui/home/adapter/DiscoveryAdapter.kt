@@ -41,7 +41,7 @@ class DiscoveryAdapter(val viewModel: HomeViewModel) : ListAdapter<ServerProfile
     }
 
     /**
-     * This is slightly different then [ServersAdapter.Differ] because all profiles generated
+     * This is slightly different from [ServersAdapter.Differ] because all profiles generated
      * by service discovery have same ID (0) & all discovered servers are unique. So we
      * compare the whole profile instead of a particular field.
      */

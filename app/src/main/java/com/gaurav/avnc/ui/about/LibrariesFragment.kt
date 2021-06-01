@@ -26,7 +26,7 @@ internal class LibrariesFragment : Fragment() {
 
         val binding = FragmentLibrariesBinding.inflate(inflater, container, false)
 
-        // ListView would be better for this but I am having layout issues with it.
+        // ListView would be better for this, but I am having layout issues with it.
         var indexInParent = binding.root.indexOfChild(binding.librariesDivider) + 1
         for (library in libraries) {
             val textView = inflater.inflate(android.R.layout.simple_list_item_1, binding.root, false) as TextView

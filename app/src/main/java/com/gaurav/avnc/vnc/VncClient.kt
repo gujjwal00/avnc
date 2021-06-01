@@ -224,7 +224,7 @@ class VncClient(private val observer: Observer) {
 
     /**
      * Releases all resource (native & managed) currently held.
-     * After cleanup, this client MUST NOT be used any more.
+     * After cleanup, this client MUST NOT be used anymore.
      */
     fun cleanup() {
         if (state == State.Destroyed)

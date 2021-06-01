@@ -16,7 +16,7 @@ import java.util.concurrent.LinkedBlockingQueue
 /**
  * Extension of [LiveEvent] to facilitate awaiting some response from observers.
  *
- * This simplifies the cases where we need some value from User (UI thread)
+ * This simplifies the cases where a background thread needs some value from the user (i.e. UI thread),
  * and we want the background thread to block until that value is available.
  *
  * If request is canceled then [requestResponse] will return [cancellationValue].

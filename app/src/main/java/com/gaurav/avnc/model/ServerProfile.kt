@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 /**
  * This class holds connection configuration of a remote VNC server.
  *
- * Some of the fields remain unused until that feature is implemented.
+ * Some fields remain unused until that feature is implemented.
  */
 @Parcelize
 @Serializable
@@ -28,7 +28,7 @@ data class ServerProfile(
         var ID: Long = 0,
 
         /**
-         * Descriptive name of the server (ex: 'Kitchen PC').
+         * Descriptive name of the server (e.g. 'Kitchen PC').
          */
         var name: String = "",
 
@@ -55,14 +55,14 @@ data class ServerProfile(
         var password: String = "",
 
         /**
-         * Security type to use when connecting to this server. e.g. VncAuth.
+         * Security type to use when connecting to this server (e.g. VncAuth).
          * 0 enables all supported types.
          */
         var securityType: Int = 0,
 
         /**
          * Transport channel to be used for communicating with the server.
-         * Ex: TCP, SSH Tunnel
+         * e.g. TCP, SSH Tunnel
          */
         var channelType: Int = CHANNEL_TCP,
 
@@ -92,7 +92,7 @@ data class ServerProfile(
 
         /**
          * Compatibility mode used for connection.
-         * Currently used to decide how key events are sent to server.
+         * Currently, used to decide how key events are sent to server.
          * Set to 0 to disable compatibility mode.
          */
         var compatMode: Int = COMPAT_MODE_LEGACY_KEYSYM,

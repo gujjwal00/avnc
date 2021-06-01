@@ -171,7 +171,7 @@ class VncActivity : AppCompatActivity() {
             viewModel.frameState.setWindowSize(v.width.toFloat(), v.height.toFloat())
         }
 
-        //This is used to handle cases where a system view (ex: soft keyboard) is covering
+        //This is used to handle cases where a system view (e.g. soft keyboard) is covering
         //some part of our window. We retrieve the visible area and add padding to our
         //root view so that its content is resized to that area.
         //This will trigger the resize of frame view allowing it to handle the available space.

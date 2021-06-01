@@ -38,7 +38,7 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
 
     /**
      * Fired when a new profile is saved to database.
-     * Can be used to highlight the profile in UI.
+     * Can be used to highlight the new profile in UI.
      */
     val profileInsertedEvent = LiveEvent<ServerProfile>()
 
@@ -72,7 +72,7 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
      * with appropriate profile, causing the profile editor to be shown.
      *
      * NOTE: We need to make a copy of given profile because the instance
-     * given to [editProfileEvent] can be modified by editor.
+     * given to [editProfileEvent] can be modified by the editor.
      **************************************************************************/
 
     fun onNewProfile() = editProfileEvent.fire(ServerProfile())
@@ -88,7 +88,7 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     /**************************************************************************
      * Profile persistence
      *
-     * These operations are executed on background thread.
+     * These operations are asynchronous.
      **************************************************************************/
 
     fun insertProfile(profile: ServerProfile) = asyncIO({ serverProfileDao.insert(profile) }, {

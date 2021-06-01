@@ -161,7 +161,7 @@ static const char *errnoToStr(int e) {
 
         default:
             // In this case we don't want to display errno description to user
-            // because it is more likely to be misleading (ex EINTR, EAGAIN).
+            // because it is more likely to be misleading (e.g. EINTR, EAGAIN).
             // BUT add it to logs in case LibVNC didn't.
             Logger::e("errnoToStr: (%d %s)", errno, strerror(errno));
             return "";

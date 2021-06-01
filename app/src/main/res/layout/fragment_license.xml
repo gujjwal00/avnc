@@ -53,7 +53,7 @@
             android:layout_marginBottom="@dimen/margin_large"
             android:background="@color/colorBorder" />
 
-        <!--Vertical scrolling is provided by the the ScrollView in parent activity-->
+        <!--Vertical scrolling is provided by the ScrollView in parent activity-->
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

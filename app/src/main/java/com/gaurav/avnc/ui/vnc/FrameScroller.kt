@@ -13,7 +13,7 @@ import androidx.dynamicanimation.animation.FloatValueHolder
 import com.gaurav.avnc.viewmodel.VncViewModel
 
 /**
- * Implements fling animation for frame.
+ * Implements fling animation for the frame.
  */
 class FrameScroller(val viewModel: VncViewModel) {
 

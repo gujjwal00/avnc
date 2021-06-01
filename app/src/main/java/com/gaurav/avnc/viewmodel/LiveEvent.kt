@@ -28,7 +28,7 @@ import androidx.lifecycle.Observer
  * Activity restarts where old observers are detached and new ones are attached.
  *
  * But there are some 'events' which should be handled only once (e.g starting
- * a fragment). This class is used used for those 'events'.
+ * a fragment). This class is used for those 'events'.
  *
  * Currently, [observeForever] & [removeObserver] are not implemented because we
  * are not using them.

@@ -24,7 +24,7 @@
 
     1. FrameView :- Renders remote content. This is "behind" all other Views.
 
-    2. Drawers   :- These represents the toolbars and are rendered on top of FrameView.
+    2. Drawers   :- These represent the toolbars and are rendered on top of FrameView.
                     Currently, we only have one drawer.
 
     3. Status    :- Topmost View. Shows progress indicator, status msg etc. It is initially

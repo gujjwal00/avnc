@@ -7,7 +7,7 @@
   -->
 
 <!--
-    This color can be used for icon of controls (e.g. EditText).
+    This color can be used for the icon of controls (e.g. EditText).
     It is only valid for API >= 23
 -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">

@@ -32,7 +32,7 @@ class SpinnerEx(context: Context, attrs: AttributeSet? = null) : AppCompatSpinne
      * Popup window of the Spinner does not support elevation overlay
      * which makes it hard to differentiate between popup & rest of the controls in dark theme.
      *
-     * So we manually applies the overlay to popup background.
+     * So we manually apply the overlay to popup background.
      */
     private fun setupElevationOverlay() {
         // Elevation is hardcoded to 16dp because we don't have access to popup
@@ -55,7 +55,7 @@ class SpinnerEx(context: Context, attrs: AttributeSet? = null) : AppCompatSpinne
      * Items in the Spinner are populated using [keys] and whenever an item is selected,
      * [selectionListener] will be called with corresponding value from [values].
      *
-     * Using this method will replace old Adapter & OnItemSelectionListener.
+     * Using this method will replace the old Adapter & OnItemSelectionListener.
      *
      * [keys] & [values] must have the same size.
      */

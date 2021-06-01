@@ -29,7 +29,7 @@ object XKeySymAndroid {
     /**
      * Lookup table for X KeySym.
      *
-     * Each index represent a keycode from [KeyEvent] and
+     * Each index represents a keycode from [KeyEvent] and
      * value at that index represents the corresponding X KeySym.
      */
     private val AndroidKeyCodeToXKeySym = intArrayOf(

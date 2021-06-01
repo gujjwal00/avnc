@@ -40,7 +40,7 @@ open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
 
 
     /**
-     * Puts given text on clipboard.
+     * Puts given text on the clipboard.
      */
     fun setClipboardText(text: String) {
         try {

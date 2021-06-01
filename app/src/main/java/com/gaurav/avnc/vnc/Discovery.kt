@@ -17,7 +17,7 @@ import com.gaurav.avnc.model.ServerProfile
 import kotlinx.coroutines.*
 
 /**
- * Discovers VNC servers available on local network.
+ * Discovers VNC servers available on the network.
  */
 class Discovery(private val context: Context) {
 

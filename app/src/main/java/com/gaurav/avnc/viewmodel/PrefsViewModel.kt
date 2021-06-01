@@ -36,10 +36,10 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
     /**************************************************************************
      * Import/Export
      *
-     * Currently we are only exporting server profiles but preferences can be
-     * exported in future.
+     * Currently, we are only exporting server profiles but preferences can be
+     * exported in the future.
      *
-     * Importing/Exporting is done on background thread.
+     * Importing/Exporting is done on a background thread.
      **************************************************************************/
 
     @Serializable
