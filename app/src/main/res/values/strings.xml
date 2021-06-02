@@ -7,7 +7,7 @@
   -->
 
 <resources>
-    <string name="app_name">aVNC</string>
+    <string name="app_name">AVNC</string>
 
     <string name="title_add_server_profile">Add Server</string>
     <string name="title_edit_server_profile">Edit Server</string>
@@ -53,7 +53,7 @@
     <string name="hint_password">Password</string>
     <string name="hint_key_password">Key Password</string>
 
-    <string name="msg_about_app">aVNC is an open-source VNC client for Android. It allows you to remotely control any device running a VNC server.</string>
+    <string name="msg_about_app">AVNC is an open-source VNC client for Android. It allows you to remotely control any device running a VNC server.</string>
     <string name="msg_server_profile_added">Server added.</string>
     <string name="msg_server_profile_deleted">Server deleted.</string>
     <string name="msg_pip_not_supported">Picture-in-Picture is not supported on this device</string>

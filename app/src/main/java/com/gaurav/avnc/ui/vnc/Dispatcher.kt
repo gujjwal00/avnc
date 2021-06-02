@@ -15,7 +15,7 @@ import com.gaurav.avnc.vnc.PointerButton
 import kotlin.math.abs
 
 /**
- * aVNC allows user to configure the actions for different events.
+ * We allow users to customize the actions for different events.
  * This class reads those preferences and invokes proper handlers.
  *
  * Input handling overview:

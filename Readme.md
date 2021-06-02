@@ -1,3 +1,3 @@
-aVNC
+AVNC
 ====
-**aVNC** is a VNC client for Android.
+**AVNC** is a VNC client for Android.
