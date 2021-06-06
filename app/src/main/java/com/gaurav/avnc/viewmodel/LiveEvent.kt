@@ -30,13 +30,14 @@ import androidx.lifecycle.Observer
  * But there are some 'events' which should be handled only once (e.g starting
  * a fragment). This class is used for those 'events'.
  *
- * Currently, [observeForever] & [removeObserver] are not implemented because we
- * are not using them.
+ * Calling [removeObserver] on [LiveEvent] is NOT supported because we wrap
+ * the observer given to us in a custom observer, which is currently not
+ * exposed to callers (see [wrapObserver]).
  */
 open class LiveEvent<T> : LiveData<T>() {
 
     /**
-     * Whether we are currently firring the event. Observers will be notified
+     * Whether we are currently firing the event. Observers will be notified
      * only when this is true.
      */
     private var firing = false
@@ -83,15 +84,23 @@ open class LiveEvent<T> : LiveData<T>() {
             fire(value)
     }
 
-    /**
-     * Registers an observer for this event.
-     */
+
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
-        // Observer given to us is wrapped in another Observer
-        // which checks current state before invoking given observer.
-        super.observe(owner) {
+        super.observe(owner, wrapObserver(observer))
+    }
+
+    override fun observeForever(observer: Observer<in T>) {
+        super.observeForever(wrapObserver(observer))
+    }
+
+    /**
+     * Observer given to us is wrapped in another Observer
+     * which checks current state before invoking given observer.
+     */
+    private fun <T> wrapObserver(real: Observer<in T>): Observer<T> {
+        return Observer {
             if (firing) {
-                observer.onChanged(it)
+                real.onChanged(it)
                 handled = true
             }
         }
