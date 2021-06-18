@@ -141,7 +141,7 @@ class Dispatcher(private val viewModel: VncViewModel) {
         accumulatedDy += dy
 
         //Drain horizontal shift
-        while (abs(accumulatedDx) > deltaPerScroll) {
+        while (abs(accumulatedDx) >= deltaPerScroll) {
             if (accumulatedDx > 0) {
                 doClick(PointerButton.WheelLeft, focus)
                 accumulatedDx -= deltaPerScroll
@@ -152,7 +152,7 @@ class Dispatcher(private val viewModel: VncViewModel) {
         }
 
         //Drain vertical shift
-        while (abs(accumulatedDy) > deltaPerScroll) {
+        while (abs(accumulatedDy) >= deltaPerScroll) {
             if (accumulatedDy > 0) {
                 doClick(PointerButton.WheelUp, focus)
                 accumulatedDy -= deltaPerScroll
