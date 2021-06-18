@@ -27,7 +27,7 @@ class AboutFragment : Fragment() {
         binding.apply {
             version.text = BuildConfig.VERSION_NAME
             repoBtn.setOnClickListener { openUrl(AboutActivity.GIT_REPO_URL) }
-            librariesBtn.setOnClickListener { showFragment(LibrariesFragment()) }
+            libraryBtn.setOnClickListener { showFragment(LibrariesFragment()) }
             licenceBtn.setOnClickListener { showFragment(LicenseFragment()) }
         }
 
@@ -47,7 +47,7 @@ class AboutFragment : Fragment() {
 
     private fun showFragment(fragment: Fragment) {
         parentFragmentManager.beginTransaction()
-                .replace(R.id.container, fragment)
+                .replace(R.id.fragment_host, fragment)
                 .addToBackStack(null)
                 .commit()
     }

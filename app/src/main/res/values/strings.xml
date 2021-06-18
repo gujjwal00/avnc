@@ -54,7 +54,7 @@
     <string name="hint_key_password">Key Password</string>
 
     <string name="msg_about_app">aVNC is an open-source VNC client for Android. It allows you to remotely control any device running a VNC server.</string>
-    <string name="msg_server_profile_inserted">Server added.</string>
+    <string name="msg_server_profile_added">Server added.</string>
     <string name="msg_server_profile_deleted">Server deleted.</string>
     <string name="msg_pip_not_supported">Picture-in-Picture is not supported on this device</string>
     <string name="msg_loading">Loading …</string>

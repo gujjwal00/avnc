@@ -26,7 +26,7 @@
             app:profile="@{viewModel}" />
 
         <ImageButton
-            android:id="@+id/add"
+            android:id="@+id/save_btn"
             style="@style/ImageButton"
             android:layout_gravity="end|center_vertical"
             android:contentDescription="@string/desc_save_discovered_server_btn"

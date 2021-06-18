@@ -44,7 +44,7 @@ class HomeActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
         binding.lifecycleOwner = this
 
-        tabController = TabController(this, binding.pager, binding.tabs)
+        tabController = TabController(this, binding.pager, binding.tabLayout)
         binding.drawerNav.setNavigationItemSelectedListener { onMenuItemSelected(it.itemId) }
         binding.navigationBtn.setOnClickListener { binding.drawerLayout.open() }
         binding.settingsBtn.setOnClickListener { showSettings() }
@@ -111,7 +111,7 @@ class HomeActivity : AppCompatActivity() {
 
         // Show snackbar for new servers
         if (profile.ID == 0L)
-            Snackbar.make(binding.root, R.string.msg_server_profile_inserted, Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, R.string.msg_server_profile_added, Snackbar.LENGTH_SHORT).show()
     }
 
     /**

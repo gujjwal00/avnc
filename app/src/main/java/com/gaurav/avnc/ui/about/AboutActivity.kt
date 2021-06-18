@@ -31,7 +31,7 @@ class AboutActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, AboutFragment())
+                    .replace(R.id.fragment_host, AboutFragment())
                     .commit()
         }
     }

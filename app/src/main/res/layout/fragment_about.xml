@@ -19,7 +19,7 @@
             android:layout_height="80dp"
             android:layout_gravity="center"
             android:importantForAccessibility="no"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ic_launcher_round" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -37,13 +37,11 @@
             android:layout_marginTop="@dimen/margin_small" />
 
         <TextView
-            android:id="@+id/about_app"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
             android:text="@string/msg_about_app"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
-
 
         <Button
             android:id="@+id/repo_btn"
@@ -63,7 +61,7 @@
             app:icon="@drawable/ic_file" />
 
         <Button
-            android:id="@+id/libraries_btn"
+            android:id="@+id/library_btn"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

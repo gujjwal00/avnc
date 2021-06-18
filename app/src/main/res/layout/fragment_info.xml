@@ -9,7 +9,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ScrollView
-        android:id="@+id/scroll_v"
+        android:id="@+id/v_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

@@ -58,7 +58,7 @@
             app:layout_constraintTop_toBottomOf="@id/export_btn" />
 
         <CheckBox
-            android:id="@+id/deleteCurrentServers"
+            android:id="@+id/delete_current_servers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_delete_servers_before_import"
@@ -66,7 +66,6 @@
             app:layout_constraintTop_toBottomOf="@id/options_divider" />
 
         <TextView
-            android:id="@+id/ie_error"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_large"
@@ -74,14 +73,14 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             android:textColor="?colorError"
             app:isVisible="@{viewModel.importExportError != null}"
-            app:layout_constraintBottom_toTopOf="@id/export_auth_msg"
+            app:layout_constraintBottom_toTopOf="@id/auth_msg"
             app:layout_constraintEnd_toEndOf="@id/options_divider"
             app:layout_constraintStart_toStartOf="@id/options_divider"
-            app:layout_constraintTop_toBottomOf="@id/deleteCurrentServers"
+            app:layout_constraintTop_toBottomOf="@id/delete_current_servers"
             tools:text="A message about export/import result" />
 
         <TextView
-            android:id="@+id/export_auth_msg"
+            android:id="@+id/auth_msg"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_large"

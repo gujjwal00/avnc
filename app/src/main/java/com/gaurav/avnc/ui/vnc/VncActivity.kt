@@ -80,9 +80,9 @@ class VncActivity : AppCompatActivity() {
 
         //Drawers
         binding.drawerLayout.setScrimColor(0)
-        binding.kbBtn.setOnClickListener { showKeyboard(); closeDrawers() }
+        binding.keyboardBtn.setOnClickListener { showKeyboard(); closeDrawers() }
         binding.zoomResetBtn.setOnClickListener { viewModel.resetZoom(); closeDrawers() }
-        binding.vkBtn.setOnClickListener { virtualKeys.show(); closeDrawers() }
+        binding.virtualKeysBtn.setOnClickListener { virtualKeys.show(); closeDrawers() }
         if (viewModel.pref.experimental.swipeCloseToolbar)
             Experimental.setupDrawerCloseOnScrimSwipe(binding.drawerLayout, Gravity.START)
 

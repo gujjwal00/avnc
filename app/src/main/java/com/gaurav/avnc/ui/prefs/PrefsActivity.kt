@@ -30,7 +30,7 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
         if (savedInstanceState == null) {
             supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.settings, Main())
+                    .replace(R.id.fragment_host, Main())
                     .commit()
         }
 
@@ -50,7 +50,7 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
         val fragment = supportFragmentManager.fragmentFactory.instantiate(classLoader, pref.fragment)
 
         supportFragmentManager.beginTransaction()
-                .replace(R.id.settings, fragment)
+                .replace(R.id.fragment_host, fragment)
                 .addToBackStack(null)
                 .commit()
 

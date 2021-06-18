@@ -26,7 +26,7 @@
                 android:transitionName="urlbar">
 
                 <ImageButton
-                    android:id="@+id/back"
+                    android:id="@+id/back_btn"
                     android:layout_width="@dimen/action_btn_size"
                     android:layout_height="@dimen/action_btn_size"
                     android:background="?selectableItemBackgroundBorderless"
@@ -47,7 +47,7 @@
                     tools:ignore="LabelFor" />
 
                 <ImageButton
-                    android:id="@+id/clear"
+                    android:id="@+id/clear_btn"
                     android:layout_width="@dimen/action_btn_size"
                     android:layout_height="@dimen/action_btn_size"
                     android:background="?selectableItemBackgroundBorderless"

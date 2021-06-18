@@ -44,7 +44,7 @@ abstract class InfoFragment : Fragment() {
 
             binding.text.text = text
             delay(100)
-            binding.scrollV.fullScroll(View.FOCUS_DOWN)
+            binding.vScroll.fullScroll(View.FOCUS_DOWN)
         }
 
         return binding.root

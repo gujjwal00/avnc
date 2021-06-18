@@ -36,7 +36,7 @@ class DiscoveryAdapter(val viewModel: HomeViewModel) : ListAdapter<ServerProfile
             ProfileViewHolder(viewModel, binding, R.menu.discovered_server) {
 
         init {
-            binding.add.setOnClickListener { viewModel.onNewProfile(profile) }
+            binding.saveBtn.setOnClickListener { viewModel.onNewProfile(profile) }
         }
     }
 

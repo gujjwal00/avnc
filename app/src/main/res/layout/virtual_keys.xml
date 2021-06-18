@@ -48,7 +48,6 @@
             <!--~~~~~~~~~~~~~~~~~~~~~~~~~~ Meta keys ~~~~~~~~~~~~~~~~~~~~~-->
 
             <ToggleButton
-                android:id="@+id/vk_shift"
                 style="@style/VirtualKey.Toggle"
                 android:textOff="Shift"
                 android:textOn="Shift"
@@ -56,14 +55,12 @@
                 app:onCheckedChangeListener="@{(v,checked) -> h.onKeyEvent(KeyEvent.KEYCODE_SHIFT_RIGHT, checked)}" />
 
             <ToggleButton
-                android:id="@+id/vk_ctrl"
                 style="@style/VirtualKey.Toggle"
                 android:textOff="Ctrl"
                 android:textOn="Ctrl"
                 app:onCheckedChangeListener="@{(v,checked) -> h.onKeyEvent(KeyEvent.KEYCODE_CTRL_RIGHT, checked)}" />
 
             <ToggleButton
-                android:id="@+id/vk_alt"
                 style="@style/VirtualKey.Toggle"
                 android:textOff="Alt"
                 android:textOn="Alt"
