@@ -11,7 +11,7 @@ package com.gaurav.avnc.ui.vnc.gl
 /**
  * Shaders used for rendering framebuffer
  */
-internal object Shaders {
+object Shaders {
     //language=GLSL
     const val VERTEX_SHADER = """
             uniform mat4 u_Projection;

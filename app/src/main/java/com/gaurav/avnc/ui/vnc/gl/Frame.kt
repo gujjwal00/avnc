@@ -25,7 +25,7 @@ import java.nio.FloatBuffer
  *
  * Frame texture is mapped onto these triangles.
  */
-internal class Frame {
+class Frame {
 
     companion object {
         const val FLOAT_SIZE = 4

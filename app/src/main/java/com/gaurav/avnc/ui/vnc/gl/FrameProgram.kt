@@ -16,7 +16,7 @@ import android.util.Log
  *
  * NOTE: It must be instantiated in an OpenGL context.
  */
-internal class FrameProgram {
+class FrameProgram {
 
     companion object {
         // Attribute constants

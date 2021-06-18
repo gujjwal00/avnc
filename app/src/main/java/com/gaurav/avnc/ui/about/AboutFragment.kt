@@ -19,7 +19,7 @@ import com.gaurav.avnc.BuildConfig
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.FragmentAboutBinding
 
-internal class AboutFragment : Fragment() {
+class AboutFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentAboutBinding.inflate(inflater, container, false)

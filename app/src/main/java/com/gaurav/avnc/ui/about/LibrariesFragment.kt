@@ -20,7 +20,7 @@ import androidx.fragment.app.Fragment
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.FragmentLibrariesBinding
 
-internal class LibrariesFragment : Fragment() {
+class LibrariesFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 
