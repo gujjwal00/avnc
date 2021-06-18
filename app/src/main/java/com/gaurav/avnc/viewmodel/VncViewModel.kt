@@ -317,6 +317,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     override fun onFramebufferSizeChanged(width: Int, height: Int) {
-        frameState.setFramebufferSize(width.toFloat(), height.toFloat())
+        viewModelScope.launch(Dispatchers.Main) {
+            frameState.setFramebufferSize(width.toFloat(), height.toFloat())
+        }
     }
 }
