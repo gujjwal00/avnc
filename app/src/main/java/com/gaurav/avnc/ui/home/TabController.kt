@@ -44,6 +44,10 @@ class TabController(val activity: HomeActivity, private val pager: ViewPager2, t
     init {
         pager.adapter = PagerAdapter()
 
+        // Ask the the pager to keep both fragments in memory
+        // This allows smoother transition between fragments
+        pager.offscreenPageLimit = 1
+
         val mediator = TabLayoutMediator(tabLayout, pager) { tab, position ->
             tab.setIcon(pageList[position].iconId)
             tab.setContentDescription(pageList[position].descriptionId)
