@@ -36,28 +36,25 @@
             app:isVisible="@{viewModel.pref.ui.showTips &amp;&amp; !viewModel.discovery.isRunning &amp;&amp; viewModel.discovery.servers.empty}"
             tools:visibility="visible" />
 
-
-        <FrameLayout
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/Widget.MaterialComponents.FloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_margin="@dimen/margin_normal"
-            android:animateLayoutChanges="true">
+            android:contentDescription="@string/desc_discovery_btn"
+            android:onClick="@{()-> viewModel.startDiscovery()}"
+            android:src="@drawable/ic_refresh"
+            app:isVisible="@{!viewModel.discovery.isRunning}" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                style="@style/Widget.MaterialComponents.FloatingActionButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/desc_discovery_btn"
-                android:onClick="@{()-> viewModel.startDiscovery()}"
-                android:src="@drawable/ic_refresh"
-                app:isInVisible="@{viewModel.discovery.isRunning}" />
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/desc_discovery_running"
-                app:isInVisible="@{!viewModel.discovery.isRunning}" />
-        </FrameLayout>
+        <ProgressBar
+            style="@style/Widget.MaterialComponents.CircularProgressIndicator"
+            android:layout_width="@dimen/action_btn_size"
+            android:layout_height="@dimen/action_btn_size"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="@dimen/margin_normal"
+            android:contentDescription="@string/desc_discovery_running"
+            android:indeterminate="true"
+            app:isVisible="@{viewModel.discovery.isRunning}" />
     </FrameLayout>
 </layout>
