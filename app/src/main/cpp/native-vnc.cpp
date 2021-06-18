@@ -406,10 +406,13 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeProcessServerMessage(JNIEnv *env, jobje
                                                               jint u_sec_timeout) {
     auto client = (rfbClient *) client_ptr;
 
-    if (WaitForMessage(client, static_cast<unsigned int>(u_sec_timeout)) >= 0) {
-        if (HandleRFBServerMessage(client))
-            return JNI_TRUE;
-    }
+    auto waitResult = WaitForMessage(client, static_cast<unsigned int>(u_sec_timeout));
+
+    if (waitResult == 0) // Timeout
+        return JNI_TRUE;
+
+    if (waitResult > 0 && HandleRFBServerMessage(client))
+        return JNI_TRUE;
 
     return JNI_FALSE;
 }
