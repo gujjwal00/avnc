@@ -12,6 +12,8 @@ import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.vnc.Discovery
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class HomeViewModel(app: Application) : BaseViewModel(app) {
 
@@ -60,9 +62,17 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     fun startConnection(profile: ServerProfile) = newConnectionEvent.fire(profile)
 
     /**
-     * Starts discovery service
+     * Starts discovery service.
+     * It will be automatically stopped after timeout.
      */
-    fun startDiscovery() = discovery.start(viewModelScope, pref.server.discoveryTimeout)
+    fun startDiscovery() {
+        discovery.start()
+
+        viewModelScope.launch {
+            runCatching { delay(pref.server.discoveryTimeout) }
+            discovery.stop()
+        }
+    }
 
 
     /**************************************************************************

@@ -14,20 +14,18 @@ import android.net.nsd.NsdServiceInfo
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.gaurav.avnc.model.ServerProfile
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
- * Discovers VNC servers available on the network.
+ * Discovers VNC servers advertising themselves on the network.
  */
 class Discovery(private val context: Context) {
 
-    private object Config {
-        const val SERVICE_TYPE = "_rfb._tcp"
-    }
-
     /**
-     * List of found servers.
-     * This will be automatically updated as servers are found/lost.
+     * List of servers found by Discovery.
      */
     val servers = MutableLiveData(ArrayList<ServerProfile>())
 
@@ -37,41 +35,42 @@ class Discovery(private val context: Context) {
     val isRunning = MutableLiveData(false)
 
 
+    private val service = "_rfb._tcp"
     private var nsdManager: NsdManager? = null
     private val listener = DiscoveryListener()
 
     /**
      * Starts discovery.
+     * Must be called on main thread.
      *
-     * Must be called from main thread. It will return immediately if discovery
-     * is already running. Once started, discovery will be automatically stopped
-     * after [timeout] milliseconds.
+     * [NsdManager] starts/stops service discovery asynchronously, and notifies
+     * us through callbacks in [listener]. Also, it does not allow us to request
+     * start/stop if a previous start/stop request is yet to complete.
      *
-     * Status changes:
+     * So, we set [isRunning] to true 'optimistically' in [start] without waiting
+     * for the confirmation in [listener], and revert it if starting fails.
+     * This way we don't have to track previously issued start/stop requests.
      *
-     *        [start] : isRunning = true
-     *           |
-     *           +-----------------------------> [start failed] : isRunning = false
-     *           |
-     *           V
-     *       [started]
-     *           |
-     *           | (timeout)
-     *           V
-     *        [stop]
-     *           |
-     *           +-----------------------------> [stop failed]
-     *           |
-     *           V
-     *       [stopped] : isRunning = false
-     *
-     *
-     * Because [NsdManager] starts/stops service discovery asynchronously,
-     * we set [isRunning] to true 'optimistically' in [start] without waiting
-     * for confirmation in [listener].
-     * This way we don't have to track intermediate states.
+     * Status change:
+     *-
+     *-        [start]   :isRunning = true
+     *-           |
+     *-           +-----------------------------> start failed   :isRunning = false
+     *-           |
+     *-           V
+     *-        started
+     *-           |
+     *-           |
+     *-           V
+     *-        [stop]
+     *-           |
+     *-           +-----------------------------> stop failed
+     *-           |
+     *-           V
+     *-        stopped   :isRunning = false
+     *-
      */
-    fun start(scope: CoroutineScope, timeout: Long) {
+    fun start() {
         if (isRunning.value == true) {
             return
         }
@@ -79,22 +78,22 @@ class Discovery(private val context: Context) {
         isRunning.value = true
         servers.value = ArrayList() //Forget known servers
 
-        //Construction NSD manager is done on a background thread because it appears to be quite heavy.
-        scope.launch(Dispatchers.Default) {
+        // Construction of NSD manager is done on a background thread because it appears to be quite heavy.
+        GlobalScope.launch(Dispatchers.Default) {
             if (nsdManager == null)
                 nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
 
-            nsdManager?.discoverServices(Config.SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, listener)
+            nsdManager?.discoverServices(service, NsdManager.PROTOCOL_DNS_SD, listener)
         }
+    }
 
-        scope.launch(Dispatchers.Main) {
-            try {
-                delay(timeout)
-            } finally {
-                if (isRunning.value == true) {
-                    nsdManager?.stopServiceDiscovery(listener)
-                }
-            }
+    /**
+     * Stops discovery.
+     * Must be called on main thread.
+     */
+    fun stop() {
+        if (isRunning.value == true) {
+            nsdManager?.stopServiceDiscovery(listener)
         }
     }
 
