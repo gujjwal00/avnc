@@ -26,10 +26,8 @@ class LibrariesFragment : Fragment() {
 
         val binding = FragmentLibrariesBinding.inflate(inflater, container, false)
 
-        // ListView would be better for this, but I am having layout issues with it.
-        var indexInParent = binding.root.indexOfChild(binding.librariesDivider) + 1
         for (library in libraries) {
-            val textView = inflater.inflate(android.R.layout.simple_list_item_1, binding.root, false) as TextView
+            val textView = inflater.inflate(android.R.layout.simple_list_item_1, binding.libraryList, false) as TextView
 
             textView.text = library.name
             textView.setOnClickListener { openUrl(library.homepage) }
@@ -40,8 +38,7 @@ class LibrariesFragment : Fragment() {
                 textView.setBackgroundResource(resourceId)
             }
 
-            binding.root.addView(textView, indexInParent)
-            ++indexInParent
+            binding.libraryList.addView(textView)
         }
 
         return binding.root

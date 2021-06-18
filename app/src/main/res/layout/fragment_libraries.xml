@@ -10,7 +10,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-        android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -32,12 +31,19 @@
             android:text="(Tap to open their homepage)" />
 
         <View
-            android:id="@+id/libraries_divider"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/colorBorder" />
 
-        <!--Libraries are dynamically inserted here -->
+        <!--
+            Library list is dynamically populated.
+            ListView would be better for this task but it causes some layout issues here.
+         -->
+        <LinearLayout
+            android:id="@+id/library_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
 
         <View
             android:layout_width="match_parent"
