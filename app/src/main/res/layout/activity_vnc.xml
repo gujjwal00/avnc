@@ -66,13 +66,13 @@
                 <ImageButton
                     android:id="@+id/keyboard_btn"
                     style="@style/ImageButton"
-                    android:contentDescription="@string/desc_kb_btn"
+                    android:contentDescription="@string/desc_keyboard_btn"
                     android:src="@drawable/ic_keyboard" />
 
                 <ImageButton
                     android:id="@+id/virtual_keys_btn"
                     style="@style/ImageButton"
-                    android:contentDescription="@string/desc_vk_btn"
+                    android:contentDescription="@string/desc_virtual_keys_btn"
                     android:src="@drawable/ic_keyboard_mini" />
 
                 <ImageButton

@@ -79,14 +79,16 @@
     <string name="desc_save_discovered_server_btn">Save this Server</string>
     <string name="desc_discovery_btn">Start Server Discovery</string>
     <string name="desc_discovery_running">Discovering Servers on you network</string>
-    <string name="desc_kb_btn">Show Keyboard</string>
-    <string name="desc_vk_btn">Show Virtual Keys</string>
+    <string name="desc_keyboard_btn">Open Keyboard</string>
+    <string name="desc_virtual_keys_btn">Show Virtual Keys</string>
     <string name="desc_reset_zoom_btn">Reset Zoom to 100%</string>
     <string name="desc_retry_connection_btn">Retry Connection</string>
     <string name="desc_back_btn">Go Back</string>
     <string name="desc_clear_url_btn">Clear URL</string>
     <string name="desc_server_url">Enter address of VNC server</string>
     <string name="desc_help_btn">Show Help</string>
+    <string name="desc_discovered_list">List of automatically discovered servers</string>
+    <string name="desc_saved_servers_list">List of saved Servers</string>
 
     <!-- Preference -->
     <string name="pref_ui">User Interface</string>
