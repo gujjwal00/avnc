@@ -79,6 +79,10 @@ class ImportExportFragment : Fragment() {
         importFilePicker.launch(arrayOf("*/*"))
     }
 
+    /**
+     * If user has enabled any authentication method, we verify the user before exporting data.
+     * This is to protect sensitive info that might be present in exported data.
+     */
     private fun startExport() {
         if (viewModel.canAuthenticateUser)
             startClass2BiometricOrCredentialAuthentication(

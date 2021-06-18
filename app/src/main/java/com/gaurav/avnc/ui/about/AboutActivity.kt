@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.gaurav.avnc.R
 
 /**
- * Host activity for app details.
+ * Activity for app details.
  */
 class AboutActivity : AppCompatActivity() {
 

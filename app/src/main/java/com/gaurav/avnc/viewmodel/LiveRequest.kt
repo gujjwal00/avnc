@@ -19,7 +19,7 @@ import java.util.concurrent.LinkedBlockingQueue
  * This simplifies the cases where a background thread needs some value from the user (i.e. UI thread),
  * and we want the background thread to block until that value is available.
  *
- * If request is canceled then [requestResponse] will return [cancellationValue].
+ * If a request is canceled then [requestResponse] will return [cancellationValue].
  *
  * @param scope can be specified to auto-cancel this request on scope cancellation.
  */
@@ -33,7 +33,7 @@ class LiveRequest<RequestType, ResponseType>(private val cancellationValue: Resp
     }
 
     /**
-     * Fire this request with given value and returns the response.
+     * Fires this request with given value and returns the response.
      * Will block until any response is available.
      * Can be called from any threads.
      */

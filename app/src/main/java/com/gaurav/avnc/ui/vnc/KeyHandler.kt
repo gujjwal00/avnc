@@ -23,7 +23,7 @@ import com.gaurav.avnc.vnc.XKeySymUnicode
  * testing with some popular servers. It might not handle all the edge cases.
  *
  *
- * Basically, job of this class is to convert a received [KeyEvent] into a 'KeySym'.
+ * Basically, job of this class is to convert the received [KeyEvent] into a 'KeySym'.
  * That KeySym will be sent to the server.
  *
  *-      [KeyEvent]     +----------------+    KeySym     +----------------+
@@ -207,7 +207,7 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Int
     }
 
     /************************************************************************************
-     * Convert String to Array of Unicode code-point
+     * Convert String to Array of Unicode code-points
      ***********************************************************************************/
 
     private val cpCache = intArrayOf(0)

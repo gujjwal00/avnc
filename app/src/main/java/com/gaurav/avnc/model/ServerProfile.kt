@@ -33,23 +33,23 @@ data class ServerProfile(
         var name: String = "",
 
         /**
-         * Internet address of the server. This can be hostname or IP address.
-         * It does not contain the port number.
+         * Internet address of the server (without port number).
+         * This can be hostname or IP address.
          */
         var host: String = "",
 
         /**
-         * Port number of the remote server.
+         * Port number of the server.
          */
         var port: Int = 5900,
 
         /**
-         * Username which will be used when connecting to this server.
+         * Username used for authentication.
          */
         var username: String = "",
 
         /**
-         * Password used for authenticating with this server.
+         * Password used for authentication.
          * Note: Username & password may not be used for all security types.
          */
         var password: String = "",
@@ -86,7 +86,6 @@ data class ServerProfile(
 
         /**
          * Whether the cursor should be drawn by client instead of server.
-         * Currently, only hides the remote cursor.
          */
         var useLocalCursor: Boolean = false,
 

@@ -22,7 +22,7 @@ import kotlin.math.min
  * Framebuffer: This is the buffer holding pixel data. It resides in native memory.
  *
  * Frame: This is the actual content rendered on screen. It can be thought of as
- * 'scaled framebuffer'. Its size changes based on current [scale] and its position
+ * 'rendered framebuffer'. Its size changes based on current [scale] and its position
  * is stored in [frameX] & [frameY].
  *
  * Window: Top-level window of the application/activity.
@@ -71,7 +71,7 @@ import kotlin.math.min
  *
  * 2. Zoom Scale [zoomScale] :
  *
- * This value represents 'zoom level' requested by the user (by pinch gestures).
+ * This value represents the 'zoom level' requested by user (through pinch gestures).
  * It works 'on top of' base scale.
  *
  * Effective scale [scale] is calculated as the product of these two values.
@@ -81,7 +81,7 @@ import kotlin.math.min
  * Thread safety
  * =============
  *
- * Frame state is accessed from multiple threads. Its properties are updated in
+ * Frame state is accessed from two threads: Its properties are updated in
  * UI thread and consumed by the renderer thread. There is a "slight" chance that
  * Renderer thread may see half-updated state. But it should "eventually" settle down
  * because any change in frame state is usually followed by a new render request.

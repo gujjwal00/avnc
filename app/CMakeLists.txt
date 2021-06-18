@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(NativeVNC C CXX ASM)
 
-option(AVNC_BUILD_ALL "Build with JPEG an SSL" OFF)
+option(AVNC_BUILD_ALL "Build with JPEG and SSL" OFF)
 set(AVNC_EXTERN_DIR ../extern)
 set(BUILD_SHARED_LIBS OFF)
 

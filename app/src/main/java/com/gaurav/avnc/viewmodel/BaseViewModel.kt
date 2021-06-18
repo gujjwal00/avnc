@@ -27,9 +27,6 @@ import kotlinx.coroutines.withContext
  */
 open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
 
-    /**
-     * Database instance.
-     */
     protected val db by lazy { MainDb.getInstance(app) }
 
     protected val serverProfileDao by lazy { db.serverProfileDao }

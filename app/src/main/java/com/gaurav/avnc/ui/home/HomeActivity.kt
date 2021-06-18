@@ -109,7 +109,7 @@ class HomeActivity : AppCompatActivity() {
     private fun onProfileInserted(profile: ServerProfile) {
         tabController.showSavedServers()
 
-        // Only show snackbar for new servers
+        // Show snackbar for new servers
         if (profile.ID == 0L)
             Snackbar.make(binding.root, R.string.msg_server_profile_inserted, Snackbar.LENGTH_SHORT).show()
     }

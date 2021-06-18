@@ -13,22 +13,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 
 /**
- * This class implements the concept of single-fire observable events.
+ * This class implements single-shot observable events.
  * It is based on [LiveData] which does the heavy lifting for us.
  *
  * Single-shot
  * ===========
- * When this event is fired, it will notify all active observers (if any).
- * If there is no active observer we will queue the event and will fire
- * it when we have active observers. After that, it will be marked as 'handled'
- * and any observers attached in future will not be notified.
+ * When this event is fired, it will notify all active observers.
+ * If there is no active observer, it will wait for active observers,
+ * so that the event is not "lost". After notifying observers, it will
+ * be marked as 'handled' and any future observers will NOT be notified.
  *
- * This is the main difference between [LiveEvent] & [LiveData]. [LiveData] will
- * notify the future observers to bring them up-to date. This mainly happens during
+ * This is the main difference between this class & [LiveData]. [LiveData] will
+ * notify the future observers to bring them up-to date. This can happens during
  * Activity restarts where old observers are detached and new ones are attached.
  *
- * But there are some 'events' which should be handled only once (e.g starting
- * a fragment). This class is used for those 'events'.
+ * This class is used for events which should be handled only once.
+ * e.g starting a fragment.
  *
  * Calling [removeObserver] on [LiveEvent] is NOT supported because we wrap
  * the observer given to us in a custom observer, which is currently not
@@ -95,7 +95,7 @@ open class LiveEvent<T> : LiveData<T>() {
 
     /**
      * Observer given to us is wrapped in another Observer
-     * which checks current state before invoking given observer.
+     * which checks current state before invoking real observer.
      */
     private fun <T> wrapObserver(real: Observer<in T>): Observer<T> {
         return Observer {

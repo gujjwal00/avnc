@@ -47,7 +47,7 @@ import java.lang.ref.WeakReference
  * =========
  *
  * Receiver thread :- This thread is started (as a coroutine) in [launchConnection].
- * It handles the protocol initialization and after that processes incoming messages.
+ * It handles the protocol initialization, and after that processes incoming messages.
  * Most of the callbacks of [VncClient.Observer] are invoked on this thread. In most
  * cases it is stopped when activity is finished and this view model is cleaned up.
  *
@@ -129,6 +129,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      * Used to confirm unknown hosts.
      */
     val sshHostKeyVerifyRequest = LiveRequest<HostKey, Boolean>(false, viewModelScope)
+
 
     /**************************************************************************
      * Connection management
