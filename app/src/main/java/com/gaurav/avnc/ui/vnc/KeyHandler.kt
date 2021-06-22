@@ -10,7 +10,6 @@ package com.gaurav.avnc.ui.vnc
 
 import android.os.Build
 import android.view.KeyEvent
-import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.vnc.XKeySymAndroid
 import com.gaurav.avnc.vnc.XKeySymUnicode
 
@@ -75,7 +74,7 @@ import com.gaurav.avnc.vnc.XKeySymUnicode
  * [X Windows System Protocol](https://www.x.org/releases/X11R7.7/doc/xproto/x11protocol.html#keysym_encoding)
  *
  */
-class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Int) {
+class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boolean) {
 
     /**
      * Shortcut to send both up & down events. Useful for Virtual Keys.
@@ -172,7 +171,7 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Int
     private fun emitForUnicodeChar(uChar: Int, isDown: Boolean): Boolean {
         var uKeySym = 0
 
-        if (compatMode and ServerProfile.COMPAT_MODE_LEGACY_KEYSYM != 0)
+        if (compatMode)
             uKeySym = XKeySymUnicode.getLegacyKeySymForUnicodeChar(uChar)
 
         if (uKeySym == 0)

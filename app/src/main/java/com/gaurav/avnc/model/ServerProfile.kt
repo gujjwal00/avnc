@@ -90,11 +90,10 @@ data class ServerProfile(
         var useLocalCursor: Boolean = false,
 
         /**
-         * Compatibility mode used for connection.
-         * Currently, used to decide how key events are sent to server.
-         * Set to 0 to disable compatibility mode.
+         * Compatibility mode for key events.
+         * If enabled, we will try to emit legacy X KeySym events.
          */
-        var compatMode: Int = COMPAT_MODE_LEGACY_KEYSYM,
+        var keyCompatMode: Boolean = true,
 
         /**
          * Whether UltraVNC Repeater is used for connections.
@@ -129,8 +128,5 @@ data class ServerProfile(
         // SSH auth types
         const val SSH_AUTH_KEY = 1
         const val SSH_AUTH_PASSWORD = 2
-
-        // Compatibility modes flags
-        const val COMPAT_MODE_LEGACY_KEYSYM = 0x1
     }
 }

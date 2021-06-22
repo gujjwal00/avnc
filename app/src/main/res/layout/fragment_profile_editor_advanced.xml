@@ -156,10 +156,11 @@
                     app:layout_constraintTop_toBottomOf="@id/view_only" />
 
 
-                <!--Compatibility mode-->
+                <!--Key Compatibility mode-->
                 <CheckBox
                     android:id="@+id/key_compat_mode"
                     style="@style/FormField.CheckBox"
+                    android:checked="@={profile.keyCompatMode}"
                     android:text="@string/title_key_compat_mode"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

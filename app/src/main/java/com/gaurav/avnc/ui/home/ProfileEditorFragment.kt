@@ -167,7 +167,6 @@ class ProfileEditorFragment : DialogFragment() {
             // We can't use Data Binding to initialize these because it breaks
             // the inter-dependency among views.
             useRepeater.isChecked = p.useRepeater
-            keyCompatMode.isChecked = (p.compatMode and ServerProfile.COMPAT_MODE_LEGACY_KEYSYM != 0)
             useSshTunnel.isChecked = (p.channelType == CHANNEL_SSH_TUNNEL)
             sshAuthTypePassword.isChecked = (p.sshAuthType == SSH_AUTH_PASSWORD)
             sshAuthTypeKey.isChecked = (p.sshAuthType == SSH_AUTH_KEY)
@@ -198,11 +197,6 @@ class ProfileEditorFragment : DialogFragment() {
             idOnRepeater = binding.idOnRepeater.text.toString().toIntOrNull() ?: 0
             channelType = if (binding.useSshTunnel.isChecked) CHANNEL_SSH_TUNNEL else CHANNEL_TCP
             sshAuthType = if (binding.sshAuthTypeKey.isChecked) SSH_AUTH_KEY else SSH_AUTH_PASSWORD
-
-            if (binding.keyCompatMode.isChecked)
-                compatMode = compatMode or ServerProfile.COMPAT_MODE_LEGACY_KEYSYM
-            else
-                compatMode = compatMode and ServerProfile.COMPAT_MODE_LEGACY_KEYSYM.inv()
         }
 
         saveProfile()
