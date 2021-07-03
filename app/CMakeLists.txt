@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.10)
 project(NativeVNC C CXX ASM)
 
 option(AVNC_BUILD_ALL "Build with JPEG and SSL" OFF)
-set(AVNC_EXTERN_DIR ../extern)
+set(AVNC_EXTERN_DIR ${PROJECT_SOURCE_DIR}/../extern)
 set(BUILD_SHARED_LIBS OFF)
 
 ###############################################################################
@@ -13,7 +13,7 @@ set(BUILD_SHARED_LIBS OFF)
 
 # Make sure given submodule is checked out
 macro(avnc_check_submodule name)
-    if (NOT EXISTS "${PROJECT_SOURCE_DIR}/${AVNC_EXTERN_DIR}/${name}/CMakeLists.txt")
+    if (NOT EXISTS "${AVNC_EXTERN_DIR}/${name}/CMakeLists.txt")
         message(FATAL_ERROR "git submodule for ${name} is not initialized.
                              Please run 'git submodule update --init'.")
     endif ()
@@ -21,7 +21,7 @@ endmacro()
 
 # Make sure libressl-portable is initialized
 macro(avnc_check_libressl)
-    if (NOT EXISTS "${PROJECT_SOURCE_DIR}/${AVNC_EXTERN_DIR}/libressl/VERSION")
+    if (NOT EXISTS "${AVNC_EXTERN_DIR}/libressl/VERSION")
         message(FATAL_ERROR "libressl is not initialized properly.
                              Please run './autogen.sh' in 'libressl' submodule.")
     endif ()
