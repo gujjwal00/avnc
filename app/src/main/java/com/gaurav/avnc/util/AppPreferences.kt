@@ -30,7 +30,6 @@ class AppPreferences(context: Context) {
                 else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
             }
 
-        val showTips; get() = prefs.getBoolean("show_tips", true)
         val preferAdvancedEditor; get() = prefs.getBoolean("prefer_advanced_editor", false)
     }
 

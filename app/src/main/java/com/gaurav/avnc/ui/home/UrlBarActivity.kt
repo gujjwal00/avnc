@@ -12,12 +12,10 @@ import android.os.Bundle
 import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityUrlBinding
 import com.gaurav.avnc.ui.vnc.startVncActivity
-import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.vnc.VncUri
 
 /**
@@ -44,8 +42,6 @@ class UrlBarActivity : AppCompatActivity() {
             else
                 binding.url.setText("")
         }
-
-        binding.urlTip.isVisible = AppPreferences(this).ui.showTips
     }
 
     private fun go(url: String): Boolean {

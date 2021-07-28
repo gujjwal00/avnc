@@ -57,7 +57,6 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <TextView
-            android:id="@+id/url_tip"
             style="@style/TipView"
             android:text="@string/tip_urlbar" />
     </FrameLayout>
