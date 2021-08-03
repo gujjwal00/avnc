@@ -16,7 +16,6 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.Keep
-import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
@@ -159,7 +158,7 @@ object Experimental {
      * 1. Swipe 'on' the drawer
      * 2. Tap inside Scrim (dimmed region outside of drawer)
      *
-     * Notably, swiping inside scrim are does NOT hide the drawer. This can be jarring
+     * Notably, swiping inside scrim area does NOT hide the drawer. This can be jarring
      * to users if drawer is relatively small & most of the layout area acts as scrim.
      *
      * The toolbar drawer used in [com.gaurav.avnc.ui.vnc.VncActivity] is affected by
@@ -167,6 +166,8 @@ object Experimental {
      *
      * This function attempts to detect these swipe gestures and close the drawer
      * when they happen.
+     *
+     * [drawerGravity] can be [Gravity.START] or [Gravity.END]
      *
      * Note: It will set a custom TouchListener on [drawerLayout].
      *
@@ -176,34 +177,25 @@ object Experimental {
     fun setupDrawerCloseOnScrimSwipe(drawerLayout: DrawerLayout, drawerGravity: Int) {
 
         drawerLayout.setOnTouchListener(object : View.OnTouchListener {
-            var detectingSwipe = false
-            var drawerClosed = true
+            var drawerOpen = false
 
             val detector = GestureDetector(drawerLayout.context, object : GestureDetector.SimpleOnGestureListener() {
 
-                override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, dx: Float, dy: Float): Boolean {
-                    if (drawerClosed)
-                        return true
-
-                    val absGravity = GravityCompat.getAbsoluteGravity(drawerGravity, drawerLayout.layoutDirection)
-                    if ((absGravity == Gravity.LEFT && dx > 0) || (absGravity == Gravity.RIGHT && dx < 0)) {
+                override fun onFling(e1: MotionEvent, e2: MotionEvent, vX: Float, vY: Float): Boolean {
+                    val absGravity = Gravity.getAbsoluteGravity(drawerGravity, drawerLayout.layoutDirection)
+                    if ((absGravity == Gravity.LEFT && vX < 0) || (absGravity == Gravity.RIGHT && vX > 0)) {
                         drawerLayout.closeDrawer(drawerGravity)
-                        drawerClosed = true
+                        drawerOpen = false
                     }
-
                     return true
                 }
             })
 
             override fun onTouch(v: View, event: MotionEvent): Boolean {
+                if (event.actionMasked == MotionEvent.ACTION_DOWN)
+                    drawerOpen = drawerLayout.isDrawerOpen(drawerGravity)
 
-                if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-                    val isDrawerOpen = drawerLayout.isDrawerOpen(drawerGravity)
-                    detectingSwipe = isDrawerOpen
-                    drawerClosed = !isDrawerOpen
-                }
-
-                if (detectingSwipe)
+                if (drawerOpen)
                     detector.onTouchEvent(event)
 
                 return false
