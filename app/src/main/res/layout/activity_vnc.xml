@@ -57,6 +57,7 @@
 
             <!--Drawers-->
             <LinearLayout
+                android:id="@+id/primary_toolbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"

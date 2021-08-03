@@ -20,6 +20,15 @@
     </string-array>
 
 
+    <string-array name="toolbar_position_entries">
+        <item>Start</item>
+        <item>End</item>
+    </string-array>
+    <string-array name="toolbar_position_values">
+        <item>start</item>
+        <item>end</item>
+    </string-array>
+
     <string-array name="single_tap_action_entries">
         <item>@string/pref_gesture_action_none</item>
         <item>@string/pref_gesture_action_left_click</item>

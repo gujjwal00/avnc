@@ -40,4 +40,17 @@
             app:showSeekBarValue="true"
             app:title="@string/pref_zoom_max" />
     </PreferenceCategory>
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_toolbar"
+        app:title="@string/pref_toolbar">
+
+        <ListPreference
+            app:defaultValue="start"
+            app:entries="@array/toolbar_position_entries"
+            app:entryValues="@array/toolbar_position_values"
+            app:key="primary_toolbar_position"
+            app:title="@string/pref_toolbar_position"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
 </PreferenceScreen>

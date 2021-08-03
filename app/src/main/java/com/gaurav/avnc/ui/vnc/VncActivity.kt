@@ -26,6 +26,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
@@ -79,12 +80,10 @@ class VncActivity : AppCompatActivity() {
         binding.retryConnectionBtn.setOnClickListener { retryConnection() }
 
         //Drawers
-        binding.drawerLayout.setScrimColor(0)
+        setupDrawerLayout()
         binding.keyboardBtn.setOnClickListener { showKeyboard(); closeDrawers() }
         binding.zoomResetBtn.setOnClickListener { viewModel.resetZoom(); closeDrawers() }
         binding.virtualKeysBtn.setOnClickListener { virtualKeys.show(); closeDrawers() }
-        if (viewModel.pref.experimental.swipeCloseToolbar)
-            Experimental.setupDrawerCloseOnScrimSwipe(binding.drawerLayout, Gravity.START)
 
         //ViewModel setup
         viewModel.frameViewRef = WeakReference(binding.frameView)
@@ -189,6 +188,20 @@ class VncActivity : AppCompatActivity() {
 
             binding.root.updatePadding(bottom = paddingBottom)
         }
+    }
+
+    private fun setupDrawerLayout() {
+        binding.drawerLayout.setScrimColor(0)
+
+        // Update Toolbar gravity
+        val gravityH = if (viewModel.pref.display.toolbarPosition == "start") Gravity.START else Gravity.END
+
+        val lp = binding.primaryToolbar.layoutParams as DrawerLayout.LayoutParams
+        lp.gravity = gravityH or Gravity.CENTER_VERTICAL
+        binding.primaryToolbar.layoutParams = lp
+
+        if (viewModel.pref.experimental.swipeCloseToolbar)
+            Experimental.setupDrawerCloseOnScrimSwipe(binding.drawerLayout, gravityH)
     }
 
 

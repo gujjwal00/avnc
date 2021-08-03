@@ -36,6 +36,7 @@ class AppPreferences(context: Context) {
     inner class Display {
         val fullscreen; get() = prefs.getBoolean("fullscreen_display", true)
         val pipEnabled; get() = prefs.getBoolean("pip_enabled", false)
+        val toolbarPosition; get() = prefs.getString("primary_toolbar_position", "start")
         val zoomMax; get() = prefs.getInt("zoom_max", 500) / 100F
         val zoomMin; get() = prefs.getInt("zoom_min", 50) / 100F
     }
