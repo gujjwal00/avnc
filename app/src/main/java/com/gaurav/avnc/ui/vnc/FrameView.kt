@@ -17,9 +17,30 @@ import android.view.MotionEvent
 import android.view.inputmethod.BaseInputConnection
 import android.view.inputmethod.EditorInfo
 import com.gaurav.avnc.ui.vnc.gl.Renderer
+import com.gaurav.avnc.viewmodel.VncViewModel
+import com.gaurav.avnc.vnc.VncClient
 
 /**
- * FrameView renders the VNC framebuffer on screen.
+ * This class renders the VNC framebuffer on screen.
+ *
+ * It derives from [GLSurfaceView], which creates an EGL Display, where we can
+ * render the framebuffer using OpenGL ES. See [GLSurfaceView] for more details.
+ *
+ * Actual rendering is done by [Renderer], which is executed on a dedicated
+ * thread by [GLSurfaceView].
+ *
+ *
+ *-   +-------------------+          +--------------------+         +--------------------+
+ *-   |   [FrameView]     |          |  [VncViewModel]    |         |   [VncClient]      |
+ *-   +--------+----------+          +----------+---------+         +----------+---------+
+ *-            |                                |                              |
+ *-            |                                |                              |
+ *-            | Render Request                 | [FrameState]                 | Framebuffer
+ *-            |                                v                              |
+ *-            |                     +----------+---------+                    |
+ *-            +-------------------> |     [Renderer]     | <------------------+
+ *-                                  +--------------------+
+
  */
 class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(context, attrs) {
 
