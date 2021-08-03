@@ -161,7 +161,7 @@ class VncActivity : AppCompatActivity() {
 
     private fun setupLayout() {
 
-        if (viewModel.pref.display.fullscreen) {
+        if (viewModel.pref.viewer.fullscreen) {
             @Suppress("DEPRECATION")
             window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         }
@@ -194,7 +194,7 @@ class VncActivity : AppCompatActivity() {
         binding.drawerLayout.setScrimColor(0)
 
         // Update Toolbar gravity
-        val gravityH = if (viewModel.pref.display.toolbarPosition == "start") Gravity.START else Gravity.END
+        val gravityH = if (viewModel.pref.viewer.toolbarPosition == "start") Gravity.START else Gravity.END
 
         val lp = binding.primaryToolbar.layoutParams as DrawerLayout.LayoutParams
         lp.gravity = gravityH or Gravity.CENTER_VERTICAL
@@ -224,7 +224,7 @@ class VncActivity : AppCompatActivity() {
     }
 
     private fun enterPiPMode() {
-        val canEnter = viewModel.pref.display.pipEnabled && viewModel.client.state == VncClient.State.Connected
+        val canEnter = viewModel.pref.viewer.pipEnabled && viewModel.client.state == VncClient.State.Connected
 
         if (canEnter && Build.VERSION.SDK_INT >= 26) {
 

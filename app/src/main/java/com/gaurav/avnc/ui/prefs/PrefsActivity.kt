@@ -96,7 +96,7 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
         }
     }
 
-    @Keep class Display : PrefFragment(R.xml.pref_display) {
+    @Keep class Viewer : PrefFragment(R.xml.pref_viewer) {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
 

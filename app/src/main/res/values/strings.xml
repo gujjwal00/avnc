@@ -91,10 +91,10 @@
     <string name="desc_saved_servers_list">List of saved Servers</string>
 
     <!-- Preference -->
-    <string name="pref_ui">User Interface</string>
-    <string name="pref_appearance_summary">Look and feel</string>
-    <string name="pref_display">Local Display</string>
-    <string name="pref_display_summary">Picture-in-Picture, Zoom</string>
+    <string name="pref_ui">Interface</string>
+    <string name="pref_ui_summary">Look and feel</string>
+    <string name="pref_viewer">Viewer</string>
+    <string name="pref_viewer_summary">Picture-in-Picture, Zoom</string>
     <string name="pref_input">Input</string>
     <string name="pref_input_summary">Gestures, Mouse, Virtual keys</string>
     <string name="pref_servers">Servers</string>
@@ -110,7 +110,7 @@
     <string name="pref_gesture_action_right_click">Right Click</string>
     <string name="pref_gesture_action_double_click">Double Click</string>
     <string name="pref_gesture_action_move_pointer">Move Pointer</string>
-    <string name="pref_gesture_action_pan">Move Local Display</string>
+    <string name="pref_gesture_action_pan">Pan Local Frame</string>
     <string name="pref_gesture_action_remote_scroll">Scroll Remote Content</string>
     <string name="pref_gesture_action_remote_drag">Drag Remote Content</string>
 

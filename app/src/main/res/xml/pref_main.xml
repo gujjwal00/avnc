@@ -12,14 +12,14 @@
     <Preference
         app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Appearance"
         app:icon="@drawable/ic_palette"
-        app:summary="@string/pref_appearance_summary"
+        app:summary="@string/pref_ui_summary"
         app:title="@string/pref_ui" />
 
     <Preference
-        app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Display"
+        app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Viewer"
         app:icon="@drawable/ic_video"
-        app:summary="@string/pref_display_summary"
-        app:title="@string/pref_display" />
+        app:summary="@string/pref_viewer_summary"
+        app:title="@string/pref_viewer" />
 
     <Preference
         app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Input"

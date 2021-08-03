@@ -33,7 +33,7 @@ class AppPreferences(context: Context) {
         val preferAdvancedEditor; get() = prefs.getBoolean("prefer_advanced_editor", false)
     }
 
-    inner class Display {
+    inner class Viewer {
         val fullscreen; get() = prefs.getBoolean("fullscreen_display", true)
         val pipEnabled; get() = prefs.getBoolean("pip_enabled", false)
         val toolbarPosition; get() = prefs.getString("primary_toolbar_position", "start")
@@ -86,7 +86,7 @@ class AppPreferences(context: Context) {
     }
 
     val ui = UI()
-    val display = Display()
+    val viewer = Viewer()
     val input = Input()
     val server = Server()
     val experimental = Experimental()
