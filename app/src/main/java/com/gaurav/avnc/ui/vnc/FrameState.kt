@@ -61,7 +61,7 @@ import kotlin.math.min
  * Scaling
  * =======
  *
- * Scaling controls the 'size' of rendered frame. Conceptually, scaling is done in two steps:
+ * Scaling controls the 'size' of rendered frame. Scaling is done in two (conceptual) steps:
  *
  * 1. Base Scale [baseScale] :
  *
@@ -90,8 +90,8 @@ class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScal
 
     constructor(prefs: AppPreferences) : this(prefs.viewer.zoomMin, prefs.viewer.zoomMax)
 
-    var baseScale = 0F; private set
-    var zoomScale = 1.0F; private set
+    var baseScale = 1F; private set
+    var zoomScale = 1F; private set
     val scale get() = baseScale * zoomScale
 
     //Frame position, relative to top-left corner (0,0)
