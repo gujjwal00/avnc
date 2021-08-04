@@ -35,8 +35,8 @@ class FrameStateTest {
     @Test
     fun baseScaleTest1() {
         val state = FrameState()
-        state.setViewportSize(100f, 100f)
-        state.setFramebufferSize(100f, 100f)  //Same as viewport
+        state.setWindowSize(100f, 100f)
+        state.setFramebufferSize(100f, 100f) //Same as window
         assertEquals(1F, state.baseScale)
     }
 
@@ -44,7 +44,7 @@ class FrameStateTest {
     @Test
     fun baseScaleTest2() {
         val state = FrameState()
-        state.setViewportSize(100f, 100f)
+        state.setWindowSize(100f, 100f)
         state.setFramebufferSize(50f, 100f) //Width is half, But height is same
         assertEquals(1F, state.baseScale)
     }
@@ -52,7 +52,7 @@ class FrameStateTest {
     @Test
     fun baseScaleTest3() {
         val state = FrameState()
-        state.setViewportSize(100f, 100f)
+        state.setWindowSize(100f, 100f)
         state.setFramebufferSize(50f, 50f) //Half size
         assertEquals(2F, state.baseScale)
     }
@@ -60,7 +60,7 @@ class FrameStateTest {
     @Test
     fun baseScaleTest4() {
         val state = FrameState()
-        state.setViewportSize(100f, 100f)
+        state.setWindowSize(100f, 100f)
         state.setFramebufferSize(200f, 200f) //Double size
         assertEquals(.5F, state.baseScale)
     }
@@ -68,10 +68,10 @@ class FrameStateTest {
     @Test
     fun baseScaleTest5() {
         val state = FrameState()
-        state.setViewportSize(100f, 100f)
+        state.setWindowSize(100f, 100f)
         state.setFramebufferSize(100f, 100f)
 
-        state.setViewportSize(50f, 50f)       //If viewport size is reduced
+        state.setWindowSize(50f, 50f)         //If window size is reduced
         assertEquals(.5F, state.baseScale) //base scale should also reduce
     }
 
@@ -79,20 +79,20 @@ class FrameStateTest {
     @Test
     fun baseScaleTest6() {
         val state = FrameState()
-        state.setViewportSize(100f, 100f)
+        state.setWindowSize(100f, 100f)
         state.setFramebufferSize(100f, 100f)
 
-        state.setViewportSize(200f, 200f)    //If viewport size is increased
+        state.setWindowSize(200f, 200f)      //If window size is increased
         assertEquals(2F, state.baseScale) //base scale should also increase
     }
 
     @Test
-    fun translateCoerceTest1() {
+    fun positionCoerceTest1() {
         val state = FrameState()
         state.setViewportSize(100f, 100f)
         state.setFramebufferSize(100f, 100f)
 
-        //Because frame and viewport are of same size, we should not be able to translate
+        //Because frame and viewport are of same size, we should not be able to pan
         state.pan(10f, 10f)
         assertEquals(0f, state.frameX)
         assertEquals(0f, state.frameY)
@@ -100,20 +100,20 @@ class FrameStateTest {
 
 
     @Test
-    fun translateCoerceTest2() {
+    fun positionCoerceTest2() {
         val state = FrameState()
         state.setViewportSize(100f, 100f)
         state.setFramebufferSize(100f, 100f)
         state.updateZoom(.5F)
 
-        //Because frame is half in size, we should be centered
+        //Because frame size is less than viewport size, we should be centered
         assertEquals(25f, state.frameX)
         assertEquals(25f, state.frameY)
     }
 
 
     @Test
-    fun translateCoerceTest3() {
+    fun positionCoerceTest3() {
         val state = FrameState()
         state.setViewportSize(100f, 100f)
         state.setFramebufferSize(100f, 100f)
