@@ -194,7 +194,7 @@ class VncActivity : AppCompatActivity() {
         binding.drawerLayout.setScrimColor(0)
 
         // Update Toolbar gravity
-        val gravityH = if (viewModel.pref.viewer.toolbarPosition == "start") Gravity.START else Gravity.END
+        val gravityH = if (viewModel.pref.viewer.toolbarAlignment == "start") Gravity.START else Gravity.END
 
         val lp = binding.primaryToolbar.layoutParams as DrawerLayout.LayoutParams
         lp.gravity = gravityH or Gravity.CENTER_VERTICAL

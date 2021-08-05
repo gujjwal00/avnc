@@ -47,10 +47,10 @@
 
         <ListPreference
             app:defaultValue="start"
-            app:entries="@array/toolbar_position_entries"
-            app:entryValues="@array/toolbar_position_values"
-            app:key="primary_toolbar_position"
-            app:title="@string/pref_toolbar_position"
+            app:entries="@array/toolbar_alignment_entries"
+            app:entryValues="@array/toolbar_alignment_values"
+            app:key="toolbar_alignment"
+            app:title="@string/pref_toolbar_alignment"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 </PreferenceScreen>

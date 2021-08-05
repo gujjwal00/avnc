@@ -135,7 +135,7 @@
     <string name="pref_fullscreen">Use Fullscreen</string>
     <string name="pref_enable_pip">Enable Picture-in-Picture</string>
     <string name="pref_toolbar">Toolbar</string>
-    <string name="pref_toolbar_position">Position</string>
+    <string name="pref_toolbar_alignment">Alignment</string>
     <string name="pref_zoom">Zoom</string>
     <string name="pref_zoom_min">Minimum Zoom</string>
     <string name="pref_zoom_max">Maximum Zoom</string>

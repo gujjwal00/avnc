@@ -20,11 +20,11 @@
     </string-array>
 
 
-    <string-array name="toolbar_position_entries">
+    <string-array name="toolbar_alignment_entries">
         <item>Start</item>
         <item>End</item>
     </string-array>
-    <string-array name="toolbar_position_values">
+    <string-array name="toolbar_alignment_values">
         <item>start</item>
         <item>end</item>
     </string-array>
