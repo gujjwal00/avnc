@@ -8,6 +8,7 @@
 
 package com.gaurav.avnc.ui.about
 
+import android.content.res.AssetManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +26,7 @@ class LicenseFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentLicenseBinding.inflate(inflater, container, false)
-        loadLicenses(binding.licenseText)
+        loadLicenses(binding.licenseText, resources.assets)
         return binding.root
     }
 
@@ -45,12 +46,12 @@ class LicenseFragment : Fragment() {
             "license/X11.txt",
     )
 
-    private fun loadLicenses(tv: TextView) {
+    private fun loadLicenses(tv: TextView, assets: AssetManager) {
         lifecycleScope.launch(Dispatchers.IO) {
             var combinedText = ""
 
             licenseFiles.forEach {
-                val reader = resources.assets.open(it).reader()
+                val reader = assets.open(it).reader()
                 val text = reader.readText()
                 reader.close()
 
