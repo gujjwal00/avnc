@@ -36,3 +36,6 @@ vcs.xml
 
 #SIMD tester
 gastest.o
+
+#Private data
+private/
