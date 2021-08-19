@@ -1,10 +1,9 @@
 [submodule "extern/libvncserver"]
 	path = extern/libvncserver
 	url = ../../gujjwal00/libvncserver.git
-[submodule "extern/libressl"]
-	path = extern/libressl
-	url = ../../libressl-portable/portable.git
-	ignore = untracked    # Ignore temporary files created by LibreSSL build
 [submodule "extern/libjpeg-turbo"]
 	path = extern/libjpeg-turbo
 	url = ../../libjpeg-turbo/libjpeg-turbo
+[submodule "extern/wolfssl"]
+	path = extern/wolfssl
+	url = ../../wolfSSL/wolfssl.git

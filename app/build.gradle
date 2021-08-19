@@ -45,7 +45,7 @@ android {
             externalNativeBuild {
                 cmake {
                     arguments '-DAVNC_BUILD_ALL=ON'
-                    targets 'turbojpeg-static', 'ssl', 'crypto'
+                    targets 'turbojpeg-static', 'wolfssl'
                 }
             }
         }
@@ -61,7 +61,7 @@ android {
             externalNativeBuild {
                 cmake {
                     arguments '-DAVNC_BUILD_ALL=ON'
-                    targets 'turbojpeg-static', 'ssl', 'crypto'
+                    targets 'turbojpeg-static', 'wolfssl'
                 }
             }
         }

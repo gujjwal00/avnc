@@ -19,14 +19,6 @@ macro(avnc_check_submodule name)
     endif ()
 endmacro()
 
-# Make sure libressl-portable is initialized
-macro(avnc_check_libressl)
-    if (NOT EXISTS "${AVNC_EXTERN_DIR}/libressl/VERSION")
-        message(FATAL_ERROR "libressl is not initialized properly.
-                             Please run './autogen.sh' in 'libressl' submodule.")
-    endif ()
-endmacro()
-
 
 # Requred to enable SIMD support on ARM
 if (CMAKE_ANDROID_ARCH STREQUAL "arm64")
@@ -58,20 +50,27 @@ endif ()
 # SSL
 ###############################################################################
 if (AVNC_BUILD_ALL)
-    avnc_check_submodule(libressl)
-    avnc_check_libressl()
+    avnc_check_submodule(wolfssl)
 
-    set(AVNC_LIBSSL_SRC_DIR ${AVNC_EXTERN_DIR}/libressl)
-    set(AVNC_LIBSSL_BUILD_DIR ${CMAKE_BINARY_DIR}/libressl)
+    set(AVNC_LIBSSL_SRC_DIR ${AVNC_EXTERN_DIR}/wolfssl)
+    set(AVNC_LIBSSL_BUILD_DIR ${CMAKE_BINARY_DIR}/wolfssl)
+
+    # CMake support in wolfSSl is still under development, so we have to
+    # manully set some flags to enable OpenSSL compatibility layer
+    set(WOLFSSL_CRL yes)
+    set(WOLFSSL_DES3 yes)
+    add_definitions(-DOPENSSL_ALL -DOPENSSL_EXTRA -DHAVE_CRL -DHAVE_EX_DATA
+            -DHAVE_ANON -DWOLFSSL_AES_DIRECT -DHAVE_AES_ECB -DWOLFSSL_DES_ECB
+            -DWC_NO_HARDEN)
 
     add_subdirectory(${AVNC_LIBSSL_SRC_DIR} ${AVNC_LIBSSL_BUILD_DIR})
 
     # Set these variables so FindOpenSSL can find the library
-    set(OPENSSL_SSL_LIBRARY ${AVNC_LIBSSL_BUILD_DIR}/ssl/libssl.a)
-    set(OPENSSL_CRYPTO_LIBRARY ${AVNC_LIBSSL_BUILD_DIR}/crypto/libcrypto.a)
-    set(OPENSSL_INCLUDE_DIR ${AVNC_LIBSSL_BUILD_DIR}/include)
+    set(OPENSSL_SSL_LIBRARY ${AVNC_LIBSSL_BUILD_DIR}/libwolfssl.a)
+    set(OPENSSL_CRYPTO_LIBRARY ${AVNC_LIBSSL_BUILD_DIR}/libwolfssl.a)
+    set(OPENSSL_INCLUDE_DIR ${AVNC_LIBSSL_SRC_DIR}/wolfssl)
 
-    include_directories(${AVNC_LIBSSL_SRC_DIR}/include)
+    include_directories(${AVNC_LIBSSL_SRC_DIR})
 endif ()
 
 
