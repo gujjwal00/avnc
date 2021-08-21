@@ -24,8 +24,7 @@ android {
             cmake {
                 //We are not using STL
                 arguments '-DANDROID_STL=none'
-
-                targets 'vncclient', 'native-vnc'
+                targets 'native-vnc', 'vncclient', 'turbojpeg-static', 'wolfssl'
             }
         }
 
@@ -39,31 +38,9 @@ android {
             versionNameSuffix ' (debug)'
         }
 
-        debugAll {
-            initWith(debug)
-
-            externalNativeBuild {
-                cmake {
-                    arguments '-DAVNC_BUILD_ALL=ON'
-                    targets 'turbojpeg-static', 'wolfssl'
-                }
-            }
-        }
-
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-
-        releseAll {
-            initWith(release)
-
-            externalNativeBuild {
-                cmake {
-                    arguments '-DAVNC_BUILD_ALL=ON'
-                    targets 'turbojpeg-static', 'wolfssl'
-                }
-            }
         }
     }
 

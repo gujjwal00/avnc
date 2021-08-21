@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.10)
 
 project(NativeVNC C CXX ASM)
 
-option(AVNC_BUILD_ALL "Build with JPEG and SSL" OFF)
 set(AVNC_EXTERN_DIR ${PROJECT_SOURCE_DIR}/../extern)
 set(BUILD_SHARED_LIBS OFF)
 
@@ -31,47 +30,44 @@ endif ()
 ###############################################################################
 # JPEG
 ###############################################################################
-if (AVNC_BUILD_ALL)
-    avnc_check_submodule(libjpeg-turbo)
+avnc_check_submodule(libjpeg-turbo)
 
-    set(AVNC_LIBJPEG_SRC_DIR ${AVNC_EXTERN_DIR}/libjpeg-turbo)
-    set(AVNC_LIBJPEG_BUILD_DIR ${CMAKE_BINARY_DIR}/libjpeg-turbo)
+set(AVNC_LIBJPEG_SRC_DIR ${AVNC_EXTERN_DIR}/libjpeg-turbo)
+set(AVNC_LIBJPEG_BUILD_DIR ${CMAKE_BINARY_DIR}/libjpeg-turbo)
 
-    add_subdirectory(${AVNC_LIBJPEG_SRC_DIR} ${AVNC_LIBJPEG_BUILD_DIR})
+add_subdirectory(${AVNC_LIBJPEG_SRC_DIR} ${AVNC_LIBJPEG_BUILD_DIR})
 
-    # Set these variables so FindJPEG can find the library
-    set(JPEG_LIBRARY ${AVNC_LIBJPEG_BUILD_DIR}/libturbojpeg.a)
-    set(JPEG_INCLUDE_DIR ${AVNC_LIBJPEG_SRC_DIR})
+# Set these variables so FindJPEG can find the library
+set(JPEG_LIBRARY ${AVNC_LIBJPEG_BUILD_DIR}/libturbojpeg.a)
+set(JPEG_INCLUDE_DIR ${AVNC_LIBJPEG_SRC_DIR})
 
-    include_directories(${AVNC_LIBJPEG_SRC_DIR} ${AVNC_LIBJPEG_BUILD_DIR})
-endif ()
+include_directories(${AVNC_LIBJPEG_SRC_DIR} ${AVNC_LIBJPEG_BUILD_DIR})
+
 
 ###############################################################################
 # SSL
 ###############################################################################
-if (AVNC_BUILD_ALL)
-    avnc_check_submodule(wolfssl)
+avnc_check_submodule(wolfssl)
 
-    set(AVNC_LIBSSL_SRC_DIR ${AVNC_EXTERN_DIR}/wolfssl)
-    set(AVNC_LIBSSL_BUILD_DIR ${CMAKE_BINARY_DIR}/wolfssl)
+set(AVNC_LIBSSL_SRC_DIR ${AVNC_EXTERN_DIR}/wolfssl)
+set(AVNC_LIBSSL_BUILD_DIR ${CMAKE_BINARY_DIR}/wolfssl)
 
-    # CMake support in wolfSSl is still under development, so we have to
-    # manully set some flags to enable OpenSSL compatibility layer
-    set(WOLFSSL_CRL yes)
-    set(WOLFSSL_DES3 yes)
-    add_definitions(-DOPENSSL_ALL -DOPENSSL_EXTRA -DHAVE_CRL -DHAVE_EX_DATA
-            -DHAVE_ANON -DWOLFSSL_AES_DIRECT -DHAVE_AES_ECB -DWOLFSSL_DES_ECB
-            -DWC_NO_HARDEN)
+# CMake support in wolfSSl is still under development, so we have to
+# manully set some flags to enable OpenSSL compatibility layer
+set(WOLFSSL_CRL yes)
+set(WOLFSSL_DES3 yes)
+add_definitions(-DOPENSSL_ALL -DOPENSSL_EXTRA -DHAVE_CRL -DHAVE_EX_DATA
+        -DHAVE_ANON -DWOLFSSL_AES_DIRECT -DHAVE_AES_ECB -DWOLFSSL_DES_ECB
+        -DWC_NO_HARDEN)
 
-    add_subdirectory(${AVNC_LIBSSL_SRC_DIR} ${AVNC_LIBSSL_BUILD_DIR})
+add_subdirectory(${AVNC_LIBSSL_SRC_DIR} ${AVNC_LIBSSL_BUILD_DIR})
 
-    # Set these variables so FindOpenSSL can find the library
-    set(OPENSSL_SSL_LIBRARY ${AVNC_LIBSSL_BUILD_DIR}/libwolfssl.a)
-    set(OPENSSL_CRYPTO_LIBRARY ${AVNC_LIBSSL_BUILD_DIR}/libwolfssl.a)
-    set(OPENSSL_INCLUDE_DIR ${AVNC_LIBSSL_SRC_DIR}/wolfssl)
+# Set these variables so FindOpenSSL can find the library
+set(OPENSSL_SSL_LIBRARY ${AVNC_LIBSSL_BUILD_DIR}/libwolfssl.a)
+set(OPENSSL_CRYPTO_LIBRARY ${AVNC_LIBSSL_BUILD_DIR}/libwolfssl.a)
+set(OPENSSL_INCLUDE_DIR ${AVNC_LIBSSL_SRC_DIR}/wolfssl)
 
-    include_directories(${AVNC_LIBSSL_SRC_DIR})
-endif ()
+include_directories(${AVNC_LIBSSL_SRC_DIR})
 
 
 ###############################################################################

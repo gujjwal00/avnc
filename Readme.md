@@ -56,26 +56,3 @@ Now you can import the project in Android Studio, or build it directly from term
 
 Read [Architecture.kt](app/src/main/java/com/gaurav/avnc/Architecture.kt) (preferably in
 Android Studio) to know more about the code.
-
-
--------------------------------------------------------------------------------
-
-To reduce build time during development, Libjpeg-turbo and LibreSSL are **not** 
-included in default build types. 
-
-Thus, the Tight encoding, and security types based on TLS, will not work in such builds.
-If you need these features, you can create a full build.
-
-Before creating a full build, you have to prepare the LibreSSL source tree:
-
-1. Make sure following packages are installed: automake, autoconf, git, libtool, perl
-2. Run the following commands from root of the project:
-   ```bash
-   cd extern/libressl/
-   ./autogen.sh
-   ```
-
-Now, select an appropriate build type (`releaseAll`/`debugAll`) to create full build.
-See [build.gradle](app/build.gradle) for available build types.
-
--------------------------------------------------------------------------------
