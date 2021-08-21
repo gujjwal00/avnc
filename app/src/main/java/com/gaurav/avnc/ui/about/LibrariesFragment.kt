@@ -68,8 +68,8 @@ class LibrariesFragment : Fragment() {
             Library("Libjpeg-turbo",
                     "https://github.com/libjpeg-turbo/libjpeg-turbo"),
 
-            Library("LibreSSL Portable",
-                    "https://github.com/libressl-portable/portable"),
+            Library("wolfSSL",
+                    "https://github.com/wolfSSL/wolfssl"),
 
             Library("ConnectBot's SSH library",
                     "https://github.com/connectbot/sshlib/"),
