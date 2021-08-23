@@ -175,8 +175,17 @@ class VncActivity : AppCompatActivity() {
         //root view so that its content is resized to that area.
         //This will trigger the resize of frame view allowing it to handle the available space.
         val visibleFrame = Rect()
+        val rootLocation = intArrayOf(0, 0)
         binding.root.viewTreeObserver.addOnGlobalLayoutListener {
             binding.root.getWindowVisibleDisplayFrame(visibleFrame)
+
+            // Normally, the root view will cover the whole screen, but on devices
+            // with display-cutout it will be letter-boxed by the system.
+            // In that case the root view won't start from (0,0).
+            // So we have to offset the visibleFame (which is in display coordinates)
+            // to make sure it is relative to our root view.
+            binding.root.getLocationOnScreen(rootLocation)
+            visibleFrame.offset(-rootLocation[0], -rootLocation[1])
 
             var paddingBottom = binding.root.bottom - visibleFrame.bottom
             if (paddingBottom < 0)
