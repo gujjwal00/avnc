@@ -13,6 +13,8 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.gaurav.avnc.R
+import com.gaurav.avnc.checkIsDisplayed
+import com.gaurav.avnc.doClick
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
