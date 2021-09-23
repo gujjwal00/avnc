@@ -20,7 +20,6 @@ import androidx.preference.PreferenceManager
 class AppPreferences(context: Context) {
 
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-    private val editor = prefs.edit()
 
     inner class UI {
         val nightMode
@@ -82,7 +81,7 @@ class AppPreferences(context: Context) {
     inner class RunInfo {
         var hasConnectedSuccessfully: Boolean
             get() = prefs.getBoolean("run_info_has_connected_successfully", false)
-            set(value) = editor.putBoolean("run_info_has_connected_successfully", value).apply()
+            set(value) = prefs.edit().putBoolean("run_info_has_connected_successfully", value).apply()
     }
 
     val ui = UI()
