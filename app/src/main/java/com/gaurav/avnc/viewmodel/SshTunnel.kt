@@ -16,6 +16,7 @@ import com.trilead.ssh2.LocalPortForwarder
 import com.trilead.ssh2.ServerHostKeyVerifier
 import java.io.File
 import java.io.IOException
+import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.security.MessageDigest
 
@@ -78,7 +79,7 @@ class SshTunnel(private val viewModel: VncViewModel) {
     private var connection: Connection? = null
     private var forwarder: LocalPortForwarder? = null
 
-    val localHost = "localhost"
+    val localHost = "127.0.0.1"
     var localPort = 0
 
     /**
@@ -106,11 +107,12 @@ class SshTunnel(private val viewModel: VncViewModel) {
         // So we create a temporary ServerSocket, close it immediately and try to use its port.
         // But between the close-reuse, that port can be assigned to someone else so we try again.
         for (i in 1..50) {
-            val ss = ServerSocket(0)
-            ss.close()
+            val attemptedPort = with(ServerSocket(0)) { close(); localPort }
+            val address = InetSocketAddress(localHost, attemptedPort)
+
             try {
-                forwarder = connection.createLocalPortForwarder(ss.localPort, profile.host, profile.port)
-                localPort = ss.localPort
+                forwarder = connection.createLocalPortForwarder(address, profile.host, profile.port)
+                localPort = attemptedPort
             } catch (e: IOException) {
                 //Retry
             }
@@ -118,6 +120,15 @@ class SshTunnel(private val viewModel: VncViewModel) {
 
         if (localPort == 0)
             throw IOException("Cannot find a local port for SSH Tunnel")
+    }
+
+    /**
+     * Stop accepting new connections.
+     * This has no effect on connections already established through the tunnel.
+     */
+    fun stopAcceptingConnections() {
+        forwarder?.close()
+        forwarder = null
     }
 
     fun close() {

@@ -199,6 +199,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
         if (!client.connect(host, port))
             throw IOException(client.getLastErrorStr())
+
+        sshTunnel.stopAcceptingConnections()
     }
 
     private fun processMessages() {
