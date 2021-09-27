@@ -113,6 +113,7 @@ class SshTunnel(private val viewModel: VncViewModel) {
             try {
                 forwarder = connection.createLocalPortForwarder(address, profile.host, profile.port)
                 localPort = attemptedPort
+                break
             } catch (e: IOException) {
                 //Retry
             }
