@@ -11,7 +11,10 @@ package com.gaurav.avnc
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.model.db.MainDb
 import com.gaurav.avnc.ui.about.AboutActivity
-import com.gaurav.avnc.ui.home.*
+import com.gaurav.avnc.ui.home.HomeActivity
+import com.gaurav.avnc.ui.home.ProfileEditorFragment
+import com.gaurav.avnc.ui.home.ServerTabs
+import com.gaurav.avnc.ui.home.UrlBarActivity
 import com.gaurav.avnc.ui.prefs.PrefsActivity
 import com.gaurav.avnc.ui.vnc.*
 import com.gaurav.avnc.viewmodel.HomeViewModel
@@ -68,8 +71,8 @@ import com.gaurav.avnc.vnc.VncClient
  * - A urlbar, which launches [UrlBarActivity], allowing user to quickly connect
  *   to a server without creating a profile for it.
  *
- * - List of saved servers, shown by [ServersFragment].
- * - List of servers found by [Discovery], shown by [DiscoveryFragment].
+ * - Lists of saved & discovered servers, in [ServerTabs].
+ *
  * - [ProfileEditorFragment], used for creating/editing [ServerProfile].
  *
  *

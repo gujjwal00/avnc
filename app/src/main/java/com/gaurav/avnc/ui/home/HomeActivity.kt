@@ -34,7 +34,7 @@ import com.google.android.material.snackbar.Snackbar
 class HomeActivity : AppCompatActivity() {
     val viewModel by viewModels<HomeViewModel>()
     private lateinit var binding: ActivityHomeBinding
-    private lateinit var tabController: TabController
+    private val tabs = ServerTabs(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +44,8 @@ class HomeActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
         binding.lifecycleOwner = this
 
-        tabController = TabController(this, binding.pager, binding.tabLayout)
+        tabs.create(binding.tabLayout, binding.pager)
+
         binding.drawerNav.setNavigationItemSelectedListener { onMenuItemSelected(it.itemId) }
         binding.navigationBtn.setOnClickListener { binding.drawerLayout.open() }
         binding.settingsBtn.setOnClickListener { showSettings() }
@@ -107,7 +108,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun onProfileInserted(profile: ServerProfile) {
-        tabController.showSavedServers()
+        tabs.showSavedServers()
 
         // Show snackbar for new servers
         if (profile.ID == 0L)
@@ -124,6 +125,6 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun updateDiscoveryBadge(list: List<ServerProfile>) {
-        tabController.updateDiscoveryBadge(list.size)
+        tabs.updateDiscoveryBadge(list.size)
     }
 }

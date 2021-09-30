@@ -21,10 +21,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.recyclerview.widget.RecyclerView
-import com.gaurav.avnc.databinding.FragmentServersBinding
-import com.gaurav.avnc.databinding.ItemServerBinding
+import com.gaurav.avnc.databinding.ServerSavedBinding
 import com.gaurav.avnc.model.ServerProfile
-import com.gaurav.avnc.ui.home.adapter.ServersAdapter
+import com.gaurav.avnc.ui.home.ServerTabs.SavedServerAdapter
 
 /**
  * All the experimental stuff is dumped here.
@@ -83,7 +82,7 @@ object Experimental {
          *
          * Note: Viewmodel & lifecycle must have been assigned to [binding].
          */
-        fun setup(binding: FragmentServersBinding, adapter: ServersAdapter) {
+        fun setup(binding: ServerSavedBinding, adapter: SavedServerAdapter) {
             Log.i(javaClass.simpleName, "Setting up Experimental Indicator")
 
             // There are 4 event sources which we are interested in:
@@ -100,11 +99,9 @@ object Experimental {
 
             // 2 - RV Binding: We need to know which RV Item View is rendering which profile.
             adapter.bindListener = { holder, profile ->
-                if (holder.binding is ItemServerBinding) {
-                    val view = holder.binding.indicator
-                    profileMap[view] = profile
-                    animatorMap[view] = isServerDiscovered(profile)
-                }
+                val view = holder.binding.indicator
+                profileMap[view] = profile
+                animatorMap[view] = isServerDiscovered(profile)
             }
 
             // 3 - RV Views: We need to clear Views which are no longer used by RecyclerView.

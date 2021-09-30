@@ -23,39 +23,28 @@
         android:clipChildren="false">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/discovered_rv"
+            android:id="@+id/servers_rv"
             style="@style/ServerList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/desc_discovered_list"
-            tools:listitem="@layout/item_discovery" />
+            android:contentDescription="@string/desc_saved_servers_list"
+            tools:listitem="@layout/server_saved_item" />
 
         <TextView
             style="@style/TipView"
-            android:text="@string/tip_discovery"
+            android:text="@string/tip_empty_server_list"
             android:visibility="gone"
-            app:isVisible="@{!viewModel.discovery.isRunning &amp;&amp; viewModel.discovery.servers.empty}"
+            app:isVisible="@{viewModel.serverProfiles.empty}"
             tools:visibility="visible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             style="@style/Widget.MaterialComponents.FloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
+            android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/margin_normal"
-            android:contentDescription="@string/desc_discovery_btn"
-            android:onClick="@{()-> viewModel.startDiscovery()}"
-            android:src="@drawable/ic_refresh"
-            app:isVisible="@{!viewModel.discovery.isRunning}" />
-
-        <ProgressBar
-            style="@style/Widget.MaterialComponents.CircularProgressIndicator"
-            android:layout_width="@dimen/action_btn_size"
-            android:layout_height="@dimen/action_btn_size"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="@dimen/margin_normal"
-            android:contentDescription="@string/desc_discovery_running"
-            android:indeterminate="true"
-            app:isVisible="@{viewModel.discovery.isRunning}" />
+            android:contentDescription="@string/desc_add_new_server_btn"
+            android:onClick="@{()-> viewModel.onNewProfile()}"
+            android:src="@drawable/ic_plus" />
     </FrameLayout>
 </layout>

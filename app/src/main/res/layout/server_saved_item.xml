@@ -7,7 +7,8 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -22,14 +23,21 @@
         android:layout_height="wrap_content">
 
         <include
-            layout="@layout/server_profile"
+            layout="@layout/server_item"
             app:profile="@{viewModel}" />
 
-        <ImageButton
-            android:id="@+id/save_btn"
-            style="@style/ImageButton"
+        <!--Experimental Feature-->
+        <View
+            android:id="@+id/indicator"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
             android:layout_gravity="end|center_vertical"
-            android:contentDescription="@string/desc_save_discovered_server_btn"
-            android:src="@drawable/ic_plus" />
+            android:layout_margin="@dimen/margin_normal"
+            android:alpha="0"
+            android:background="@drawable/indicator"
+            android:visibility="gone"
+            tools:alpha="1"
+            tools:visibility="visible" />
     </com.google.android.material.card.MaterialCardView>
+
 </layout>
