@@ -66,7 +66,7 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
         asyncIO {
             runCatching {
                 // Serialize
-                val profiles = serverProfileDao.getAll()
+                val profiles = serverProfileDao.getList()
                 val data = Container(profiles = profiles)
                 val json = serializer.encodeToString(data)
 

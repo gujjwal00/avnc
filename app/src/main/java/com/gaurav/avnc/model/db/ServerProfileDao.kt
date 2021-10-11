@@ -17,11 +17,11 @@ import com.gaurav.avnc.vnc.UserCredential
 interface ServerProfileDao {
 
     @Query("SELECT * FROM profiles")
-    fun getAllLive(): LiveData<List<ServerProfile>>
+    fun getLiveList(): LiveData<List<ServerProfile>>
 
     //Synchronous version
     @Query("SELECT * FROM profiles")
-    fun getAll(): List<ServerProfile>
+    fun getList(): List<ServerProfile>
 
     @Query("SELECT username, password FROM profiles")
     fun getCredentials(): LiveData<List<UserCredential>>
