@@ -9,7 +9,9 @@
 package com.gaurav.avnc.util
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.LiveData
 import androidx.preference.PreferenceManager
 
 /**
@@ -90,4 +92,36 @@ class AppPreferences(context: Context) {
     val server = Server()
     val experimental = Experimental()
     val runInfo = RunInfo()
+
+
+    /**
+     * For some preference changes we want to provide live feedback to user.
+     * This class is used for such scenarios. Based on [LiveData], it notifies
+     * the observers whenever the value of given preference is changed.
+     *
+     * For now, each [LivePref] creates a separate change listener, but if
+     * number of [LivePref]s grow, we can optimize by sharing a single listener.
+     */
+    inner class LivePref<T>(val key: String, private val defValue: T) : LiveData<T>() {
+        private val prefChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, changedKey ->
+            if (key == changedKey)
+                updateValue()
+        }
+
+        init {
+            updateValue() //Initial load
+            prefs.registerOnSharedPreferenceChangeListener(prefChangeListener)
+        }
+
+        private fun updateValue() {
+            @Suppress("UNCHECKED_CAST")
+            when (defValue) {
+                is Boolean -> value = prefs.getBoolean(key, defValue) as T
+                is String -> value = prefs.getString(key, defValue) as T
+                is Int -> value = prefs.getInt(key, defValue) as T
+                is Long -> value = prefs.getLong(key, defValue) as T
+                is Float -> value = prefs.getFloat(key, defValue) as T
+            }
+        }
+    }
 }
