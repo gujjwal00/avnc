@@ -23,4 +23,10 @@
         app:summary="@string/pref_prefer_advanced_editor_summary"
         app:title="@string/pref_prefer_advanced_editor" />
 
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="sort_server_list"
+        app:summary="@string/pref_sort_server_list_summary"
+        app:title="@string/pref_sort_server_list" />
+
 </PreferenceScreen>

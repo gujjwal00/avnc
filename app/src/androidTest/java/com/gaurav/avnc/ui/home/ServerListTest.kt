@@ -10,7 +10,9 @@ package com.gaurav.avnc.ui.home
 
 import android.app.Activity
 import android.app.Instrumentation
+import androidx.preference.PreferenceManager
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.PositionAssertions.isCompletelyAbove
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
@@ -104,5 +106,25 @@ class ServerListTest {
 
         assertEquals(testProfile.host, getClipboardText())
         onView(withText(R.string.msg_copied_to_clipboard)).checkIsDisplayed()
+    }
+
+    @Test
+    fun sortServers() {
+        val prefEditor = PreferenceManager.getDefaultSharedPreferences(targetContext).edit()
+
+        with(dbRule.db.serverProfileDao) {
+            deleteAll()
+            insert(ServerProfile(name = "pqr"))
+            insert(ServerProfile(name = "abc"))
+        }
+
+        //Without sorting, "pqr" should be above "abc", as it was inserted first
+        prefEditor.putBoolean("sort_server_list", false).commit()
+        onView(withText("pqr")).checkWithTimeout(isCompletelyAbove(withText("abc")))
+
+
+        //With sorting, "abc" should be above "pqr"
+        prefEditor.putBoolean("sort_server_list", true).commit()
+        onView(withText("abc")).checkWithTimeout(isCompletelyAbove(withText("pqr")))
     }
 }

@@ -117,6 +117,8 @@
     <string name="pref_theme">Theme</string>
     <string name="pref_prefer_advanced_editor">Prefer Advanced Editor</string>
     <string name="pref_prefer_advanced_editor_summary">Enable this to directly open Advanced mode to add/edit Servers</string>
+    <string name="pref_sort_server_list">Sort Server List</string>
+    <string name="pref_sort_server_list_summary">Servers are sorted by their name</string>
     <string name="pref_gesture">Gestures</string>
     <string name="pref_single_tap">Single Tap</string>
     <string name="pref_double_tap">Double Tap</string>

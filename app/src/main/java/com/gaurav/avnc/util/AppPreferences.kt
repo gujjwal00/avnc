@@ -32,6 +32,7 @@ class AppPreferences(context: Context) {
             }
 
         val preferAdvancedEditor; get() = prefs.getBoolean("prefer_advanced_editor", false)
+        val sortServerList = LivePref("sort_server_list", false)
     }
 
     inner class Viewer {
