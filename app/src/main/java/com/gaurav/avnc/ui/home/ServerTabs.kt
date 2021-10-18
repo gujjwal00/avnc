@@ -10,6 +10,8 @@ package com.gaurav.avnc.ui.home
 
 import android.view.*
 import androidx.core.view.forEach
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -27,6 +29,9 @@ import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * This class creates and manages tabs in [HomeActivity].
@@ -172,10 +177,26 @@ class ServerTabs(val activity: HomeActivity) {
         binding.discoveredRv.setHasFixedSize(true)
 
         activity.viewModel.discovery.servers.observe(activity) { adapter.submitList(it) }
+        launchDiscoveryRestarter()
 
         return binding.root
     }
 
+    private fun launchDiscoveryRestarter() {
+        activity.lifecycleScope.launch(Dispatchers.Main) {
+            val viewModel = activity.viewModel
+
+            while (true) {
+                delay(viewModel.pref.server.discoveryTimeout + viewModel.pref.server.discoveryRestartDelay)
+
+                if (activity.lifecycle.currentState == Lifecycle.State.RESUMED &&
+                    viewModel.pref.server.discoveryAutoStart &&
+                    viewModel.pref.server.discoveryRestart) {
+                    viewModel.startDiscovery()
+                }
+            }
+        }
+    }
 
     class DiscoveredServerAdapter(val viewModel: HomeViewModel)
         : ListAdapter<ServerProfile, DiscoveredServerAdapter.ViewHolder>(Differ) {
