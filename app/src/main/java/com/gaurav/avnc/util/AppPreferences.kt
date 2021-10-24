@@ -44,7 +44,8 @@ class AppPreferences(context: Context) {
     }
 
     inner class Gesture {
-        val singleTap; get() = prefs.getString("gesture_single_tap", "left-click")!!
+        val tap1; get() = prefs.getString("gesture_single_tap", "left-click")!!
+        val tap2; get() = prefs.getString("gesture_tap2", "open-keyboard")!!
         val doubleTap; get() = prefs.getString("gesture_double_tap", "double-click")!!
         val longPress; get() = prefs.getString("gesture_long_press", "right-click")!!
         val swipe1; get() = prefs.getString("gesture_swipe1", "pan")!!

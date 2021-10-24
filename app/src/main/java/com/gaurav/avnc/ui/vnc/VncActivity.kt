@@ -63,7 +63,7 @@ class VncActivity : AppCompatActivity() {
     private val profile by lazy { loadProfile() }
     val viewModel by viewModels<VncViewModel>()
     lateinit var binding: ActivityVncBinding
-    private val dispatcher by lazy { Dispatcher(viewModel) }
+    private val dispatcher by lazy { Dispatcher(this) }
     val touchHandler by lazy { TouchHandler(viewModel, dispatcher) }
     val keyHandler by lazy { KeyHandler(dispatcher, profile.keyCompatMode) }
     private val virtualKeys by lazy { VirtualKeys(this) }
@@ -127,7 +127,7 @@ class VncActivity : AppCompatActivity() {
         HostKeyFragment().show(supportFragmentManager, "HostKeyFragment")
     }
 
-    private fun showKeyboard() {
+    fun showKeyboard() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         binding.frameView.requestFocus()

@@ -33,21 +33,25 @@ import kotlin.math.abs
  *-             |              +--------------------+
  *-             +------------->+    [Dispatcher]    +
  *-                            +--------------------+
- *-                                |             |
- *-                                v             v
- *-                     +---------------+    +----------------+
- *-                     |  [Messenger]  |    | [VncViewModel] |
- *-                     +---------------+    +----------------+
+ *-                                      |
+ *-                                      |
+ *-                 +--------------------+---------------------+
+ *-                 |                    |                     |
+ *-                 v                    v                     v
+ *-         +---------------+    +----------------+    +---------------+
+ *-         |  [Messenger]  |    | [VncViewModel] |    | [VncActivity] |
+ *-         +---------------+    +----------------+    +---------------+
  *-
  *-
  *
- * 1. First we identify which gesture/key was input by user
+ * 1. First we identify which gesture/key was input by the user.
  * 2. Then we select an action based on user preferences. This is done here in [Dispatcher].
- * 3. Then that action is executed either in [Messenger] or [VncViewModel] depending on
- *    whether it affects the remote server OR local app state.
+ * 3. Then that action is executed. Some actions change local app state (e.g. zoom in/out),
+ *    while others send events to remote server (e.g. mouse click).
  */
-class Dispatcher(private val viewModel: VncViewModel) {
+class Dispatcher(private val activity: VncActivity) {
 
+    private val viewModel = activity.viewModel
     private val messenger = viewModel.messenger
     private val prefs = viewModel.pref
 
@@ -64,7 +68,8 @@ class Dispatcher(private val viewModel: VncViewModel) {
     val swipe2Action by lazy { selectSwipeAction(prefs.input.gesture.swipe2) }
     val dragAction by lazy { selectSwipeAction(prefs.input.gesture.drag) }
 
-    val tapAction by lazy { selectPointerAction(prefs.input.gesture.singleTap) }
+    val tap1Action by lazy { selectPointerAction(prefs.input.gesture.tap1) }
+    val tap2Action by lazy { selectPointerAction(prefs.input.gesture.tap2) }
     val doubleTapAction by lazy { selectPointerAction(prefs.input.gesture.doubleTap) }
     val longPressAction by lazy { selectPointerAction(prefs.input.gesture.longPress) }
 
@@ -75,6 +80,7 @@ class Dispatcher(private val viewModel: VncViewModel) {
             "middle-click" -> { p -> doClick(PointerButton.Middle, p) }
             "right-click" -> { p -> doClick(PointerButton.Right, p) }
             "move-pointer" -> { p -> doMovePointer(p) }
+            "open-keyboard" -> { _ -> doOpenKeyboard() }
             else -> { _ -> } //Nothing
         }
     }
@@ -103,7 +109,8 @@ class Dispatcher(private val viewModel: VncViewModel) {
 
     fun onScale(scaleFactor: Float, fx: Float, fy: Float) = doScale(scaleFactor, fx, fy)
 
-    fun onTap(p: PointF) = tapAction(p)
+    fun onTap1(p: PointF) = tap1Action(p)
+    fun onTap2(p: PointF) = tap2Action(p)
     fun onDoubleTap(p: PointF) = doubleTapAction(p)
     fun onLongPress(p: PointF) = longPressAction(p)
 
@@ -192,6 +199,7 @@ class Dispatcher(private val viewModel: VncViewModel) {
     private fun doDrag(p: PointF) = doPointerButtonDown(PointerButton.Left, p)
     private fun endDrag(p: PointF) = doPointerButtonUp(PointerButton.Left, p)
 
+    private fun doOpenKeyboard() = activity.showKeyboard()
 
     /**
      * Positions of input events received from Android are in viewport coordinates.

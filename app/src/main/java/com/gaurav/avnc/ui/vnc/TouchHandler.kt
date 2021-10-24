@@ -13,6 +13,7 @@ import android.os.Build
 import android.view.*
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.PointerButton
+import kotlin.math.max
 
 /**
  * Handler for touch events. It detects various gestures and notifies [dispatcher].
@@ -24,6 +25,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
 
     private val scaleDetector = ScaleGestureDetector(viewModel.getApplication(), this)
     private val gestureDetector = GestureDetector(viewModel.getApplication(), this)
+    private val multiFingerTapDetector = MultiFingerTapDetector()
     private val frameScroller = FrameScroller(viewModel) //Should it be in Dispatcher?
     private val dragDetector = DragDetector()
     private val dragEnabled = viewModel.pref.input.gesture.dragEnabled
@@ -48,6 +50,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         if (dragEnabled)
             dragDetector.onTouchEvent(event)
 
+        multiFingerTapDetector.onTouchEvent(event)
         scaleDetector.onTouchEvent(event)
         return gestureDetector.onTouchEvent(event)
     }
@@ -171,7 +174,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     }
 
     override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-        dispatcher.onTap(e.point())
+        dispatcher.onTap1(e.point())
         return true
     }
 
@@ -203,6 +206,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
             2 -> dispatcher.onSwipe2(startPoint, currentPoint, -dX, -dY)
         }
 
+        multiFingerTapDetector.reset()
         return true
     }
 
@@ -255,6 +259,50 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
                     isDragging = false
                 }
             }
+        }
+    }
+
+    /**
+     * Detects 'tapping' by two or more fingers.
+     *
+     * Detection:
+     *
+     *  1. First finger goes down. We start tracking by updating [startEvent]
+     *  2. More fingers go down. [fingerCount] is used to track them
+     *  3. Fingers start going up
+     *  4. Last finger goes up. Timestamps are checked to ensure the gesture
+     *     was finished within a  timeout, and if more than 1 finger went down,
+     *     appropriate handler is invoked.
+     *
+     * If fingers are moved after going down, user probably intends to pan/scale.
+     * So tap detection is stopped if we receive [onScroll].
+     */
+    private inner class MultiFingerTapDetector {
+        private var startEvent: MotionEvent? = null
+        private var fingerCount = 0
+
+        fun onTouchEvent(e: MotionEvent) {
+            when (e.actionMasked) {
+
+                MotionEvent.ACTION_DOWN -> startEvent = MotionEvent.obtain(e)
+                MotionEvent.ACTION_POINTER_DOWN -> fingerCount = max(fingerCount, e.pointerCount)
+                MotionEvent.ACTION_CANCEL -> reset()
+
+                MotionEvent.ACTION_UP -> startEvent?.let { startEvent ->
+                    if ((e.eventTime - startEvent.eventTime) <= ViewConfiguration.getDoubleTapTimeout())
+                        when (fingerCount) {
+                            2 -> dispatcher.onTap2(startEvent.point())
+                            // Taps by 3+ fingers are not exposed yet
+                        }
+                    reset()
+                }
+            }
+        }
+
+        fun reset() {
+            startEvent?.recycle()
+            startEvent = null
+            fingerCount = 0
         }
     }
 }

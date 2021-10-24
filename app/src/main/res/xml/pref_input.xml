@@ -15,8 +15,8 @@
 
         <ListPreference
             app:defaultValue="left-click"
-            app:entries="@array/single_tap_action_entries"
-            app:entryValues="@array/single_tap_action_values"
+            app:entries="@array/tap1_action_entries"
+            app:entryValues="@array/tap1_action_values"
             app:key="gesture_single_tap"
             app:title="@string/pref_single_tap"
             app:useSimpleSummaryProvider="true" />
@@ -59,6 +59,14 @@
             app:entryValues="@array/drag_action_values"
             app:key="gesture_drag"
             app:title="@string/pref_drag"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="open-keyboard"
+            app:entries="@array/tap2_action_entries"
+            app:entryValues="@array/tap2_action_values"
+            app:key="gesture_tap2"
+            app:title="@string/pref_two_finger_tap"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 

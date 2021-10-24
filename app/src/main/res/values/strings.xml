@@ -113,6 +113,7 @@
     <string name="pref_gesture_action_pan">Pan Local Frame</string>
     <string name="pref_gesture_action_remote_scroll">Scroll Remote Content</string>
     <string name="pref_gesture_action_remote_drag">Drag Remote Content</string>
+    <string name="pref_gesture_action_open_keyboard">Open Keyboard</string>
 
     <string name="pref_theme">Theme</string>
     <string name="pref_prefer_advanced_editor">Prefer Advanced Editor</string>
@@ -121,6 +122,7 @@
     <string name="pref_sort_server_list_summary">Servers are sorted by their name</string>
     <string name="pref_gesture">Gestures</string>
     <string name="pref_single_tap">Single Tap</string>
+    <string name="pref_two_finger_tap">2 Finger Tap (Experimental)</string>
     <string name="pref_double_tap">Double Tap</string>
     <string name="pref_long_press">Long Press</string>
     <string name="pref_swipe1">1 Finger Swipe</string>

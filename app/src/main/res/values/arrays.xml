@@ -29,15 +29,26 @@
         <item>end</item>
     </string-array>
 
-    <string-array name="single_tap_action_entries">
+    <string-array name="tap1_action_entries">
         <item>@string/pref_gesture_action_none</item>
         <item>@string/pref_gesture_action_left_click</item>
         <item>@string/pref_gesture_action_move_pointer</item>
     </string-array>
-    <string-array name="single_tap_action_values">
+    <string-array name="tap1_action_values">
         <item>none</item>
         <item>left-click</item>
         <item>move-pointer</item>
+    </string-array>
+
+    <string-array name="tap2_action_entries">
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_right_click</item>
+        <item>@string/pref_gesture_action_open_keyboard</item>
+    </string-array>
+    <string-array name="tap2_action_values">
+        <item>none</item>
+        <item>right-click</item>
+        <item>open-keyboard</item>
     </string-array>
 
     <string-array name="double_tap_action_entries">
