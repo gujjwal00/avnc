@@ -124,6 +124,13 @@ class Dispatcher(private val viewModel: VncViewModel) {
         doRemoteScroll(p, hs * deltaPerScroll, vs * deltaPerScroll)
     }
 
+    fun onStylusTap(p: PointF) = doClick(PointerButton.Left, p)
+    fun onStylusDoubleTap(p: PointF) = doDoubleClick(PointerButton.Left, p)
+    fun onStylusLongPress(p: PointF) = doClick(PointerButton.Right, p)
+    fun onStylusScroll(p: PointF) = doPointerButtonDown(PointerButton.Left, p)
+    fun onStylusScrollEnd(p: PointF) = doPointerButtonUp(PointerButton.Left, p)
+
+
     /**************************************************************************
      * Available actions
      **************************************************************************/

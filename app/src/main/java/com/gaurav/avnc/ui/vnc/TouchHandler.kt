@@ -40,7 +40,9 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
      ****************************************************************************************/
 
     fun onTouchEvent(event: MotionEvent): Boolean {
-        if (handleMouseEvent(event))
+        // For events from stylus, Android sets their 'source' to both 'STYLUS' & 'MOUSE'.
+        // So we check if it is a stylus event _before_ checking for mouse event.
+        if (handleStylusEvent(event) || handleMouseEvent(event))
             return true
 
         if (dragEnabled)
@@ -100,6 +102,62 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         MotionEvent.BUTTON_TERTIARY -> PointerButton.Middle
         else -> PointerButton.None
     }
+
+
+    /****************************************************************************************
+     * Stylus
+     ****************************************************************************************/
+
+    private val stylusGestureDetector = GestureDetector(viewModel.app, StylusGestureListener())
+    private var lastStylusScrollPoint: PointF? = null
+
+    inner class StylusGestureListener : GestureDetector.SimpleOnGestureListener() {
+        override fun onDown(e: MotionEvent?) = true
+
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+            dispatcher.onStylusTap(e.point())
+            return true
+        }
+
+        override fun onDoubleTap(e: MotionEvent): Boolean {
+            dispatcher.onStylusDoubleTap(e.point())
+            return true
+        }
+
+        override fun onLongPress(e: MotionEvent) {
+            dispatcher.onStylusLongPress(e.point())
+        }
+
+        override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
+            // Scrolling with stylus button pressed is currently used for scale gesture
+            if (e2.buttonState and MotionEvent.BUTTON_STYLUS_PRIMARY == 0) {
+                lastStylusScrollPoint = e2.point()
+                dispatcher.onStylusScroll(lastStylusScrollPoint!!)
+            }
+            return true
+        }
+    }
+
+    private fun handleStylusEvent(event: MotionEvent): Boolean {
+        if (!event.isFromSource(InputDevice.SOURCE_STYLUS))
+            return false
+
+        stylusGestureDetector.onTouchEvent(event)
+
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN,
+            MotionEvent.ACTION_UP,
+            MotionEvent.ACTION_CANCEL ->
+                // Finish any scroll gesture
+                lastStylusScrollPoint?.let {
+                    dispatcher.onStylusScrollEnd(it)
+                    lastStylusScrollPoint = null
+                }
+        }
+
+        return true
+    }
+
 
     /****************************************************************************************
      * Gestures
