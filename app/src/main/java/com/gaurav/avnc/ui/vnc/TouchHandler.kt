@@ -85,6 +85,9 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
             MotionEvent.ACTION_HOVER_MOVE -> dispatcher.onMouseMove(p)
         }
 
+        if (e.buttonState == 0)
+            return false
+
         return true
     }
 
