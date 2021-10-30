@@ -85,9 +85,9 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
             MotionEvent.ACTION_HOVER_MOVE -> dispatcher.onMouseMove(p)
         }
 
-        if (e.buttonState == 0)
+        // Allow touchpad gestures to be passed on to GestureDetector
+        if (e.buttonState == 0 && e.getToolType(0) != MotionEvent.TOOL_TYPE_MOUSE)
             return false
-
         return true
     }
 
