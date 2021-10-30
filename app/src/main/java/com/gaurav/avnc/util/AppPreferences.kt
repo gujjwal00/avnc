@@ -10,7 +10,6 @@ package com.gaurav.avnc.util
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.preference.PreferenceManager
 
@@ -24,13 +23,7 @@ class AppPreferences(context: Context) {
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
     inner class UI {
-        val nightMode
-            get() = when (prefs.getString("theme", "system")) {
-                "light" -> AppCompatDelegate.MODE_NIGHT_NO
-                "dark" -> AppCompatDelegate.MODE_NIGHT_YES
-                else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-            }
-
+        val theme = LivePref("theme", "system")
         val preferAdvancedEditor; get() = prefs.getBoolean("prefer_advanced_editor", false)
         val sortServerList = LivePref("sort_server_list", false)
     }

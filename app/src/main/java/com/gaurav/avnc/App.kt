@@ -14,10 +14,21 @@ import com.gaurav.avnc.util.AppPreferences
 
 class App : Application() {
 
+    lateinit var prefs: AppPreferences
+
     override fun onCreate() {
         super.onCreate()
 
-        val nightMode = AppPreferences(this).ui.nightMode
+        prefs = AppPreferences(this)
+        prefs.ui.theme.observeForever { updateNightMode(it) }
+    }
+
+    private fun updateNightMode(theme: String) {
+        val nightMode = when (theme) {
+            "light" -> AppCompatDelegate.MODE_NIGHT_NO
+            "dark" -> AppCompatDelegate.MODE_NIGHT_YES
+            else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        }
         AppCompatDelegate.setDefaultNightMode(nightMode)
     }
 }

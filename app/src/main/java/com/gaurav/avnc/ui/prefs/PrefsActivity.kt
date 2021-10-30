@@ -13,8 +13,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
@@ -75,26 +73,7 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
     }
 
     @Keep class Main : PrefFragment(R.xml.pref_main)
-
-    @Keep class Appearance : PrefFragment(R.xml.pref_appearance) {
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-
-            val theme = findPreference<ListPreference>("theme")!!
-
-            theme.setOnPreferenceChangeListener { _, newValue ->
-                val newMode = when (newValue) {
-                    "light" -> AppCompatDelegate.MODE_NIGHT_NO
-                    "dark" -> AppCompatDelegate.MODE_NIGHT_YES
-                    else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                }
-
-                AppCompatDelegate.setDefaultNightMode(newMode)
-
-                true //Allow new value to be persisted
-            }
-        }
-    }
+    @Keep class Appearance : PrefFragment(R.xml.pref_appearance)
 
     @Keep class Viewer : PrefFragment(R.xml.pref_viewer) {
         override fun onCreate(savedInstanceState: Bundle?) {
