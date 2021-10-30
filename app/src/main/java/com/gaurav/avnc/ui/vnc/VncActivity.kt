@@ -98,6 +98,16 @@ class VncActivity : AppCompatActivity() {
         viewModel.sendClipboardText()
     }
 
+    override fun onStart() {
+        super.onStart()
+        binding.frameView.onResume()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        binding.frameView.onPause()
+    }
+
     private fun loadProfile(): ServerProfile {
         val profile = intent.getParcelableExtra<ServerProfile>(PROFILE_KEY)
         if (profile != null) {
