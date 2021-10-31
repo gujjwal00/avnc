@@ -1,0 +1,3 @@
+* Added Samsung touchpad support (by Tuan Pham)
+* Added stylus/pen support
+* Added 2-finger Tap gesture
