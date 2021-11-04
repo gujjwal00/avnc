@@ -162,7 +162,7 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
      */
     private fun emitForAndroidKeyCode(keyCode: Int, isDown: Boolean): Boolean {
         val keySym = XKeySymAndroid.getKeySymForAndroidKeyCode(keyCode)
-        return emit(keySym, isDown)
+        return emit(keySym, isDown, keyCode)
     }
 
     /**
@@ -197,12 +197,11 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
     /**
      * Sends given [keySym] to [dispatcher].
      */
-    private fun emit(keySym: Int, isDown: Boolean): Boolean {
-        if (keySym == 0)
+    private fun emit(keySym: Int, isDown: Boolean, keyCode: Int = 0): Boolean {
+        if (keySym == 0 && keyCode == 0)
             return false
 
-        dispatcher.onXKeySym(keySym, isDown)
-        return true
+        return dispatcher.onXKeySym(keySym, isDown, keyCode)
     }
 
     /************************************************************************************
