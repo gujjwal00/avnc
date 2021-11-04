@@ -135,6 +135,9 @@
     <string name="pref_vk">Virtual Keys</string>
     <string name="pref_vk_show_all">Show all keys</string>
     <string name="pref_vk_open_with_keyboard">Show when Keyboard is open</string>
+    <string name="pref_km">Key Mappings</string>
+    <string name="pref_km_right_alt_to_super">Right Alt to Super</string>
+    <string name="pref_km_language_switch_to_super">Language Switch to Super</string>
     <string name="pref_fullscreen">Use Fullscreen</string>
     <string name="pref_enable_pip">Enable Picture-in-Picture</string>
     <string name="pref_toolbar">Toolbar</string>

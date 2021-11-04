@@ -26,6 +26,11 @@ object XKeySymAndroid {
             return 0
     }
 
+    fun updateKeyMap(keyCode: Int, xKeySym: Int) {
+        if (keyCode >= 0 && keyCode < AndroidKeyCodeToXKeySym.size)
+            AndroidKeyCodeToXKeySym[keyCode] = xKeySym
+    }
+
     /**
      * Lookup table for X KeySym.
      *
@@ -198,10 +203,6 @@ object XKeySymAndroid {
             0,                                  //  KEYCODE_NUMPAD_LEFT_PAREN = 162
             0,                                  //  KEYCODE_NUMPAD_RIGHT_PAREN = 163
             XKeySym.XF86XK_AudioMute,           //  KEYCODE_VOLUME_MUTE = 164
-
-            /*  We currently have no mapping for rest of the key codes.
-                So these are commented to reduce the lookup table size.
-
             0,                                  //  KEYCODE_INFO = 165
             0,                                  //  KEYCODE_CHANNEL_UP = 166
             0,                                  //  KEYCODE_CHANNEL_DOWN = 167
@@ -242,6 +243,10 @@ object XKeySymAndroid {
             0,                                  //  KEYCODE_BUTTON_15 = 202
             0,                                  //  KEYCODE_BUTTON_16 = 203
             0,                                  //  KEYCODE_LANGUAGE_SWITCH = 204
+
+            /*  We currently have no mapping for rest of the key codes.
+                So these are commented to reduce the lookup table size.
+
             0,                                  //  KEYCODE_MANNER_MODE = 205
             0,                                  //  KEYCODE_3D_MODE = 206
             0,                                  //  KEYCODE_CONTACTS = 207

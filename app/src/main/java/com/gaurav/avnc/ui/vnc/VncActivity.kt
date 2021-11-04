@@ -65,7 +65,7 @@ class VncActivity : AppCompatActivity() {
     lateinit var binding: ActivityVncBinding
     private val dispatcher by lazy { Dispatcher(this) }
     val touchHandler by lazy { TouchHandler(viewModel, dispatcher) }
-    val keyHandler by lazy { KeyHandler(dispatcher, profile.keyCompatMode) }
+    val keyHandler by lazy { KeyHandler(dispatcher, profile.keyCompatMode, viewModel.pref) }
     private val virtualKeys by lazy { VirtualKeys(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {

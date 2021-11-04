@@ -10,7 +10,10 @@ package com.gaurav.avnc.ui.vnc
 
 import android.os.Build
 import android.view.KeyEvent
+import com.gaurav.avnc.util.AppPreferences
+import com.gaurav.avnc.vnc.XKeySym
 import com.gaurav.avnc.vnc.XKeySymAndroid
+import com.gaurav.avnc.vnc.XKeySymAndroid.updateKeyMap
 import com.gaurav.avnc.vnc.XKeySymUnicode
 
 /**
@@ -74,7 +77,12 @@ import com.gaurav.avnc.vnc.XKeySymUnicode
  * [X Windows System Protocol](https://www.x.org/releases/X11R7.7/doc/xproto/x11protocol.html#keysym_encoding)
  *
  */
-class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boolean) {
+class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boolean, prefs: AppPreferences) {
+
+    init {
+        if (prefs.input.kmLanguageSwitchToSuper) updateKeyMap(KeyEvent.KEYCODE_LANGUAGE_SWITCH, XKeySym.XK_Super_L)
+        if (prefs.input.kmRightAltToSuper) updateKeyMap(KeyEvent.KEYCODE_ALT_RIGHT, XKeySym.XK_Super_L)
+    }
 
     /**
      * Shortcut to send both up & down events. Useful for Virtual Keys.

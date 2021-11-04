@@ -97,4 +97,19 @@
             app:title="@string/pref_vk_show_all" />
     </PreferenceCategory>
 
+    <PreferenceCategory
+        app:icon="@drawable/ic_keyboard"
+        app:title="@string/pref_km">
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="km_right_alt_to_super"
+            app:title="@string/pref_km_right_alt_to_super" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="km_language_switch_to_super"
+            app:title="@string/pref_km_language_switch_to_super" />
+    </PreferenceCategory>
+
 </PreferenceScreen>
