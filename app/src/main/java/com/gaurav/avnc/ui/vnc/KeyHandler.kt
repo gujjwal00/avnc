@@ -10,7 +10,10 @@ package com.gaurav.avnc.ui.vnc
 
 import android.os.Build
 import android.view.KeyEvent
+import com.gaurav.avnc.util.AppPreferences
+import com.gaurav.avnc.vnc.XKeySym
 import com.gaurav.avnc.vnc.XKeySymAndroid
+import com.gaurav.avnc.vnc.XKeySymAndroid.updateKeyMap
 import com.gaurav.avnc.vnc.XKeySymUnicode
 
 /**
@@ -74,7 +77,12 @@ import com.gaurav.avnc.vnc.XKeySymUnicode
  * [X Windows System Protocol](https://www.x.org/releases/X11R7.7/doc/xproto/x11protocol.html#keysym_encoding)
  *
  */
-class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boolean) {
+class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boolean, prefs: AppPreferences) {
+
+    init {
+        if (prefs.input.kmLanguageSwitchToSuper) updateKeyMap(KeyEvent.KEYCODE_LANGUAGE_SWITCH, XKeySym.XK_Super_L)
+        if (prefs.input.kmRightAltToSuper) updateKeyMap(KeyEvent.KEYCODE_ALT_RIGHT, XKeySym.XK_Super_L)
+    }
 
     /**
      * Shortcut to send both up & down events. Useful for Virtual Keys.
@@ -162,7 +170,7 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
      */
     private fun emitForAndroidKeyCode(keyCode: Int, isDown: Boolean): Boolean {
         val keySym = XKeySymAndroid.getKeySymForAndroidKeyCode(keyCode)
-        return emit(keySym, isDown, keyCode)
+        return emit(keySym, isDown)
     }
 
     /**
@@ -197,11 +205,12 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
     /**
      * Sends given [keySym] to [dispatcher].
      */
-    private fun emit(keySym: Int, isDown: Boolean, keyCode: Int = 0): Boolean {
-        if (keySym == 0 && keyCode == 0)
+    private fun emit(keySym: Int, isDown: Boolean): Boolean {
+        if (keySym == 0)
             return false
 
-        return dispatcher.onXKeySym(keySym, isDown, keyCode)
+        dispatcher.onXKeySym(keySym, isDown)
+        return true
     }
 
     /************************************************************************************

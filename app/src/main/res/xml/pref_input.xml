@@ -96,8 +96,9 @@
             app:key="vk_show_all"
             app:title="@string/pref_vk_show_all" />
     </PreferenceCategory>
+
     <PreferenceCategory
-        app:icon="@drawable/ic_keyboard_mini"
+        app:icon="@drawable/ic_keyboard"
         app:title="@string/pref_km">
 
         <SwitchPreference

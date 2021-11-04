@@ -9,11 +9,9 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.graphics.PointF
-import android.view.KeyEvent
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.PointerButton
-import com.gaurav.avnc.vnc.XKeySym
 import kotlin.math.abs
 
 /**
@@ -104,20 +102,6 @@ class Dispatcher(private val activity: VncActivity) {
         }
     }
 
-    private fun getMappedKeySym(keySym: Int, keyCode: Int): Int {
-        if (keySym == 0) {
-            if (keyCode == KeyEvent.KEYCODE_LANGUAGE_SWITCH && prefs.input.kmLanguageSwitchToSuper)
-                return XKeySym.XK_Super_L
-
-            return 0
-        } else {
-            if (keySym == XKeySym.XK_Alt_R && prefs.input.kmRightAltToSuper)
-                return XKeySym.XK_Super_L
-        }
-
-        return keySym
-    }
-
 
     /**************************************************************************
      * Event receivers
@@ -138,15 +122,7 @@ class Dispatcher(private val activity: VncActivity) {
             endDrag(p)
     }
 
-    fun onXKeySym(keySym: Int, isDown: Boolean, keyCode: Int = 0): Boolean {
-        val mappedKeySym = getMappedKeySym(keySym, keyCode)
-
-        if (mappedKeySym == 0)
-            return false
-
-        messenger.sendKey(mappedKeySym, isDown)
-        return true
-    }
+    fun onXKeySym(keySym: Int, isDown: Boolean) = messenger.sendKey(keySym, isDown)
 
     fun onMouseButtonDown(button: PointerButton, p: PointF) = doPointerButtonDown(button, p)
     fun onMouseButtonUp(button: PointerButton, p: PointF) = doPointerButtonUp(button, p)
