@@ -80,11 +80,6 @@ import com.gaurav.avnc.vnc.XKeySymUnicode
  */
 class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boolean, prefs: AppPreferences) {
 
-    init {
-        if (prefs.input.kmLanguageSwitchToSuper) updateKeyMap(KeyEvent.KEYCODE_LANGUAGE_SWITCH, XKeySym.XK_Super_L)
-        if (prefs.input.kmRightAltToSuper) updateKeyMap(KeyEvent.KEYCODE_ALT_RIGHT, XKeySym.XK_Super_L)
-    }
-
     /**
      * Shortcut to send both up & down events. Useful for Virtual Keys.
      */
@@ -99,7 +94,7 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
     }
 
     fun onKeyEvent(event: KeyEvent): Boolean {
-        return handleKeyEvent(event)
+        return handleKeyEvent(preProcessEvent(event))
     }
 
 
@@ -271,6 +266,28 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
         }
 
         return false
+    }
+
+    /************************************************************************************
+     * Custom key-mappings
+     ***********************************************************************************/
+
+    init {
+        if (prefs.input.kmLanguageSwitchToSuper) updateKeyMap(KeyEvent.KEYCODE_LANGUAGE_SWITCH, XKeySym.XK_Super_L)
+        if (prefs.input.kmRightAltToSuper) updateKeyMap(KeyEvent.KEYCODE_ALT_RIGHT, XKeySym.XK_Super_L)
+    }
+
+    // We can't map Back key to Escape inside init because we don't
+    // want to affect Back key events coming from Navigation Bar.
+    // So we have to test each event.
+    private val kmBackToEscape = prefs.input.kmBackToEscape
+
+    private fun preProcessEvent(event: KeyEvent): KeyEvent {
+        if (event.keyCode == KeyEvent.KEYCODE_BACK && kmBackToEscape
+            && (event.flags and KeyEvent.FLAG_VIRTUAL_HARD_KEY == 0))
+            return KeyEvent(event.action, KeyEvent.KEYCODE_ESCAPE)
+
+        return event
     }
 
     /************************************************************************************

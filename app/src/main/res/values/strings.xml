@@ -138,6 +138,8 @@
     <string name="pref_km">Key Mappings</string>
     <string name="pref_km_right_alt_to_super">Right Alt to Super</string>
     <string name="pref_km_language_switch_to_super">Language Switch to Super</string>
+    <string name="pref_km_back_to_escape">Back to Escape</string>
+    <string name="pref_km_back_to_escape_summary">Navigation Bar is not affected by this</string>
     <string name="pref_fullscreen">Use Fullscreen</string>
     <string name="pref_enable_pip">Enable Picture-in-Picture</string>
     <string name="pref_toolbar">Toolbar</string>

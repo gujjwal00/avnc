@@ -110,6 +110,12 @@
             app:defaultValue="false"
             app:key="km_language_switch_to_super"
             app:title="@string/pref_km_language_switch_to_super" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="km_back_to_escape"
+            app:summary="@string/pref_km_back_to_escape_summary"
+            app:title="@string/pref_km_back_to_escape" />
     </PreferenceCategory>
 
 </PreferenceScreen>
