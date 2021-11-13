@@ -9,6 +9,7 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.os.Build
+import android.view.KeyCharacterMap
 import android.view.KeyEvent
 import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.vnc.XKeySym
@@ -154,6 +155,9 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
                 return emitForAndroidKeyCode(keyCode, isDown)
         }
 
+        if (handleDiacritics(keyCode, unicodeChar, isDown))
+            return true
+
         // We prefer to use unicodeChar even when keyCode is available because
         // most servers ignore previously sent SHIFT/CAPS_LOCK keys.
         // As Android takes meta keys into account when calculating unicodeChar,
@@ -211,6 +215,62 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
 
         dispatcher.onXKeySym(keySym, isDown)
         return true
+    }
+
+    /************************************************************************************
+     * Diacritics (Accents) Support
+     *
+     * Instead of sending diacritics directly to server, we handle their composition here.
+     * This is done because:
+     *
+     * - Android does not report real 'combining' accents to us. Instead we get the
+     *   corresponding 'printing' characters, with the `COMBINING_ACCENT` flag set.
+     *   See the source code of [KeyCharacterMap] for more details.
+     *
+     * - Although most servers don't support diacritics directly, some of them can
+     *   handle the final composed characters (e.g. TightVNC).
+     *
+     *
+     * Behaviour:
+     *
+     * - Until an accent is received, all events are ignored by [handleDiacritics].
+     * - When first accent is received, we save it to [pendingAccents].
+     * - When next key is received (can be another accent), we try to compose
+     *   a printable character using this key & [pendingAccents].
+     *
+     * - If successful, the composed character is sent to the server and [pendingAccents]
+     *   is cleared. Otherwise we check the received key.
+     * - If we received another accent, it is added to [pendingAccents],
+     *   if we received a modifier key (e.g. Shift), it is sent to the server,
+     *   any other key is simply dropped and [pendingAccents] is cleared.
+     *
+     ************************************************************************************/
+    private var pendingAccents = ArrayList<Int>(1)
+
+    private fun handleDiacritics(keyCode: Int, uChar: Int, isDown: Boolean): Boolean {
+        val isUp = !isDown
+        val isAccent = uChar and KeyCharacterMap.COMBINING_ACCENT != 0
+        val maskedChar = uChar and KeyCharacterMap.COMBINING_ACCENT_MASK
+
+        if (pendingAccents.isNotEmpty()) {
+            var composed = maskedChar
+            pendingAccents.forEach { composed = KeyEvent.getDeadChar(it, composed) }
+            if (composed != 0) emitForUnicodeChar(composed, isDown)
+
+            if (composed != 0 || !isAccent && !KeyEvent.isModifierKey(keyCode)) {
+                if (isUp)
+                    pendingAccents.clear()
+                return true
+            }
+        }
+
+        if (isAccent) {
+            if (isUp)
+                pendingAccents.add(maskedChar)
+            return true
+        }
+
+        return false
     }
 
     /************************************************************************************
