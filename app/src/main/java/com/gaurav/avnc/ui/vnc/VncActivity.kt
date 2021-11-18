@@ -105,6 +105,14 @@ class VncActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+
+        // send key up events for Shift, Ctrl, Alt
+        // key codes for the the right versions of the keys are used
+        // as that is what is sent by the VirtualKeys
+        dispatcher.onXKeySym(65506, false) // shift_r
+        dispatcher.onXKeySym(65508, false) // ctrl_r
+        dispatcher.onXKeySym(65514, false) // alt_r
+
         binding.frameView.onPause()
     }
 
