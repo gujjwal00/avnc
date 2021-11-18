@@ -109,9 +109,9 @@ class VncActivity : AppCompatActivity() {
         // send key up events for Shift, Ctrl, Alt
         // key codes for the the right versions of the keys are used
         // as that is what is sent by the VirtualKeys
-        dispatcher.onXKeySym(65506, false) // shift_r
-        dispatcher.onXKeySym(65508, false) // ctrl_r
-        dispatcher.onXKeySym(65514, false) // alt_r
+        keyHandler.onKeyEvent(KeyEvent.KEYCODE_SHIFT_RIGHT, false)
+        keyHandler.onKeyEvent(KeyEvent.KEYCODE_CTRL_RIGHT, false)
+        keyHandler.onKeyEvent(KeyEvent.KEYCODE_ALT_RIGHT, false)
 
         binding.frameView.onPause()
     }
