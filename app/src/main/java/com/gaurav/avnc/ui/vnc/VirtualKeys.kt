@@ -51,8 +51,8 @@ class VirtualKeys(activity: VncActivity) {
     fun releaseMetaKeys() {
         val binding = stub.binding as VirtualKeysBinding
         binding.shiftBtn.toggle()
-        binding.shiftBtn.toggle()
-        binding.shiftBtn.toggle()
+        binding.ctrlBtn.toggle()
+        binding.altBtn.toggle()
     }
 
     private fun init() {
