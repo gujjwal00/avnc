@@ -9,7 +9,6 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.view.View
-import android.widget.ToggleButton
 import com.gaurav.avnc.databinding.VirtualKeysBinding
 
 /**
