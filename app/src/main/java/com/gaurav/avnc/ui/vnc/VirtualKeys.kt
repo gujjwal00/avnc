@@ -9,6 +9,7 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.view.View
+import android.widget.ToggleButton
 import com.gaurav.avnc.databinding.VirtualKeysBinding
 
 /**
@@ -46,6 +47,13 @@ class VirtualKeys(activity: VncActivity) {
             hide()
             openedWithKb = false
         }
+    }
+
+    fun releaseMetaKeys() {
+        val binding = stub.binding as VirtualKeysBinding
+        binding.shiftBtn.toggle()
+        binding.shiftBtn.toggle()
+        binding.shiftBtn.toggle()
     }
 
     private fun init() {

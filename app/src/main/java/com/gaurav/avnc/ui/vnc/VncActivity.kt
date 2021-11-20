@@ -106,14 +106,13 @@ class VncActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
 
-        // send key up events for Shift, Ctrl, Alt
-        // key codes for the the right versions of the keys are used
-        // as that is what is sent by the VirtualKeys
-        keyHandler.onKeyEvent(KeyEvent.KEYCODE_SHIFT_RIGHT, false)
-        keyHandler.onKeyEvent(KeyEvent.KEYCODE_CTRL_RIGHT, false)
-        keyHandler.onKeyEvent(KeyEvent.KEYCODE_ALT_RIGHT, false)
+        cleanUp()
 
         binding.frameView.onPause()
+    }
+
+    private fun cleanUp() {
+        virtualKeys.releaseMetaKeys()
     }
 
     private fun loadProfile(): ServerProfile {

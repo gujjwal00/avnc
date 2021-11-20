@@ -51,6 +51,7 @@
 
             <ToggleButton
                 style="@style/VirtualKey.Toggle"
+                android:id="@+id/shift_btn"
                 android:textOff="Shift"
                 android:textOn="Shift"
                 app:isVisible="@{showAll}"
@@ -58,12 +59,14 @@
 
             <ToggleButton
                 style="@style/VirtualKey.Toggle"
+                android:id="@+id/ctrl_btn"
                 android:textOff="Ctrl"
                 android:textOn="Ctrl"
                 app:onCheckedChangeListener="@{(v,checked) -> h.onKeyEvent(KeyEvent.KEYCODE_CTRL_RIGHT, checked)}" />
 
             <ToggleButton
                 style="@style/VirtualKey.Toggle"
+                android:id="@+id/alt_btn"
                 android:textOff="Alt"
                 android:textOn="Alt"
                 app:onCheckedChangeListener="@{(v,checked) -> h.onKeyEvent(KeyEvent.KEYCODE_ALT_RIGHT, checked)}" />
