@@ -49,10 +49,12 @@ class VirtualKeys(activity: VncActivity) {
     }
 
     fun releaseMetaKeys() {
-        val binding = stub.binding as VirtualKeysBinding
-        binding.shiftBtn.toggle()
-        binding.ctrlBtn.toggle()
-        binding.altBtn.toggle()
+        val binding = stub.binding as? VirtualKeysBinding
+        binding?.apply {
+            shiftBtn.isChecked = false
+            ctrlBtn.isChecked = false
+            altBtn.isChecked = false
+        }
     }
 
     private fun init() {
