@@ -48,6 +48,15 @@ class VirtualKeys(activity: VncActivity) {
         }
     }
 
+    fun releaseMetaKeys() {
+        val binding = stub.binding as? VirtualKeysBinding
+        binding?.apply {
+            shiftBtn.isChecked = false
+            ctrlBtn.isChecked = false
+            altBtn.isChecked = false
+        }
+    }
+
     private fun init() {
         if (stub.isInflated)
             return

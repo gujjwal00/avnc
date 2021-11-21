@@ -105,7 +105,14 @@ class VncActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+
+        cleanUp()
+
         binding.frameView.onPause()
+    }
+
+    private fun cleanUp() {
+        virtualKeys.releaseMetaKeys()
     }
 
     private fun loadProfile(): ServerProfile {
