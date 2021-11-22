@@ -140,6 +140,9 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
      */
     private fun emitForKeyEvent(keyCode: Int, unicodeChar: Int, isDown: Boolean): Boolean {
 
+        if (handleDiacritics(keyCode, unicodeChar, isDown))
+            return true
+
         // Always emit using keyCode for these because Android returns a unicodeChar
         // for these but most servers don't handle their Unicode characters.
         when (keyCode) {
@@ -149,9 +152,6 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
             KeyEvent.KEYCODE_TAB ->
                 return emitForAndroidKeyCode(keyCode, isDown)
         }
-
-        if (handleDiacritics(keyCode, unicodeChar, isDown))
-            return true
 
         // We prefer to use unicodeChar even when keyCode is available because
         // most servers ignore previously sent SHIFT/CAPS_LOCK keys.
