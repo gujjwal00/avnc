@@ -1,0 +1,3 @@
+* Allow key mappings to SUPER/Window key (by Tuan Pham)
+* Ensure virtual meta-keys are always released (by thechosenreader)
+* Added diacritics (accent) support
