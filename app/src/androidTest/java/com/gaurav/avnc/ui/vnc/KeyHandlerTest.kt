@@ -78,6 +78,80 @@ class KeyHandlerTest {
     }
 
 
+    private fun sendKeyWithMeta(keyCode: Int, metaState: Int) {
+        keyHandler.onKeyEvent(KeyEvent(0, 0, KeyEvent.ACTION_DOWN, keyCode, 0, metaState))
+        keyHandler.onKeyEvent(KeyEvent(0, 0, KeyEvent.ACTION_UP, keyCode, 0, metaState))
+    }
+
+
+    /**************************************************************************/
+    @Test
+    fun simpleChar() {
+        keyHandler.onKey(KeyEvent.KEYCODE_A)
+        assertEquals('a'.toInt(), dispatchedKeys.firstOrNull())
+    }
+
+    @Test
+    fun charWithShift() {
+        sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_SHIFT_ON)
+        assertEquals('A'.toInt(), dispatchedKeys.firstOrNull())
+    }
+
+    @Test
+    fun charWithShiftCtrl() {
+        sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_SHIFT_ON or KeyEvent.META_CTRL_ON)
+        assertEquals('A'.toInt(), dispatchedKeys.firstOrNull())
+    }
+
+    @Test
+    fun charWithShiftCtrlAlt() {
+        sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_SHIFT_ON or KeyEvent.META_CTRL_ON or KeyEvent.META_ALT_ON)
+        assertEquals('A'.toInt(), dispatchedKeys.firstOrNull())
+    }
+
+    @Test
+    fun charWithCapslock() {
+        sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON)
+        assertEquals('A'.toInt(), dispatchedKeys.firstOrNull())
+    }
+
+    /*@Test  // Android itself is broken on CapsLock + Shift
+    fun charWithCapslockShift() {
+        sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON or KeyEvent.META_SHIFT_ON)
+        assertEquals('a'.toInt(), dispatchedKeys.firstOrNull())
+    }*/
+
+    @Test
+    fun charWithCapslockCtrl() {
+        sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON or KeyEvent.META_CTRL_ON)
+        assertEquals('A'.toInt(), dispatchedKeys.firstOrNull())
+    }
+
+    @Test
+    fun charWithCapslockAlt() {
+        sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON or KeyEvent.META_ALT_ON)
+        assertEquals('A'.toInt(), dispatchedKeys.firstOrNull())
+    }
+
+    @Test
+    fun numpadWithNumlock() {
+        sendKeyWithMeta(KeyEvent.KEYCODE_NUMPAD_1, KeyEvent.META_NUM_LOCK_ON)
+        assertEquals('1'.toInt(), dispatchedKeys.firstOrNull())
+    }
+
+    @Test
+    fun numpadWithoutNumlock() {
+        sendKeyWithMeta(KeyEvent.KEYCODE_NUMPAD_1, 0)
+        sendKeyWithMeta(KeyEvent.KEYCODE_NUMPAD_5, 0)
+        sendKeyWithMeta(KeyEvent.KEYCODE_NUMPAD_9, 0)
+        sendKeyWithMeta(KeyEvent.KEYCODE_NUMPAD_DOT, 0)
+
+        //Unless NumLock is on, these should not be sent because we
+        //want them to fallback to their secondary actions
+        assertTrue(dispatchedKeys.isEmpty())
+    }
+
+
     /**************************************************************************/
     private val ACCENT_TILDE = 0x02DC
     private val ACCENT_CIRCUMFLEX = 0x02C6
