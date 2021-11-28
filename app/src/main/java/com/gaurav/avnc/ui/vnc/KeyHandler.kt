@@ -107,8 +107,8 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
         @Suppress("DEPRECATION")
         when (event.action) {
 
-            KeyEvent.ACTION_DOWN -> return emitForKeyEvent(event.keyCode, event.unicodeChar, true)
-            KeyEvent.ACTION_UP -> return emitForKeyEvent(event.keyCode, event.unicodeChar, false)
+            KeyEvent.ACTION_DOWN -> return emitForKeyEvent(event.keyCode, getUnicodeChar(event), true)
+            KeyEvent.ACTION_UP -> return emitForKeyEvent(event.keyCode, getUnicodeChar(event), false)
 
             KeyEvent.ACTION_MULTIPLE -> {
                 if (event.keyCode == KeyEvent.KEYCODE_UNKNOWN) {
@@ -210,6 +210,27 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
 
         dispatcher.onXKeySym(keySym, isDown)
         return true
+    }
+
+
+    /**
+     * Returns unicode character for given event.
+     * Normally [KeyEvent.getUnicodeChar] is sufficient for our need, but sometimes
+     * we have to fiddle with meta state to extract a suitable character.
+     *
+     * Consider Ctrl+Shift+A: [KeyEvent.getUnicodeChar] returns 0 for this case,
+     * because there is no character mapping for A when Ctrl & Shift both are pressed.
+     * But we want to obtain capital 'A' here, so that we can send it to server.
+     * This ensures proper working of keyboard shortcuts.
+     */
+    private fun getUnicodeChar(event: KeyEvent): Int {
+        val uChar = event.unicodeChar
+        if (uChar != 0 || event.metaState == 0)
+            return uChar
+
+        // Try without Alt/Ctrl
+        val altCtrl = KeyEvent.META_ALT_MASK or KeyEvent.META_CTRL_MASK
+        return event.getUnicodeChar(event.metaState and altCtrl.inv())
     }
 
     /************************************************************************************
