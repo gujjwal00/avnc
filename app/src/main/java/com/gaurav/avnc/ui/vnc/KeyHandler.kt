@@ -94,6 +94,9 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
     }
 
     fun onKeyEvent(event: KeyEvent): Boolean {
+        if (shouldIgnoreEvent(event))
+            return false
+
         return handleKeyEvent(preProcessEvent(event))
     }
 
@@ -231,6 +234,25 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
         // Try without Alt/Ctrl
         val altCtrl = KeyEvent.META_ALT_MASK or KeyEvent.META_CTRL_MASK
         return event.getUnicodeChar(event.metaState and altCtrl.inv())
+    }
+
+    /**
+     * Some cases where we want to ignore events.
+     */
+    private fun shouldIgnoreEvent(event: KeyEvent): Boolean {
+        val keyCode = event.keyCode
+
+        // As if our key-handling wasn't already complex enough, Android
+        // decided to mess-up NumLock handling. When any numpad number-key
+        // is pressed (e.g. 7) and NumLock is off, it will still send
+        // the number keycode (e.g. KEYCODE_NUMPAD_7) first. And if app
+        // doesn't that, it will fallback to secondary action (e.g. KEYCODE_MOVE_HOME).
+        // So we have to ignore the first events when NumLock is off.
+        if ((keyCode in KeyEvent.KEYCODE_NUMPAD_0..KeyEvent.KEYCODE_NUMPAD_9
+             || keyCode == KeyEvent.KEYCODE_NUMPAD_DOT) && !event.isNumLockOn)
+            return true
+
+        return false
     }
 
     /************************************************************************************
