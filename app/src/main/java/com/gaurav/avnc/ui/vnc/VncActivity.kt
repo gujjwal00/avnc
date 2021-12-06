@@ -20,6 +20,7 @@ import android.util.Log
 import android.util.Rational
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
@@ -168,19 +169,24 @@ class VncActivity : AppCompatActivity() {
                     binding.drawerLayout.close()
                 }
             }
-
         }
+
+        updateSystemUiVisibility()
     }
 
     /************************************************************************************
      * Layout handling.
      ************************************************************************************/
 
+    private val fullscreenMode by lazy { viewModel.pref.viewer.fullscreen }
+    private val immersiveMode by lazy { viewModel.pref.experimental.immersiveMode }
+
     private fun setupLayout() {
 
-        if (viewModel.pref.viewer.fullscreen) {
-            @Suppress("DEPRECATION")
+        @Suppress("DEPRECATION")
+        if (fullscreenMode) {
             window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            window.decorView.setOnSystemUiVisibilityChangeListener { updateSystemUiVisibility() }
         }
 
         binding.root.addOnLayoutChangeListener { v, _, _, _, _, _, _, _, _ ->
@@ -228,6 +234,31 @@ class VncActivity : AppCompatActivity() {
 
         if (viewModel.pref.experimental.swipeCloseToolbar)
             Experimental.setupDrawerCloseOnScrimSwipe(binding.drawerLayout, gravityH)
+    }
+
+
+    @Suppress("DEPRECATION")
+    private fun updateSystemUiVisibility() {
+        if (!fullscreenMode || !immersiveMode)
+            return
+
+        val flags = View.SYSTEM_UI_FLAG_FULLSCREEN or
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+
+        window.decorView.apply {
+            if (viewModel.clientState.value == VncClient.State.Connected)
+                systemUiVisibility = systemUiVisibility or flags
+            else
+                systemUiVisibility = systemUiVisibility and flags.inv()
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) updateSystemUiVisibility()
     }
 
 
