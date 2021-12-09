@@ -232,10 +232,10 @@ static void onGotXCutText(rfbClient *client, const char *text, int len) {
     auto env = context.getEnv();
     auto cls = context.managedCls;
 
-    jmethodID mid = env->GetMethodID(cls, "cbGotXCutText", "(Ljava/lang/String;)V");
-    jstring jText = env->NewStringUTF(text);
-    env->CallVoidMethod(obj, mid, jText);
-    env->DeleteLocalRef(jText);
+    jmethodID mid = env->GetMethodID(cls, "cbGotXCutText", "([B)V");
+    jbyteArray bytes = env->NewByteArray(len);
+    env->SetByteArrayRegion(bytes, 0, len, reinterpret_cast<const jbyte *>(text));
+    env->CallVoidMethod(obj, mid, bytes);
 }
 
 static rfbBool onHandleCursorPos(rfbClient *client, int x, int y) {
@@ -440,10 +440,14 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeSendPointerEvent(JNIEnv *env, jobject t
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_gaurav_avnc_vnc_VncClient_nativeSendCutText(JNIEnv *env, jobject thiz, jlong client_ptr, jstring text) {
-    char *cText = getNativeStrCopy(env, text);
-    rfbBool result = SendClientCutText((rfbClient *) client_ptr, cText, strlen(cText));
-    free(cText);
+Java_com_gaurav_avnc_vnc_VncClient_nativeSendCutText(JNIEnv *env, jobject thiz, jlong client_ptr, jbyteArray bytes) {
+    auto textBuffer = env->GetByteArrayElements(bytes, nullptr);
+    auto textLen = env->GetArrayLength(bytes);
+    auto textChars = reinterpret_cast<char *>(textBuffer);
+
+    rfbBool result = SendClientCutText((rfbClient *) client_ptr, textChars, textLen);
+
+    env->ReleaseByteArrayElements(bytes, textBuffer, JNI_ABORT);
     return (jboolean) result;
 }
 

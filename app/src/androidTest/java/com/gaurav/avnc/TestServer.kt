@@ -8,14 +8,13 @@
 
 package com.gaurav.avnc
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.InputStream
 import java.net.ServerSocket
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
-import java.util.concurrent.CountDownLatch
+import java.nio.charset.StandardCharsets
+import java.util.concurrent.LinkedTransferQueue
 
 /**
  * A tiny VNC server.
@@ -26,11 +25,11 @@ import java.util.concurrent.CountDownLatch
  * It also enables us to completely control the behaviour of the server,
  * so we can simulate different scenarios, error conditions etc.
  */
-class TestServer {
+class TestServer(name: String = "Friends") {
 
     //Protocol config
     private val protocol = "RFB 003.008\n"
-    private val serverName = "Friends"
+    private val serverName = name.toByteArray()
     private val securityTypes = byteArrayOf(1, 2, 18, 19)
     private val securityFailReason = "We should take a break!"
     private val frameWidth: Short = 10
@@ -39,24 +38,24 @@ class TestServer {
 
     //Server config
     private val ss = ServerSocket(0)
-    private val stopLatch = CountDownLatch(1)
+    private val cutTextQueue = LinkedTransferQueue<String>()
+    private lateinit var serverJob: Job
     val host = ss.inetAddress.hostAddress!!
     val port = ss.localPort
     var receivedKeySyms = arrayListOf<Int>()
+    var receivedCutText = ""
 
 
     fun start() {
-        GlobalScope.launch(Dispatchers.IO) {
-            runCatching {
-                theServer()
-            }
-            stopLatch.countDown()
-            ss.close()
-        }
+        serverJob = GlobalScope.launch(Dispatchers.IO) { theServer() }
     }
 
     fun awaitStop() {
-        stopLatch.await()
+        runBlocking { serverJob.join() }
+    }
+
+    fun sendCutText(str: String) {
+        cutTextQueue.transfer(str)
     }
 
 
@@ -99,12 +98,18 @@ class TestServer {
         output.write(toByteArray(frameWidth))
         output.write(toByteArray(frameHeight))
         output.write(ByteArray(16))  //Pixel format
-        output.write(toByteArray(serverName.length))
-        output.write(serverName.toByteArray())
+        output.write(toByteArray(serverName.size))
+        output.write(serverName)
 
         // Msg Loop
         while (true) {
-            when (input.read()) {
+
+            //Read the incoming message with a timeout
+            socket.soTimeout = 100
+            val msg = runCatching { input.read() }.getOrNull() ?: -2
+            socket.soTimeout = 0
+
+            when (msg) {
 
                 3 -> { //FramebufferUpdateRequest
 
@@ -148,10 +153,25 @@ class TestServer {
                 6 -> { //ClientCutText
                     input.skip(3)//padding
                     val length = readInt(input)
-                    input.skip(length.toLong())
+                    val textBuffer = ByteBuffer.allocate(length)
+                    for (i in 1..length) textBuffer.put(input.read().toByte())
+                    textBuffer.rewind()
+                    receivedCutText = StandardCharsets.ISO_8859_1.decode(textBuffer).toString()
                 }
 
                 -1 -> return //EOF
+            }
+
+            //Send queued cut-text to client
+            cutTextQueue.peek()?.let {
+                val bytes = StandardCharsets.ISO_8859_1.encode(it).array()
+
+                output.write(3) //ServerCutText
+                output.write(ByteArray(3)) //Padding
+                output.write(toByteArray(bytes.size))
+                output.write(bytes)
+
+                cutTextQueue.remove()
             }
         }
     }

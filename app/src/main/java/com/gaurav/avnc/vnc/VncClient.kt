@@ -2,6 +2,8 @@ package com.gaurav.avnc.vnc
 
 import androidx.annotation.Keep
 import com.gaurav.avnc.vnc.VncClient.Observer
+import java.nio.ByteBuffer
+import java.nio.charset.StandardCharsets
 
 /**
  * This is a thin wrapper around native client.
@@ -192,7 +194,7 @@ class VncClient(private val observer: Observer) {
      * Sends text to remote desktop's clipboard.
      */
     fun sendCutText(text: String) = executeSend {
-        nativeSendCutText(nativePtr, text)
+        nativeSendCutText(nativePtr, text.toByteArray(StandardCharsets.ISO_8859_1))
     }
 
     /**
@@ -250,7 +252,7 @@ class VncClient(private val observer: Observer) {
     private external fun nativeProcessServerMessage(clientPtr: Long, uSecTimeout: Int): Boolean
     private external fun nativeSendKeyEvent(clientPtr: Long, key: Long, isDown: Boolean): Boolean
     private external fun nativeSendPointerEvent(clientPtr: Long, x: Int, y: Int, mask: Int): Boolean
-    private external fun nativeSendCutText(clientPtr: Long, text: String): Boolean
+    private external fun nativeSendCutText(clientPtr: Long, bytes: ByteArray): Boolean
     private external fun nativeRefreshFrameBuffer(clientPtr: Long): Boolean
     private external fun nativeGetDesktopName(clientPtr: Long): String
     private external fun nativeGetWidth(clientPtr: Long): Int
@@ -267,7 +269,9 @@ class VncClient(private val observer: Observer) {
     private fun cbGetCredential() = observer.onCredentialRequired()
 
     @Keep
-    private fun cbGotXCutText(text: String) = observer.onGotXCutText(text)
+    private fun cbGotXCutText(bytes: ByteArray) {
+        observer.onGotXCutText(StandardCharsets.ISO_8859_1.decode(ByteBuffer.wrap(bytes)).toString())
+    }
 
     @Keep
     private fun cbFinishedFrameBufferUpdate() = observer.onFramebufferUpdated()
