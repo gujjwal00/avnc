@@ -19,6 +19,7 @@ import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.vnc.XKeySym
 import io.mockk.every
 import io.mockk.mockk
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -32,18 +33,25 @@ class KeyHandlerTest {
     private lateinit var keyHandler: KeyHandler
     private lateinit var prefs: AppPreferences
     private lateinit var mockDispatcher: Dispatcher
-    private lateinit var dispatchedKeys: ArrayList<Int>
+    private lateinit var dispatchedKeyDowns: ArrayList<Int>
+    private lateinit var dispatchedKeyUps: ArrayList<Int>
 
     @Before
     fun before() {
         instrumentation.runOnMainSync { prefs = AppPreferences(targetContext) }
 
-        dispatchedKeys = arrayListOf()
+        dispatchedKeyDowns = arrayListOf()
+        dispatchedKeyUps = arrayListOf()
         mockDispatcher = mockk()
-        every { mockDispatcher.onXKeySym(any(), true) } answers { dispatchedKeys.add(firstArg()) }
-        every { mockDispatcher.onXKeySym(any(), false) } answers {}
+        every { mockDispatcher.onXKeySym(any(), true) } answers { dispatchedKeyDowns.add(firstArg()) }
+        every { mockDispatcher.onXKeySym(any(), false) } answers { dispatchedKeyUps.add(firstArg()) }
 
         keyHandler = KeyHandler(mockDispatcher, true, prefs)
+    }
+
+    @After
+    fun after() {
+        assertEquals(dispatchedKeyDowns, dispatchedKeyUps)
     }
 
     /**
@@ -88,31 +96,31 @@ class KeyHandlerTest {
     @Test
     fun simpleChar() {
         keyHandler.onKey(KeyEvent.KEYCODE_A)
-        assertEquals('a'.toInt(), dispatchedKeys.firstOrNull())
+        assertEquals('a'.toInt(), dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
     fun charWithShift() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_SHIFT_ON)
-        assertEquals('A'.toInt(), dispatchedKeys.firstOrNull())
+        assertEquals('A'.toInt(), dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
     fun charWithShiftCtrl() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_SHIFT_ON or KeyEvent.META_CTRL_ON)
-        assertEquals('A'.toInt(), dispatchedKeys.firstOrNull())
+        assertEquals('A'.toInt(), dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
     fun charWithShiftCtrlAlt() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_SHIFT_ON or KeyEvent.META_CTRL_ON or KeyEvent.META_ALT_ON)
-        assertEquals('A'.toInt(), dispatchedKeys.firstOrNull())
+        assertEquals('A'.toInt(), dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
     fun charWithCapslock() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON)
-        assertEquals('A'.toInt(), dispatchedKeys.firstOrNull())
+        assertEquals('A'.toInt(), dispatchedKeyDowns.firstOrNull())
     }
 
     /*@Test  // Android itself is broken on CapsLock + Shift
@@ -124,19 +132,19 @@ class KeyHandlerTest {
     @Test
     fun charWithCapslockCtrl() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON or KeyEvent.META_CTRL_ON)
-        assertEquals('A'.toInt(), dispatchedKeys.firstOrNull())
+        assertEquals('A'.toInt(), dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
     fun charWithCapslockAlt() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON or KeyEvent.META_ALT_ON)
-        assertEquals('A'.toInt(), dispatchedKeys.firstOrNull())
+        assertEquals('A'.toInt(), dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
     fun numpadWithNumlock() {
         sendKeyWithMeta(KeyEvent.KEYCODE_NUMPAD_1, KeyEvent.META_NUM_LOCK_ON)
-        assertEquals('1'.toInt(), dispatchedKeys.firstOrNull())
+        assertEquals('1'.toInt(), dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
@@ -148,7 +156,7 @@ class KeyHandlerTest {
 
         //Unless NumLock is on, these should not be sent because we
         //want them to fallback to their secondary actions
-        assertTrue(dispatchedKeys.isEmpty())
+        assertTrue(dispatchedKeyDowns.isEmpty())
     }
 
 
@@ -159,28 +167,28 @@ class KeyHandlerTest {
     @Test
     fun diacriticTest_accent() {
         sendAccent(ACCENT_TILDE)
-        assertTrue(dispatchedKeys.isEmpty())
+        assertTrue(dispatchedKeyDowns.isEmpty())
     }
 
     @Test
     fun diacriticTest_twoAccents() {
         sendAccent(ACCENT_TILDE)
         sendAccent(ACCENT_CIRCUMFLEX)
-        assertTrue(dispatchedKeys.isEmpty())
+        assertTrue(dispatchedKeyDowns.isEmpty())
     }
 
     @Test
     fun diacriticTest_sameAccentTwice() {
         sendAccent(ACCENT_TILDE)
         sendAccent(ACCENT_TILDE)
-        assertEquals(ACCENT_TILDE + 0x1000000, dispatchedKeys.firstOrNull())
+        assertEquals(ACCENT_TILDE + 0x1000000, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
     fun diacriticTest_charAfterAccent() {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_A, 'a')
-        assertEquals('ã'.toInt(), dispatchedKeys.firstOrNull())
+        assertEquals('ã'.toInt(), dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
@@ -188,15 +196,15 @@ class KeyHandlerTest {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_A, 'a') // First one should be accented,
         sendKey(KeyEvent.KEYCODE_A, 'a') // next one should be normal
-        assertEquals('ã'.toInt(), dispatchedKeys[0])
-        assertEquals('a'.toInt(), dispatchedKeys[1])
+        assertEquals('ã'.toInt(), dispatchedKeyDowns[0])
+        assertEquals('a'.toInt(), dispatchedKeyDowns[1])
     }
 
     @Test
     fun diacriticTest_capitalCharAfterAccent() {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_A, 'A')
-        assertEquals('Ã'.toInt(), dispatchedKeys.firstOrNull())
+        assertEquals('Ã'.toInt(), dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
@@ -204,21 +212,21 @@ class KeyHandlerTest {
         sendAccent(ACCENT_CIRCUMFLEX)
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_A, 'a')
-        assertEquals('ẫ'.toInt() + 0x1000000, dispatchedKeys.firstOrNull())
+        assertEquals('ẫ'.toInt() + 0x1000000, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
     fun diacriticTest_spaceAfterAccent() {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_SPACE, ' ')
-        assertEquals(ACCENT_TILDE + 0x1000000, dispatchedKeys.firstOrNull())
+        assertEquals(ACCENT_TILDE + 0x1000000, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
     fun diacriticTest_invalidCharAfterAccent() {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_B, 'b')
-        assertTrue(dispatchedKeys.isEmpty())
+        assertTrue(dispatchedKeyDowns.isEmpty())
     }
 
     @Test
@@ -226,14 +234,14 @@ class KeyHandlerTest {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_B, 'b')  // This will stop composition,
         sendKey(KeyEvent.KEYCODE_B, 'b')  // next char will be passed through
-        assertEquals(1, dispatchedKeys.size)
-        assertEquals('b'.toInt(), dispatchedKeys.first())
+        assertEquals(1, dispatchedKeyDowns.size)
+        assertEquals('b'.toInt(), dispatchedKeyDowns.first())
     }
 
     @Test
     fun diacriticTest_metaKeyAfterAccent() {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_SHIFT_RIGHT, 0)  // Meta-keys should be passed through
-        assertEquals(XKeySym.XK_Shift_R, dispatchedKeys.firstOrNull())
+        assertEquals(XKeySym.XK_Shift_R, dispatchedKeyDowns.firstOrNull())
     }
 }
