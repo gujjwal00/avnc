@@ -272,43 +272,42 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
      * Behaviour:
      *
      * - Until an accent is received, all events are ignored by [handleDiacritics].
-     * - When first accent is received, we save it to [pendingAccents].
-     * - When next key is received (can be another accent), we try to compose
-     *   a printable character using this key & [pendingAccents].
-     *
-     * - If successful, the composed character is sent to the server and [pendingAccents]
-     *   is cleared. Otherwise we check the received key.
-     * - If we received another accent, it is added to [pendingAccents],
-     *   if we received a modifier key (e.g. Shift), it is sent to the server,
-     *   any other key is simply dropped and [pendingAccents] is cleared.
+     * - When first accent is received, we start tracking by adding it to [accentSequence].
+     * - When next key is received (can be another accent), we add it to [accentSequence].
+     * - Then we try to compose a printable character from [accentSequence], and if successful,
+     *   the composed character is sent to the server.
+     * - If composition was successful, or we received non-accent key, we stop tracking
+     *   by clearing [accentSequence].
      *
      ************************************************************************************/
-    private var pendingAccents = ArrayList<Int>(1)
+    private var accentSequence = ArrayList<Int>(2)
 
     private fun handleDiacritics(keyCode: Int, uChar: Int, isDown: Boolean): Boolean {
         val isUp = !isDown
         val isAccent = uChar and KeyCharacterMap.COMBINING_ACCENT != 0
         val maskedChar = uChar and KeyCharacterMap.COMBINING_ACCENT_MASK
 
-        if (pendingAccents.isNotEmpty()) {
-            var composed = maskedChar
-            pendingAccents.forEach { composed = KeyEvent.getDeadChar(it, composed) }
-            if (composed != 0) emitForUnicodeChar(composed, isDown)
+        if (!isAccent && accentSequence.size == 0) return false  // No tracking yet (most common case)
+        if (!isAccent && isUp && !accentSequence.contains(maskedChar)) return false  // Spurious key-ups
+        if (KeyEvent.isModifierKey(keyCode)) return false // Modifier keys are passed-on to the server
 
-            if (composed != 0 || !isAccent && !KeyEvent.isModifierKey(keyCode)) {
-                if (isUp)
-                    pendingAccents.clear()
-                return true
-            }
-        }
+        if (isDown)
+            accentSequence.add(maskedChar)
 
-        if (isAccent) {
-            if (isUp)
-                pendingAccents.add(maskedChar)
+        if (accentSequence.size <= 1) // Nothing to compose yet
             return true
-        }
 
-        return false
+        var composed = accentSequence.last()
+        for (i in 0 until accentSequence.lastIndex)
+            composed = KeyEvent.getDeadChar(accentSequence[i], composed)
+
+        if (composed != 0)
+            emitForUnicodeChar(composed, isDown)
+
+        if (isUp && (composed != 0 || !isAccent))
+            accentSequence.clear()
+
+        return true
     }
 
     /************************************************************************************

@@ -192,6 +192,45 @@ class KeyHandlerTest {
     }
 
     @Test
+    fun diacriticTest_charWhileAccentIsDown() {
+        sendDown(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
+        sendKey(KeyEvent.KEYCODE_A, 'a')
+        sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
+        assertEquals('ã'.toInt(), dispatchedKeyDowns.firstOrNull())
+    }
+
+    @Test
+    fun diacriticTest_interMixedUpDowns1() {
+        // Here we test key up/down events for accents and characters mixed in
+        // non-sequential order. This case can happen when you type quickly.
+
+        sendDown(KeyEvent.KEYCODE_A, 'a'.toInt())
+        sendDown(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
+        sendUp(KeyEvent.KEYCODE_A, 'a'.toInt())
+        sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
+        sendDown(KeyEvent.KEYCODE_A, 'a'.toInt())
+        sendUp(KeyEvent.KEYCODE_A, 'a'.toInt())
+
+        assertEquals('a'.toInt(), dispatchedKeyDowns[0]) // First should be normal, as accent was pressed later
+        assertEquals('ã'.toInt(), dispatchedKeyDowns[1]) // Second should be accented
+    }
+
+    @Test
+    fun diacriticTest_interMixedUpDowns2() {
+        // Another variation of intermixed up/downs
+
+        sendDown(KeyEvent.KEYCODE_A, 'a'.toInt())
+        sendDown(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
+        sendUp(KeyEvent.KEYCODE_A, 'a'.toInt())
+        sendDown(KeyEvent.KEYCODE_A, 'a'.toInt())
+        sendUp(KeyEvent.KEYCODE_A, 'a'.toInt())
+        sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
+
+        assertEquals('a'.toInt(), dispatchedKeyDowns[0])
+        assertEquals('ã'.toInt(), dispatchedKeyDowns[1])
+    }
+
+    @Test
     fun diacriticTest_twiceCharAfterAccent() {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_A, 'a') // First one should be accented,
@@ -212,6 +251,38 @@ class KeyHandlerTest {
         sendAccent(ACCENT_CIRCUMFLEX)
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_A, 'a')
+        assertEquals('ẫ'.toInt() + 0x1000000, dispatchedKeyDowns.firstOrNull())
+    }
+
+    @Test
+    fun diacriticTest_charAfterTwoAccentsPressedTogether() {
+        sendDown(0, ACCENT_CIRCUMFLEX or KeyCharacterMap.COMBINING_ACCENT)
+        sendDown(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
+        sendUp(0, ACCENT_CIRCUMFLEX or KeyCharacterMap.COMBINING_ACCENT)
+        sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
+
+        sendKey(KeyEvent.KEYCODE_A, 'a')
+        assertEquals('ẫ'.toInt() + 0x1000000, dispatchedKeyDowns.firstOrNull())
+    }
+
+    @Test
+    fun diacriticTest_charAfterTwoAccentsPressedTogetherAndReleasedInReverse() {
+        sendDown(0, ACCENT_CIRCUMFLEX or KeyCharacterMap.COMBINING_ACCENT)
+        sendDown(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
+        sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
+        sendUp(0, ACCENT_CIRCUMFLEX or KeyCharacterMap.COMBINING_ACCENT)
+
+        sendKey(KeyEvent.KEYCODE_A, 'a')
+        assertEquals('ẫ'.toInt() + 0x1000000, dispatchedKeyDowns.firstOrNull())
+    }
+
+    @Test
+    fun diacriticTest_charWhileTwoAccentsAreDown() {
+        sendDown(0, ACCENT_CIRCUMFLEX or KeyCharacterMap.COMBINING_ACCENT)
+        sendDown(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
+        sendKey(KeyEvent.KEYCODE_A, 'a')
+        sendUp(0, ACCENT_CIRCUMFLEX or KeyCharacterMap.COMBINING_ACCENT)
+        sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
         assertEquals('ẫ'.toInt() + 0x1000000, dispatchedKeyDowns.firstOrNull())
     }
 
