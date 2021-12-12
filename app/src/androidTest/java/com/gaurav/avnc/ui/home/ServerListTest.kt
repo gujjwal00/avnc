@@ -119,7 +119,7 @@ class ServerListTest {
         }
 
         //Without sorting, "pqr" should be above "abc", as it was inserted first
-        prefEditor.putBoolean("sort_server_list", false).commit()
+        prefEditor.putBoolean("sort_server_list", false).apply()
         onView(withText("pqr")).checkWithTimeout(isCompletelyAbove(withText("abc")))
 
 

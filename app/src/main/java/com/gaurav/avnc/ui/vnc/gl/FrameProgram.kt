@@ -29,18 +29,18 @@ class FrameProgram {
     }
 
     val program = ShaderCompiler.buildProgram(Shaders.VERTEX_SHADER, Shaders.FRAGMENT_SHADER)
-    val a_PositionLocation = glGetAttribLocation(program, A_POSITION)
-    val a_TextureCoordinatesLocation = glGetAttribLocation(program, A_TEXTURE_COORDINATES)
-    val u_ProjectionLocation = glGetUniformLocation(program, U_PROJECTION)
-    val u_TexUnitLocation = glGetUniformLocation(program, U_TEXTURE_UNIT)
+    val aPositionLocation = glGetAttribLocation(program, A_POSITION)
+    val aTextureCoordinatesLocation = glGetAttribLocation(program, A_TEXTURE_COORDINATES)
+    val uProjectionLocation = glGetUniformLocation(program, U_PROJECTION)
+    val uTexUnitLocation = glGetUniformLocation(program, U_TEXTURE_UNIT)
     val textureId = createTexture()
 
 
     fun setUniforms(projectionMatrix: FloatArray) {
-        glUniformMatrix4fv(u_ProjectionLocation, 1, false, projectionMatrix, 0)
+        glUniformMatrix4fv(uProjectionLocation, 1, false, projectionMatrix, 0)
         glActiveTexture(GL_TEXTURE0)
         glBindTexture(GL_TEXTURE_2D, textureId)
-        glUniform1i(u_TexUnitLocation, 0)
+        glUniform1i(uTexUnitLocation, 0)
     }
 
     private fun createTexture(): Int {

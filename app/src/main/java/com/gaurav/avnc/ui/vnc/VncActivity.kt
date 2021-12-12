@@ -57,7 +57,7 @@ fun startVncActivity(source: Activity, uri: VncUri) {
 
 
 /**
- * This activity handle the VNC connection to a server.
+ * This activity handles the connection to a VNC server.
  */
 class VncActivity : AppCompatActivity() {
 
@@ -129,7 +129,7 @@ class VncActivity : AppCompatActivity() {
     }
 
     private fun retryConnection() {
-        //We simply create a new activity to force creation of a new ViewModel
+        //We simply create a new activity to force creation of new ViewModel
         //which effectively restarts the connection.
         if (!isFinishing) {
             startActivity(intent)

@@ -22,6 +22,7 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.recyclerview.widget.RecyclerView
 import com.gaurav.avnc.databinding.ServerSavedBinding
+import com.gaurav.avnc.databinding.ServerSavedItemBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.home.ServerTabs.SavedServerAdapter
 
@@ -56,13 +57,13 @@ object Experimental {
         private var discoveredServers: List<ServerProfile>? = null
 
         /**
-         * Maps each [ItemServerBinding.indicator] view to the server profile being
+         * Maps each [ServerSavedItemBinding.indicator] view to the server profile being
          * rendered by its container.
          */
         private val profileMap = HashMap<View, ServerProfile>(5)
 
         /**
-         * Maps each [ItemServerBinding.indicator] view to its availability state.
+         * Maps each [ServerSavedItemBinding.indicator] view to its availability state.
          * If state is true, the view will be animated otherwise it will be hidden.
          */
         private val animatorMap = HashMap<View, Boolean>(5)

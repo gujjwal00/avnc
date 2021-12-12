@@ -37,7 +37,7 @@
 
         <!--
             Library list is dynamically populated.
-            ListView would be better for this task but it causes some layout issues here.
+            ListView would be better for this task, but it causes some layout issues here.
          -->
         <LinearLayout
             android:id="@+id/library_list"

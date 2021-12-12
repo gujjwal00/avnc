@@ -91,7 +91,7 @@ class Dispatcher(private val activity: VncActivity) {
      * sp - Start point of the gesture
      * cp - Current point of the gesture
      * dx - Change along x-axis since last event
-     * dx - Change along y-axis since last event
+     * dy - Change along y-axis since last event
      */
     private fun selectSwipeAction(actionName: String): (PointF, PointF, Float, Float) -> Unit {
         return when (actionName) {

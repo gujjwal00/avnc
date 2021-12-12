@@ -71,8 +71,8 @@ class Frame {
 
 
     fun bind(program: FrameProgram) {
-        setVertexAttributePointer(0, program.a_PositionLocation, TRIANGLE_COMPONENT, STRIDE)
-        setVertexAttributePointer(TRIANGLE_COMPONENT, program.a_TextureCoordinatesLocation, TEXTURE_COMPONENT, STRIDE)
+        setVertexAttributePointer(0, program.aPositionLocation, TRIANGLE_COMPONENT, STRIDE)
+        setVertexAttributePointer(TRIANGLE_COMPONENT, program.aTextureCoordinatesLocation, TEXTURE_COMPONENT, STRIDE)
     }
 
     private fun setVertexAttributePointer(dataOffset: Int, attributeLocation: Int, componentCount: Int, stride: Int) {

@@ -244,9 +244,9 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
 
         // As if our key-handling wasn't already complex enough, Android
         // decided to mess-up NumLock handling. When any numpad number-key
-        // is pressed (e.g. 7) and NumLock is off, it will still send
-        // the number keycode (e.g. KEYCODE_NUMPAD_7) first. And if app
-        // doesn't that, it will fallback to secondary action (e.g. KEYCODE_MOVE_HOME).
+        // is pressed (e.g. 7) and NumLock is off, it will _still_ send
+        // the number keycode (e.g. KEYCODE_NUMPAD_7) first. And if apps doesn't
+        // handle that, it will fallback to secondary action (e.g. KEYCODE_MOVE_HOME).
         // So we have to ignore the first events when NumLock is off.
         if ((keyCode in KeyEvent.KEYCODE_NUMPAD_0..KeyEvent.KEYCODE_NUMPAD_9
              || keyCode == KeyEvent.KEYCODE_NUMPAD_DOT) && !event.isNumLockOn)
