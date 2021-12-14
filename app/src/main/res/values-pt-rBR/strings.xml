@@ -110,7 +110,7 @@
     <string name="pref_gesture_action_right_click">Clique direito</string>
     <string name="pref_gesture_action_double_click">Clique duplo</string>
     <string name="pref_gesture_action_move_pointer">Mover ponteiro</string>
-    <string name="pref_gesture_action_pan">Focar no quadro local</string>
+    <string name="pref_gesture_action_pan">Mover no quadro local</string>
     <string name="pref_gesture_action_remote_scroll">Rolagem de conteúdo remoto</string>
     <string name="pref_gesture_action_remote_drag">Arrastar conteúdo remoto</string>
     <string name="pref_gesture_action_open_keyboard">Mostrar teclado</string>
