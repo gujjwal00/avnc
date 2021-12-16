@@ -156,6 +156,8 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
                     dispatcher.onStylusScrollEnd(it)
                     lastStylusScrollPoint = null
                 }
+
+            MotionEvent.ACTION_HOVER_MOVE -> dispatcher.onMouseMove(event.point())
         }
 
         return true
