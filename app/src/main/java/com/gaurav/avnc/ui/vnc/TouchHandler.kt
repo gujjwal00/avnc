@@ -55,7 +55,10 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         return gestureDetector.onTouchEvent(event)
     }
 
-    fun onGenericMotionEvent(event: MotionEvent) = handleMouseEvent(event)
+    fun onGenericMotionEvent(event: MotionEvent): Boolean {
+        // Event could be from either a stylus (hovering) or a mouse
+        return handleStylusEvent(event) || handleMouseEvent(event)
+    }
 
     override fun onDown(e: MotionEvent): Boolean {
         frameScroller.stop()
