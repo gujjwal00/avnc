@@ -11,9 +11,11 @@ package com.gaurav.avnc.ui.vnc
 import android.annotation.SuppressLint
 import android.content.Context
 import android.opengl.GLSurfaceView
+import android.os.Build
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.PointerIcon
 import android.view.inputmethod.BaseInputConnection
 import android.view.inputmethod.EditorInfo
 import com.gaurav.avnc.ui.vnc.gl.Renderer
@@ -70,13 +72,16 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
         setEGLContextClientVersion(2)
         setRenderer(Renderer(viewModel))
         renderMode = RENDERMODE_WHEN_DIRTY
+
+        // Hide local cursor if requested and supported
+        if (Build.VERSION.SDK_INT >= 24 && viewModel.pref.input.hideLocalCursor)
+            pointerIcon = PointerIcon.getSystemIcon(context, PointerIcon.TYPE_NULL)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         frameState.setViewportSize(w.toFloat(), h.toFloat())
     }
-
 
     override fun onCreateInputConnection(outAttrs: EditorInfo): InputConnection {
         outAttrs.imeOptions = outAttrs.imeOptions or

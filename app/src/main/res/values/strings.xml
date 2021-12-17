@@ -57,6 +57,7 @@
     <string name="msg_server_profile_added">Server added.</string>
     <string name="msg_server_profile_deleted">Server deleted.</string>
     <string name="msg_pip_not_supported">Picture-in-Picture is not supported on this device</string>
+    <string name="msg_ptr_hiding_not_supported">Hiding cursor is not supported on this device</string>
     <string name="msg_loading">Loading …</string>
     <string name="msg_imported">Imported Successfully</string>
     <string name="msg_exported">Exported Successfully</string>
@@ -132,6 +133,7 @@
     <string name="pref_mouse_passthrough">Mouse Passthrough</string>
     <string name="pref_mouse_passthrough_summary_off">Mouse events are used locally for gestures</string>
     <string name="pref_mouse_passthrough_summary_on">Mouse events are sent directly to Server</string>
+    <string name="pref_hide_local_cursor">Hide Local (Android) Cursor</string>
     <string name="pref_vk">Virtual Keys</string>
     <string name="pref_vk_show_all">Show all keys</string>
     <string name="pref_vk_open_with_keyboard">Show when Keyboard is open</string>

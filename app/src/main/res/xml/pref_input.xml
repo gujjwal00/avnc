@@ -80,6 +80,11 @@
             app:summaryOff="@string/pref_mouse_passthrough_summary_off"
             app:summaryOn="@string/pref_mouse_passthrough_summary_on"
             app:title="@string/pref_mouse_passthrough" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="hide_local_cursor"
+            app:title="@string/pref_hide_local_cursor" />
     </PreferenceCategory>
 
     <PreferenceCategory
