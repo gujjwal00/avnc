@@ -54,6 +54,7 @@ class AppPreferences(context: Context) {
         val vkShowAll; get() = prefs.getBoolean("vk_show_all", false)
 
         val mousePassthrough; get() = prefs.getBoolean("mouse_passthrough", true)
+        val hideLocalCursor; get() = prefs.getBoolean("hide_local_cursor", false)
 
         val kmLanguageSwitchToSuper; get() = prefs.getBoolean("km_language_switch_to_super", false)
         val kmRightAltToSuper; get() = prefs.getBoolean("km_right_alt_to_super", false)

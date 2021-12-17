@@ -92,7 +92,21 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
         }
     }
 
-    @Keep class Input : PrefFragment(R.xml.pref_input)
+    @Keep class Input : PrefFragment(R.xml.pref_input) {
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+
+            val canChangePtrIcon = Build.VERSION.SDK_INT >= 24
+
+            if (!canChangePtrIcon) {
+                findPreference<SwitchPreference>("hide_local_cursor")!!.apply {
+                    isEnabled = false
+                    summary = getString(R.string.msg_ptr_hiding_not_supported)
+                }
+            }
+        }
+    }
+
     @Keep class Server : PrefFragment(R.xml.pref_server)
     @Keep class Tools : PrefFragment(R.xml.pref_tools)
     @Keep class Experimental : PrefFragment(R.xml.pref_experimental)
