@@ -13,6 +13,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.ui.vnc.FrameScroller
 import com.gaurav.avnc.ui.vnc.FrameState
 import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.vnc.Messenger
@@ -117,6 +118,11 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      * Holds information about scaling, translation etc.
      */
     val frameState = FrameState(pref)
+
+    /**
+     * Used for scrolling/animating the frame.
+     */
+    val frameScroller = FrameScroller(this)
 
     /**
      * Used for sending events to remote server.

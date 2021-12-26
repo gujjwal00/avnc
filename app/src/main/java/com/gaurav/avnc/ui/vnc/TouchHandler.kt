@@ -17,53 +17,47 @@ import kotlin.math.max
 
 /**
  * Handler for touch events. It detects various gestures and notifies [dispatcher].
- *
- * TODO: Reduce [PointF] garbage
  */
 class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: Dispatcher)
     : ScaleGestureDetector.OnScaleGestureListener, GestureDetector.SimpleOnGestureListener() {
-
-    private val scaleDetector = ScaleGestureDetector(viewModel.getApplication(), this)
-    private val gestureDetector = GestureDetector(viewModel.getApplication(), this)
-    private val multiFingerTapDetector = MultiFingerTapDetector()
-    private val frameScroller = FrameScroller(viewModel) //Should it be in Dispatcher?
-    private val dragDetector = DragDetector()
-    private val dragEnabled = viewModel.pref.input.gesture.dragEnabled
-
-    init {
-        scaleDetector.isQuickScaleEnabled = false
-    }
 
     //Extension to easily access touch position
     private fun MotionEvent.point() = PointF(x, y)
 
     /****************************************************************************************
      * Touch Event receivers
+     *
+     * Note: On some devices, 'Source' property for Stylus events is set to both
+     * [InputDevice.SOURCE_STYLUS] & [InputDevice.SOURCE_MOUSE]. Hence, we should
+     * pass the events to [handleStylusEvent] before [handleMouseEvent].
      ****************************************************************************************/
 
     fun onTouchEvent(event: MotionEvent): Boolean {
-        // For events from stylus, Android sets their 'source' to both 'STYLUS' & 'MOUSE'.
-        // So we check if it is a stylus event _before_ checking for mouse event.
-        if (handleStylusEvent(event) || handleMouseEvent(event))
-            return true
-
-        if (dragEnabled)
-            dragDetector.onTouchEvent(event)
-
-        multiFingerTapDetector.onTouchEvent(event)
-        scaleDetector.onTouchEvent(event)
-        return gestureDetector.onTouchEvent(event)
+        val handled = handleStylusEvent(event) || handleMouseEvent(event) || handleGestureEvent(event)
+        handleGestureStartStop(event)
+        return handled
     }
 
     fun onGenericMotionEvent(event: MotionEvent): Boolean {
-        // Event could be from either a stylus (hovering) or a mouse
-        return handleStylusEvent(event) || handleMouseEvent(event)
+        return onHoverEvent(event) || handleStylusEvent(event) || handleMouseEvent(event)
     }
 
-    override fun onDown(e: MotionEvent): Boolean {
-        frameScroller.stop()
-        return true
+    fun onHoverEvent(event: MotionEvent): Boolean {
+        if (event.actionMasked == MotionEvent.ACTION_HOVER_MOVE) {
+            dispatcher.onMouseMove(event.point())
+            return true
+        }
+        return false
     }
+
+    private fun handleGestureStartStop(event: MotionEvent) {
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> dispatcher.onGestureStart(event.point())
+            MotionEvent.ACTION_UP,
+            MotionEvent.ACTION_CANCEL -> dispatcher.onGestureStop(event.point())
+        }
+    }
+
 
     /****************************************************************************************
      * Mouse
@@ -77,25 +71,21 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         val p = e.point()
 
         when (e.actionMasked) {
-            MotionEvent.ACTION_BUTTON_PRESS ->
-                dispatcher.onMouseButtonDown(convertButton(e.actionButton), p)
-
-            MotionEvent.ACTION_BUTTON_RELEASE ->
-                dispatcher.onMouseButtonUp(convertButton(e.actionButton), p)
+            MotionEvent.ACTION_BUTTON_PRESS -> dispatcher.onMouseButtonDown(convertButton(e.actionButton), p)
+            MotionEvent.ACTION_BUTTON_RELEASE -> dispatcher.onMouseButtonUp(convertButton(e.actionButton), p)
+            MotionEvent.ACTION_MOVE -> dispatcher.onMouseMove(p)
 
             MotionEvent.ACTION_SCROLL -> {
                 val hs = e.getAxisValue(MotionEvent.AXIS_HSCROLL)
                 val vs = e.getAxisValue(MotionEvent.AXIS_VSCROLL)
                 dispatcher.onMouseScroll(p, hs, vs)
             }
-
-            MotionEvent.ACTION_MOVE,
-            MotionEvent.ACTION_HOVER_MOVE -> dispatcher.onMouseMove(p)
         }
 
         // Allow touchpad gestures to be passed on to GestureDetector
         if (e.buttonState == 0 && e.getToolType(0) != MotionEvent.TOOL_TYPE_MOUSE)
             return false
+
         return true
     }
 
@@ -113,9 +103,15 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     /****************************************************************************************
      * Stylus
      ****************************************************************************************/
-
     private val stylusGestureDetector = GestureDetector(viewModel.app, StylusGestureListener())
-    private var lastStylusScrollPoint: PointF? = null
+
+    private fun handleStylusEvent(event: MotionEvent): Boolean {
+        if (event.isFromSource(InputDevice.SOURCE_STYLUS)) {
+            stylusGestureDetector.onTouchEvent(event)
+            return true
+        }
+        return false
+    }
 
     inner class StylusGestureListener : GestureDetector.SimpleOnGestureListener() {
         override fun onDown(e: MotionEvent?) = true
@@ -131,45 +127,37 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         }
 
         override fun onLongPress(e: MotionEvent) {
+            viewModel.frameViewRef.get()?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             dispatcher.onStylusLongPress(e.point())
         }
 
         override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
             // Scrolling with stylus button pressed is currently used for scale gesture
-            if (e2.buttonState and MotionEvent.BUTTON_STYLUS_PRIMARY == 0) {
-                lastStylusScrollPoint = e2.point()
-                dispatcher.onStylusScroll(lastStylusScrollPoint!!)
-            }
+            if (e2.buttonState and MotionEvent.BUTTON_STYLUS_PRIMARY == 0)
+                dispatcher.onStylusScroll(e2.point())
             return true
         }
     }
 
-    private fun handleStylusEvent(event: MotionEvent): Boolean {
-        if (!event.isFromSource(InputDevice.SOURCE_STYLUS))
-            return false
-
-        stylusGestureDetector.onTouchEvent(event)
-
-        when (event.actionMasked) {
-            MotionEvent.ACTION_DOWN,
-            MotionEvent.ACTION_UP,
-            MotionEvent.ACTION_CANCEL ->
-                // Finish any scroll gesture
-                lastStylusScrollPoint?.let {
-                    dispatcher.onStylusScrollEnd(it)
-                    lastStylusScrollPoint = null
-                }
-
-            MotionEvent.ACTION_HOVER_MOVE -> dispatcher.onMouseMove(event.point())
-        }
-
-        return true
-    }
-
 
     /****************************************************************************************
-     * Gestures
+     * Finger Gestures
+     *
+     * In addition to gestures supported by [GestureDetector] & [ScaleGestureDetector],
+     * we use [DragDetector] & [MultiFingerTapDetector] for more gestures.
+     *
      ****************************************************************************************/
+    private val scaleDetector = ScaleGestureDetector(viewModel.app, this).apply { isQuickScaleEnabled = false }
+    private val gestureDetector = GestureDetector(viewModel.app, this)
+    private val multiFingerTapDetector = MultiFingerTapDetector()
+    private val dragDetector = DragDetector()
+
+    private fun handleGestureEvent(event: MotionEvent): Boolean {
+        dragDetector.onTouchEvent(event)
+        multiFingerTapDetector.onTouchEvent(event)
+        scaleDetector.onTouchEvent(event)
+        return gestureDetector.onTouchEvent(event)
+    }
 
     override fun onScaleBegin(detector: ScaleGestureDetector) = true
     override fun onScaleEnd(detector: ScaleGestureDetector) {}
@@ -177,6 +165,8 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         dispatcher.onScale(detector.scaleFactor, detector.focusX, detector.focusY)
         return true
     }
+
+    override fun onDown(e: MotionEvent) = true
 
     override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
         dispatcher.onTap1(e.point())
@@ -191,14 +181,14 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     override fun onLongPress(e: MotionEvent) {
         viewModel.frameViewRef.get()?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
 
-        if (dragEnabled)
+        if (dragDetector.dragEnabled)
             dragDetector.onLongPress(e)
         else
             dispatcher.onLongPress(e.point())
     }
 
     override fun onFling(e1: MotionEvent, e2: MotionEvent, vX: Float, vY: Float): Boolean {
-        frameScroller.fling(vX, vY)
+        dispatcher.onFling(vX, vY)
         return true
     }
 
@@ -215,11 +205,27 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         return true
     }
 
-    /***************************************************************************************
-     * Small utility class for handling drag gesture (Long Press followed by Swipe/Move)
-     **************************************************************************************/
 
+    /**
+     * Utility class for detecting drag gesture.
+     *
+     * Detection:
+     *
+     *  1. Wait for the long-press before doing anything.
+     *  2. Once long-press is detected, start looking at incoming events.
+     *  3. If [MotionEvent.ACTION_UP] is received next, send long-press to dispatcher.
+     *  4. If [MotionEvent.ACTION_MOVE] is received instead, start dragging.
+     *  5. If [MotionEvent.ACTION_UP] is received WHILE dragging, stop dragging.
+     *  6. In another finger goes down, or gesture is canceled, stop dragging.
+     *
+     * Instead of using our own [GestureDetector], we rely on [gestureDetector]
+     * for long-press detection.
+     *
+     * Left mouse button pressed during dragging is automatically released
+     * by [Dispatcher.onGestureStop].
+     */
     private inner class DragDetector {
+        val dragEnabled = viewModel.pref.input.gesture.dragEnabled
         private var longPressDetected = false
         private var isDragging = false
         private var startPoint = PointF()
@@ -233,7 +239,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         }
 
         fun onTouchEvent(event: MotionEvent) {
-            if (!longPressDetected)
+            if (!dragEnabled || !longPressDetected)
                 return
 
             when (event.actionMasked) {
@@ -246,9 +252,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
                 }
 
                 MotionEvent.ACTION_UP -> {
-                    if (isDragging)
-                        dispatcher.onDragEnd(event.point())
-                    else
+                    if (!isDragging)
                         dispatcher.onLongPress(event.point())
 
                     longPressDetected = false
@@ -257,9 +261,6 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
 
                 MotionEvent.ACTION_POINTER_DOWN,
                 MotionEvent.ACTION_CANCEL -> {
-                    if (isDragging)
-                        dispatcher.onDragEnd(event.point())
-
                     longPressDetected = false
                     isDragging = false
                 }
@@ -279,8 +280,8 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
      *     was finished within a  timeout, and if more than 1 finger went down,
      *     appropriate handler is invoked.
      *
-     * If fingers are moved after going down, user probably intends to pan/scale.
-     * So tap detection is stopped if we receive [onScroll].
+     * If fingers are moved after going down, user probably intends to pan/scale,
+     * so tap detection is stopped if we receive [onScroll].
      */
     private inner class MultiFingerTapDetector {
         private var startEvent: MotionEvent? = null

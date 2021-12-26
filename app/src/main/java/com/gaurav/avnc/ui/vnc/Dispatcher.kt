@@ -107,7 +107,8 @@ class Dispatcher(private val activity: VncActivity) {
      * Event receivers
      **************************************************************************/
 
-    fun onScale(scaleFactor: Float, fx: Float, fy: Float) = doScale(scaleFactor, fx, fy)
+    fun onGestureStart(p: PointF) = stopFling()
+    fun onGestureStop(p: PointF) = doPointerButtonRelease(p)
 
     fun onTap1(p: PointF) = tap1Action(p)
     fun onTap2(p: PointF) = tap2Action(p)
@@ -117,26 +118,21 @@ class Dispatcher(private val activity: VncActivity) {
     fun onSwipe1(sp: PointF, cp: PointF, dx: Float, dy: Float) = swipe1Action(sp, cp, dx, dy)
     fun onSwipe2(sp: PointF, cp: PointF, dx: Float, dy: Float) = swipe2Action(sp, cp, dx, dy)
     fun onDrag(sp: PointF, cp: PointF, dx: Float, dy: Float) = dragAction(sp, cp, dx, dy)
-    fun onDragEnd(p: PointF) {
-        if (prefs.input.gesture.drag == "remote-drag")
-            endDrag(p)
-    }
 
-    fun onXKeySym(keySym: Int, isDown: Boolean) = messenger.sendKey(keySym, isDown)
+    fun onScale(scaleFactor: Float, fx: Float, fy: Float) = doScale(scaleFactor, fx, fy)
+    fun onFling(vx: Float, vy: Float) = doFling(vx, vy)
 
     fun onMouseButtonDown(button: PointerButton, p: PointF) = doPointerButtonDown(button, p)
     fun onMouseButtonUp(button: PointerButton, p: PointF) = doPointerButtonUp(button, p)
     fun onMouseMove(p: PointF) = doMovePointer(p)
-    fun onMouseScroll(p: PointF, hs: Float, vs: Float) {
-        doRemoteScroll(p, hs * deltaPerScroll, vs * deltaPerScroll)
-    }
+    fun onMouseScroll(p: PointF, hs: Float, vs: Float) = doRemoteScroll(p, hs * deltaPerScroll, vs * deltaPerScroll)
 
     fun onStylusTap(p: PointF) = doClick(PointerButton.Left, p)
     fun onStylusDoubleTap(p: PointF) = doDoubleClick(PointerButton.Left, p)
     fun onStylusLongPress(p: PointF) = doClick(PointerButton.Right, p)
     fun onStylusScroll(p: PointF) = doPointerButtonDown(PointerButton.Left, p)
-    fun onStylusScrollEnd(p: PointF) = doPointerButtonUp(PointerButton.Left, p)
 
+    fun onXKeySym(keySym: Int, isDown: Boolean) = messenger.sendKey(keySym, isDown)
 
     /**************************************************************************
      * Available actions
@@ -149,6 +145,9 @@ class Dispatcher(private val activity: VncActivity) {
     private fun doPan(dx: Float, dy: Float) {
         viewModel.panFrame(dx, dy)
     }
+
+    private fun doFling(vx: Float, vy: Float) = viewModel.frameScroller.fling(vx, vy)
+    private fun stopFling() = viewModel.frameScroller.stop()
 
     private fun doRemoteScroll(focus: PointF, dx: Float, dy: Float) {
         accumulatedDx += dx
@@ -186,6 +185,10 @@ class Dispatcher(private val activity: VncActivity) {
         messenger.sendPointerButtonDown(button, it)
     }
 
+    private fun doPointerButtonRelease(p: PointF) = inFbCoordinates(p) {
+        messenger.sendPointerButtonRelease(it)
+    }
+
     private fun doClick(button: PointerButton, p: PointF) = inFbCoordinates(p) {
         messenger.sendClick(button, it)
     }
@@ -197,7 +200,6 @@ class Dispatcher(private val activity: VncActivity) {
 
     private fun doMovePointer(p: PointF) = doPointerButtonDown(PointerButton.None, p)
     private fun doDrag(p: PointF) = doPointerButtonDown(PointerButton.Left, p)
-    private fun endDrag(p: PointF) = doPointerButtonUp(PointerButton.Left, p)
 
     private fun doOpenKeyboard() = activity.showKeyboard()
 

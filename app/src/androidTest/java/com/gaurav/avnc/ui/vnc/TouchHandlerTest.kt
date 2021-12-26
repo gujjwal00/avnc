@@ -92,6 +92,10 @@ class TouchHandlerTest {
         touchHandler.onGenericMotionEvent(event)
     }
 
+    private fun sendHoverEvent(event: MotionEvent) = instrumentation.runOnMainSync {
+        touchHandler.onHoverEvent(event)
+    }
+
 
     /************************* Gesture Tests *******************************************************/
 
@@ -184,7 +188,27 @@ class TouchHandlerTest {
 
         verifyOrder {
             mockDispatcher.onDrag(a1, a2, 50f, 50f)
-            mockDispatcher.onDragEnd(a2)
+            mockDispatcher.onGestureStop(a2)
+        }
+    }
+
+    @Test
+    fun gestureStartStop() {
+        sendDown()
+        sendUp()
+        verifyOrder {
+            mockDispatcher.onGestureStart(testPoint)
+            mockDispatcher.onGestureStop(testPoint)
+        }
+    }
+
+    @Test
+    fun gestureStartStopOnCancel() {
+        sendDown()
+        sendEvent(createEvent(MotionEvent.ACTION_CANCEL, testPoint))
+        verifyOrder {
+            mockDispatcher.onGestureStart(testPoint)
+            mockDispatcher.onGestureStop(testPoint)
         }
     }
 
@@ -227,7 +251,15 @@ class TouchHandlerTest {
     }
 
     @Test
-    fun mouseHover() {
+    fun mouseHover1() {
+        setupWithPref(mousePassthrough = true)
+        sendHoverEvent(createMouseEvent(MotionEvent.ACTION_HOVER_MOVE, testPoint))
+        verify { mockDispatcher.onMouseMove(testPoint) }
+    }
+
+    // We should be able to handle hover events sent as generic events.
+    @Test
+    fun mouseHover2() {
         setupWithPref(mousePassthrough = true)
         sendGenericEvent(createMouseEvent(MotionEvent.ACTION_HOVER_MOVE, testPoint))
         verify { mockDispatcher.onMouseMove(testPoint) }
@@ -275,7 +307,13 @@ class TouchHandlerTest {
     }
 
     @Test
-    fun stylusHover() {
+    fun stylusHover1() {
+        sendHoverEvent(createStylusEvent(MotionEvent.ACTION_HOVER_MOVE, testPoint))
+        verify { mockDispatcher.onMouseMove(testPoint) }
+    }
+
+    @Test
+    fun stylusHover2() {
         sendGenericEvent(createStylusEvent(MotionEvent.ACTION_HOVER_MOVE, testPoint))
         verify { mockDispatcher.onMouseMove(testPoint) }
     }
