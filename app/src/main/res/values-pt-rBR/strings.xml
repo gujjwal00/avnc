@@ -7,8 +7,6 @@
   -->
 
 <resources>
-    <string name="app_name">AVNC</string>
-
     <string name="title_add_server_profile">Adicionar um servidor</string>
     <string name="title_edit_server_profile">Edição do servidor</string>
     <string name="title_duplicate">Duplicar</string>

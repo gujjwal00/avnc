@@ -7,7 +7,7 @@
   -->
 
 <resources>
-    <string name="app_name">AVNC</string>
+    <string name="app_name" translatable="false">AVNC</string>
 
     <string name="title_add_server_profile">Add Server</string>
     <string name="title_edit_server_profile">Edit Server</string>
