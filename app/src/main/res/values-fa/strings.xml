@@ -64,30 +64,33 @@
     <string name="msg_invalid_key_file">پرونده یک کلید خصوصی معتبر نیست!</string>
     <string name="msg_invalid_vnc_uri">Invalid VNC URI</string>
     <string name="msg_copied_to_clipboard">رونویسی شد!</string>
-    <string name="msg_key_compat_mode_help">Some servers don\'t support direct Unicode input. Compatibility Mode tries to send key events in legacy format. \n\nTry enabling/disabling this if you are having trouble entering some characters.</string>
-    <string name="tip_empty_server_list">Server list is empty.\nUse the \'<b>+</b>\' button to add a Server, or\nUse the top Urlbar to directly connect to a server.</string>
-    <string name="tip_urlbar">You can enter hostname or IP address.\n\'vnc://\' URIs are also supported.</string>
-    <string name="tip_discovery">Discovery can automatically find supported servers\nrunning on your network.</string>
+    <string name="msg_key_compat_mode_help">بعضی کارسازها از ورود مستقیم یونیکد پشتیبانی نمی‌کنند. حالت سازگاری تلاش می‌کند که رویدادهای کلید را در قالب قدیمی ارسال کند.\n\nاگر با وارد کردن بعضی نویسه‌ها مشکل دارید، سعی کنید این ویژگی را فعّال/غیرفعّال کنید.</string>
+    <string name="tip_empty_server_list">فهرست کارسازها خالی است.\nاز دکمهٔ «<b>+</b>» برای افزودن کارساز استفاده کنید،\nیا از نوار نشانی بالا برای اتّصال مستقیم به کارساز استفاده کینید.</string>
+
+<!-- در رشته زیر از نویسهٔ LRM استفاده شده است -->
+    <string name="tip_urlbar">شما می‌توانید نام میزبان یا نشانی آی‌پی را وارد کنید.\nهمچنین نشانی‌ها به صورت «vnc://‎» نیز پشتیبانی می‌شوند.</string>
+    <string name="tip_discovery">اکتشاف می‌تواند به صورت خودکار کارسازهای پشتیبانی‌شده\nکه در شبکهٔ شما در حال اجرا هستند، را بیابد.</string>
 
     <!-- Accessibility descriptions -->
-    <string name="desc_navigation_btn">Open Navigation Drawer</string>
-    <string name="desc_settings_btn">Open Settings</string>
-    <string name="desc_saved_servers_tab">Saved Servers</string>
-    <string name="desc_discovered_servers_tab">Discovered Servers</string>
-    <string name="desc_add_new_server_btn">Add new Server</string>
-    <string name="desc_save_discovered_server_btn">Save this Server</string>
-    <string name="desc_discovery_btn">Start Server Discovery</string>
-    <string name="desc_discovery_running">Discovering Servers on you network</string>
-    <string name="desc_keyboard_btn">Open Keyboard</string>
-    <string name="desc_virtual_keys_btn">Show Virtual Keys</string>
-    <string name="desc_reset_zoom_btn">Reset Zoom to 100%</string>
-    <string name="desc_retry_connection_btn">Retry Connection</string>
-    <string name="desc_back_btn">Go Back</string>
-    <string name="desc_clear_url_btn">Clear URL</string>
-    <string name="desc_server_url">Enter address of VNC server</string>
-    <string name="desc_help_btn">Show Help</string>
-    <string name="desc_discovered_list">List of automatically discovered servers</string>
-    <string name="desc_saved_servers_list">List of saved Servers</string>
+    <string name="desc_navigation_btn">گشودن کشوی ناوش</string>
+    <string name="desc_settings_btn">گشودن تنظیمات</string>
+    <string name="desc_saved_servers_tab">کارسازهای ذخیره شده</string>
+    <string name="desc_discovered_servers_tab">کارسازهای کشف شده</string>
+    <string name="desc_add_new_server_btn">افزودن کارساز جدید</string>
+    <string name="desc_save_discovered_server_btn">ذخیرهٔ این کارساز</string>
+    <string name="desc_discovery_btn">شروع اکتشاف کارساز</string>
+    <string name="desc_discovery_running">درحال اکتشاف کارسازها در شبکهٔ شما</string>
+    <string name="desc_keyboard_btn">گشودن صفحه‌کلید</string>
+    <string name="desc_virtual_keys_btn">نمایش کلیدهای مجازی</string>
+<!-- در رشته زیر از نویسه‌های ایزوله چپ‌به‌راست استفاده شده است -->
+    <string name="desc_reset_zoom_btn">بازنشانی بزرگنمایی به ⁦100%⁩</string>
+    <string name="desc_retry_connection_btn">تلاش مجدد برای اتّصال</string>
+    <string name="desc_back_btn">بازگشت</string>
+    <string name="desc_clear_url_btn">پاک‌کردن نشانی</string>
+    <string name="desc_server_url">نشانی کارساز VNC را وارد کنید</string>
+    <string name="desc_help_btn">نمایش راهنما</string>
+    <string name="desc_discovered_list">فهرست کارسازهای به صورت خودکار کشف شده</string>
+    <string name="desc_saved_servers_list">فهرست کارسازهای ذخیره شده</string>
 
     <!-- Preference -->
     <string name="pref_ui">واسط</string>
@@ -115,10 +118,10 @@
     <string name="pref_gesture_action_open_keyboard">گشودن صفحه‌کلید</string>
 
     <string name="pref_theme">زمینه</string>
-    <string name="pref_prefer_advanced_editor">Prefer Advanced Editor</string>
-    <string name="pref_prefer_advanced_editor_summary">Enable this to directly open Advanced mode to add/edit Servers</string>
-    <string name="pref_sort_server_list">Sort Server List</string>
-    <string name="pref_sort_server_list_summary">Servers are sorted by their name</string>
+    <string name="pref_prefer_advanced_editor">ترجیح دادن ویرایشگر پیشرفته</string>
+    <string name="pref_prefer_advanced_editor_summary">این را برای گشودن مستقیم حالت پیشرفته برای افزودن/ویرایش کارسازها، به کار بیاندازید.</string>
+    <string name="pref_sort_server_list">مرتب‌سازی فهرست کارسازها</string>
+    <string name="pref_sort_server_list_summary">کارسازها بر اساس نامشان مرتب شدند</string>
     <string name="pref_gesture">حرکات</string>
     <string name="pref_single_tap">یک ضربه</string>
     <string name="pref_two_finger_tap">ضربهٔ دو انگشتی (آزمایشی)</string>
@@ -148,9 +151,9 @@
     <string name="pref_zoom_min">بیشینهٔ بزرگنمایی</string>
     <string name="pref_zoom_max">بیشینهٔ بزرگنمایی</string>
     <string name="pref_clipboard_sync">همگام‌سازی تخته‌گیره</string>
-    <string name="pref_credential">Credentials</string>
-    <string name="pref_cred_autocomplete">Enable Autocomplete</string>
-    <string name="pref_cred_autocomplete_summary">Suggests known credentials when connecting to a new Server</string>
+    <string name="pref_credential">اعتبارنامه</string>
+    <string name="pref_cred_autocomplete">به کار انداختن تکمیل خودکار</string>
+    <string name="pref_cred_autocomplete_summary">هنگام اتّصال به کارسازی جدید، اعتبارنامه‌های شناخته شده را پیشنهاد می‌دهد</string>
     <string name="pref_discovery">اکتشاف</string>
     <string name="pref_discovery_timeout">زمان انقضا (ثانیه)</string>
     <string name="pref_discovery_auto_start">شروع خودکار</string>
