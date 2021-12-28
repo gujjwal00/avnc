@@ -54,7 +54,7 @@ class Dispatcher(private val activity: VncActivity) {
 
     private val viewModel = activity.viewModel
     private val messenger = viewModel.messenger
-    private val prefs = viewModel.pref
+    private val gesturePref = viewModel.pref.input.gesture
 
     //Used for remote scrolling
     private var accumulatedDx = 0F
@@ -65,16 +65,16 @@ class Dispatcher(private val activity: VncActivity) {
      * Action configuration
      **************************************************************************/
 
-    private val swipe1Action = selectSwipeAction(prefs.input.gesture.swipe1)
-    private val swipe2Action = selectSwipeAction(prefs.input.gesture.swipe2)
-    private val dragAction = selectSwipeAction(prefs.input.gesture.drag)
+    private val tap1Action = selectPointAction(gesturePref.tap1)
+    private val tap2Action = selectPointAction(gesturePref.tap2)
+    private val doubleTapAction = selectPointAction(gesturePref.doubleTap)
+    private val longPressAction = selectPointAction(gesturePref.longPress)
 
-    private val tap1Action = selectPointerAction(prefs.input.gesture.tap1)
-    private val tap2Action = selectPointerAction(prefs.input.gesture.tap2)
-    private val doubleTapAction = selectPointerAction(prefs.input.gesture.doubleTap)
-    private val longPressAction = selectPointerAction(prefs.input.gesture.longPress)
+    private val swipe1Action = selectSwipeAction(gesturePref.swipe1)
+    private val swipe2Action = selectSwipeAction(gesturePref.swipe2)
+    private val dragAction = selectSwipeAction(gesturePref.drag)
 
-    private fun selectPointerAction(actionName: String): (PointF) -> Unit {
+    private fun selectPointAction(actionName: String): (PointF) -> Unit {
         return when (actionName) {
             "left-click" -> { p -> doClick(PointerButton.Left, p) }
             "double-click" -> { p -> doDoubleClick(PointerButton.Left, p) }
