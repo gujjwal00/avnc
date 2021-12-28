@@ -64,14 +64,14 @@ class Dispatcher(private val activity: VncActivity) {
      * Action configuration
      **************************************************************************/
 
-    val swipe1Action by lazy { selectSwipeAction(prefs.input.gesture.swipe1) }
-    val swipe2Action by lazy { selectSwipeAction(prefs.input.gesture.swipe2) }
-    val dragAction by lazy { selectSwipeAction(prefs.input.gesture.drag) }
+    private val swipe1Action = selectSwipeAction(prefs.input.gesture.swipe1)
+    private val swipe2Action = selectSwipeAction(prefs.input.gesture.swipe2)
+    private val dragAction = selectSwipeAction(prefs.input.gesture.drag)
 
-    val tap1Action by lazy { selectPointerAction(prefs.input.gesture.tap1) }
-    val tap2Action by lazy { selectPointerAction(prefs.input.gesture.tap2) }
-    val doubleTapAction by lazy { selectPointerAction(prefs.input.gesture.doubleTap) }
-    val longPressAction by lazy { selectPointerAction(prefs.input.gesture.longPress) }
+    private val tap1Action = selectPointerAction(prefs.input.gesture.tap1)
+    private val tap2Action = selectPointerAction(prefs.input.gesture.tap2)
+    private val doubleTapAction = selectPointerAction(prefs.input.gesture.doubleTap)
+    private val longPressAction = selectPointerAction(prefs.input.gesture.longPress)
 
     private fun selectPointerAction(actionName: String): (PointF) -> Unit {
         return when (actionName) {
