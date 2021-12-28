@@ -9,6 +9,7 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.graphics.PointF
+import com.gaurav.avnc.ui.vnc.Dispatcher.SwipeAction
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.PointerButton
@@ -85,21 +86,25 @@ class Dispatcher(private val activity: VncActivity) {
         }
     }
 
-    /**
-     * Returns a lambda which takes 4 arguments:
-     *
-     * sp - Start point of the gesture
-     * cp - Current point of the gesture
-     * dx - Change along x-axis since last event
-     * dy - Change along y-axis since last event
-     */
-    private fun selectSwipeAction(actionName: String): (PointF, PointF, Float, Float) -> Unit {
+    private fun selectSwipeAction(actionName: String): SwipeAction {
         return when (actionName) {
-            "pan" -> { _, _, dx, dy -> doPan(dx, dy) }
-            "remote-scroll" -> { sp, _, dx, dy -> doRemoteScroll(sp, dx, dy) }
-            "remote-drag" -> { _, cp, _, _ -> doDrag(cp) }
-            else -> { _, _, _, _ -> } //Nothing
+            "pan" -> SwipeAction { _, _, dx, dy -> doPan(dx, dy) }
+            "remote-scroll" -> SwipeAction { sp, _, dx, dy -> doRemoteScroll(sp, dx, dy) }
+            "remote-drag" -> SwipeAction { _, cp, _, _ -> doDrag(cp) }
+            else -> SwipeAction { _, _, _, _ -> } //Nothing
         }
+    }
+
+    //Instead of using generic lambda, like point actions, we are using a functional
+    //interface with SAM conversion to avoid boxing/unboxing overhead for dx & dy.
+    private fun interface SwipeAction {
+        /**
+         * [sp] Start point of the gesture
+         * [cp] Current point of the gesture
+         * [dx] Change along x-axis since last event
+         * [dy] Change along y-axis since last event
+         */
+        operator fun invoke(sp: PointF, cp: PointF, dx: Float, dy: Float)
     }
 
 
