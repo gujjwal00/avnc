@@ -1,0 +1,174 @@
+<!--
+  ~ Copyright (c) 2021  eshagh shahidani.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<resources>
+    <string name="title_add_server_profile">افزودن کارساز</string>
+    <string name="title_edit_server_profile">ویرایش کارساز</string>
+    <string name="title_duplicate">تکرار</string>
+    <string name="title_edit">ویرایش</string>
+    <string name="title_delete">حذف</string>
+    <string name="title_copy_host">رونویسی میزبان</string>
+    <string name="title_copy_name">رونویسی نام</string>
+    <string name="title_advanced">پیشرفته</string>
+    <string name="title_cancel">لغو</string>
+    <string name="title_save">ذخیره</string>
+    <string name="title_undo">برگردان</string>
+    <string name="title_settings">تنظیمات</string>
+    <string name="title_credentials_required">مدارک مورد نیاز</string>
+    <string name="title_remember">یادآوری</string>
+    <string name="title_export">برون‌ریزی</string>
+    <string name="title_import">درون‌ریزی</string>
+    <string name="title_view_only_mode">حالت فقط مشاهده</string>
+    <string name="title_hide_remote_cursor">پنهان کردن مکان‌نمای دوردست</string>
+    <string name="title_key_compat_mode">حالت سازگاری صفحه کلید</string>
+    <string name="title_use_ssh_tunnel">استفاده از تونل SSH</string>
+    <string name="title_unknown_ssh_host">میزبان SSH ناشناخته</string>
+    <string name="title_ssh_host_key_changed">کلید میزبان تغییر کرد!</string>
+    <string name="title_continue">ادامه</string>
+    <string name="title_delete_servers_before_import">حذف کارسازهای کنونی پیش از درون‌ریزی</string>
+    <string name="title_password">گذرواژه</string>
+    <string name="title_use_repeater">استفاده از تکرارکننده</string>
+    <string name="title_private_key">کلید خصوصی</string>
+    <string name="title_change">تغییر</string>
+    <string name="title_about">درباره</string>
+    <string name="title_license">پروانه</string>
+    <string name="title_open_source_libraries">کتاب‌خانه‌های متن‌باز</string>
+    <string name="title_report_bug">گزارش یک اشکال</string>
+    <string name="title_github_repo">مخزن گیت‌هاب</string>
+
+    <string name="hint_urlbar">اتّصال به یک کارساز</string>
+    <string name="hint_server_name">نام (مثلا: رایانهٔ کاری)</string>
+    <string name="hint_host">میزبان</string>
+    <string name="hint_repeater_host">میزبان تکرارکننده</string>
+    <string name="hint_port">درگاه</string>
+    <string name="hint_server_id">آی‌دی کارساز</string>
+    <string name="hint_username">نام کاربری</string>
+    <string name="hint_password">گذرواژه</string>
+    <string name="hint_key_password">گذرواژهٔ کلید</string>
+
+    <string name="msg_about_app">برنامهٔ AVNC یک کارخواه متن‌باز VNC برای اندروید است. این به شما اجازهٔ کنترل از راه دور هر افزاره‌ای که یک کارساز VNC را اجرا کند، را می‌دهد.</string>
+    <string name="msg_server_profile_added">کارساز اضافه شد.</string>
+    <string name="msg_server_profile_deleted">کارساز حذف شد.</string>
+    <string name="msg_pip_not_supported">تصویر در تصویر، در این افزاره پشتیبانی نمی‌شود</string>
+    <string name="msg_ptr_hiding_not_supported">پنهان کردن مکان‌نما ، در این افزاره پشتیبانی نمی‌شود</string>
+    <string name="msg_loading">در حال بار کردن …</string>
+    <string name="msg_imported">باموفّقیت درون‌ریزی شد</string>
+    <string name="msg_exported">باموفّقیت برون‌ریزی شد</string>
+    <string name="msg_export_auth_required">پیش از برون‌ریزی احراز هویت لازم است.</string>
+    <string name="msg_export_auth_missing">افزارهٔ شما ایمن نیست. پیش از برون‌ریزی قفل صفحتان را برای بکار انداختن احراز هویت، روشن کنید.</string>
+    <string name="msg_invalid_key_file">پرونده یک کلید خصوصی معتبر نیست!</string>
+    <string name="msg_invalid_vnc_uri">Invalid VNC URI</string>
+    <string name="msg_copied_to_clipboard">رونویسی شد!</string>
+    <string name="msg_key_compat_mode_help">بعضی کارسازها از ورود مستقیم یونیکد پشتیبانی نمی‌کنند. حالت سازگاری تلاش می‌کند که رویدادهای کلید را در قالب قدیمی ارسال کند.\n\nاگر با وارد کردن بعضی نویسه‌ها مشکل دارید، سعی کنید این ویژگی را فعّال/غیرفعّال کنید.</string>
+    <string name="tip_empty_server_list">فهرست کارسازها خالی است.\nاز دکمهٔ «<b>+</b>» برای افزودن کارساز استفاده کنید،\nیا از نوار نشانی بالا برای اتّصال مستقیم به کارساز استفاده کینید.</string>
+
+<!-- در رشته زیر از نویسهٔ LRM استفاده شده است -->
+    <string name="tip_urlbar">شما می‌توانید نام میزبان یا نشانی آی‌پی را وارد کنید.\nهمچنین نشانی‌ها به صورت «vnc://‎» نیز پشتیبانی می‌شوند.</string>
+    <string name="tip_discovery">اکتشاف می‌تواند به صورت خودکار کارسازهای پشتیبانی‌شده\nکه در شبکهٔ شما در حال اجرا هستند، را بیابد.</string>
+
+    <!-- Accessibility descriptions -->
+    <string name="desc_navigation_btn">گشودن کشوی ناوش</string>
+    <string name="desc_settings_btn">گشودن تنظیمات</string>
+    <string name="desc_saved_servers_tab">کارسازهای ذخیره شده</string>
+    <string name="desc_discovered_servers_tab">کارسازهای کشف شده</string>
+    <string name="desc_add_new_server_btn">افزودن کارساز جدید</string>
+    <string name="desc_save_discovered_server_btn">ذخیرهٔ این کارساز</string>
+    <string name="desc_discovery_btn">شروع اکتشاف کارساز</string>
+    <string name="desc_discovery_running">درحال اکتشاف کارسازها در شبکهٔ شما</string>
+    <string name="desc_keyboard_btn">گشودن صفحه‌کلید</string>
+    <string name="desc_virtual_keys_btn">نمایش کلیدهای مجازی</string>
+<!-- در رشته زیر از نویسه‌های ایزوله چپ‌به‌راست استفاده شده است -->
+    <string name="desc_reset_zoom_btn">بازنشانی بزرگنمایی به ⁦100%⁩</string>
+    <string name="desc_retry_connection_btn">تلاش مجدد برای اتّصال</string>
+    <string name="desc_back_btn">بازگشت</string>
+    <string name="desc_clear_url_btn">پاک‌کردن نشانی</string>
+    <string name="desc_server_url">نشانی کارساز VNC را وارد کنید</string>
+    <string name="desc_help_btn">نمایش راهنما</string>
+    <string name="desc_discovered_list">فهرست کارسازهای به صورت خودکار کشف شده</string>
+    <string name="desc_saved_servers_list">فهرست کارسازهای ذخیره شده</string>
+
+    <!-- Preference -->
+    <string name="pref_ui">واسط</string>
+    <string name="pref_ui_summary">دیدن و احساس</string>
+    <string name="pref_viewer">نمایشگر</string>
+    <string name="pref_viewer_summary">تصویر در تصویر، بزرگنمایی</string>
+    <string name="pref_input">ورودی</string>
+    <string name="pref_input_summary">حرکات، ماوس، کلیدهای مجازی</string>
+    <string name="pref_servers">کارسازها</string>
+    <string name="pref_server_summary">اکتشاف، اعتبار</string>
+    <string name="pref_tools">ابزار</string>
+    <string name="pref_tools_summary">درون‌ریزی/برون‌ریزی، اشکال زدایی</string>
+    <string name="pref_experimental">آزمایشی</string>
+    <string name="pref_experimental_summary">چیزهای اضافی!</string>
+
+    <string name="pref_gesture_action_none">هیچ</string>
+    <string name="pref_gesture_action_left_click">کلیک چپ</string>
+    <string name="pref_gesture_action_middle_click">کلیک وسط</string>
+    <string name="pref_gesture_action_right_click">کلیک راست</string>
+    <string name="pref_gesture_action_double_click">دوبار کلیک</string>
+    <string name="pref_gesture_action_move_pointer">جابه‌جایی اشاره‌گر</string>
+    <string name="pref_gesture_action_pan">Pan Local Frame</string>
+    <string name="pref_gesture_action_remote_scroll">لغزش محتوای دوردست</string>
+    <string name="pref_gesture_action_remote_drag">کشیدن محتوای دوردست</string>
+    <string name="pref_gesture_action_open_keyboard">گشودن صفحه‌کلید</string>
+
+    <string name="pref_theme">زمینه</string>
+    <string name="pref_prefer_advanced_editor">ترجیح دادن ویرایشگر پیشرفته</string>
+    <string name="pref_prefer_advanced_editor_summary">این را برای گشودن مستقیم حالت پیشرفته برای افزودن/ویرایش کارسازها، به کار بیاندازید.</string>
+    <string name="pref_sort_server_list">مرتب‌سازی فهرست کارسازها</string>
+    <string name="pref_sort_server_list_summary">کارسازها بر اساس نامشان مرتب شدند</string>
+    <string name="pref_gesture">حرکات</string>
+    <string name="pref_single_tap">یک ضربه</string>
+    <string name="pref_two_finger_tap">ضربهٔ دو انگشتی (آزمایشی)</string>
+    <string name="pref_double_tap">دو ضربه</string>
+    <string name="pref_long_press">فشار طولانی</string>
+    <string name="pref_swipe1">سُر دادن یک انگشت</string>
+    <string name="pref_swipe2">سُر دادن دو انگشت</string>
+    <string name="pref_drag">کشیدن (فشار طولانی و سُر دادن)</string>
+    <string name="pref_mouse">ماوس</string>
+    <string name="pref_mouse_passthrough">Mouse Passthrough</string>
+    <string name="pref_mouse_passthrough_summary_off">Mouse events are used locally for gestures</string>
+    <string name="pref_mouse_passthrough_summary_on">Mouse events are sent directly to Server</string>
+    <string name="pref_hide_local_cursor">پنهان کردن مکان‌نمای محلّی (اندروید)</string>
+    <string name="pref_vk">کلیدهای مجازی</string>
+    <string name="pref_vk_show_all">نمایش همهٔ کلیدها</string>
+    <string name="pref_vk_open_with_keyboard">نمایش هنگامی که صفحه‌کلید گشوده است</string>
+    <string name="pref_km">Key Mappings</string>
+    <string name="pref_km_right_alt_to_super">Right Alt to Super</string>
+    <string name="pref_km_language_switch_to_super">Language Switch to Super</string>
+    <string name="pref_km_back_to_escape">Back to Escape</string>
+    <string name="pref_km_back_to_escape_summary">Navigation Bar is not affected by this</string>
+    <string name="pref_fullscreen">استفاده از تمام صفحه</string>
+    <string name="pref_enable_pip">بکار انداختن تصویر در تصویر</string>
+    <string name="pref_toolbar">نوار ابزار</string>
+    <string name="pref_toolbar_alignment">تراز</string>
+    <string name="pref_zoom">بزرگنمایی</string>
+    <string name="pref_zoom_min">بیشینهٔ بزرگنمایی</string>
+    <string name="pref_zoom_max">بیشینهٔ بزرگنمایی</string>
+    <string name="pref_clipboard_sync">همگام‌سازی تخته‌گیره</string>
+    <string name="pref_credential">اعتبارنامه</string>
+    <string name="pref_cred_autocomplete">به کار انداختن تکمیل خودکار</string>
+    <string name="pref_cred_autocomplete_summary">هنگام اتّصال به کارسازی جدید، اعتبارنامه‌های شناخته شده را پیشنهاد می‌دهد</string>
+    <string name="pref_discovery">اکتشاف</string>
+    <string name="pref_discovery_timeout">زمان انقضا (ثانیه)</string>
+    <string name="pref_discovery_auto_start">شروع خودکار</string>
+    <string name="pref_discovery_auto_start_summary">شروع اکتشاف هنگامی که کاره شروع شد</string>
+    <string name="pref_discovery_restart">شروع مجدد</string>
+    <string name="pref_discovery_restart_summary">شروع مجدد اکتشاف پس از توقّف آن</string>
+    <string name="pref_discovery_restart_delay">تأخیر شروع مجدد (دقسقه)</string>
+    <string name="pref_import_export">درون‌ریزی/برون‌ریزی کارسازها</string>
+    <string name="pref_debugging">اشکال زدایی</string>
+    <string name="pref_logs">گزارشات</string>
+    <string name="pref_keycode_map">Keycode Map</string>
+    <string name="pref_experimental_toolbar_swipe_close">Swipe to close Toolbar Drawer</string>
+    <string name="pref_experimental_toolbar_swipe_close_summary">During a remote session, you can swipe to close currently open Toolbar</string>
+    <string name="pref_experimental_indicator">Discovery indicator for saved Servers</string>
+    <string name="pref_experimental_indicator_summary">Highlights already saved servers which are also found by Discovery.\nRequires App restart.</string>
+    <string name="pref_experimental_immersive_mode">Full immersive mode</string>
+    <string name="pref_experimental_immersive_mode_summary">Hides all system bars in fullscreen mode</string>
+</resources>
