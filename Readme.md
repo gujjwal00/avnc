@@ -59,3 +59,7 @@ Now you can import the project in Android Studio, or build it directly from term
 
 Read [Architecture.kt](app/src/main/java/com/gaurav/avnc/Architecture.kt) (preferably in
 Android Studio) to know more about the code.
+
+
+### Translation
+You can translate AVNC on [Weblate](https://hosted.weblate.org/engage/avnc/).
