@@ -66,7 +66,7 @@
     <string name="msg_invalid_key_file">File is not a valid private key!</string>
     <string name="msg_invalid_vnc_uri">Invalid VNC URI</string>
     <string name="msg_copied_to_clipboard">Copied!</string>
-    <string name="msg_key_compat_mode_help">Some servers don\'t support direct Unicode input. Compatibility Mode tries to send key events in legacy format. \n\nTry enabling/disabling this if you are having trouble entering some characters.</string>
+    <string name="msg_key_compat_mode_help">Some servers don\'t support direct Unicode input. Compatibility Mode tries to send key events in legacy format.\n\nTry enabling/disabling this if you are having trouble entering some characters.</string>
     <string name="tip_empty_server_list">Server list is empty.\nUse the \'<b>+</b>\' button to add a Server, or\nUse the top Urlbar to directly connect to a server.</string>
     <string name="tip_urlbar">You can enter hostname or IP address.\n\'vnc://\' URIs are also supported.</string>
     <string name="tip_discovery">Discovery can automatically find supported servers\nrunning on your network.</string>
