@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_edit_server_profile">சேவையகத்தைத் திருத்து</string>
+    <string name="title_duplicate">நகல்</string>
+    <string name="title_edit">திருத்து</string>
+    <string name="title_delete">நீக்கு</string>
+    <string name="title_add_server_profile">சேவையகத்தைச் சேர்க்கவும்</string>
+</resources>
