@@ -1,15 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2020  Gaurav Ujjwal.
   ~
   ~ SPDX-License-Identifier:  GPL-3.0-or-later
   ~
   ~ See COPYING.txt for more details.
-  -->
-
-<resources>
+  --><resources>
     <string name="app_name" translatable="false">AVNC</string>
-
-    <string name="title_add_server_profile">Add Server</string>
+    <string name="title_add_server_profile">Add Server Test</string>
     <string name="title_edit_server_profile">Edit Server</string>
     <string name="title_duplicate">Duplicate</string>
     <string name="title_edit">Edit</string>
@@ -42,7 +40,6 @@
     <string name="title_open_source_libraries">Open Source Libraries</string>
     <string name="title_report_bug">Report a Bug</string>
     <string name="title_github_repo">Github Repo</string>
-
     <string name="hint_urlbar">Connect to a Server</string>
     <string name="hint_server_name">Name (e.g. Work PC)</string>
     <string name="hint_host">Host</string>
@@ -52,7 +49,6 @@
     <string name="hint_username">Username</string>
     <string name="hint_password">Password</string>
     <string name="hint_key_password">Key Password</string>
-
     <string name="msg_about_app">AVNC is an open-source VNC client for Android. It allows you to remotely control any device running a VNC server.</string>
     <string name="msg_server_profile_added">Server added.</string>
     <string name="msg_server_profile_deleted">Server deleted.</string>
@@ -70,7 +66,6 @@
     <string name="tip_empty_server_list">Server list is empty.\nUse the \'<b>+</b>\' button to add a Server, or\nUse the top Urlbar to directly connect to a server.</string>
     <string name="tip_urlbar">You can enter hostname or IP address.\n\'vnc://\' URIs are also supported.</string>
     <string name="tip_discovery">Discovery can automatically find supported servers\nrunning on your network.</string>
-
     <!-- Accessibility descriptions -->
     <string name="desc_navigation_btn">Open Navigation Drawer</string>
     <string name="desc_settings_btn">Open Settings</string>
@@ -90,7 +85,6 @@
     <string name="desc_help_btn">Show Help</string>
     <string name="desc_discovered_list">List of automatically discovered servers</string>
     <string name="desc_saved_servers_list">List of saved Servers</string>
-
     <!-- Preference -->
     <string name="pref_ui">Interface</string>
     <string name="pref_ui_summary">Look and feel</string>
@@ -104,7 +98,6 @@
     <string name="pref_tools_summary">Import/Export, Debugging</string>
     <string name="pref_experimental">Experimental</string>
     <string name="pref_experimental_summary">Extra goodies!</string>
-
     <string name="pref_gesture_action_none">None</string>
     <string name="pref_gesture_action_left_click">Left Click</string>
     <string name="pref_gesture_action_middle_click">Middle Click</string>
@@ -115,7 +108,6 @@
     <string name="pref_gesture_action_remote_scroll">Scroll Remote Content</string>
     <string name="pref_gesture_action_remote_drag">Drag Remote Content</string>
     <string name="pref_gesture_action_open_keyboard">Open Keyboard</string>
-
     <string name="pref_theme">Theme</string>
     <string name="pref_prefer_advanced_editor">Prefer Advanced Editor</string>
     <string name="pref_prefer_advanced_editor_summary">Enable this to directly open Advanced mode to add/edit Servers</string>
