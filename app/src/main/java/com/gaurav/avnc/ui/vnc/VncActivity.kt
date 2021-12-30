@@ -33,6 +33,7 @@ import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.util.Experimental
+import com.gaurav.avnc.util.SamsungDex
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.VncClient
 import com.gaurav.avnc.vnc.VncUri
@@ -169,6 +170,10 @@ class VncActivity : AppCompatActivity() {
                     binding.drawerLayout.close()
                 }
             }
+
+            SamsungDex.setMetaKeyCapture(this, true)
+        } else {
+            SamsungDex.setMetaKeyCapture(this, false)
         }
 
         updateSystemUiVisibility()

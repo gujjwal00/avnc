@@ -155,8 +155,8 @@ object XKeySymAndroid {
             XKeySym.XK_Control_R,               //  KEYCODE_CTRL_RIGHT = 114
             XKeySym.XK_Caps_Lock,               //  KEYCODE_CAPS_LOCK = 115
             XKeySym.XK_Scroll_Lock,             //  KEYCODE_SCROLL_LOCK = 116
-            XKeySym.XK_Meta_L,                  //  KEYCODE_META_LEFT = 117
-            XKeySym.XK_Meta_R,                  //  KEYCODE_META_RIGHT = 118
+            XKeySym.XK_Super_L,                 //  KEYCODE_META_LEFT = 117
+            XKeySym.XK_Super_R,                 //  KEYCODE_META_RIGHT = 118
             0,                                  //  KEYCODE_FUNCTION = 119
             XKeySym.XK_Sys_Req,                 //  KEYCODE_SYSRQ = 120
             XKeySym.XK_Break,                   //  KEYCODE_BREAK = 121
