@@ -211,8 +211,7 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
         if (keySym == 0)
             return false
 
-        dispatcher.onXKeySym(keySym, isDown)
-        return true
+        return dispatcher.onXKeySym(keySym, isDown)
     }
 
 

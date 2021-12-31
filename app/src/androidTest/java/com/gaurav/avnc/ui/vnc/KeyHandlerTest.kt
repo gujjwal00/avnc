@@ -43,8 +43,8 @@ class KeyHandlerTest {
         dispatchedKeyDowns = arrayListOf()
         dispatchedKeyUps = arrayListOf()
         mockDispatcher = mockk()
-        every { mockDispatcher.onXKeySym(any(), true) } answers { dispatchedKeyDowns.add(firstArg()) }
-        every { mockDispatcher.onXKeySym(any(), false) } answers { dispatchedKeyUps.add(firstArg()) }
+        every { mockDispatcher.onXKeySym(any(), true) } answers { dispatchedKeyDowns.add(firstArg()); true }
+        every { mockDispatcher.onXKeySym(any(), false) } answers { dispatchedKeyUps.add(firstArg()); true }
 
         keyHandler = KeyHandler(mockDispatcher, true, prefs)
     }
