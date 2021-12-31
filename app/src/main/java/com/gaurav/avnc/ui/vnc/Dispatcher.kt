@@ -112,7 +112,7 @@ class Dispatcher(private val activity: VncActivity) {
      * Event receivers
      **************************************************************************/
 
-    fun onGestureStart(p: PointF) = stopFling()
+    fun onGestureStart() = stopFling()
     fun onGestureStop(p: PointF) = doPointerButtonRelease(p)
 
     fun onTap1(p: PointF) = tap1Action(p)

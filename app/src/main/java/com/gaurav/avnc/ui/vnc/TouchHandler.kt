@@ -52,7 +52,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
 
     private fun handleGestureStartStop(event: MotionEvent) {
         when (event.actionMasked) {
-            MotionEvent.ACTION_DOWN -> dispatcher.onGestureStart(event.point())
+            MotionEvent.ACTION_DOWN -> dispatcher.onGestureStart()
             MotionEvent.ACTION_UP,
             MotionEvent.ACTION_CANCEL -> dispatcher.onGestureStop(event.point())
         }

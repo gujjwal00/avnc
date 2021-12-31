@@ -197,7 +197,7 @@ class TouchHandlerTest {
         sendDown()
         sendUp()
         verifyOrder {
-            mockDispatcher.onGestureStart(testPoint)
+            mockDispatcher.onGestureStart()
             mockDispatcher.onGestureStop(testPoint)
         }
     }
@@ -207,7 +207,7 @@ class TouchHandlerTest {
         sendDown()
         sendEvent(createEvent(MotionEvent.ACTION_CANCEL, testPoint))
         verifyOrder {
-            mockDispatcher.onGestureStart(testPoint)
+            mockDispatcher.onGestureStart()
             mockDispatcher.onGestureStop(testPoint)
         }
     }
