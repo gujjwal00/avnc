@@ -116,7 +116,7 @@
     <string name="pref_sort_server_list_summary">کارسازها بر اساس نامشان مرتب شدند</string>
     <string name="pref_gesture">حرکات</string>
     <string name="pref_single_tap">یک ضربه</string>
-    <string name="pref_two_finger_tap">ضربهٔ دو انگشتی (آزمایشی)</string>
+    <string name="pref_two_finger_tap">ضربهٔ دو انگشتی</string>
     <string name="pref_double_tap">دو ضربه</string>
     <string name="pref_long_press">فشار طولانی</string>
     <string name="pref_swipe1">سُر دادن یک انگشت</string>

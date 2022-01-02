@@ -120,7 +120,7 @@
     <string name="pref_sort_server_list_summary">Servidores são ordenados pelo nome</string>
     <string name="pref_gesture">Gestos</string>
     <string name="pref_single_tap">Toque único</string>
-    <string name="pref_two_finger_tap">Toque com 2 dedos (experimental)</string>
+    <string name="pref_two_finger_tap">Toque com 2 dedos</string>
     <string name="pref_double_tap">Toque duplo</string>
     <string name="pref_long_press">Toque longo</string>
     <string name="pref_swipe1">Deslize com 1 dedo</string>

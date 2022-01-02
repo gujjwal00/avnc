@@ -123,7 +123,7 @@
     <string name="pref_sort_server_list_summary">Servers are sorted by their name</string>
     <string name="pref_gesture">Gestures</string>
     <string name="pref_single_tap">Single Tap</string>
-    <string name="pref_two_finger_tap">2 Finger Tap (Experimental)</string>
+    <string name="pref_two_finger_tap">2 Finger Tap</string>
     <string name="pref_double_tap">Double Tap</string>
     <string name="pref_long_press">Long Press</string>
     <string name="pref_swipe1">1 Finger Swipe</string>
