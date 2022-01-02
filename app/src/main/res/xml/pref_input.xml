@@ -62,13 +62,14 @@
             app:title="@string/pref_swipe2"
             app:useSimpleSummaryProvider="true" />
 
-        <ListPreference
+        <com.gaurav.avnc.ui.prefs.ListPreferenceEx
             app:defaultValue="none"
             app:entries="@array/drag_action_entries"
             app:entryValues="@array/drag_action_values"
             app:key="gesture_drag"
             app:title="@string/pref_drag"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true"
+            app:widgetLayout="@layout/help_btn" />
 
         <SeekBarPreference
             android:max="15"

@@ -108,6 +108,9 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
             findPreference<ListPreferenceEx>("gesture_swipe1")!!.apply {
                 disabledStateSummary = getString(R.string.pref_gesture_action_move_pointer)
             }
+            findPreference<ListPreferenceEx>("gesture_drag")!!.apply {
+                helpMessage = getText(R.string.msg_drag_gesture_help)
+            }
         }
     }
 

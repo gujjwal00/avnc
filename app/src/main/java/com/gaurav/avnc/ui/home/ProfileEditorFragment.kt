@@ -160,7 +160,9 @@ class ProfileEditorFragment : DialogFragment() {
             toolbar.setNavigationOnClickListener { dismiss() }
             keyImportBtn.setOnClickListener { keyFilePicker.launch(arrayOf("*/*")) }
             keyCompatModeHelpBtn.setOnClickListener {
-                MsgDialog.show(parentFragmentManager, R.string.title_key_compat_mode, R.string.msg_key_compat_mode_help)
+                MsgDialog.show(parentFragmentManager,
+                               getString(R.string.title_key_compat_mode),
+                               getString(R.string.msg_key_compat_mode_help))
             }
 
             // Setup initial values of some CheckBox views.
