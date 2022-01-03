@@ -14,6 +14,7 @@
     <string name="title_duplicate">Duplicate</string>
     <string name="title_edit">Edit</string>
     <string name="title_delete">Delete</string>
+    <string name="title_clear">Clear</string>
     <string name="title_copy_host">Copy Host</string>
     <string name="title_copy_name">Copy Name</string>
     <string name="title_advanced">Advanced</string>
@@ -117,6 +118,9 @@
     <string name="pref_gesture_action_open_keyboard">Open Keyboard</string>
 
     <string name="pref_theme">Theme</string>
+    <string name="pref_theme_option_system">Follow System Theme</string>
+    <string name="pref_theme_option_dark">Dark</string>
+    <string name="pref_theme_option_light">Light</string>
     <string name="pref_prefer_advanced_editor">Prefer Advanced Editor</string>
     <string name="pref_prefer_advanced_editor_summary">Enable this to directly open Advanced mode to add/edit Servers</string>
     <string name="pref_sort_server_list">Sort Server List</string>
@@ -146,6 +150,8 @@
     <string name="pref_enable_pip">Enable Picture-in-Picture</string>
     <string name="pref_toolbar">Toolbar</string>
     <string name="pref_toolbar_alignment">Alignment</string>
+    <string name="pref_toolbar_alignment_option_start">Start</string>
+    <string name="pref_toolbar_alignment_option_end">End</string>
     <string name="pref_zoom">Zoom</string>
     <string name="pref_zoom_min">Minimum Zoom</string>
     <string name="pref_zoom_max">Maximum Zoom</string>

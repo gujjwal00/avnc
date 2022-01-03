@@ -81,7 +81,7 @@ class LogsFragment : InfoFragment() {
      */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        menu.add("Clear").setOnMenuItemClickListener {
+        menu.add(getString(R.string.title_clear)).setOnMenuItemClickListener {
             Debugging.clearLogs()
             Snackbar.make(requireView(), "Cleared!", Snackbar.LENGTH_SHORT).show()
             parentFragmentManager.popBackStack()

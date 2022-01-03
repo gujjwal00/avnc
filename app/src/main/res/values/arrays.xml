@@ -9,9 +9,9 @@
 <resources>
 
     <string-array name="theme_entries">
-        <item>Follow System Theme</item>
-        <item>Dark</item>
-        <item>Light</item>
+        <item>@string/pref_theme_option_system</item>
+        <item>@string/pref_theme_option_dark</item>
+        <item>@string/pref_theme_option_light</item>
     </string-array>
     <string-array name="theme_values">
         <item>system</item>
@@ -21,8 +21,8 @@
 
 
     <string-array name="toolbar_alignment_entries">
-        <item>Start</item>
-        <item>End</item>
+        <item>@string/pref_toolbar_alignment_option_start</item>
+        <item>@string/pref_toolbar_alignment_option_end</item>
     </string-array>
     <string-array name="toolbar_alignment_values">
         <item>start</item>
