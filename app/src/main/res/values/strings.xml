@@ -27,22 +27,23 @@
     <string name="title_export">Export</string>
     <string name="title_import">Import</string>
     <string name="title_view_only_mode">View-only</string>
-    <string name="title_hide_remote_cursor">Hide remote cursor</string>
+    <!-- Big R for no reason. Planning to move this option to global settings (near Hide local cursor). -->
+    <string name="title_hide_remote_cursor">Hide Remote cursor</string>
     <string name="title_key_compat_mode">Keyboard compatibility mode</string>
-    <string name="title_use_ssh_tunnel">SSH tunnel</string>
+    <string name="title_use_ssh_tunnel">Use SSH tunnel</string>
     <string name="title_unknown_ssh_host">Unknown SSH host</string>
-    <string name="title_ssh_host_key_changed">The host key changed!</string>
+    <string name="title_ssh_host_key_changed">The known host key for the SSH server changed!</string>
     <string name="title_continue">Continue</string>
-    <string name="title_delete_servers_before_import">Remove all servers before importing</string>
+    <string name="title_delete_servers_before_import">Remove all prior servers before importing</string>
     <string name="title_password">Password</string>
-    <string name="title_use_repeater">Repeater</string>
+    <string name="title_use_repeater">Use repeater</string>
     <string name="title_private_key">Private key</string>
     <string name="title_change">Change</string>
     <string name="title_about">About</string>
-    <string name="title_license">GPLv3+ licence</string>
+    <string name="title_license">Licence</string>
     <string name="title_open_source_libraries">Libre libraries</string>
-    <string name="title_report_bug">Report</string>
-    <string name="title_github_repo">Code</string>
+    <string name="title_report_bug">Report an issue</string>
+    <string name="title_github_repo">Source code</string>
 
     <string name="hint_urlbar">Server URL…</string>
     <string name="hint_server_name">Name (e.g. Work PC)</string>
@@ -54,7 +55,7 @@
     <string name="hint_password">Password</string>
     <string name="hint_key_password">Key password</string>
 
-    <string name="msg_about_app">A copylefted libre VNC client.\nUse any device with a VNC server remotely.</string>
+    <string name="msg_about_app">A copylefted libre VNC app.\nUse any device with a VNC server on it remotely.</string>
     <string name="msg_server_profile_added">Added</string>
     <string name="msg_server_profile_deleted">Deleted</string>
     <string name="msg_pip_not_supported">Not supported on this device</string>
@@ -62,31 +63,31 @@
     <string name="msg_loading">Loading…</string>
     <string name="msg_imported">Imported</string>
     <string name="msg_exported">Exported</string>
-    <string name="msg_export_auth_required">Authenticate before exporting.</string>
-    <string name="msg_export_auth_missing">Turn on screen lock to require authenticating to export servers and passwords.</string>
-    <string name="msg_invalid_key_file">This file is not a valid private key.</string>
+    <string name="msg_export_auth_required">Unlock device before exporting.</string>
+    <string name="msg_export_auth_missing">Turn on screen lock to export any servers.</string>
+    <string name="msg_invalid_key_file">That file is not a valid private key.</string>
     <string name="msg_invalid_vnc_uri">Invalid VNC URI</string>
     <string name="msg_copied_to_clipboard">Copied</string>
-    <string name="msg_key_compat_mode_help">Compatiblity mode can help input characters on servers that don\'t support Unicode.</string>
+    <string name="msg_key_compat_mode_help">Can help input characters on servers that have limited Unicode support.</string>
     <string name="tip_empty_server_list">Click \'<b>+</b>\' to add a server, or\nuse the top bar to connect to one.</string>
     <string name="tip_urlbar">Enter a hostname or IP address.\n\'vnc://\' URIs are also supported.</string>
     <string name="tip_discovery">Discovery can find servers on your network.</string>
 
     <!-- Accessibility descriptions -->
-    <string name="desc_navigation_btn">Open Navigation Drawer</string>
-    <string name="desc_settings_btn">Open Settings</string>
+    <string name="desc_navigation_btn">Open navigation drawer</string>
+    <string name="desc_settings_btn">Open settings</string>
     <string name="desc_saved_servers_tab">Saved</string>
     <string name="desc_discovered_servers_tab">Discovered</string>
     <string name="desc_add_new_server_btn">Add new</string>
-    <string name="desc_save_discovered_server_btn">Save this</string>
-    <string name="desc_discovery_btn">Discover</string>
-    <string name="desc_discovery_running">Discovering running servers on you network…</string>
+    <string name="desc_save_discovered_server_btn">Save this server</string>
+    <string name="desc_discovery_btn">Discover servers</string>
+    <string name="desc_discovery_running">Finding running VNC servers on you network…</string>
     <string name="desc_keyboard_btn">Open keyboard</string>
     <string name="desc_virtual_keys_btn">Show virtual keys</string>
     <string name="desc_reset_zoom_btn">Reset Zoom</string>
     <string name="desc_retry_connection_btn">Retry</string>
     <string name="desc_back_btn">Back</string>
-    <string name="desc_clear_url_btn">Clear</string>
+    <string name="desc_clear_url_btn">Clear URL</string>
     <string name="desc_server_url">Enter address of VNC server</string>
     <string name="desc_help_btn">Help</string>
     <string name="desc_discovered_list">List of discovered servers</string>
@@ -104,7 +105,7 @@
     <string name="pref_tools">Tools</string>
     <string name="pref_tools_summary">Import/export, debugging</string>
     <string name="pref_experimental">Experimental</string>
-    <string name="pref_experimental_summary">Extra goodies</string>
+    <string name="pref_experimental_summary">Extra goodies :)</string>
 
     <string name="pref_gesture_action_none">None</string>
     <string name="pref_gesture_action_left_click">Left click</string>
@@ -123,29 +124,28 @@
     <string name="pref_theme_option_light">Light</string>
     <string name="pref_prefer_advanced_editor">Prefer advanced editor</string>
     <string name="pref_prefer_advanced_editor_summary">Opens advanced mode when adding/editing servers</string>
-    <string name="pref_sort_server_list">Sorting of servers</string>
-    <string name="pref_sort_server_list_summary">By name</string>
+    <string name="pref_sort_server_list">Sort servers by name</string>
     <string name="pref_gesture">Gestures</string>
     <string name="pref_single_tap">Single tap</string>
     <string name="pref_two_finger_tap">Two-finger Tap</string>
     <string name="pref_double_tap">Double Tap</string>
     <string name="pref_long_press">Long press</string>
-    <string name="pref_swipe1">1 Finger swipe</string>
-    <string name="pref_swipe2">2 Finger swipe</string>
+    <string name="pref_swipe1">One-finger swipe</string>
+    <string name="pref_swipe2">Two-finger swipe</string>
     <string name="pref_drag">Drag (long press then swipe)</string>
     <string name="pref_mouse">Mouse</string>
     <string name="pref_mouse_passthrough">Mouse passthrough</string>
-    <string name="pref_mouse_passthrough_summary_off">Using mouse events for gestures on Android</string>
-    <string name="pref_mouse_passthrough_summary_on">Sending all mouse events to server</string>
+    <string name="pref_mouse_passthrough_summary_off">Use mouse events for (Android) gestures first</string>
+    <string name="pref_mouse_passthrough_summary_on">Send all mouse events to directly server</string>
     <string name="pref_hide_local_cursor">Hide local (Android) cursor</string>
-    <string name="pref_vk">Virtual Keys</string>
+    <string name="pref_vk">Virtual keys</string>
     <string name="pref_vk_show_all">Show all keys</string>
     <string name="pref_vk_open_with_keyboard">Show when keyboard is open</string>
-    <string name="pref_km">Shortcuts</string>
-    <string name="pref_km_right_alt_to_super">Right Alt → Super modifier</string>
-    <string name="pref_km_language_switch_to_super">Language switch → Super modifier</string>
-    <string name="pref_km_back_to_escape">Back to Escape</string>
-    <string name="pref_km_back_to_escape_summary">The nav bar is unaffected by this</string>
+    <string name="pref_km">Keystroke shortcuts</string>
+    <string name="pref_km_right_alt_to_super">Right Alt → Super</string>
+    <string name="pref_km_language_switch_to_super">Super → Switch language</string>
+    <string name="pref_km_back_to_escape">Back → Esc</string>
+    <string name="pref_km_back_to_escape_summary">(Does not affect the navigation bar)</string>
     <string name="pref_fullscreen">Fullscreen</string>
     <string name="pref_enable_pip">Picture-in-picture</string>
     <string name="pref_toolbar">Toolbar</string>
@@ -164,16 +164,18 @@
     <string name="pref_discovery_auto_start">Auto-start</string>
     <string name="pref_discovery_auto_start_summary">Discover servers when opening the app</string>
     <string name="pref_discovery_restart">Always look for new servers</string>
-    <string name="pref_discovery_restart_summary">Keep running server discovery</string>
+    <string name="pref_discovery_restart_summary">Always look for new servers</string>
     <string name="pref_discovery_restart_delay">Restart delay (min)</string>
     <string name="pref_import_export">Import/export servers</string>
     <string name="pref_debugging">Debugging</string>
     <string name="pref_logs">Logs</string>
     <string name="pref_keycode_map">Keycode map</string>
-    <string name="pref_experimental_toolbar_swipe_close">Swipe to close toolbar drawer</string>
-    <string name="pref_experimental_toolbar_swipe_close_summary">Swipe during a remote sessions to exit the toolbar</string>
+    <!-- Removed next version -->
+    <string name="pref_experimental_toolbar_swipe_close">Swipe to close Toolbar Drawer</string>
+    <!-- Removed next version -->
+    <string name="pref_experimental_toolbar_swipe_close_summary">During a remote session, you can swipe to close currently open Toolbar</string>
     <string name="pref_experimental_indicator">Highlight rediscovered servers</string>
     <string name="pref_experimental_indicator_summary">Indicate already found servers.\nRequires app restart.</string>
-    <string name="pref_experimental_immersive_mode">Immersive mode</string>
-    <string name="pref_experimental_immersive_mode_summary">No system bars in fullscreen</string>
+    <string name="pref_experimental_immersive_mode">Undisturbed fullscreen</string>
+    <string name="pref_experimental_immersive_mode_summary">No system bars in fullscreen view</string>
 </resources>
