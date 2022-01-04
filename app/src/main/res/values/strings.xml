@@ -64,8 +64,8 @@
     <string name="msg_imported">Imported</string>
     <string name="msg_exported">Exported</string>
     <string name="msg_export_auth_required">Unlock device before exporting.</string>
-    <string name="msg_export_auth_missing">Turn on screen lock to export any servers.</string>
-    <string name="msg_invalid_key_file">That file is not a valid private key.</string>
+    <string name="msg_export_auth_missing">Turn on screen lock in Android to protect saved servers.</string>
+    <string name="msg_invalid_key_file">The selected file is not a valid private key.</string>
     <string name="msg_invalid_vnc_uri">Invalid VNC URI</string>
     <string name="msg_copied_to_clipboard">Copied</string>
     <string name="msg_key_compat_mode_help">Can help input characters on servers that have limited Unicode support.</string>
@@ -111,7 +111,7 @@
     <string name="pref_gesture_action_left_click">Left-click</string>
     <string name="pref_gesture_action_middle_click">Middle-click</string>
     <string name="pref_gesture_action_right_click">Right-click</string>
-    <string name="pref_gesture_action_double_click">Double click</string>
+    <string name="pref_gesture_action_double_click">Double-click</string>
     <string name="pref_gesture_action_move_pointer">Move pointer</string>
     <string name="pref_gesture_action_pan">Pan local frame</string>
     <string name="pref_gesture_action_remote_scroll">Scroll remote content</string>
@@ -119,7 +119,7 @@
     <string name="pref_gesture_action_open_keyboard">Open keyboard</string>
 
     <string name="pref_theme">Theme</string>
-    <string name="pref_theme_option_system">System</string>
+    <string name="pref_theme_option_system">Follow system</string>
     <string name="pref_theme_option_dark">Dark</string>
     <string name="pref_theme_option_light">Light</string>
     <string name="pref_prefer_advanced_editor">Prefer advanced editor</string>
