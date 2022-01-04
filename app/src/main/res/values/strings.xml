@@ -84,7 +84,7 @@
     <string name="desc_keyboard_btn">Open keyboard</string>
     <string name="desc_virtual_keys_btn">Show virtual keys</string>
     <string name="desc_reset_zoom_btn">Reset Zoom</string>
-    <string name="desc_retry_connection_btn">Retry Connection</string>
+    <string name="desc_retry_connection_btn">Retry</string>
     <string name="desc_back_btn">Back</string>
     <string name="desc_clear_url_btn">Clear</string>
     <string name="desc_server_url">Enter address of VNC server</string>
