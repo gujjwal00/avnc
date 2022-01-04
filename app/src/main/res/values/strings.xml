@@ -26,13 +26,13 @@
     <string name="title_remember">Remember</string>
     <string name="title_export">Export</string>
     <string name="title_import">Import</string>
-    <string name="title_view_only_mode">View-only</string>
+    <string name="title_view_only_mode">View-only mode</string>
     <!-- Big R for no reason. Planning to move this option to global settings (near Hide local cursor). -->
     <string name="title_hide_remote_cursor">Hide Remote cursor</string>
     <string name="title_key_compat_mode">Keyboard compatibility mode</string>
     <string name="title_use_ssh_tunnel">Use SSH tunnel</string>
     <string name="title_unknown_ssh_host">Unknown SSH host</string>
-    <string name="title_ssh_host_key_changed">The known host key for the SSH server changed!</string>
+    <string name="title_ssh_host_key_changed">The SSH host key changed!</string>
     <string name="title_continue">Continue</string>
     <string name="title_delete_servers_before_import">Remove all prior servers before importing</string>
     <string name="title_password">Password</string>
@@ -55,7 +55,7 @@
     <string name="hint_password">Password</string>
     <string name="hint_key_password">Key password</string>
 
-    <string name="msg_about_app">A copylefted libre VNC app.\nUse any device with a VNC server on it remotely.</string>
+    <string name="msg_about_app">Use other devices and PCs that have VNC servers with this copylefted libre VNC app.\nUse, inspect, change and share — with all.</string>
     <string name="msg_server_profile_added">Added</string>
     <string name="msg_server_profile_deleted">Deleted</string>
     <string name="msg_pip_not_supported">Not supported on this device</string>
@@ -101,16 +101,16 @@
     <string name="pref_input">Input</string>
     <string name="pref_input_summary">Gestures, mouse, virtual keys</string>
     <string name="pref_servers">Servers</string>
-    <string name="pref_server_summary">Discovery, credentials</string>
+    <string name="pref_server_summary">Discovery, login</string>
     <string name="pref_tools">Tools</string>
-    <string name="pref_tools_summary">Import/export, debugging</string>
+    <string name="pref_tools_summary">Import and export, debugging</string>
     <string name="pref_experimental">Experimental</string>
     <string name="pref_experimental_summary">Extra goodies :)</string>
 
     <string name="pref_gesture_action_none">None</string>
-    <string name="pref_gesture_action_left_click">Left click</string>
-    <string name="pref_gesture_action_middle_click">Middle click</string>
-    <string name="pref_gesture_action_right_click">Right click</string>
+    <string name="pref_gesture_action_left_click">Left-click</string>
+    <string name="pref_gesture_action_middle_click">Middle-click</string>
+    <string name="pref_gesture_action_right_click">Right-click</string>
     <string name="pref_gesture_action_double_click">Double click</string>
     <string name="pref_gesture_action_move_pointer">Move pointer</string>
     <string name="pref_gesture_action_pan">Pan local frame</string>
@@ -123,7 +123,7 @@
     <string name="pref_theme_option_dark">Dark</string>
     <string name="pref_theme_option_light">Light</string>
     <string name="pref_prefer_advanced_editor">Prefer advanced editor</string>
-    <string name="pref_prefer_advanced_editor_summary">Opens advanced mode when adding/editing servers</string>
+    <string name="pref_prefer_advanced_editor_summary">More features when adding/editing servers</string>
     <string name="pref_sort_server_list">Sort servers by name</string>
     <string name="pref_gesture">Gestures</string>
     <string name="pref_single_tap">Single tap</string>
@@ -132,11 +132,11 @@
     <string name="pref_long_press">Long press</string>
     <string name="pref_swipe1">One-finger swipe</string>
     <string name="pref_swipe2">Two-finger swipe</string>
-    <string name="pref_drag">Drag (long press then swipe)</string>
+    <string name="pref_drag">Drag (long-press then swipe)</string>
     <string name="pref_mouse">Mouse</string>
     <string name="pref_mouse_passthrough">Mouse passthrough</string>
     <string name="pref_mouse_passthrough_summary_off">Use mouse events for (Android) gestures first</string>
-    <string name="pref_mouse_passthrough_summary_on">Send all mouse events to directly server</string>
+    <string name="pref_mouse_passthrough_summary_on">Send all mouse events directly to server</string>
     <string name="pref_hide_local_cursor">Hide local (Android) cursor</string>
     <string name="pref_vk">Virtual keys</string>
     <string name="pref_vk_show_all">Show all keys</string>
@@ -166,7 +166,7 @@
     <string name="pref_discovery_restart">Always look for new servers</string>
     <string name="pref_discovery_restart_summary">Always look for new servers</string>
     <string name="pref_discovery_restart_delay">Restart delay (min)</string>
-    <string name="pref_import_export">Import/export servers</string>
+    <string name="pref_import_export">Import and export servers</string>
     <string name="pref_debugging">Debugging</string>
     <string name="pref_logs">Logs</string>
     <string name="pref_keycode_map">Keycode map</string>
