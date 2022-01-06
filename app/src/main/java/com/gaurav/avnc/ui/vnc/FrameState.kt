@@ -61,22 +61,29 @@ import kotlin.math.min
  * Scaling
  * =======
  *
- * Scaling controls the 'size' of rendered frame. Scaling is done in two (conceptual) steps:
+ * Scaling controls the 'size' of rendered frame. It involves multiple factors, like window size,
+ * framebuffer size, user choice etc. To achieve best experience, we split scaling in two parts.
+ * One automatic, and one user controlled.
  *
  * 1. Base Scale [baseScale] :
+ * Motivation behind base scale is to start with the most optimal frame size. It is automatically
+ * calculated (and updated) using window size & framebuffer size. When orientation of local
+ * device is such that longer edge of the window is aligned with longer edge of the frame,
+ * base scale will satisfy following constraints (see [calculateBaseScale]):
  *
- * This is used to manage the difference between framebuffer size & window size.
- * At this scale frame will be completely visible inside window (in landscape mode),
- * and at least one side of frame will match the corresponding side of window.
+ * - Frame is completely visible
+ * - Frame's aspect ratio is maintained
+ * - Maximum window space is utilized
  *
  * 2. Zoom Scale [zoomScale] :
+ * This is the user controlled part. It always starts at 1 (100% zoom), and only updated in response
+ * to pinch gestures. Conceptually, it works 'on top of' the base scale.
  *
- * This value represents the 'zoom level' requested by user (through pinch gestures).
- * It works 'on top of' base scale.
  *
- * Effective scale [scale] is calculated as the product of these two values.
+ * Effective scale [scale] is calculated as the product of these two parts, so:
+
+ *      FrameSize = (FramebufferSize * BaseScale) * ZoomScale
  *
- * So:      FrameSize = (FramebufferSize * BaseScale) * ZoomScale
  *
  * Thread safety
  * =============
@@ -191,12 +198,10 @@ class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScal
         if (fbHeight == 0F || fbWidth == 0F || windowHeight == 0F)
             return  //Not enough info yet
 
-        //Base scale is calculated as-if we are in 'Landscape' mode.
-        //So larger window side is treated as width and smaller as height
-        val wRatio = max(windowWidth, windowHeight) / fbWidth
-        val hRatio = min(windowWidth, windowHeight) / fbHeight
+        val s1 = max(windowWidth, windowHeight) / max(fbWidth, fbHeight)
+        val s2 = min(windowWidth, windowHeight) / min(fbWidth, fbHeight)
 
-        baseScale = min(wRatio, hRatio)
+        baseScale = min(s1, s2)
     }
 
     /**

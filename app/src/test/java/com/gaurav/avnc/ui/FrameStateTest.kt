@@ -87,6 +87,30 @@ class FrameStateTest {
     }
 
     @Test
+    fun baseScaleTest7() {
+        val state = FrameState()
+        state.setWindowSize(50f, 100f)
+        state.setFramebufferSize(50f, 100f)  //Remote screen in portrait mode
+        assertEquals(1F, state.baseScale)
+    }
+
+    @Test
+    fun baseScaleTest8() {
+        val state = FrameState()
+        state.setWindowSize(50f, 100f)
+        state.setFramebufferSize(25f, 50f)  //Remote screen in portrait mode, but half size
+        assertEquals(2F, state.baseScale)
+    }
+
+    @Test
+    fun baseScaleTest9() {
+        val state = FrameState()
+        state.setWindowSize(50f, 100f)
+        state.setFramebufferSize(100f, 200f)  //Remote screen in portrait mode, but double size
+        assertEquals(.5F, state.baseScale)
+    }
+
+    @Test
     fun positionCoerceTest1() {
         val state = FrameState()
         state.setViewportSize(100f, 100f)
