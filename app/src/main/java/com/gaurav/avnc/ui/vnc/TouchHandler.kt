@@ -151,6 +151,8 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     private val gestureDetector = GestureDetector(viewModel.app, this)
     private val multiFingerTapDetector = MultiFingerTapDetector()
     private val dragDetector = DragDetector()
+    private val dragEnabled = viewModel.pref.input.gesture.dragEnabled
+
 
     private fun handleGestureEvent(event: MotionEvent): Boolean {
         dragDetector.onTouchEvent(event)
@@ -181,7 +183,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     override fun onLongPress(e: MotionEvent) {
         viewModel.frameViewRef.get()?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
 
-        if (dragDetector.dragEnabled)
+        if (dragEnabled)
             dragDetector.onLongPress(e)
         else
             dispatcher.onLongPress(e.point())
@@ -211,54 +213,61 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
      *
      * Detection:
      *
-     *  1. Wait for the long-press before doing anything.
+     *  1. Wait for the long-press from [gestureDetector] before doing anything.
      *  2. Once long-press is detected, start looking at incoming events.
-     *  3. If [MotionEvent.ACTION_UP] is received next, send long-press to dispatcher.
-     *  4. If [MotionEvent.ACTION_MOVE] is received instead, start dragging.
-     *  5. If [MotionEvent.ACTION_UP] is received WHILE dragging, stop dragging.
-     *  6. In another finger goes down, or gesture is canceled, stop dragging.
+     *  3. If [MotionEvent.ACTION_UP] is received next, send long-press.
+     *  4. If scroll event is received from [scrollDetector], start dragging.
+     *  5. Reset, if gesture is finished, or another finger goes down.
      *
-     * Instead of using our own [GestureDetector], we rely on [gestureDetector]
-     * for long-press detection.
+     * But, if long-press detection is enabled for a [GestureDetector] object, it will not report
+     * scroll events after long-press. So, we rely on [gestureDetector] for long-press detection,
+     * and use a separate object [scrollDetector] for scroll events.
      *
      * Left mouse button pressed during dragging is automatically released
      * by [Dispatcher.onGestureStop].
      */
     private inner class DragDetector {
-        val dragEnabled = viewModel.pref.input.gesture.dragEnabled
         private var longPressDetected = false
         private var isDragging = false
         private var startPoint = PointF()
-        private var lastPoint = PointF()
+        private val scrollDetector = GestureDetector(viewModel.app, ScrollListener()).apply {
+            setIsLongpressEnabled(false)
+        }
 
-        fun onLongPress(e: MotionEvent): Boolean {
+        private inner class ScrollListener : GestureDetector.SimpleOnGestureListener() {
+            override fun onScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float): Boolean {
+                if (longPressDetected) {
+                    if (!isDragging) {
+                        isDragging = true
+
+                        //Send first drag event at startPoint, otherwise drag gesture
+                        //will start off by (at-least) touch-slope used by GestureDetector
+                        dispatcher.onDrag(startPoint, startPoint, 0f, 0f)
+                    }
+
+                    dispatcher.onDrag(startPoint, e2.point(), -dx, -dy)
+                }
+                return true
+            }
+        }
+
+        fun onLongPress(e: MotionEvent) {
             longPressDetected = true
             startPoint = e.point()
-            lastPoint = startPoint
-            return true
         }
 
         fun onTouchEvent(event: MotionEvent) {
-            if (!dragEnabled || !longPressDetected)
+            if (!dragEnabled)
                 return
 
-            when (event.actionMasked) {
-                MotionEvent.ACTION_MOVE -> {
-                    isDragging = true
+            scrollDetector.onTouchEvent(event)
 
-                    val cp = event.point()
-                    dispatcher.onDrag(startPoint, cp, cp.x - lastPoint.x, cp.y - lastPoint.y)
-                    lastPoint = cp
-                }
+            val action = event.actionMasked
+            if (action == MotionEvent.ACTION_UP && longPressDetected && !isDragging)
+                dispatcher.onLongPress(event.point())
 
-                MotionEvent.ACTION_UP -> {
-                    if (!isDragging)
-                        dispatcher.onLongPress(event.point())
-
-                    longPressDetected = false
-                    isDragging = false
-                }
-
+            when (action) {
+                MotionEvent.ACTION_UP,
                 MotionEvent.ACTION_POINTER_DOWN,
                 MotionEvent.ACTION_CANCEL -> {
                     longPressDetected = false
