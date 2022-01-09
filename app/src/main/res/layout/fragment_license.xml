@@ -25,7 +25,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Copyright (c) 2020-2021 Gaurav Ujjwal" />
+            android:text="Copyleft (c) 2020-2021 Gaurav Ujjwal" />
 
         <TextView
             android:layout_width="wrap_content"

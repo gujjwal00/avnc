@@ -54,7 +54,7 @@
     <string name="hint_password">Password</string>
     <string name="hint_key_password">Key password</string>
 
-    <string name="msg_about_app">A free, libre, and open source VNC client. Remotely use PCs, smartphones, or any other device running a VNC server.</string>
+    <string name="msg_about_app">A fast and secure VNC client. Remotely view and control any device running a VNC server.\n\n\nAVNC is an open source and copyleft software — made with help from many contributors.</string>
     <string name="msg_server_profile_added">Server added</string>
     <string name="msg_server_profile_deleted">Server deleted</string>
     <string name="msg_pip_not_supported">Not supported on this device</string>
