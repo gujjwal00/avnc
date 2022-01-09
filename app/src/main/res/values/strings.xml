@@ -133,7 +133,7 @@
     <string name="pref_drag">Drag (long press and swipe)</string>
     <string name="pref_mouse">Mouse</string>
     <string name="pref_mouse_passthrough">Mouse passthrough</string>
-    <string name="pref_mouse_passthrough_summary_off">Use mouse events locally for gestures</string>
+    <string name="pref_mouse_passthrough_summary_off">Use mouse events for local gestures</string>
     <string name="pref_mouse_passthrough_summary_on">Send mouse events directly to server</string>
     <string name="pref_hide_local_cursor">Hide local (Android) pointer</string>
     <string name="pref_vk">Virtual keys</string>
