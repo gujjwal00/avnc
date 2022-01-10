@@ -94,4 +94,10 @@
     <string name="pref_gesture_action_left_click">Clic gauche</string>
     <string name="pref_gesture_action_middle_click">Clic du milieu</string>
     <string name="pref_theme">Thème</string>
+    <string name="tip_empty_server_list">La liste des serveurs est vide.
+\nUtilisez le bouton « <b>+</b> » ; pour ajouter un serveur, ou
+\nUtilisez la barre d\'outils supérieure pour vous connecter directement à un serveur.</string>
+    <string name="pref_experimental_immersive_mode">Mode immersif complet</string>
+    <string name="pref_experimental_toolbar_swipe_close">Balayer pour fermer le tiroir de la barre d\'outils</string>
+    <string name="pref_experimental_immersive_mode_summary">Masquer toutes les barres du système en mode plein écran</string>
 </resources>
