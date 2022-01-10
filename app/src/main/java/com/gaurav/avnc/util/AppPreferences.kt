@@ -37,6 +37,7 @@ class AppPreferences(context: Context) {
     }
 
     inner class Gesture {
+        val directTouch; get() = prefs.getBoolean("gesture_direct_touch", true)
         val tap1; get() = prefs.getString("gesture_single_tap", "left-click")!!
         val tap2; get() = prefs.getString("gesture_tap2", "open-keyboard")!!
         val doubleTap; get() = prefs.getString("gesture_double_tap", "double-click")!!

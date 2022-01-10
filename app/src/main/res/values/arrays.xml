@@ -32,12 +32,10 @@
     <string-array name="tap1_action_entries">
         <item>@string/pref_gesture_action_none</item>
         <item>@string/pref_gesture_action_left_click</item>
-        <item>@string/pref_gesture_action_move_pointer</item>
     </string-array>
     <string-array name="tap1_action_values">
         <item>none</item>
         <item>left-click</item>
-        <item>move-pointer</item>
     </string-array>
 
     <string-array name="tap2_action_entries">
@@ -56,14 +54,12 @@
         <item>@string/pref_gesture_action_double_click</item>
         <item>@string/pref_gesture_action_middle_click</item>
         <item>@string/pref_gesture_action_right_click</item>
-        <item>@string/pref_gesture_action_move_pointer</item>
     </string-array>
     <string-array name="double_tap_action_values">
         <item>none</item>
         <item>double-click</item>
         <item>middle-click</item>
         <item>right-click</item>
-        <item>move-pointer</item>
     </string-array>
 
     <string-array name="long_press_action_entries">
@@ -71,14 +67,12 @@
         <item>@string/pref_gesture_action_double_click</item>
         <item>@string/pref_gesture_action_middle_click</item>
         <item>@string/pref_gesture_action_right_click</item>
-        <item>@string/pref_gesture_action_move_pointer</item>
     </string-array>
     <string-array name="long_press_action_values">
         <item>none</item>
         <item>double-click</item>
         <item>middle-click</item>
         <item>right-click</item>
-        <item>move-pointer</item>
     </string-array>
 
     <string-array name="swipe1_action_entries">

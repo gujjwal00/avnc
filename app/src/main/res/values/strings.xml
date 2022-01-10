@@ -124,6 +124,9 @@
     <string name="pref_prefer_advanced_editor">Directly open advanced server options</string>
     <string name="pref_sort_server_list">Sort saved servers by name</string>
     <string name="pref_gesture">Gestures</string>
+    <string name="pref_direct_touch">Direct touch</string>
+    <string name="pref_direct_touch_summary_on">Do actions at touch-point</string>
+    <string name="pref_direct_touch_summary_off">Do actions at pointer</string>
     <string name="pref_single_tap">Single tap</string>
     <string name="pref_two_finger_tap">Two-finger tap</string>
     <string name="pref_double_tap">Double tap</string>

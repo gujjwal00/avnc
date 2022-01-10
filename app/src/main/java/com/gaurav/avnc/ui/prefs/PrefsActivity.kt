@@ -104,6 +104,10 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
                     summary = getString(R.string.msg_ptr_hiding_not_supported)
                 }
             }
+
+            findPreference<ListPreferenceEx>("gesture_swipe1")!!.apply {
+                disabledStateSummary = getString(R.string.pref_gesture_action_move_pointer)
+            }
         }
     }
 

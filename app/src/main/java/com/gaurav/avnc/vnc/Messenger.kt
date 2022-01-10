@@ -77,11 +77,6 @@ class Messenger(private val client: VncClient) {
         }
     }
 
-    fun sendClick(button: PointerButton, p: PointF) {
-        sendPointerButtonDown(button, p)
-        sendPointerButtonUp(button, p)
-    }
-
     fun sendKey(keySym: Int, isDown: Boolean): Boolean {
         if (client.state != VncClient.State.Connected)
             return false
