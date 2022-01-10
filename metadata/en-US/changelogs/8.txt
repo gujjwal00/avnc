@@ -1,0 +1,8 @@
+* Added trackpad/touchpad mode
+* Captured Window key & Alt+Tab on Samsung DeX
+* Optimized zoom for portrait-mode remote screens
+* Fixed sensitivity of Drag gesture
+* Translations: Portuguese-BR (by João Paulo),
+     Norwegian Bokmål (by Allan Nordhøy),
+     Persian (by Eshagh Shahedany),
+     French (by J. Lavoie)
