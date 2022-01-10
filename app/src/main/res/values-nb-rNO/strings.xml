@@ -62,7 +62,6 @@
     <string name="pref_gesture_action_open_keyboard">Åpne tastatur</string>
     <string name="pref_prefer_advanced_editor">Foretrekk avansert tekstbehandler</string>
     <string name="pref_sort_server_list">Sorter tjenerliste</string>
-    <string name="pref_sort_server_list_summary">Tjenere sorteres etter navn</string>
     <string name="pref_gesture">Håndvendinger</string>
     <string name="pref_single_tap">Enkelttrykk</string>
     <string name="pref_double_tap">Dobbelttrykk</string>
@@ -120,7 +119,6 @@
     <string name="pref_theme_option_system">System</string>
     <string name="pref_theme_option_dark">Mørk</string>
     <string name="pref_theme_option_light">Lys</string>
-    <string name="pref_prefer_advanced_editor_summary">Åpner avansert modus for tillegg/redigering av tjenere</string>
     <string name="pref_two_finger_tap">Tofingerstrykk</string>
     <string name="pref_swipe1">Énfingerstrykk</string>
     <string name="pref_swipe2">Tofingerssveip</string>
