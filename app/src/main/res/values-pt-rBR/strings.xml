@@ -1,12 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2020  Gaurav Ujjwal.
   ~
   ~ SPDX-License-Identifier:  GPL-3.0-or-later
   ~
   ~ See COPYING.txt for more details.
-  -->
-
-<resources>
+  --><resources>
     <string name="title_add_server_profile">Adicionar um servidor</string>
     <string name="title_edit_server_profile">Edição do servidor</string>
     <string name="title_duplicate">Duplicar</string>
@@ -28,7 +27,7 @@
     <string name="title_key_compat_mode">Modo de compatibilidade do teclado</string>
     <string name="title_use_ssh_tunnel">Usar túnel de SSH</string>
     <string name="title_unknown_ssh_host">Host de SSH desconhecido</string>
-    <string name="title_ssh_host_key_changed">A chave do host foi alterada!</string>
+    <string name="title_ssh_host_key_changed">A chave do host foi alterada</string>
     <string name="title_continue">Continuar</string>
     <string name="title_delete_servers_before_import">Excluir os servidores atuais antes de importar</string>
     <string name="title_password">Senha</string>
@@ -40,7 +39,6 @@
     <string name="title_open_source_libraries">Bibliotecas de código livre</string>
     <string name="title_report_bug">Relatar um erro</string>
     <string name="title_github_repo">Repositório no Github</string>
-
     <string name="hint_urlbar">Conectar ao servidor</string>
     <string name="hint_server_name">Nome (ex. PC do trabalho)</string>
     <string name="hint_host">Host</string>
@@ -50,24 +48,22 @@
     <string name="hint_username">Nome de usuário</string>
     <string name="hint_password">Senha</string>
     <string name="hint_key_password">Senha chave</string>
-
     <string name="msg_about_app">O AVNC é um cliente VNC de software livre para Android. Permite o controle remoto de qualquer dispositivo que executa um servidor VNC.</string>
-    <string name="msg_server_profile_added">Servidor adicionado.</string>
-    <string name="msg_server_profile_deleted">Servidor excluído.</string>
+    <string name="msg_server_profile_added">Servidor adicionado</string>
+    <string name="msg_server_profile_deleted">Servidor excluído</string>
     <string name="msg_pip_not_supported">O recurso de Picture-in-Picture não é suportado neste dispositivo</string>
     <string name="msg_loading">Carregando …</string>
     <string name="msg_imported">Importado com sucesso</string>
     <string name="msg_exported">Exportado com sucesso</string>
-    <string name="msg_export_auth_required">É necessária a autenticação antes de exportar.</string>
+    <string name="msg_export_auth_required">É necessária a autenticação antes de exportar</string>
     <string name="msg_export_auth_missing">Seu dispositivo não está seguro. Ative o bloqueio da tela para permitir a autenticação antes de exportar.</string>
-    <string name="msg_invalid_key_file">O arquivo não é uma chave privada válida!</string>
+    <string name="msg_invalid_key_file">O arquivo não é uma chave privada válida</string>
     <string name="msg_invalid_vnc_uri">O URI do VNC inválido</string>
-    <string name="msg_copied_to_clipboard">Copiado!</string>
+    <string name="msg_copied_to_clipboard">Copiado</string>
     <string name="msg_key_compat_mode_help">Alguns servidores não tem suporte a entrada direta do Unicode. O modo de compatibilidade tenta enviar eventos chave em formato legado. \n\nTente ativar/desativar isto, se você estiver tendo problemas inserindo alguns caracteres.</string>
     <string name="tip_empty_server_list">A lista de servidores está vazia.\nUse o botão \'<b>+</b>\' para adicionar um servidor, ou\nUse a barra do Url na parte superior para conectar-se diretamente a um servidor.</string>
     <string name="tip_urlbar">Você pode digitar o nome de host ou endereço de IP.\n\'vnc://\' URIs também são suportados.</string>
     <string name="tip_discovery">A descoberta pode encontrar automaticamente os servidores suportados\nexecutados na sua rede.</string>
-
     <!-- Accessibility descriptions -->
     <string name="desc_navigation_btn">Abrir a aba de navegação</string>
     <string name="desc_settings_btn">Abrir configurações</string>
@@ -87,21 +83,19 @@
     <string name="desc_help_btn">Mostrar ajuda</string>
     <string name="desc_discovered_list">Lista de servidores descobertos automaticamente</string>
     <string name="desc_saved_servers_list">Lista de servidores salvos</string>
-
     <!-- Preference -->
     <string name="pref_ui">Interface</string>
     <string name="pref_ui_summary">Aspecto</string>
     <string name="pref_viewer">Visualizador</string>
-    <string name="pref_viewer_summary">Picture-in-Picture, Zoom</string>
+    <string name="pref_viewer_summary">Picture-in-picture, zoom</string>
     <string name="pref_input">Entrada</string>
-    <string name="pref_input_summary">Gestos, Mouse, Teclas virtuais</string>
+    <string name="pref_input_summary">Gestos, mouse, teclas virtuais</string>
     <string name="pref_servers">Servidores</string>
     <string name="pref_server_summary">Descoberta, Credenciais</string>
     <string name="pref_tools">Ferramentas</string>
-    <string name="pref_tools_summary">Importar/Exportar, Depuração</string>
+    <string name="pref_tools_summary">Importar/Exportar, depuração</string>
     <string name="pref_experimental">Experimental</string>
-    <string name="pref_experimental_summary">Mais recursos!</string>
-
+    <string name="pref_experimental_summary">Mais recursos</string>
     <string name="pref_gesture_action_none">Nenhum</string>
     <string name="pref_gesture_action_left_click">Clique esquerdo</string>
     <string name="pref_gesture_action_middle_click">Clique do meio</string>
@@ -112,12 +106,9 @@
     <string name="pref_gesture_action_remote_scroll">Rolagem de conteúdo remoto</string>
     <string name="pref_gesture_action_remote_drag">Arrastar conteúdo remoto</string>
     <string name="pref_gesture_action_open_keyboard">Mostrar teclado</string>
-
     <string name="pref_theme">Tema</string>
     <string name="pref_prefer_advanced_editor">Preferência do editor avançado</string>
-    <string name="pref_prefer_advanced_editor_summary">Ative isto para abrir diretamente o Modo avançado para adicionar/editar servidores</string>
     <string name="pref_sort_server_list">Ordenar a lista de servidores</string>
-    <string name="pref_sort_server_list_summary">Servidores são ordenados pelo nome</string>
     <string name="pref_gesture">Gestos</string>
     <string name="pref_single_tap">Toque único</string>
     <string name="pref_two_finger_tap">Toque com 2 dedos</string>
@@ -134,12 +125,12 @@
     <string name="pref_vk_show_all">Mostrar todas teclas</string>
     <string name="pref_vk_open_with_keyboard">Mostrar quando teclado está disponível</string>
     <string name="pref_km">Mapeamento de teclas</string>
-    <string name="pref_km_right_alt_to_super">Right Alt para Super</string>
-    <string name="pref_km_language_switch_to_super">Alteração de idioma para Super</string>
-    <string name="pref_km_back_to_escape">Voltar para Escape</string>
+    <string name="pref_km_right_alt_to_super">Right Alt → Super</string>
+    <string name="pref_km_language_switch_to_super">Alteração de idioma → Super</string>
+    <string name="pref_km_back_to_escape">Voltar → Escape</string>
     <string name="pref_km_back_to_escape_summary">A barra de navegação não é afetada por isto</string>
     <string name="pref_fullscreen">Usar tela completa</string>
-    <string name="pref_enable_pip">Ativar Picture-in-Picture</string>
+    <string name="pref_enable_pip">Picture-in-picture</string>
     <string name="pref_toolbar">Barra de ferramentas</string>
     <string name="pref_toolbar_alignment">Alinhamento</string>
     <string name="pref_zoom">Zoom</string>
@@ -163,7 +154,8 @@
     <string name="pref_experimental_toolbar_swipe_close">Deslizar para fechar a barra de ferramentas</string>
     <string name="pref_experimental_toolbar_swipe_close_summary">Durante uma sessão remota, você pode deslizar para fechar a barra de ferramentas atualmente aberta</string>
     <string name="pref_experimental_indicator">Indicador de descoberta para servidores salvos</string>
-    <string name="pref_experimental_indicator_summary">Destacar os servidores já salvos que também foram encontrados pela Descoberta.\nRequer reinício do app.</string>
+    <string name="pref_experimental_indicator_summary">Destacar os servidores já salvos que também foram encontrados pela Descoberta.
+\nRequer reinício do app.</string>
     <string name="pref_theme_option_system">Seguir Tema do Sistema</string>
     <string name="pref_theme_option_dark">Modo Escuro</string>
     <string name="pref_theme_option_light">Modo Claro</string>
@@ -172,6 +164,6 @@
     <string name="pref_hide_local_cursor">Ocultar Cursor do Android</string>
     <string name="title_clear">Limpar</string>
     <string name="pref_experimental_immersive_mode">Modo totalmente imersivo</string>
-    <string name="pref_experimental_immersive_mode_summary">Oculta todas as barras do sistema no modo tela cheia</string>
-    <string name="msg_ptr_hiding_not_supported">" Ocultar cursor não é compatível com este dispositivo "</string>
+    <string name="pref_experimental_immersive_mode_summary">Oculta todas as barras do sistema em modo de tela cheia</string>
+    <string name="msg_ptr_hiding_not_supported">Ocultar cursor não é compatível com este dispositivo</string>
 </resources>

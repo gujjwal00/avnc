@@ -111,9 +111,7 @@
     <string name="pref_gesture_action_open_keyboard">گشودن صفحه‌کلید</string>
     <string name="pref_theme">زمینه</string>
     <string name="pref_prefer_advanced_editor">ترجیح دادن ویرایشگر پیشرفته</string>
-    <string name="pref_prefer_advanced_editor_summary">این را برای گشودن مستقیم حالت پیشرفته برای افزودن/ویرایش کارسازها، به کار بیاندازید</string>
     <string name="pref_sort_server_list">مرتب‌سازی فهرست کارسازها</string>
-    <string name="pref_sort_server_list_summary">کارسازها بر اساس نامشان مرتب شدند</string>
     <string name="pref_gesture">حرکات</string>
     <string name="pref_single_tap">یک ضربه</string>
     <string name="pref_two_finger_tap">ضربهٔ دو انگشتی</string>
@@ -164,4 +162,10 @@
 \nنیاز به راه‌اندازی مجدد برنامه دارد.</string>
     <string name="pref_experimental_immersive_mode">حالت کاملاً فراگیر</string>
     <string name="pref_experimental_immersive_mode_summary">تمام نوارهای سامانه را در حالت تمام صفحه پنهان می‌کند</string>
+    <string name="title_clear">پاک‌کردن</string>
+    <string name="pref_theme_option_light">روشن</string>
+    <string name="pref_toolbar_alignment_option_end">پایان</string>
+    <string name="pref_theme_option_system">پیروی از زمینهٔ سامانه</string>
+    <string name="pref_theme_option_dark">تاریک</string>
+    <string name="pref_toolbar_alignment_option_start">شروع</string>
 </resources>
