@@ -111,4 +111,58 @@
     <string name="pref_vk_open_with_keyboard">Vis når tastaturet er åpent</string>
     <string name="pref_toolbar_alignment">Justering</string>
     <string name="pref_enable_pip">Skru på bilde-i-bilde</string>
+    <string name="pref_drag">Dra (lang-trykk og så sveip)</string>
+    <string name="pref_experimental_toolbar_swipe_close">Dra for å lukke verktøysskuff</string>
+    <string name="pref_experimental_toolbar_swipe_close_summary">Under fjernøkter kan du dra for å lukke verktøylinjen</string>
+    <string name="title_clear">Tøm</string>
+    <string name="title_hide_remote_cursor">Skjul fjernpeker</string>
+    <string name="desc_retry_connection_btn">Prøv igjen</string>
+    <string name="pref_theme_option_system">System</string>
+    <string name="pref_theme_option_dark">Mørk</string>
+    <string name="pref_theme_option_light">Lys</string>
+    <string name="pref_prefer_advanced_editor_summary">Åpner avansert modus for tillegg/redigering av tjenere</string>
+    <string name="pref_two_finger_tap">Tofingerstrykk</string>
+    <string name="pref_swipe1">Énfingerstrykk</string>
+    <string name="pref_swipe2">Tofingerssveip</string>
+    <string name="pref_mouse_passthrough">Mus-videresending</string>
+    <string name="pref_gesture_action_pan">Panorer lokal ramme</string>
+    <string name="pref_gesture_action_remote_scroll">Rull fjerninnhold</string>
+    <string name="pref_gesture_action_remote_drag">Dra fjerninnhold</string>
+    <string name="pref_mouse_passthrough_summary_off">Musehendelser brukes lokalt for håndvendinger</string>
+    <string name="pref_mouse_passthrough_summary_on">Musehendleser sendes direkte til tjeneren</string>
+    <string name="pref_hide_local_cursor">Skjul lokal (Android-) peker</string>
+    <string name="pref_vk">Virtuelle taster</string>
+    <string name="pref_km_right_alt_to_super">Høyre Alt som Super</string>
+    <string name="pref_km_language_switch_to_super">Bytt språk med Super</string>
+    <string name="pref_km_back_to_escape_summary">Har ingen innvirkning på navigasjonsfelt</string>
+    <string name="pref_toolbar_alignment_option_start">Start</string>
+    <string name="pref_cred_autocomplete_summary">Foreslå kjente innlogginger ved tilkobling til tjenere</string>
+    <string name="pref_discovery_restart_delay">Omstartsforsinkelse (min)</string>
+    <string name="pref_import_export">Importer/eksporter tjenere</string>
+    <string name="pref_debugging">Avlusing</string>
+    <string name="pref_logs">Logger</string>
+    <string name="pref_experimental_indicator">Vis oppdagede tjenere igjen</string>
+    <string name="msg_about_app">En fri VNC-klient.
+\nKoble til alle enheter som har en VNC-tjener.</string>
+    <string name="desc_discovered_list">Liste over oppdagede tjenere</string>
+    <string name="pref_viewer">Viser</string>
+    <string name="hint_repeater_host">Gjentaker-vert</string>
+    <string name="pref_tools_summary">Import/eksport, avlusing</string>
+    <string name="pref_server_summary">Oppdagelse, identitetsdetaljer</string>
+    <string name="pref_toolbar_alignment_option_end">Slutt</string>
+    <string name="pref_cred_autocomplete">Auto-fullføring</string>
+    <string name="pref_keycode_map">Snarveier</string>
+    <string name="hint_key_password">Nøkkelpassord</string>
+    <string name="msg_key_compat_mode_help">Foreldet modus for tjenere som ikke støtter inntasting av alle tegn.</string>
+    <string name="pref_input">Inndata</string>
+    <string name="tip_empty_server_list">Tjenerlisten er tom.
+\nBruk «<b>+</b>»-knappen for å legge til en tjener,
+\neller feltet ovenfor for å legge til en.</string>
+    <string name="pref_km_back_to_escape">Tilbake for Esc</string>
+    <string name="title_use_repeater">Bruk gjentaker</string>
+    <string name="pref_experimental_indicator_summary">Framhever treff blandt allerede lagrede tjenere under oppdagelse.
+\nKrever programomstart.</string>
+    <string name="tip_discovery">Oppdagelse kan automatisk finne støttede tjenere
+\npå nettverket ditt.</string>
+    <string name="msg_export_auth_missing">Skru på skjermlås for å kreve identitetsbekreftelse før eksport.</string>
 </resources>
