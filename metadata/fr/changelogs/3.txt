@@ -1,0 +1,2 @@
+* Amélioration du temps de démarrage de l'application
+* Ajout d'une préférence pour le tri des serveurs

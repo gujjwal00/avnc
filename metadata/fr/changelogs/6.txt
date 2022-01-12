@@ -1,0 +1,3 @@
+* Amélioration de la prise en charge des raccourcis clavier
+* Amélioration de la prise en charge des diacritiques (accents)
+* Ajout d'un mode immersif complet (expérimental)

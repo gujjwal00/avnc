@@ -1,0 +1,8 @@
+* Ajout du mode trackpad/touchpad
+* Capture de la touche Windows et Alt+Tab sur Samsung DeX
+* Optimisation du zoom pour les écrans distants en mode portrait
+* Correction de la sensibilité des gestes de glissement
+* Traductions : Portugais - BR (par João Paulo),
+     Bokmål norvégien (par Allan Nordhøy),
+     Persan (par Eshagh Shahedany),
+     français (par J. Lavoie)
