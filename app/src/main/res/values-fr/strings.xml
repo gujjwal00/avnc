@@ -18,7 +18,7 @@
     <string name="title_hide_remote_cursor">Masquer le curseur distant</string>
     <string name="title_key_compat_mode">Envoyer des événements claviers rétrocompatibles</string>
     <string name="title_unknown_ssh_host">Hôte SSH inconnu</string>
-    <string name="title_ssh_host_key_changed">La clé de l\'hôte SSH a été modifiée !</string>
+    <string name="title_ssh_host_key_changed">La clé de l\'hôte SSH a été modifiée</string>
     <string name="title_continue">Continuer</string>
     <string name="title_delete_servers_before_import">Supprimer les serveurs courants avant l\'importation</string>
     <string name="title_password">Mot de passe</string>
@@ -141,7 +141,7 @@
     <string name="pref_direct_touch_summary_on">Effectuer les actions au point de contact</string>
     <string name="pref_direct_touch">Pointage direct</string>
     <string name="pref_direct_touch_summary_off">Effectuer les actions au niveau du pointeur</string>
-    <string name="pref_debugging">Déboggage</string>
+    <string name="pref_debugging">Débogage</string>
     <string name="title_clear">Effacer</string>
     <string name="pref_theme_option_dark">Sombre</string>
     <string name="pref_theme_option_light">Clair</string>
@@ -164,4 +164,6 @@
     <string name="pref_drag">Déplacement (appui long et glissement)</string>
     <string name="pref_km_language_switch_to_super">Changement de langue → Super</string>
     <string name="pref_import_export">Importer/Exporter des serveurs</string>
+    <string name="pref_keycode_map">Carte des codes-clés</string>
+    <string name="pref_mouse_passthrough">Passage de la souris</string>
 </resources>
