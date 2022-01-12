@@ -1,2 +1,2 @@
-* Improve app startup time
-* Added a preference to sort Servers
+* بهبود زمان راه‌اندازی برنامه
+* افزودن یک اولویت برای مرتب‌سازی کارسازها
