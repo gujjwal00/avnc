@@ -164,4 +164,7 @@
     <string name="tip_discovery">Oppdagelse kan automatisk finne støttede tjenere
 \npå nettverket ditt.</string>
     <string name="msg_export_auth_missing">Skru på skjermlås for å kreve identitetsbekreftelse før eksport.</string>
+    <string name="pref_direct_touch">Direkte-trykk</string>
+    <string name="pref_direct_touch_summary_on">Utfør handlinger ved berøring</string>
+    <string name="pref_direct_touch_summary_off">Utfør handlinger ved peker</string>
 </resources>
