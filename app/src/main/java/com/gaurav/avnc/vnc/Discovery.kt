@@ -101,11 +101,12 @@ class Discovery(private val context: Context) {
      * Adds a new profile with given details to list.
      */
     private fun addProfile(name: String, host: String, port: Int) {
-        val profile = ServerProfile().apply {
-            this.name = name
-            this.host = host
-            this.port = port
-        }
+        val profile = ServerProfile(
+                ID = (name + host + port).hashCode().toLong(),
+                name = name,
+                host = host,
+                port = port
+        )
 
         runBlocking(Dispatchers.Main) {
             val currentList = servers.value!!
@@ -168,7 +169,6 @@ class Discovery(private val context: Context) {
      */
     private inner class ResolveListener : NsdManager.ResolveListener {
         override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
-            Log.d(javaClass.simpleName, "Resolved service: ${serviceInfo.serviceName.take(3)}*******")
             addProfile(serviceInfo.serviceName, serviceInfo.host.hostAddress, serviceInfo.port)
         }
 

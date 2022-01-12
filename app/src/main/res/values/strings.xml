@@ -80,6 +80,7 @@
     <string name="desc_add_new_server_btn">Add server</string>
     <string name="desc_save_discovered_server_btn">Save</string>
     <string name="desc_discovery_btn">Discover servers</string>
+    <string name="desc_discovery_stop_btn">Stop discovering servers</string>
     <string name="desc_discovery_running">Discovering servers on you network</string>
     <string name="desc_keyboard_btn">Open keyboard</string>
     <string name="desc_virtual_keys_btn">Show virtual keys</string>
@@ -161,12 +162,8 @@
     <string name="pref_cred_autocomplete">Auto-completion</string>
     <string name="pref_cred_autocomplete_summary">Suggest saved logins when connecting to new servers</string>
     <string name="pref_discovery">Discovery</string>
-    <string name="pref_discovery_timeout">Timeout (seconds)</string>
-    <string name="pref_discovery_auto_start">Auto start</string>
-    <string name="pref_discovery_auto_start_summary">Discover servers when opening the app</string>
-    <string name="pref_discovery_restart">Restart</string>
-    <string name="pref_discovery_restart_summary">Restart discovery after it stops</string>
-    <string name="pref_discovery_restart_delay">Restart delay (minutes)</string>
+    <string name="pref_discovery_autorun">Autorun</string>
+    <string name="pref_discovery_autorun_summary">Discover servers while on homepage</string>
     <string name="pref_import_export">Import/Export servers</string>
     <string name="pref_debugging">Debugging</string>
     <string name="pref_logs">Logs</string>

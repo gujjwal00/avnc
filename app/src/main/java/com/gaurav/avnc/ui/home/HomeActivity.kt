@@ -59,6 +59,17 @@ class HomeActivity : AppCompatActivity() {
         viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.autoStartDiscovery()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (!isChangingConfigurations)
+            viewModel.autoStopDiscovery()
+    }
+
     /**
      * Handle drawer item selection.
      */

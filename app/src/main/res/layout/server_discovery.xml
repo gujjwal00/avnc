@@ -34,7 +34,7 @@
             style="@style/TipView"
             android:text="@string/tip_discovery"
             android:visibility="gone"
-            app:isVisible="@{!viewModel.discovery.isRunning &amp;&amp; viewModel.discovery.servers.empty}"
+            app:isVisible="@{viewModel.discovery.servers.empty}"
             tools:visibility="visible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -57,5 +57,15 @@
             android:contentDescription="@string/desc_discovery_running"
             android:indeterminate="true"
             app:isVisible="@{viewModel.discovery.isRunning}" />
+
+        <ImageButton
+            style="@style/ImageButton"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="@dimen/margin_normal"
+            android:contentDescription="@string/desc_discovery_stop_btn"
+            android:onClick="@{()-> viewModel.stopDiscovery()}"
+            android:src="@drawable/ic_clear"
+            app:isVisible="@{viewModel.discovery.isRunning}"
+            app:tint="?colorSecondary" />
     </FrameLayout>
 </layout>

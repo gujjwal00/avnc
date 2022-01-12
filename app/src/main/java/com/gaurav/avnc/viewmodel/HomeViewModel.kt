@@ -10,11 +10,8 @@ package com.gaurav.avnc.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.Transformations
-import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.vnc.Discovery
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class HomeViewModel(app: Application) : BaseViewModel(app) {
 
@@ -57,27 +54,37 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
      */
     val profileDeletedEvent = LiveEvent<ServerProfile>()
 
-
-    init {
-        if (pref.server.discoveryAutoStart)
-            startDiscovery()
-    }
-
     /**
      * Starts new connection to given profile.
      */
     fun startConnection(profile: ServerProfile) = newConnectionEvent.fire(profile)
 
-    /**
-     * Starts discovery service.
-     * It will be automatically stopped after timeout.
-     */
-    fun startDiscovery() {
-        discovery.start()
+    /**************************************************************************
+     * Server Discovery
+     *
+     * To save battery, Discovery is stopped when HomeActivity is in background.
+     **************************************************************************/
+    private var autoStopped = false
 
-        viewModelScope.launch {
-            runCatching { delay(pref.server.discoveryTimeout) }
-            discovery.stop()
+    fun startDiscovery() {
+        autoStopped = false
+        discovery.start()
+    }
+
+    fun stopDiscovery() {
+        autoStopped = false
+        discovery.stop()
+    }
+
+    fun autoStartDiscovery() {
+        if (pref.server.discoveryAutorun || autoStopped)
+            startDiscovery()
+    }
+
+    fun autoStopDiscovery() {
+        if (discovery.isRunning.value == true) {
+            stopDiscovery()
+            autoStopped = true
         }
     }
 
