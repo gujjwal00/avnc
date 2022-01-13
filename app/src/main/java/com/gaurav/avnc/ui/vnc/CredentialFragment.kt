@@ -9,16 +9,14 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
+import android.util.ArrayMap
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.FragmentCredentialBinding
+import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
@@ -53,9 +51,10 @@ class CredentialFragment : DialogFragment() {
                 .setTitle(R.string.title_credentials_required)
                 .setView(binding.root)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
-                    val cred = UserCredential(binding.username.text.toString(),
-                                              binding.password.text.toString())
+                    val username = binding.username.text.toString()
+                    val password = getRealPassword(binding.password.text.toString())
 
+                    val cred = UserCredential(username, password)
                     viewModel.credentialRequest.offerResponse(cred)
 
                     if (binding.remember.isChecked)
@@ -106,11 +105,11 @@ class CredentialFragment : DialogFragment() {
         }
 
         viewModel.knownCredentials.observe(this) { list ->
-            val usernames = list.map { it.username }.filter { it.isNotBlank() }.distinct()
-            val passwords = list.map { it.password }.filter { it.isNotBlank() }.distinct()
+            val usernames = list.map { it.username }.filter { it.isNotEmpty() }.distinct()
+            val passwords = preparePasswordSuggestions(list)
 
             val usernameAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, usernames)
-            val passwordAdapter = PasswordAdapter(requireContext(), android.R.layout.simple_list_item_1, passwords)
+            val passwordAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, passwords)
 
             binding.username.setAdapter(usernameAdapter)
             binding.password.setAdapter(passwordAdapter)
@@ -118,21 +117,20 @@ class CredentialFragment : DialogFragment() {
     }
 
     /**
-     * Specialized adapter for password completion. We don't want to show plaintext password
-     * in completion list, so we partially obfuscate it.
-     *
-     * @param layout Must point to a resource with [TextView] as root
+     * Instead of showing plaintext passwords, we show server name & host in suggestion
+     * list. When user taps OK, we convert the suggestion back to real password.
      */
-    private class PasswordAdapter(context: Context, layout: Int, passwords: List<String>)
-        : ArrayAdapter<String>(context, layout, passwords) {
+    private val passwordMap = ArrayMap<String, String>()
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val view = super.getView(position, convertView, parent) as TextView
+    private fun preparePasswordSuggestions(list: List<LoginInfo>): List<String> {
+        list.filter { it.password.isNotEmpty() }
+                .map { Pair("from: ${it.name} [${it.host}]", it.password) }
+                .distinct()
+                .toMap(passwordMap)
+                .removeAll(passwordMap.values) //Guard against (very unlikely) clash with real password
 
-            val obfuscated = "**********" + view.text.takeLast(2)
-            view.text = obfuscated
-
-            return view
-        }
+        return passwordMap.keys.toList()
     }
+
+    private fun getRealPassword(typedPassword: String) = passwordMap[typedPassword] ?: typedPassword
 }

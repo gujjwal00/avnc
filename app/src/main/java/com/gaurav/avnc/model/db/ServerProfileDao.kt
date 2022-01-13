@@ -10,8 +10,8 @@ package com.gaurav.avnc.model.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.model.ServerProfile
-import com.gaurav.avnc.vnc.UserCredential
 
 @Dao
 interface ServerProfileDao {
@@ -26,8 +26,8 @@ interface ServerProfileDao {
     @Query("SELECT * FROM profiles")
     fun getList(): List<ServerProfile>
 
-    @Query("SELECT username, password FROM profiles")
-    fun getCredentials(): LiveData<List<UserCredential>>
+    @Query("SELECT name, host, username, password FROM profiles")
+    fun getCredentials(): LiveData<List<LoginInfo>>
 
     @Insert
     fun insert(profile: ServerProfile): Long
