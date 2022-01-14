@@ -1,0 +1,3 @@
+* Ajout des traductions en portugais (BR) (par inkhorn)
+* Ajout d'une préférence pour cacher le curseur local sur Android (par Henry H)
+* Correction de la gestion du survol du stylet sur certains appareils (par Henry H)

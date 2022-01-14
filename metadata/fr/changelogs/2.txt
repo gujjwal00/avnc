@@ -1,0 +1,3 @@
+* Renforcement du tunnel SSH
+* Correction de la fuite du port de redirection
+* Mise à jour des métadonnées de l'application
