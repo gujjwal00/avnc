@@ -82,7 +82,6 @@
     <string name="desc_discovery_running">درحال اکتشاف کارسازها در شبکهٔ شما</string>
     <string name="desc_keyboard_btn">گشودن صفحه‌کلید</string>
     <string name="desc_virtual_keys_btn">نمایش کلیدهای مجازی</string>
-    <!-- در رشته زیر از نویسه‌های ایزوله چپ‌به‌راست استفاده شده است -->
     <string name="desc_reset_zoom_btn">بازنشانی بزرگنمایی</string>
     <string name="desc_retry_connection_btn">تلاش مجدد</string>
     <string name="desc_back_btn">بازگشت</string>
