@@ -104,9 +104,14 @@ class AppPreferences(context: Context) {
                 updateValue()
         }
 
-        init {
-            updateValue() //Initial load
-            prefs.registerOnSharedPreferenceChangeListener(prefChangeListener)
+        private var initialized = false
+
+        override fun onActive() {
+            if (!initialized) {
+                initialized = true
+                updateValue()
+                prefs.registerOnSharedPreferenceChangeListener(prefChangeListener)
+            }
         }
 
         private fun updateValue() {
