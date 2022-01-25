@@ -26,8 +26,7 @@
             layout="@layout/server_item"
             app:profile="@{viewModel}" />
 
-        <!--Experimental Feature-->
-        <View
+        <com.gaurav.avnc.ui.home.IndicatorView
             android:id="@+id/indicator"
             android:layout_width="10dp"
             android:layout_height="10dp"

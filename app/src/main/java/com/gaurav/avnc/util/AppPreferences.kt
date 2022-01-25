@@ -64,10 +64,10 @@ class AppPreferences(context: Context) {
         val credAutocomplete; get() = prefs.getBoolean("cred_autocomplete", true)
         val clipboardSync; get() = prefs.getBoolean("clipboard_sync", true)
         val discoveryAutorun; get() = prefs.getBoolean("discovery_autorun", true)
+        val rediscoveryIndicator = LivePref("rediscovery_indicator", true)
     }
 
     inner class Experimental {
-        val indicator; get() = prefs.getBoolean("experimental_indicator", false)
         val swipeCloseToolbar; get() = prefs.getBoolean("experimental_vnc_toolbar_swipe_close", true)
         val immersiveMode; get() = prefs.getBoolean("viewer_immersive_mode", false)
     }

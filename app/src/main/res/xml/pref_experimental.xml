@@ -10,12 +10,6 @@
     app:title="@string/pref_experimental">
 
     <SwitchPreference
-        app:defaultValue="false"
-        app:key="experimental_indicator"
-        app:summary="@string/pref_experimental_indicator_summary"
-        app:title="@string/pref_experimental_indicator" />
-
-    <SwitchPreference
         app:defaultValue="true"
         app:key="experimental_vnc_toolbar_swipe_close"
         app:summary="@string/pref_experimental_toolbar_swipe_close_summary"

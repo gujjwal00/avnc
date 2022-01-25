@@ -164,14 +164,13 @@
     <string name="pref_discovery">Discovery</string>
     <string name="pref_discovery_autorun">Autorun</string>
     <string name="pref_discovery_autorun_summary">Discover servers while on homepage</string>
+    <string name="pref_rediscovery_indicator">Highlight rediscovered servers</string>
     <string name="pref_import_export">Import/Export servers</string>
     <string name="pref_debugging">Debugging</string>
     <string name="pref_logs">Logs</string>
     <string name="pref_keycode_map">Keycode map</string>
     <string name="pref_experimental_toolbar_swipe_close">Swipe to close toolbar drawer</string>
     <string name="pref_experimental_toolbar_swipe_close_summary">During a remote session, you can swipe to close currently open Toolbar</string>
-    <string name="pref_experimental_indicator">Discovery indicator for saved Servers</string>
-    <string name="pref_experimental_indicator_summary">Highlights already saved servers, which are also found during discovery.\nRequires app restart.</string>
     <string name="pref_experimental_immersive_mode">Full immersive mode</string>
     <string name="pref_experimental_immersive_mode_summary">Hides all system bars in fullscreen mode</string>
 </resources>

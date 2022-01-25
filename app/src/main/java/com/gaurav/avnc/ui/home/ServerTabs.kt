@@ -22,7 +22,6 @@ import com.gaurav.avnc.databinding.ServerSavedBinding
 import com.gaurav.avnc.databinding.ServerSavedItemBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.home.ServerTabs.PagerAdapter.ViewHolder
-import com.gaurav.avnc.util.Experimental
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
@@ -116,11 +115,6 @@ class ServerTabs(val activity: HomeActivity) {
         binding.serversRv.setHasFixedSize(true)
 
         activity.viewModel.serverProfiles.observe(activity) { adapter.submitList(it) }
-
-        if (activity.viewModel.pref.experimental.indicator) {
-            Experimental.Indicator().setup(binding, adapter)
-        }
-
         return binding.root
     }
 
@@ -130,9 +124,6 @@ class ServerTabs(val activity: HomeActivity) {
      */
     class SavedServerAdapter(val viewModel: HomeViewModel)
         : ListAdapter<ServerProfile, SavedServerAdapter.ViewHolder>(Differ) {
-
-        //Experimental feature
-        var bindListener: ((ViewHolder, ServerProfile) -> Unit)? = null
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val inflater = LayoutInflater.from(parent.context)
@@ -144,7 +135,7 @@ class ServerTabs(val activity: HomeActivity) {
             val profile = getItem(position)
             holder.profile = profile
             holder.binding.viewModel = profile
-            bindListener?.invoke(holder, profile)
+            holder.binding.indicator.setup(profile, viewModel.rediscoveredProfiles)
         }
 
         inner class ViewHolder(val binding: ServerSavedItemBinding)

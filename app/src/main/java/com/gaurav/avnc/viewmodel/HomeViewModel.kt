@@ -9,6 +9,8 @@
 package com.gaurav.avnc.viewmodel
 
 import android.app.Application
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.vnc.Discovery
@@ -123,4 +125,29 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     fun deleteProfile(profile: ServerProfile) = asyncIO({ serverProfileDao.delete(profile) }, {
         profileDeletedEvent.fire(profile)
     })
+
+
+    /**************************************************************************
+     * Rediscovery Indicator
+     *
+     * [rediscoveredProfiles] is the intersection of saved & discovered servers.
+     *
+     * To detect reachable server in [serverProfiles], we could directly 'ping'
+     * them, but that has its own issues.
+     **************************************************************************/
+    val rediscoveredProfiles by lazy {
+        Transformations.switchMap(pref.server.rediscoveryIndicator) {
+            if (it) prepareRediscoveredProfiles()
+            else MutableLiveData(null)
+        }!!
+    }
+
+    private fun prepareRediscoveredProfiles() = with(MediatorLiveData<List<ServerProfile>>()) {
+        val filter = { saved: List<ServerProfile>?, discovered: List<ServerProfile>? ->
+            saved?.filter { s -> discovered?.find { s.host == it.host && s.port == it.port } != null }
+        }
+        addSource(serverProfiles) { value = filter(it, discovery.servers.value) }
+        addSource(discovery.servers) { value = filter(serverProfiles.value, it) }
+        this
+    }
 }

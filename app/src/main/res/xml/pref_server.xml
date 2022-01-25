@@ -37,6 +37,10 @@
             app:summary="@string/pref_discovery_autorun_summary"
             app:title="@string/pref_discovery_autorun" />
 
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="rediscovery_indicator"
+            app:title="@string/pref_rediscovery_indicator" />
     </PreferenceCategory>
 
 </PreferenceScreen>
