@@ -19,7 +19,6 @@ import com.gaurav.avnc.databinding.FragmentCredentialBinding
 import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.UserCredential
-import com.gaurav.avnc.vnc.VncClient
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 
@@ -79,8 +78,8 @@ class CredentialFragment : DialogFragment() {
          */
         private fun scheduleCredentialSave(viewModel: VncViewModel, cred: UserCredential) {
             with(viewModel) {
-                clientState.observeForever {
-                    if (it == VncClient.State.Connected) {
+                state.observeForever {
+                    if (it == VncViewModel.State.Connected) {
                         profile.username = cred.username
                         profile.password = cred.password
                         saveProfile()

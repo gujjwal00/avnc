@@ -10,7 +10,6 @@ package com.gaurav.avnc.vnc
 
 import com.gaurav.avnc.TestServer
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -23,7 +22,6 @@ class VncClientTest {
         override fun onCredentialRequired() = UserCredential()
         override fun onFramebufferUpdated() {}
         override fun onFramebufferSizeChanged(width: Int, height: Int) {}
-        override fun onClientStateChanged(newState: VncClient.State) {}
         override fun onGotXCutText(text: String) {
             cutText = text
         }
@@ -47,8 +45,8 @@ class VncClientTest {
 
     private fun connect() {
         server.start()
-        assertTrue(client.connect(server.host, server.port))
-        assertTrue(client.processServerMessage(10000))
+        client.connect(server.host, server.port)
+        client.processServerMessage(10000)
     }
 
 

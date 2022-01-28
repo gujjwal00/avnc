@@ -12,7 +12,6 @@ import android.opengl.GLES20.*
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import com.gaurav.avnc.viewmodel.VncViewModel
-import com.gaurav.avnc.vnc.VncClient
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -72,7 +71,7 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
     override fun onDrawFrame(gl: GL10?) {
         glClear(GL_COLOR_BUFFER_BIT)
 
-        if (viewModel.client.state != VncClient.State.Connected)
+        if (!viewModel.client.connected)
             return
 
         if (state.vpWidth == 0f || state.vpHeight == 0f)

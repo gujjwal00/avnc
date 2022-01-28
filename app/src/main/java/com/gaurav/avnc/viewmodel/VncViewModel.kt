@@ -65,23 +65,47 @@ import java.lang.ref.WeakReference
  */
 class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
+    /**
+     * Connection lifecycle:
+     *
+     *            Created
+     *               |
+     *               v
+     *          Connecting ----------+
+     *               |               |
+     *               v               |
+     *           Connected           |
+     *               |               |
+     *               v               |
+     *          Disconnected <-------+
+     *
+     */
+    enum class State {
+        Created,
+        Connecting,
+        Connected,
+        Disconnected,
+    }
+
     val client = VncClient(this)
-
-    /**
-     * Client state is exposed as live data here to allow dynamic data binding
-     * from layouts.
-     */
-    val clientState = MutableLiveData(client.state)
-
-    /**
-     * Reason for [clientState] being [VncClient.State.Disconnected].
-     */
-    val disconnectReason = MutableLiveData("")
 
     /**
      * [ServerProfile] used for current connection.
      */
     var profile = ServerProfile()
+
+    /**
+     * We have two places for connection state (both are synced):
+     *
+     * [VncClient.connected] - Simple boolean state, used most of the time
+     * [state]               - More granular, used by observers & data binding
+     */
+    val state = MutableLiveData(State.Created)
+
+    /**
+     * Reason for disconnecting.
+     */
+    val disconnectReason = MutableLiveData("")
 
     /**
      * Fired when [VncClient] has asked for credential. It is used to
@@ -147,20 +171,15 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      **************************************************************************/
 
     /**
-     * Because [initConnection] can be called multiple times due to activity restarts,
-     * initialization inside it is performed only once.
-     */
-    private var initialized = false
-
-    /**
      * Initialize VNC connection using given profile.
+     * [initConnection] can be called multiple times due to activity restarts.
      */
     fun initConnection(profile: ServerProfile) {
-        if (initialized)
+        if (state.value != State.Created)
             return
 
-        initialized = true
         this.profile = profile
+        state.value = State.Connecting
 
         launchConnection()
     }
@@ -175,11 +194,11 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
                 processMessages()
 
             }.onFailure {
-                client.disconnect()
-                if (it is IOException)
-                    disconnectReason.postValue(it.message)
+                if (it is IOException) disconnectReason.postValue(it.message)
                 Log.e("ReceiverCoroutine", "Connection failed", it)
             }
+
+            state.postValue(State.Disconnected)
 
             //Wait until activity is finished and viewmodel is cleaned up.
             runCatching { awaitCancellation() }
@@ -208,16 +227,13 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
             else -> throw IOException("Unknown Channel: ${profile.channelType}")
         }
 
-        if (client.state != VncClient.State.Connected)
-            throw IOException(client.getLastErrorStr())
+        state.postValue(State.Connected)
+        sendClipboardText() //Initial sync
     }
 
     private fun processMessages() {
-        while (viewModelScope.isActive && client.processServerMessage()) {
-            //Message Loop
-        }
-
-        disconnectReason.postValue(client.getLastErrorStr())
+        while (viewModelScope.isActive)
+            client.processServerMessage()
     }
 
     private fun cleanup() {
@@ -318,13 +334,6 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
     override fun onGotXCutText(text: String) {
         receiveClipboardText(text)
-    }
-
-    override fun onClientStateChanged(newState: VncClient.State) {
-        clientState.postValue(newState)
-
-        if (newState == VncClient.State.Connected)
-            sendClipboardText() //Initial sync
     }
 
     override fun onFramebufferSizeChanged(width: Int, height: Int) {

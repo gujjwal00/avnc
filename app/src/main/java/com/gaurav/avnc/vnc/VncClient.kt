@@ -2,6 +2,7 @@ package com.gaurav.avnc.vnc
 
 import androidx.annotation.Keep
 import com.gaurav.avnc.vnc.VncClient.Observer
+import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 
@@ -36,32 +37,8 @@ import java.nio.charset.StandardCharsets
 class VncClient(private val observer: Observer) {
 
     /**
-     * [VncClient] Lifecycle:
-     *
-     *            Created ---------------+
-     *               |                   |
-     *               v                   |
-     *          Connecting ----------+   |
-     *               |               |   |
-     *               v               |   |
-     *           Connected           |   |
-     *               |               |   |
-     *               v               |   |
-     *          Disconnected <-------+   |
-     *               |                   |
-     *               v                   |
-     *           Destroyed <-------------+
-     */
-    enum class State {
-        Created,
-        Connecting,
-        Connected,
-        Disconnected,
-        Destroyed
-    }
-
-    /**
      * Interface for event observer.
+     * DO NOT throw exceptions from these methods.
      */
     interface Observer {
         fun onPasswordRequired(): String
@@ -69,7 +46,6 @@ class VncClient(private val observer: Observer) {
         fun onGotXCutText(text: String)
         fun onFramebufferUpdated()
         fun onFramebufferSizeChanged(width: Int, height: Int)
-        fun onClientStateChanged(newState: State)
 
         //fun onBell()
         //fun onCursorMoved(x: Int, y: Int): Boolean
@@ -86,14 +62,9 @@ class VncClient(private val observer: Observer) {
             throw RuntimeException("Could not create native rfbClient!")
     }
 
-    /**
-     * Current client state.
-     */
-    var state: State = State.Created
-        private set(value) {
-            field = value
-            observer.onClientStateChanged(value)
-        }
+    @Volatile
+    var connected = false
+        private set
 
     /**
      * Name of remote desktop
@@ -112,14 +83,10 @@ class VncClient(private val observer: Observer) {
 
     /**
      * Setup different properties for this client.
-     * Only valid in [State.Connected] state.
      *
      * @param securityType RFB security type to use.
      */
     fun configure(viewOnly: Boolean, securityType: Int, useLocalCursor: Boolean) {
-        if (state != State.Created)
-            return
-
         viewOnlyMode = viewOnly
         nativeConfigure(nativePtr, securityType, useLocalCursor)
     }
@@ -130,42 +97,25 @@ class VncClient(private val observer: Observer) {
 
     /**
      * Initializes VNC connection.
-     *
-     * @return true if initialization was successful
      */
-    fun connect(host: String, port: Int): Boolean {
-        if (state != State.Created)
-            return false
-
-        state = State.Connecting
-
-        if (nativeInit(nativePtr, host, port)) {
-            state = State.Connected
-            return true
-        } else {
-            state = State.Disconnected
-            return false
-        }
+    fun connect(host: String, port: Int) {
+        connected = nativeInit(nativePtr, host, port)
+        if (!connected) throw IOException(nativeGetLastErrorStr())
     }
 
     /**
-     * Waits for incoming server message, parses it and then invokes appropriate
-     * callbacks.
+     * Waits for incoming server message, parses it and then invokes appropriate callbacks.
      *
      * @param uSecTimeout Timeout in microseconds.
-     * @return true if message was successfully handled or no message was received within timeout,
-     *         false otherwise.
      */
-    fun processServerMessage(uSecTimeout: Int = 1000000): Boolean {
-        if (state != State.Connected)
-            return false
+    fun processServerMessage(uSecTimeout: Int = 1000000) {
+        if (!connected)
+            return
 
         if (!nativeProcessServerMessage(nativePtr, uSecTimeout)) {
-            disconnect() //Reason: Msg processing will only fail on irrecoverable errors
-            return false
+            connected = false
+            throw IOException(nativeGetLastErrorStr())
         }
-
-        return true
     }
 
     /**
@@ -209,30 +159,11 @@ class VncClient(private val observer: Observer) {
     fun uploadFrameTexture() = nativeUploadFrameTexture(nativePtr)
 
     /**
-     * Marks this client as 'disconnected'.
-     *
-     * This doesn't actually release the resources from server but
-     * simply updates the state. [cleanup] is used for that.
-     */
-    fun disconnect() {
-        state = State.Disconnected
-    }
-
-    /**
-     * Returns a string describing last error.
-     * Only valid in disconnected state.
-     */
-    fun getLastErrorStr() = nativeGetLastErrorStr()
-
-    /**
-     * Releases all resource (native & managed) currently held.
-     * After cleanup, this client MUST NOT be used anymore.
+     * Release all resources allocated by the client.
+     * DO NOT use this client after [cleanup].
      */
     fun cleanup() {
-        if (state == State.Destroyed)
-            return
-
-        state = State.Destroyed
+        connected = false
         nativeCleanup(nativePtr)
     }
 
@@ -241,7 +172,7 @@ class VncClient(private val observer: Observer) {
      * events to remote server.
      */
     private inline fun executeSend(block: () -> Unit) {
-        if (state == State.Connected && !viewOnlyMode)
+        if (connected && !viewOnlyMode)
             block()
     }
 

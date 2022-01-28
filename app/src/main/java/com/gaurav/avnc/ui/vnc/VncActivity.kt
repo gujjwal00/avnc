@@ -35,7 +35,6 @@ import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.util.Experimental
 import com.gaurav.avnc.util.SamsungDex
 import com.gaurav.avnc.viewmodel.VncViewModel
-import com.gaurav.avnc.vnc.VncClient
 import com.gaurav.avnc.vnc.VncUri
 import kotlinx.coroutines.delay
 import java.lang.ref.WeakReference
@@ -91,7 +90,7 @@ class VncActivity : AppCompatActivity() {
         viewModel.frameViewRef = WeakReference(binding.frameView)
         viewModel.credentialRequest.observe(this) { showCredentialDialog() }
         viewModel.sshHostKeyVerifyRequest.observe(this) { showHostKeyDialog() }
-        viewModel.clientState.observe(this) { onClientStateChanged(it) }
+        viewModel.state.observe(this) { onClientStateChanged(it) }
         viewModel.initConnection(profile) //Should be called after observers has been setup
     }
 
@@ -157,8 +156,8 @@ class VncActivity : AppCompatActivity() {
 
     private fun closeDrawers() = binding.drawerLayout.closeDrawers()
 
-    private fun onClientStateChanged(newState: VncClient.State) {
-        if (newState == VncClient.State.Connected) {
+    private fun onClientStateChanged(newState: VncViewModel.State) {
+        if (newState == VncViewModel.State.Connected) {
 
             if (!viewModel.pref.runInfo.hasConnectedSuccessfully) {
                 viewModel.pref.runInfo.hasConnectedSuccessfully = true
@@ -254,7 +253,7 @@ class VncActivity : AppCompatActivity() {
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
 
         window.decorView.apply {
-            if (viewModel.clientState.value == VncClient.State.Connected)
+            if (viewModel.client.connected)
                 systemUiVisibility = systemUiVisibility or flags
             else
                 systemUiVisibility = systemUiVisibility and flags.inv()
@@ -286,7 +285,7 @@ class VncActivity : AppCompatActivity() {
     }
 
     private fun enterPiPMode() {
-        val canEnter = viewModel.pref.viewer.pipEnabled && viewModel.client.state == VncClient.State.Connected
+        val canEnter = viewModel.pref.viewer.pipEnabled && viewModel.client.connected
 
         if (canEnter && Build.VERSION.SDK_INT >= 26) {
 

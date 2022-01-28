@@ -13,7 +13,6 @@ import com.gaurav.avnc.ui.vnc.Dispatcher.SwipeAction
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.PointerButton
-import com.gaurav.avnc.vnc.VncClient
 import kotlin.math.abs
 
 /**
@@ -282,13 +281,13 @@ class Dispatcher(private val activity: VncActivity) {
                 syncPending = true
                 syncPosition()
             }
-            viewModel.clientState.observe(activity) {
+            viewModel.state.observe(activity) {
                 syncPosition()
             }
         }
 
         private fun syncPosition() {
-            if (syncPending && viewModel.clientState.value == VncClient.State.Connected) {
+            if (syncPending && viewModel.client.connected) {
                 pointerPosition.apply {
                     x = viewModel.frameState.fbWidth / 2
                     y = viewModel.frameState.fbHeight / 2

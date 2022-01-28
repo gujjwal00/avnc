@@ -78,7 +78,7 @@ class Messenger(private val client: VncClient) {
     }
 
     fun sendKey(keySym: Int, isDown: Boolean): Boolean {
-        if (client.state != VncClient.State.Connected)
+        if (!client.connected)
             return false
 
         execute { client.sendKeyEvent(keySym, isDown) }

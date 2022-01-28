@@ -12,7 +12,7 @@
 
     <data>
 
-        <import type="com.gaurav.avnc.vnc.VncClient.State" />
+        <import type="com.gaurav.avnc.viewmodel.VncViewModel.State" />
 
         <variable
             name="viewModel"
@@ -41,7 +41,7 @@
             android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:isVisible="@{viewModel.clientState == State.Connected}">
+            app:isVisible="@{viewModel.state == State.Connected}">
 
 
             <!--FrameView-->
@@ -99,7 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?colorSurface"
-            app:isVisible="@{viewModel.clientState != State.Connected}">
+            app:isVisible="@{viewModel.state != State.Connected}">
 
             <ProgressBar
                 style="@style/Widget.AppCompat.ProgressBar"
@@ -107,7 +107,7 @@
                 android:layout_height="60dp"
                 android:indeterminate="true"
                 android:padding="@dimen/padding_small"
-                app:isVisible="@{viewModel.clientState != State.Disconnected}"
+                app:isVisible="@{viewModel.state == State.Connecting}"
                 app:layout_constraintBottom_toTopOf="@id/client_state"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -117,7 +117,7 @@
                 android:layout_height="60dp"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_warning"
-                app:isVisible="@{viewModel.clientState == State.Disconnected}"
+                app:isVisible="@{viewModel.state == State.Disconnected}"
                 app:layout_constraintBottom_toTopOf="@id/client_state"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -128,8 +128,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_normal"
-                android:text="@{viewModel.clientState.toString()}"
-                app:isVisible="@{viewModel.clientState != State.Created}"
+                android:text="@{viewModel.state.toString()}"
+                app:isVisible="@{viewModel.state != State.Created}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -144,7 +144,7 @@
                 android:gravity="center"
                 android:text='@{ "( " + viewModel.disconnectReason + " )"}'
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                app:isVisible="@{viewModel.clientState == State.Disconnected &amp;&amp; !viewModel.disconnectReason.empty}"
+                app:isVisible="@{viewModel.state == State.Disconnected &amp;&amp; !viewModel.disconnectReason.empty}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/client_state"
@@ -156,7 +156,7 @@
                 android:background="@drawable/bg_circular_button"
                 android:contentDescription="@string/desc_retry_connection_btn"
                 android:src="@drawable/ic_refresh"
-                app:isVisible="@{viewModel.clientState == State.Disconnected}"
+                app:isVisible="@{viewModel.state == State.Disconnected}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
