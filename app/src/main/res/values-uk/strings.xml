@@ -17,7 +17,6 @@
     <string name="pref_toolbar">Панель засобів</string>
     <string name="pref_zoom">Збільшення</string>
     <string name="pref_discovery">Виявлення</string>
-    <string name="pref_discovery_restart_summary">Перезапускати виявлення після зупинки</string>
     <string name="pref_debugging">Зневадження</string>
     <string name="pref_logs">Журнал</string>
     <string name="title_add_server_profile">Додати сервер</string>

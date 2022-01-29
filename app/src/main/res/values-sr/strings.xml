@@ -81,9 +81,7 @@
     <string name="pref_cred_autocomplete">Самопопуна</string>
     <string name="pref_cred_autocomplete_summary">Предлаже сачуване пријаве при повезивању са новим служитељем</string>
     <string name="pref_discovery">Откривање</string>
-    <string name="pref_discovery_auto_start">Самопокретање</string>
     <string name="pref_discovery_restart">Поново покрени</string>
-    <string name="pref_discovery_restart_delay">Одгода поновног покретања (минута)</string>
     <string name="pref_import_export">Увези/извези служитеље</string>
     <string name="pref_debugging">Отклон грешака</string>
     <string name="pref_logs">Дневници</string>
@@ -158,8 +156,6 @@
     <string name="pref_gesture_action_pan">Премести положај оквира</string>
     <string name="pref_keycode_map">Мапа распореда дугмади</string>
     <string name="pref_experimental_toolbar_swipe_close">Превуци за затварање траке прибора</string>
-    <string name="pref_experimental_indicator_summary">Истакни сачуване служитеље, који су такође пронађени током откривања.
-\nЗахтева препокретање програма.</string>
     <string name="pref_experimental_toolbar_swipe_close_summary">Током удаљене седнице можете превући ради затварања тренутно отворене траке прибора</string>
     <string name="pref_experimental_immersive_mode">Потпуно утопљен приказ</string>
     <string name="pref_experimental_immersive_mode_summary">Скрива све траке система у пуном приказу заслона</string>
