@@ -17,11 +17,8 @@
     <string name="pref_toolbar">Панель засобів</string>
     <string name="pref_zoom">Збільшення</string>
     <string name="pref_discovery">Виявлення</string>
-    <string name="pref_discovery_timeout">Час (в секундах)</string>
     <string name="pref_discovery_auto_start">Самозапуск</string>
-    <string name="pref_discovery_restart">Перезапуск</string>
     <string name="pref_discovery_restart_summary">Перезапускати виявлення після зупинки</string>
-    <string name="pref_discovery_restart_delay">Затримка перезапуску (в хвилинах)</string>
     <string name="pref_debugging">Зневадження</string>
     <string name="pref_logs">Журнал</string>
     <string name="title_add_server_profile">Додати сервер</string>
@@ -84,12 +81,10 @@
     <string name="pref_zoom_min">Найменше</string>
     <string name="pref_credential">Вхід</string>
     <string name="pref_cred_autocomplete_summary">Пропонувати збережені дані входу під час зʼєднання з новими серверами</string>
-    <string name="pref_discovery_auto_start_summary">Виявляти сервери під час відкривання застосунку</string>
     <string name="pref_experimental_immersive_mode_summary">Ховає всі системні панелі в повноекранному режимі</string>
     <string name="pref_import_export">Імпорт/експорт серверів</string>
     <string name="pref_keycode_map">Мапа кодів клавіш</string>
     <string name="pref_experimental_toolbar_swipe_close">Ковзнути, щоб закрити шторку панелі засобів</string>
-    <string name="pref_experimental_indicator">Індикатор виявлення для збережених серверів</string>
     <string name="title_delete">Видалити</string>
     <string name="title_edit_server_profile">Змінити сервер</string>
     <string name="title_duplicate">Дублювати</string>
@@ -164,7 +159,5 @@
     <string name="pref_mouse_passthrough_summary_on">Надсилати події миші відразу на сервер</string>
     <string name="pref_vk_open_with_keyboard">Відкривати з клавіатурою</string>
     <string name="pref_km">Мапування клавіш</string>
-    <string name="pref_experimental_indicator_summary">Виділяти вже збережені сервери під час виявлення.
-\nВимагає перезапуск застосунку.</string>
     <string name="pref_experimental_immersive_mode">Повний імерсивний режим</string>
 </resources>
