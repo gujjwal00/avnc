@@ -74,7 +74,6 @@
     <string name="pref_clipboard_sync">Utklippstavlesynkronisering</string>
     <string name="pref_credential">Innlogging</string>
     <string name="pref_discovery">Oppdagelse</string>
-    <string name="pref_discovery_auto_start_summary">Oppdag tjenere når programmet startes</string>
     <string name="title_import">Importer</string>
     <string name="pref_experimental_immersive_mode">Helt oppslukende modus</string>
     <string name="pref_experimental_immersive_mode_summary">Skjuler alle systemfelter i fullskjermsmodus</string>
@@ -96,7 +95,6 @@
     <string name="pref_experimental_summary">Ekstra godsaker</string>
     <string name="pref_gesture_action_none">Ingen</string>
     <string name="pref_gesture_action_double_click">Dobbeltklikk</string>
-    <string name="pref_discovery_restart">Omstart</string>
     <string name="pref_vk_show_all">Vis alle taster</string>
     <string name="msg_invalid_vnc_uri">Ugyldig VNC-URI</string>
     <string name="desc_reset_zoom_btn">Tilbakestill forstørrelse</string>
@@ -160,4 +158,8 @@
     <string name="pref_direct_touch">Direkte-trykk</string>
     <string name="pref_direct_touch_summary_on">Utfør handlinger ved berøring</string>
     <string name="pref_direct_touch_summary_off">Utfør handlinger ved peker</string>
+    <string name="pref_rediscovery_indicator">Framhev tjenere som oppdages igjen</string>
+    <string name="desc_discovery_stop_btn">Stopp oppdaging av tjenere</string>
+    <string name="pref_discovery_autorun">Kjør automatisk</string>
+    <string name="pref_discovery_autorun_summary">Oppdag tjenere når hovedsiden vises</string>
 </resources>
