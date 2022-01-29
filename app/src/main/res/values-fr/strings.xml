@@ -109,18 +109,10 @@
     <string name="pref_fullscreen">Plein écran</string>
     <string name="pref_km_back_to_escape">Retour → Échap</string>
     <string name="pref_km_back_to_escape_summary">N\'affecte pas la barre de navigation</string>
-    <string name="pref_discovery_timeout">Délai (secondes)</string>
     <string name="pref_toolbar_alignment_option_start">Début</string>
     <string name="pref_toolbar_alignment">Alignement</string>
     <string name="pref_toolbar_alignment_option_end">Fin</string>
     <string name="pref_zoom">Zoom</string>
-    <string name="pref_discovery_restart_summary">Relancer la découverte une fois qu\'elle est terminée</string>
-    <string name="pref_discovery_auto_start">Démarrage automatique</string>
-    <string name="pref_discovery_auto_start_summary">Lancer la découverte des serveurs à l\'ouverture de l\'application</string>
-    <string name="pref_discovery_restart">Relancer</string>
-    <string name="pref_experimental_indicator">Indicateur de découverte pour les serveurs enregistrés</string>
-    <string name="pref_experimental_indicator_summary">Met en évidence les serveurs déjà enregistrés, qui sont également détectés lors de la découverte.
-\nNécessite le redémarrage de l\'application.</string>
     <string name="tip_urlbar">Vous pouvez saisir une adresse IP, un nom d\'hôte ou une URI « vnc:// ».</string>
     <string name="tip_discovery">Le mode découverte peut trouver automatiquement les serveurs pris en charge
 \ns\'exécutant sur votre réseau.</string>
@@ -137,7 +129,6 @@
     <string name="pref_experimental_toolbar_swipe_close_summary">Au cours d\'une session distante, vous pouvez faire glisser pour fermer la barre d\'outils ouverte</string>
     <string name="pref_enable_pip">Picture-in-picture</string>
     <string name="pref_toolbar">Barre d\'outils</string>
-    <string name="pref_discovery_restart_delay">Délai avant relance (minutes)</string>
     <string name="pref_direct_touch_summary_on">Effectuer les actions au point de contact</string>
     <string name="pref_direct_touch">Pointage direct</string>
     <string name="pref_direct_touch_summary_off">Effectuer les actions au niveau du pointeur</string>
@@ -166,4 +157,8 @@
     <string name="pref_import_export">Importer/Exporter des serveurs</string>
     <string name="pref_keycode_map">Carte des codes-clés</string>
     <string name="pref_mouse_passthrough">Passage de la souris</string>
+    <string name="pref_discovery_autorun_summary">Découverte des serveurs sur la page d\'accueil</string>
+    <string name="desc_discovery_stop_btn">Arrêter la découverte des serveurs</string>
+    <string name="pref_rediscovery_indicator">Mettre en avant les serveurs découverts de nouveau</string>
+    <string name="pref_discovery_autorun">Exécution automatique</string>
 </resources>

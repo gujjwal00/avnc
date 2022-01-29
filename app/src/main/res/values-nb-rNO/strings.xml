@@ -74,12 +74,9 @@
     <string name="pref_clipboard_sync">Utklippstavlesynkronisering</string>
     <string name="pref_credential">Innlogging</string>
     <string name="pref_discovery">Oppdagelse</string>
-    <string name="pref_discovery_auto_start">Automatisk start</string>
-    <string name="pref_discovery_auto_start_summary">Oppdag tjenere når programmet startes</string>
     <string name="title_import">Importer</string>
     <string name="pref_experimental_immersive_mode">Helt oppslukende modus</string>
     <string name="pref_experimental_immersive_mode_summary">Skjuler alle systemfelter i fullskjermsmodus</string>
-    <string name="pref_discovery_restart_summary">Kontinuerlig oppdagelse</string>
     <string name="desc_add_new_server_btn">Legg til tjener</string>
     <string name="title_copy_name">Kopier navn</string>
     <string name="title_export">Eksporter</string>
@@ -98,8 +95,6 @@
     <string name="pref_experimental_summary">Ekstra godsaker</string>
     <string name="pref_gesture_action_none">Ingen</string>
     <string name="pref_gesture_action_double_click">Dobbeltklikk</string>
-    <string name="pref_discovery_timeout">Tidsavbrudd (sek)</string>
-    <string name="pref_discovery_restart">Omstart</string>
     <string name="pref_vk_show_all">Vis alle taster</string>
     <string name="msg_invalid_vnc_uri">Ugyldig VNC-URI</string>
     <string name="desc_reset_zoom_btn">Tilbakestill forstørrelse</string>
@@ -134,11 +129,9 @@
     <string name="pref_km_back_to_escape_summary">Har ingen innvirkning på navigasjonsfeltet</string>
     <string name="pref_toolbar_alignment_option_start">Start</string>
     <string name="pref_cred_autocomplete_summary">Foreslå kjente innlogginger ved tilkobling til nye tjenere</string>
-    <string name="pref_discovery_restart_delay">Omstartsforsinkelse (min)</string>
     <string name="pref_import_export">Importer/eksporter tjenere</string>
     <string name="pref_debugging">Avlusing</string>
     <string name="pref_logs">Logger</string>
-    <string name="pref_experimental_indicator">Vis oppdagede tjenere igjen</string>
     <string name="msg_about_app">En rask og sikker VNC-klient. Koble til alle enheter som har en VNC-tjener.
 \n
 \n
@@ -159,12 +152,14 @@
 \neller feltet ovenfor for å koble til direkte.</string>
     <string name="pref_km_back_to_escape">Tilbake → Esc</string>
     <string name="title_use_repeater">Bruk gjentaker</string>
-    <string name="pref_experimental_indicator_summary">Framhever treff blandt allerede lagrede tjenere under oppdagelse.
-\nKrever programomstart.</string>
     <string name="tip_discovery">Oppdagelse kan automatisk finne støttede tjenere
 \npå nettverket ditt.</string>
     <string name="msg_export_auth_missing">Skru på skjermlås for å kreve identitetsbekreftelse før eksport.</string>
     <string name="pref_direct_touch">Direkte-trykk</string>
     <string name="pref_direct_touch_summary_on">Utfør handlinger ved berøring</string>
     <string name="pref_direct_touch_summary_off">Utfør handlinger ved peker</string>
+    <string name="pref_rediscovery_indicator">Framhev tjenere som oppdages igjen</string>
+    <string name="desc_discovery_stop_btn">Stopp oppdaging av tjenere</string>
+    <string name="pref_discovery_autorun">Kjør automatisk</string>
+    <string name="pref_discovery_autorun_summary">Oppdag tjenere når hovedsiden vises</string>
 </resources>

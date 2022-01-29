@@ -149,21 +149,13 @@
     <string name="pref_cred_autocomplete">تکمیل خودکار</string>
     <string name="pref_cred_autocomplete_summary">هنگام اتّصال به کارسازهای جدید، ورودهای ذخیره شده را پیشنهاد می‌دهد</string>
     <string name="pref_discovery">اکتشاف</string>
-    <string name="pref_discovery_timeout">زمان انقضا (ثانیه)</string>
-    <string name="pref_discovery_auto_start">شروع خودکار</string>
-    <string name="pref_discovery_auto_start_summary">هنگام گشودن کاره، کارسازها را اکتشاف کن</string>
     <string name="pref_discovery_restart">شروع مجدد</string>
-    <string name="pref_discovery_restart_summary">شروع مجدد اکتشاف پس از توقّف آن</string>
-    <string name="pref_discovery_restart_delay">تأخیر شروع مجدد (دقیقه)</string>
     <string name="pref_import_export">درون‌ریزی/برون‌ریزی کارسازها</string>
     <string name="pref_debugging">اشکال زدایی</string>
     <string name="pref_logs">گزارشات</string>
     <string name="pref_keycode_map">نقشهٔ کد کلید</string>
     <string name="pref_experimental_toolbar_swipe_close">برای بستن کشوی نوار ابزار، انگشت خود را بکشید</string>
     <string name="pref_experimental_toolbar_swipe_close_summary">در طول یک جلسهٔ از راه دور، می‌توانید برای بستن نوار ابزار در حال حاضر باز، انگشت خود را بکشید</string>
-    <string name="pref_experimental_indicator">نشانگر اکتشاف برای کارسازهای ذخیره شده</string>
-    <string name="pref_experimental_indicator_summary">کارسازهای ذخیره شده را که توسط اکتشاف نیز یافت می‌شوند، برجسته می‌کند.
-\nنیاز به راه‌اندازی مجدد برنامه دارد.</string>
     <string name="pref_experimental_immersive_mode">حالت کاملاً فراگیر</string>
     <string name="pref_experimental_immersive_mode_summary">تمام نوارهای سامانه را در حالت تمام صفحه پنهان می‌کند</string>
     <string name="title_clear">پاک‌کردن</string>

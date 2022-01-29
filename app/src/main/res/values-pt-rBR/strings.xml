@@ -141,21 +141,13 @@
     <string name="pref_cred_autocomplete">Ativar preenchimento automático</string>
     <string name="pref_cred_autocomplete_summary">Sugerir credenciais conhecidas ao conectar-se a um novo servidor</string>
     <string name="pref_discovery">Descoberta</string>
-    <string name="pref_discovery_timeout">Intervalo (em segundos)</string>
-    <string name="pref_discovery_auto_start">Iniciar automaticamente</string>
-    <string name="pref_discovery_auto_start_summary">Ao abrir app iniciar a Descoberta</string>
     <string name="pref_discovery_restart">Reiniciar</string>
-    <string name="pref_discovery_restart_summary">Reiniciar a Descoberta depois de parar</string>
-    <string name="pref_discovery_restart_delay">Resetar adiamento (minutos)</string>
     <string name="pref_import_export">Importar/Exportar servidores</string>
     <string name="pref_debugging">Depuração</string>
     <string name="pref_logs">Registros</string>
     <string name="pref_keycode_map">Mapa de códigos de teclado</string>
     <string name="pref_experimental_toolbar_swipe_close">Deslizar para fechar a barra de ferramentas</string>
     <string name="pref_experimental_toolbar_swipe_close_summary">Durante uma sessão remota, você pode deslizar para fechar a barra de ferramentas atualmente aberta</string>
-    <string name="pref_experimental_indicator">Indicador de descoberta para servidores salvos</string>
-    <string name="pref_experimental_indicator_summary">Destacar os servidores já salvos que também foram encontrados pela Descoberta.
-\nRequer reinício do app.</string>
     <string name="pref_theme_option_system">Seguir Tema do Sistema</string>
     <string name="pref_theme_option_dark">Modo Escuro</string>
     <string name="pref_theme_option_light">Modo Claro</string>
