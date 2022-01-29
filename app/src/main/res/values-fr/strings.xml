@@ -113,10 +113,7 @@
     <string name="pref_toolbar_alignment">Alignement</string>
     <string name="pref_toolbar_alignment_option_end">Fin</string>
     <string name="pref_zoom">Zoom</string>
-    <string name="pref_discovery_auto_start">Démarrage automatique</string>
     <string name="pref_discovery_restart">Relancer</string>
-    <string name="pref_experimental_indicator_summary">Met en évidence les serveurs déjà enregistrés, qui sont également détectés lors de la découverte.
-\nNécessite le redémarrage de l\'application.</string>
     <string name="tip_urlbar">Vous pouvez saisir une adresse IP, un nom d\'hôte ou une URI « vnc:// ».</string>
     <string name="tip_discovery">Le mode découverte peut trouver automatiquement les serveurs pris en charge
 \ns\'exécutant sur votre réseau.</string>
@@ -161,4 +158,8 @@
     <string name="pref_import_export">Importer/Exporter des serveurs</string>
     <string name="pref_keycode_map">Carte des codes-clés</string>
     <string name="pref_mouse_passthrough">Passage de la souris</string>
+    <string name="pref_discovery_autorun_summary">Découverte des serveurs sur la page d\'accueil</string>
+    <string name="desc_discovery_stop_btn">Arrêter la découverte des serveurs</string>
+    <string name="pref_rediscovery_indicator">Mettre en avant les serveurs découverts de nouveau</string>
+    <string name="pref_discovery_autorun">Exécution automatique</string>
 </resources>
