@@ -76,7 +76,7 @@ class Discovery(private val context: Context) {
         }
 
         isRunning.value = true
-        servers.value = ArrayList() //Forget known servers
+        if (servers.value?.size != 0) servers.value = ArrayList() //Forget known servers
 
         // Construction of NSD manager is done on a background thread because it appears to be quite heavy.
         GlobalScope.launch(Dispatchers.Default) {
