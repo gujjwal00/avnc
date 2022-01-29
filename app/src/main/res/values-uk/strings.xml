@@ -17,7 +17,6 @@
     <string name="pref_toolbar">Панель засобів</string>
     <string name="pref_zoom">Збільшення</string>
     <string name="pref_discovery">Виявлення</string>
-    <string name="pref_discovery_auto_start">Самозапуск</string>
     <string name="pref_discovery_restart_summary">Перезапускати виявлення після зупинки</string>
     <string name="pref_debugging">Зневадження</string>
     <string name="pref_logs">Журнал</string>
@@ -160,4 +159,8 @@
     <string name="pref_vk_open_with_keyboard">Відкривати з клавіатурою</string>
     <string name="pref_km">Мапування клавіш</string>
     <string name="pref_experimental_immersive_mode">Повний імерсивний режим</string>
+    <string name="pref_rediscovery_indicator">Виділяти попередньо виявлені сервери</string>
+    <string name="desc_discovery_stop_btn">Зупинити виявлення серверів</string>
+    <string name="pref_discovery_autorun">Автозапуск</string>
+    <string name="pref_discovery_autorun_summary">Виявляти сервери поки на домашній сторінці</string>
 </resources>
