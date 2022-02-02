@@ -141,7 +141,6 @@
     <string name="pref_cred_autocomplete">Ativar preenchimento automático</string>
     <string name="pref_cred_autocomplete_summary">Sugerir credenciais conhecidas ao conectar-se a um novo servidor</string>
     <string name="pref_discovery">Descoberta</string>
-    <string name="pref_discovery_restart">Reiniciar</string>
     <string name="pref_import_export">Importar/Exportar servidores</string>
     <string name="pref_debugging">Depuração</string>
     <string name="pref_logs">Registros</string>

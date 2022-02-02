@@ -81,7 +81,6 @@
     <string name="pref_cred_autocomplete">Самопопуна</string>
     <string name="pref_cred_autocomplete_summary">Предлаже сачуване пријаве при повезивању са новим служитељем</string>
     <string name="pref_discovery">Откривање</string>
-    <string name="pref_discovery_restart">Поново покрени</string>
     <string name="pref_import_export">Увези/извези служитеље</string>
     <string name="pref_debugging">Отклон грешака</string>
     <string name="pref_logs">Дневници</string>
