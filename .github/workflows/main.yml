@@ -3,8 +3,6 @@ name: Android CI
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
   build:
@@ -23,10 +21,21 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleRelease
+
+      - name: Sign APK
+        env:
+          CI_SIGNING_KS: ${{ secrets.CI_SIGNING_KS }}
+          CI_SIGNING_KS_PASSWORD: ${{ secrets.CI_SIGNING_KS_PASSWORD }}
+          IN_APK: app-release-unsigned.apk
+          OUT_APK: app-release.apk
+        working-directory: ./app/build/outputs/apk/release/
+        run: |
+          echo $CI_SIGNING_KS | base64 --decode > keystore.jks
+          $ANDROID_HOME/build-tools/30.0.3/apksigner sign --in $IN_APK --out $OUT_APK --ks keystore.jks --ks-pass 'env:CI_SIGNING_KS_PASSWORD'
 
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
-          name: dubug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: avnc-ci
+          path: app/build/outputs/apk/release/app-release.apk
