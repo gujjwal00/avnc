@@ -1,0 +1,9 @@
+* Improved login auto-completion
+* Improved server discovery
+* New language:
+     Serbian (by Саша Петровић)
+     Ukrainian (by Andrij Mizyk)
+* Updated language:
+     Norwegian Bokmål (by Allan Nordhøy)
+     Persian (by Eshagh Shahedany)
+     French (by J. Lavoie, Nathan)
