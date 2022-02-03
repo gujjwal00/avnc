@@ -42,6 +42,12 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        ci {
+            initWith(release)
+            applicationIdSuffix '.ci'
+            versionNameSuffix ' (CI)'
+        }
     }
 
     buildFeatures {
