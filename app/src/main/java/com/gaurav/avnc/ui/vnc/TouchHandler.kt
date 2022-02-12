@@ -44,7 +44,8 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
 
     fun onHoverEvent(event: MotionEvent): Boolean {
         if (event.actionMasked == MotionEvent.ACTION_HOVER_MOVE) {
-            dispatcher.onMouseMove(event.point())
+            lastHoverPoint = event.point()
+            dispatcher.onMouseMove(lastHoverPoint)
             return true
         }
         return false
@@ -58,6 +59,13 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         }
     }
 
+    //Temporary workaround for emulating mouse right-click until
+    //pointer-position is implemented in VncClient
+    private var lastHoverPoint = PointF()
+    fun fakeMouseRightClick(isDown: Boolean) {
+        if (isDown) dispatcher.onMouseButtonDown(PointerButton.Right, lastHoverPoint)
+        else dispatcher.onMouseButtonUp(PointerButton.Right, lastHoverPoint)
+    }
 
     /****************************************************************************************
      * Mouse

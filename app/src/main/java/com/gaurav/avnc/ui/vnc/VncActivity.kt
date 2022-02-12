@@ -18,10 +18,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.Rational
-import android.view.Gravity
-import android.view.KeyEvent
-import android.view.View
-import android.view.WindowManager
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -306,14 +303,33 @@ class VncActivity : AppCompatActivity() {
      ************************************************************************************/
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        return keyHandler.onKeyEvent(event) || super.onKeyDown(keyCode, event)
+        return keyHandler.onKeyEvent(event) || workarounds(event) || super.onKeyDown(keyCode, event)
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
-        return keyHandler.onKeyEvent(event) || super.onKeyUp(keyCode, event)
+        return keyHandler.onKeyEvent(event) || workarounds(event) || super.onKeyUp(keyCode, event)
     }
 
     override fun onKeyMultiple(keyCode: Int, repeatCount: Int, event: KeyEvent): Boolean {
         return keyHandler.onKeyEvent(event) || super.onKeyMultiple(keyCode, repeatCount, event)
+    }
+
+    private fun workarounds(keyEvent: KeyEvent): Boolean {
+
+        //It seems that some device manufacturers are hell-bent on making developers'
+        //life miserable. In their infinite wisdom, they decided that Android apps don't
+        //need Mouse right-click events. It is hardcoded to act as back-press, without
+        //giving apps a chance to handle it. For better or worse, they set the 'source'
+        //for such key events to Mouse, enabling the following workarounds.
+        if (Build.VERSION.SDK_INT >= 23 &&
+            keyEvent.keyCode == KeyEvent.KEYCODE_BACK &&
+            keyEvent.source == InputDevice.SOURCE_MOUSE) {
+
+            val isDown = keyEvent.action == KeyEvent.ACTION_DOWN
+            touchHandler.fakeMouseRightClick(isDown)
+            return true
+        }
+
+        return false
     }
 }
