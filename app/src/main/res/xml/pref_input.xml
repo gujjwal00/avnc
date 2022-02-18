@@ -93,6 +93,14 @@
             app:defaultValue="false"
             app:key="hide_local_cursor"
             app:title="@string/pref_hide_local_cursor" />
+
+        <ListPreference
+            app:defaultValue="right"
+            app:entries="@array/mouse_back_action_entries"
+            app:entryValues="@array/mouse_back_action_values"
+            app:key="mouse_back"
+            app:title="@string/pref_mouse_back"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
     <PreferenceCategory

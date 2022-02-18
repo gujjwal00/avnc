@@ -323,10 +323,11 @@ class VncActivity : AppCompatActivity() {
         //for such key events to Mouse, enabling the following workarounds.
         if (Build.VERSION.SDK_INT >= 23 &&
             keyEvent.keyCode == KeyEvent.KEYCODE_BACK &&
-            keyEvent.source == InputDevice.SOURCE_MOUSE) {
+            (keyEvent.source == InputDevice.SOURCE_MOUSE ||
+             keyEvent.deviceId > 0 && keyEvent.scanCode == 0)) {
 
             val isDown = keyEvent.action == KeyEvent.ACTION_DOWN
-            touchHandler.fakeMouseRightClick(isDown)
+            touchHandler.fakeMouseClick(isDown)
             return true
         }
 
