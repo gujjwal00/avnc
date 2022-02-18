@@ -56,11 +56,11 @@
     <string name="msg_export_auth_required">Sunucuları dışa aktarmak için kimlik doğrulaması yapın</string>
     <string name="msg_export_auth_missing">Cihazınız güvenli değil. Dışa aktarmadan önce kimlik doğrulamasını etkinleştirmek için ekran kilidini açın.</string>
     <string name="msg_invalid_key_file">Geçersiz özel anahtar dosyası</string>
-    <string name="msg_invalid_vnc_uri">Geçersiz VNC URI'si</string>
+    <string name="msg_invalid_vnc_uri">Geçersiz VNC URI\'si</string>
     <string name="msg_copied_to_clipboard">Kopyalandı</string>
     <string name="msg_key_compat_mode_help">Bazı sunucular sınırlı Unicode desteğine sahiptir. Eski önemli olaylar, İngilizce olmayan metinlerin girilmesine yardımcı olabilir.</string>
     <string name="tip_empty_server_list">Sunucu listesi boş.\nSunucu eklemek için \'<b>+</b>\' öğesini tıklayın veya\ndoğrudan bağlanmak için üst adres çubuğunu kullanın.</string>
-    <string name="tip_urlbar">IP adresini, ana bilgisayar adını veya \'vnc://\' URI'sini girebilirsiniz..</string>
+    <string name="tip_urlbar">IP adresini, ana bilgisayar adını veya \'vnc://\' URI\'sini girebilirsiniz..</string>
     <string name="tip_discovery">Discovery, ağınızda çalışan\ndesteklenen sunucuları otomatik olarak bulabilir.</string>
 
     <!-- Accessibility descriptions -->
