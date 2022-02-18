@@ -1,3 +1,0 @@
-* Güçlendirilmiş SSH Tüneli
-* Bağlantı noktası sızıntıları düzeltildi
-* Uygulama meta verileri güncellendi
