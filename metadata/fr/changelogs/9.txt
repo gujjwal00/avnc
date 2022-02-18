@@ -1,0 +1,9 @@
+* Amélioration de l'autocomplétion à la connexion
+* Amélioration de la découverte des serveurs
+* Nouvelles langues :
+     Serbe (par Саша Петровић)
+     Ukrainien (par Andrij Mizyk)
+* Langues mises à jour :
+     Norvégien Bokmål (par Allan Nordhøy)
+     Perse (par Eshagh Shahedany)
+     Français (par J. Lavoie, Nathan)

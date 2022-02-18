@@ -158,4 +158,8 @@
     <string name="pref_experimental_toolbar_swipe_close_summary">Током удаљене седнице можете превући ради затварања тренутно отворене траке прибора</string>
     <string name="pref_experimental_immersive_mode">Потпуно утопљен приказ</string>
     <string name="pref_experimental_immersive_mode_summary">Скрива све траке система у пуном приказу заслона</string>
+    <string name="pref_discovery_autorun_summary">Откривај служитеље од матичне стране</string>
+    <string name="desc_discovery_stop_btn">Престани да откриваш служитеље</string>
+    <string name="pref_discovery_autorun">Самопокрени</string>
+    <string name="pref_rediscovery_indicator">Истакни поново пронађене служитеље</string>
 </resources>

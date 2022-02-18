@@ -1,0 +1,16 @@
+AVNC er en fri VNC-klient for Android. Det tillater deg å kontrollere enheter som har en VNC-tjener annensteds hen.
+
+Funksjoner:
+
+- Materiell design (med mørk drakt)
+- Oppsettbare håndvendinger
+- Stram koding
+- Virtuelt tastatur
+- Bilde-i-bilde -modus
+- Skrivebeskyttet modus
+- Zeroconf-tjeneroppdagelse
+- TLS-støtte (AnonTLS, VeNCrypt)
+- SSH-tunnel (VNC over SSH)
+- Importer/eksporter tjenere
+- VNC-gjentagelsesstøtte
+- Utklippstavlesyknronisering med tjener
