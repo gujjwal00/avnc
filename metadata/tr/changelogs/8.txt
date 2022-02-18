@@ -1,0 +1,9 @@
+* İzleme paneli/dokunmatik yüzey modu eklendi
+* Yakalama windows tuşu ve Samsung DeX'te Alt+Tab
+* Portre modu uzak ekranlar için optimize edilmiş yakınlaştırma
+* Sürükleme hareketi sabit hassasiyeti
+* Çeviriler: Portekizce-BR (João Paulo tarafından),
+      Norveç Bokmål (Allan Nordhøy tarafından),
+      Farsça (Eshagh Shahedany tarafından),
+      Fransızca (J. Lavoie tarafından)
+	  Türkçe (FabSec; Fabriel tarafından)

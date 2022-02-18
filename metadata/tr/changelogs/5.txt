@@ -1,0 +1,3 @@
+* Windows anahtar eşlemelerine izin verin (Tuan Pham tarafından)
+* Sanal meta anahtarların her zaman serbest bırakıldığından emin olun (seçilen okuyucu tarafından)
+* Eklenen aksan (aksan) desteği

@@ -1,0 +1,3 @@
+* Portekizce (BR) çeviri eklendi (inkhorn ile)
+* Yerel Android imlecini gizleme tercihi eklendi (Henry H tarafından)
+* Bazı cihazlarda Stylus kullanım hataları düzeltildi (Henry H tarafından)

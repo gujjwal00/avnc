@@ -1,0 +1,3 @@
+* Gelişmiş klavye kısayolları desteği
+* Gelişmiş aksan desteği
+* Sürükleme modu eklendi (Deneysel)
