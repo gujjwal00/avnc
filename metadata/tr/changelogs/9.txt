@@ -1,0 +1,10 @@
+* Otomatik oturum açma
+* Sunucu keşfi
+* Yeni dil:
+      Sırpça (Саша Петровић tarafından)
+      Ukraynaca (Andrij Mizyk tarafından)
+	  Turkish (FabSec; Fabriel tarafından)
+* Güncellenen dil:
+      Norveç Bokmål (Allan Nordhøy tarafından)
+      Farsça (Eshagh Shahedany tarafından)
+      Fransızca (J. Lavoie, Nathan)
