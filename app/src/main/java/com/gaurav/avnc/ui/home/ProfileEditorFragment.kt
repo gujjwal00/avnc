@@ -175,8 +175,8 @@ class ProfileEditorFragment : DialogFragment() {
 
             // TODO Move it to proper place
             val securityTypes = mapOf(
-                    "Default Security" to 0,
-                    "None" to 1,
+                    getString(R.string.title_default_security) to 0,
+                    getString(R.string.pref_gesture_action_none) to 1,
                     "VncAuth" to 2,
                     "AnonTLS" to 18,
                     "VeNCrypt" to 19

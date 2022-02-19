@@ -129,7 +129,7 @@
     <string name="pref_km_language_switch_to_super">Alteração de idioma → Super</string>
     <string name="pref_km_back_to_escape">Voltar → Escape</string>
     <string name="pref_km_back_to_escape_summary">A barra de navegação não é afetada por isto</string>
-    <string name="pref_fullscreen">Usar tela completa</string>
+    <string name="pref_fullscreen">Tela Cheia</string>
     <string name="pref_enable_pip">Picture-in-picture</string>
     <string name="pref_toolbar">Barra de ferramentas</string>
     <string name="pref_toolbar_alignment">Alinhamento</string>
@@ -168,4 +168,5 @@
     <string name="pref_rediscovery_indicator">Destaque servidores redescobertos</string>
     <string name="pref_direct_touch_summary_on">Faça ações no ponto de contato</string>
     <string name="pref_direct_touch">Toque direto</string>
+    <string name="title_default_security">Segurança Padrão</string>
 </resources>

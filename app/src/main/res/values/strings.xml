@@ -27,6 +27,7 @@
     <string name="title_export">Export</string>
     <string name="title_import">Import</string>
     <string name="title_view_only_mode">View-only</string>
+    <string name="title_default_security">Default security</string>
     <string name="title_hide_remote_cursor">Hide remote pointer</string>
     <string name="title_key_compat_mode">Send legacy key events</string>
     <string name="title_use_ssh_tunnel">Use SSH tunnel</string>
