@@ -321,10 +321,10 @@ class VncActivity : AppCompatActivity() {
         //need Mouse right-click events. It is hardcoded to act as back-press, without
         //giving apps a chance to handle it. For better or worse, they set the 'source'
         //for such key events to Mouse, enabling the following workarounds.
+        val device = InputDevice.getDevice(keyEvent.deviceId)
         if (Build.VERSION.SDK_INT >= 23 &&
             keyEvent.keyCode == KeyEvent.KEYCODE_BACK &&
-            (keyEvent.source == InputDevice.SOURCE_MOUSE ||
-             keyEvent.deviceId > 0 && keyEvent.scanCode == 0)) {
+            device.sources or InputDevice.SOURCE_MOUSE == device.sources) {
 
             val isDown = keyEvent.action == KeyEvent.ACTION_DOWN
             touchHandler.fakeMouseClick(isDown)
