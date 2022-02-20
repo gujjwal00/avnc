@@ -1,3 +1,3 @@
 * Samsung dokunmatik yüzey desteği eklendi (Tuan Pham tarafından)
-* Kalem desteği eklendi
+* İğne/kalem desteği eklendi
 * 2 parmakla dokunma hareketi eklendi

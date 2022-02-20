@@ -1,2 +1,2 @@
 * Uygulama başlatma süresi iyileştirildi
-* Sunucuları sıralamak için kısayol eklendi
+* Sunucuları sıralamak için seçenek eklendi
