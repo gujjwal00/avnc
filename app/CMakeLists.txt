@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.10)
 project(NativeVNC C CXX ASM)
 
 set(AVNC_EXTERN_DIR ${PROJECT_SOURCE_DIR}/../extern)
-set(BUILD_SHARED_LIBS OFF)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared Libs" FORCE)
 
 ###############################################################################
 # Utilities
