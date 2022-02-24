@@ -109,4 +109,15 @@
         <item>pan</item>
         <item>remote-scroll</item>
     </string-array>
+
+    <string-array name="mouse_back_action_entries">
+        <item>@string/pref_mouse_back_action_default</item>
+        <item>@string/pref_mouse_back_action_right</item>
+        <item>@string/pref_mouse_back_action_middle</item>
+    </string-array>
+    <string-array name="mouse_back_action_values">
+        <item>default</item>
+        <item>right</item>
+        <item>middle</item>
+    </string-array>
 </resources>

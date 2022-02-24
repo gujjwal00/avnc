@@ -140,6 +140,10 @@
     <string name="pref_mouse_passthrough_summary_off">Use mouse events for local gestures</string>
     <string name="pref_mouse_passthrough_summary_on">Send mouse events directly to server</string>
     <string name="pref_hide_local_cursor">Hide local (Android) pointer</string>
+    <string name="pref_mouse_back">Back button</string>
+    <string name="pref_mouse_back_action_default">Default</string>
+    <string name="pref_mouse_back_action_right">Right click</string>
+    <string name="pref_mouse_back_action_middle">Middle click</string>
     <string name="pref_vk">Virtual keys</string>
     <string name="pref_vk_show_all">Show all keys</string>
     <string name="pref_vk_open_with_keyboard">Open with keyboard</string>
