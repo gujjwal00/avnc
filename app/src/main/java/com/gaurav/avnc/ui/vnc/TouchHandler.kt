@@ -64,7 +64,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     private var lastHoverPoint = PointF()
     private var mouseBack = viewModel.pref.input.mouseBack
     fun fakeMouseClick(isDown: Boolean) {
-        if (mouseBack == "none")
+        if (mouseBack == "default")
             return
 
         var buttonToMap = PointerButton.Right;
