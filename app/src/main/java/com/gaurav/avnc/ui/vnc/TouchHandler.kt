@@ -63,9 +63,9 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     //pointer-position is implemented in VncClient
     private var lastHoverPoint = PointF()
     private var mouseBack = viewModel.pref.input.mouseBack
-    fun fakeMouseClick(isDown: Boolean) {
+    fun fakeMouseClick(isDown: Boolean): Boolean {
         if (mouseBack == "default")
-            return
+            return false
 
         var buttonToMap = PointerButton.Right;
         when (mouseBack) {
@@ -75,6 +75,8 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
 
         if (isDown) dispatcher.onMouseButtonDown(buttonToMap, lastHoverPoint)
         else dispatcher.onMouseButtonUp(buttonToMap, lastHoverPoint)
+
+        return true
     }
 
     /****************************************************************************************

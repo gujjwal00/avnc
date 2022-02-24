@@ -325,8 +325,7 @@ class VncActivity : AppCompatActivity() {
             InputDevice.getDevice(keyEvent.deviceId).supportsSource(InputDevice.SOURCE_MOUSE)) {
 
             val isDown = keyEvent.action == KeyEvent.ACTION_DOWN
-            touchHandler.fakeMouseClick(isDown)
-            return true
+            return touchHandler.fakeMouseClick(isDown)
         }
 
         return false
