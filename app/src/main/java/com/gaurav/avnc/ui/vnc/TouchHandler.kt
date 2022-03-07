@@ -134,7 +134,12 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     }
 
     inner class StylusGestureListener : GestureDetector.SimpleOnGestureListener() {
-        override fun onDown(e: MotionEvent?) = true
+        private var scrolling = false
+
+        override fun onDown(e: MotionEvent?): Boolean {
+            scrolling = false
+            return true
+        }
 
         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
             dispatcher.onStylusTap(e.point())
@@ -153,8 +158,16 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
 
         override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
             // Scrolling with stylus button pressed is currently used for scale gesture
-            if (e2.buttonState and MotionEvent.BUTTON_STYLUS_PRIMARY == 0)
+            if (e2.buttonState and MotionEvent.BUTTON_STYLUS_PRIMARY == 0) {
+
+                // When scrolling starts, we need to send the first event at initial touch-point.
+                // Otherwise, we will loose the small distance (touch-slope) required by onScroll().
+                if (!scrolling) {
+                    scrolling = true
+                    dispatcher.onStylusScroll(e1.point())
+                }
                 dispatcher.onStylusScroll(e2.point())
+            }
             return true
         }
     }
