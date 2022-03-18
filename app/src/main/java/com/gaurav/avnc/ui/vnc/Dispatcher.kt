@@ -266,6 +266,7 @@ class Dispatcher(private val activity: VncActivity) {
                 y = y.coerceIn(0f, viewModel.frameState.fbHeight - 1)
             }
             doButtonDown(PointerButton.None, pointerPosition)
+            viewModel.showFbPoint(pointerPosition)
         }
 
         override fun doDrag(p: PointF, dx: Float, dy: Float) {

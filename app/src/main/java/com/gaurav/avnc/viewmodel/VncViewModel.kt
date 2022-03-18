@@ -9,6 +9,7 @@
 package com.gaurav.avnc.viewmodel
 
 import android.app.Application
+import android.graphics.PointF
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -274,6 +275,11 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
     fun moveFrameTo(x: Float, y: Float) {
         frameState.moveTo(x, y)
+        frameViewRef.get()?.requestRender()
+    }
+
+    fun showFbPoint(fbPoint: PointF) {
+        frameState.showFbPoint(fbPoint.x, fbPoint.y)
         frameViewRef.get()?.requestRender()
     }
 
