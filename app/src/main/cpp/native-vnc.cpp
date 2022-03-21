@@ -15,6 +15,7 @@
 #include <errno.h>
 #include <netdb.h>
 
+#include "ClientEx.h"
 
 /******************************************************************************
  * Logging
@@ -110,20 +111,6 @@ static char *getNativeStrCopy(JNIEnv *env, jstring jStr) {
     char *str = strdup(cStr);
     env->ReleaseStringUTFChars(jStr, cStr);
     return str;
-}
-
-/**
- * Returns reference to managed `VncClient` associated with given rfbClient.
- */
-static jobject getManagedClient(rfbClient *client) {
-    return (jobject) rfbClientGetClientData(client, context.managedCls);
-}
-
-/**
- * Associate given rfbClient with a managed `VncClient`.
- */
-static void setManagedClient(rfbClient *client, jobject managedClient) {
-    rfbClientSetClientData(client, context.managedCls, managedClient);
 }
 
 /**
@@ -331,6 +318,9 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeClientCreate(JNIEnv *env, jobject thiz)
     if (client == nullptr)
         return 0;
 
+    if (!assignClientExtension(client))
+        return 0;
+
     setCallbacks(client);
     client->canHandleNewFBSize = TRUE;
 
@@ -396,6 +386,7 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeCleanup(JNIEnv *env, jobject thiz,
     auto managedClient = getManagedClient(client);
     env->DeleteGlobalRef(managedClient);
 
+    freeClientExtension(client);
     rfbClientCleanup(client);
 }
 
