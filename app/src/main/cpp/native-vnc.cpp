@@ -6,44 +6,12 @@
  * See COPYING.txt for more details.
  */
 
-#include <stdlib.h>
-#include <stdarg.h>
 #include <jni.h>
-#include <android/log.h>
 #include <GLES2/gl2.h>
 #include <rfb/rfbclient.h>
-#include <errno.h>
-#include <netdb.h>
 
 #include "ClientEx.h"
-
-/******************************************************************************
- * Logging
- *****************************************************************************/
-static const char *TAG = "NativeVnc";
-
-struct Logger {
-    static void i(const char *fmt, ...) {
-        va_list args;
-        va_start(args, fmt);
-        __android_log_vprint(ANDROID_LOG_INFO, TAG, fmt, args);
-        va_end(args);
-    }
-
-    static void w(const char *fmt, ...) {
-        va_list args;
-        va_start(args, fmt);
-        __android_log_vprint(ANDROID_LOG_WARN, TAG, fmt, args);
-        va_end(args);
-    }
-
-    static void e(const char *fmt, ...) {
-        va_list args;
-        va_start(args, fmt);
-        __android_log_vprint(ANDROID_LOG_ERROR, TAG, fmt, args);
-        va_end(args);
-    }
-};
+#include "Utility.h"
 
 
 /******************************************************************************
@@ -94,66 +62,10 @@ Java_com_gaurav_avnc_vnc_VncClient_initLibrary(JNIEnv *env, jclass clazz) {
     context.cbFramebufferUpdated = env->GetMethodID(clazz, "cbFinishedFrameBufferUpdate", "()V");
     //TODO: Cache more method IDs so we don't have to repeatedly search them
 
-    rfbClientLog = &Logger::i;
-    rfbClientErr = &Logger::e;
+    rfbClientLog = &log_info;
+    rfbClientErr = &log_error;
 }
 
-/******************************************************************************
- * Utilities
- *****************************************************************************/
-
-/**
- * Returns a native copy of the given jstring.
- * Caller is responsible for releasing the memory.
- */
-static char *getNativeStrCopy(JNIEnv *env, jstring jStr) {
-    const char *cStr = env->GetStringUTFChars(jStr, nullptr);
-    char *str = strdup(cStr);
-    env->ReleaseStringUTFChars(jStr, cStr);
-    return str;
-}
-
-/**
- * Converts given errno value to its description.
- */
-static const char *errnoToStr(int e) {
-
-    // LibVNC is patched to report `getaddrinfo` errors as negative 'errno'.
-    // See ConnectClientToTcpAddr6WithTimeout() in sockets.c
-    if (e < -1000) {
-        return gai_strerror((-e) - 1000);
-    }
-
-    switch (e) {
-        case ENETDOWN:
-        case ENETRESET:
-        case ENETUNREACH:
-        case ECONNABORTED:
-        case EHOSTDOWN:
-        case EHOSTUNREACH:
-        case ETIMEDOUT:
-        case ENOMEM:
-        case EPROTO:
-        case EIO:
-            return strerror(e);
-
-        case ECONNREFUSED:
-            return "Connection refused! Server may be down or running on different port";
-
-        case ECONNRESET:
-            return "Connection closed by server";
-
-        case EACCES:
-            return "Authentication failed";
-
-        default:
-            // In this case we don't want to display errno description to user
-            // because it is more likely to be misleading (e.g. EINTR, EAGAIN).
-            // BUT add it to logs in case LibVNC didn't.
-            Logger::e("errnoToStr: (%d %s)", errno, strerror(errno));
-            return "";
-    }
-}
 
 /******************************************************************************
  * rfbClient Callbacks
@@ -253,7 +165,6 @@ static rfbBool onMallocFrameBuffer(rfbClient *client) {
 
     if (requestedSize >= SIZE_MAX) {
         rfbClientErr("CRITICAL: cannot allocate frameBuffer, requested size is too large\n");
-        errno = EPROTO;
         return FALSE;
     }
 
@@ -278,7 +189,6 @@ static rfbBool onMallocFrameBuffer(rfbClient *client) {
     UNLOCK(client->fbMutex);
 
     if (client->frameBuffer == nullptr) {
-        errno = ENOMEM;
         rfbClientErr("CRITICAL: frameBuffer allocation failed\n");
         return FALSE;
     }
