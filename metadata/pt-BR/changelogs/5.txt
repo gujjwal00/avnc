@@ -1,0 +1,3 @@
+* Permitir mapeamentos de teclas para a tecla SUPER/Window (por Tuan Pham)
+* Certifique-se de que as meta-chaves virtuais sejam sempre liberadas (pelo leitor escolhido)
+* Adicionado suporte a diacríticos (acentos)

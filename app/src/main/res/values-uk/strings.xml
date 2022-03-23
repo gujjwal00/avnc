@@ -162,4 +162,8 @@
     <string name="desc_discovery_stop_btn">Зупинити виявлення серверів</string>
     <string name="pref_discovery_autorun">Автозапуск</string>
     <string name="pref_discovery_autorun_summary">Виявляти сервери поки на домашній сторінці</string>
+    <string name="pref_mouse_back">Кнопка назад</string>
+    <string name="pref_mouse_back_action_default">Типово</string>
+    <string name="pref_mouse_back_action_right">Клацання правою кнопкою</string>
+    <string name="pref_mouse_back_action_middle">Клацання середньою кнопкою</string>
 </resources>

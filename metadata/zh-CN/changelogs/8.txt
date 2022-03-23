@@ -1,0 +1,8 @@
+* 新增 触控板/触摸板 模式
+* 三星 DeX 上捕获 Window 键和 Alt+Tab
+* 优化了远程屏幕人像模式的缩放
+* 修复了拖动手势的灵敏度
+* 翻译：葡萄牙语-BR（由 João Paulo），
+     挪威博克马尔语（由 Allan Nordhøy），
+     波斯语（由 Eshagh Shahedany），
+     法语（由 J. Lavoie）

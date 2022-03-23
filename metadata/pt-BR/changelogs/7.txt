@@ -1,0 +1,3 @@
+* Adicionada tradução para português (BR) (por inkhorn)
+* Adicionada uma preferência para ocultar o cursor local do Android (por Henry H)
+* Corrigido o manuseio do Stylus hover em alguns dispositivos (por Henry H)

@@ -1,0 +1,16 @@
+AVNC 是一个适用于 Android 的开源 VNC 客户端。它允许远程控制运行 VNC 服务器的任何设备。
+
+特征：
+
+- Material 设计（深色主题）
+- 可配置的手势
+- Tight 编码
+- 虚拟按键
+- 画中画模式
+- 仅查看模式
+- Zeroconf 服务器发现
+- TLS 支持（AnonTLS，VeNCrypt）
+- SSH 隧道（VNC over SSH）
+- 导入/导出 服务器
+- VNC 中继器支持
+- 剪贴板与服务器同步

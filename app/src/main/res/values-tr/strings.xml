@@ -162,4 +162,8 @@
     <string name="pref_discovery_autorun">Otomatik çalıştır</string>
     <string name="pref_mouse_passthrough">Fare geçişi</string>
     <string name="pref_vk_open_with_keyboard">Klavye ile aç</string>
+    <string name="pref_mouse_back_action_right">Sağ tıklama</string>
+    <string name="pref_mouse_back_action_middle">Orta tıklama</string>
+    <string name="pref_mouse_back">Geri düğmesi</string>
+    <string name="pref_mouse_back_action_default">Öntanımlı</string>
 </resources>

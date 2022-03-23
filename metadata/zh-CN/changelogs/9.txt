@@ -1,0 +1,9 @@
+* 改进了登录自动完成
+* 改进了服务器发现
+* 新增语言：
+     塞尔维亚语 （由 Саша Петровић）
+     乌克兰语（由 Andrij Mizyk）
+* 更新语言：
+     挪威博克马尔语（由 Allan Nordhøy）
+     波斯语（由 Eshagh Shahedany）
+     法语（由 J. Lavoie, Nathan）

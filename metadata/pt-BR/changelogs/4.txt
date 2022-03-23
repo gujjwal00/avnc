@@ -1,0 +1,3 @@
+* Adicionado suporte ao touchpad Samsung (por Tuan Pham)
+* Adicionado suporte para stylus/caneta
+* Adicionado gesto de toque de 2 dedos

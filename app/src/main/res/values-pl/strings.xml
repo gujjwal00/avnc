@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_cancel">Anuluj</string>
+    <string name="title_password">Hasło</string>
+    <string name="title_add_server_profile">Dodaj serwer</string>
+    <string name="msg_key_compat_mode_help">Niektóre serwery mają ograniczoną obsługę Unicode. Kluczowe zdarzenia starszego typu mogą pomóc w wprowadzaniu tekstu w języku innym niż angielski.</string>
+    <string name="title_delete">Usuń</string>
+    <string name="title_clear">Wyczyść</string>
+    <string name="title_copy_name">Nazwa kopii</string>
+    <string name="title_advanced">Zaawansowane</string>
+    <string name="title_save">Zapisz</string>
+    <string name="title_undo">Cofnij</string>
+    <string name="title_settings">Ustawienia</string>
+    <string name="title_view_only_mode">Tylko podgląd</string>
+    <string name="title_use_ssh_tunnel">Użyj tunelu SSH</string>
+    <string name="title_private_key">Klucz prywatny</string>
+    <string name="title_about">O alikacji</string>
+    <string name="title_license">Licencja</string>
+    <string name="title_open_source_libraries">Biblioteki open source</string>
+    <string name="title_report_bug">Zgłoś problem</string>
+    <string name="title_github_repo">Kod źródłowy</string>
+    <string name="hint_urlbar">Połącz się z serwerem</string>
+    <string name="hint_server_name">Nazwa (np. Komputer służbowy)</string>
+    <string name="hint_host">Host</string>
+    <string name="hint_port">Port</string>
+    <string name="hint_server_id">Identyfikator serwera</string>
+    <string name="hint_username">Nazwa użytkownika</string>
+    <string name="hint_password">Hasło</string>
+    <string name="msg_about_app">Szybki i bezpieczny klient VNC. Umożliwia zdalne wyświetlanie i kontrolowanie dowolnego urządzenia z serwerem VNC.
+\n
+\n
+\nAVNC jest oprogramowaniem typu open source i copyleft - powstał dzięki pomocy wielu współpracowników.</string>
+    <string name="msg_pip_not_supported">Brak wsparcia dla tego urządzenia</string>
+    <string name="msg_loading">Ładowanie…</string>
+    <string name="msg_invalid_key_file">Nieprawidłowy plik klucza prywatnego</string>
+    <string name="msg_invalid_vnc_uri">Nieprawidłowy identyfikator URI VNC</string>
+    <string name="msg_copied_to_clipboard">Skopiowano</string>
+    <string name="tip_empty_server_list">Lista serwerów jest pusta.
+\nKliknij przycisk \'<b>+</b>\', aby dodać serwer, lub
+\nużyj górnego paska adresu, aby połączyć się bezpośrednio.</string>
+    <string name="tip_urlbar">Można wprowadzić adres IP, nazwę hosta lub \'vnc://\' URI.</string>
+    <string name="desc_navigation_btn">Otwórz szufladę nawigacyjną</string>
+    <string name="desc_settings_btn">Ustawienia</string>
+    <string name="desc_saved_servers_tab">Zapisane serwery</string>
+    <string name="desc_discovered_servers_tab">Wykryte serwery</string>
+    <string name="title_edit_server_profile">Edytuj serwer</string>
+    <string name="title_unknown_ssh_host">Nieznany host SSH</string>
+    <string name="title_ssh_host_key_changed">Zmieniono klucz hosta SSH</string>
+    <string name="title_delete_servers_before_import">Usuń bieżące serwery przed importem</string>
+    <string name="msg_ptr_hiding_not_supported">Brak wsparcia dla tego urządzenia</string>
+    <string name="title_continue">Kontynuuj</string>
+</resources>

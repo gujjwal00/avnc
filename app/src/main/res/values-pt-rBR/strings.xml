@@ -157,4 +157,15 @@
     <string name="pref_experimental_immersive_mode">Modo totalmente imersivo</string>
     <string name="pref_experimental_immersive_mode_summary">Oculta todas as barras do sistema em modo de tela cheia</string>
     <string name="msg_ptr_hiding_not_supported">Ocultar cursor não é compatível com este dispositivo</string>
+    <string name="desc_discovery_stop_btn">Parar de descobrir servidores</string>
+    <string name="pref_direct_touch_summary_off">Faça ações no ponteiro</string>
+    <string name="pref_mouse_back_action_default">Padrão</string>
+    <string name="pref_mouse_back_action_right">Clique com o botão direito</string>
+    <string name="pref_mouse_back">Botão \"voltar</string>
+    <string name="pref_mouse_back_action_middle">Clique do meio</string>
+    <string name="pref_discovery_autorun">Execução automática</string>
+    <string name="pref_discovery_autorun_summary">Descubra servidores enquanto estiver na página inicial</string>
+    <string name="pref_rediscovery_indicator">Destaque servidores redescobertos</string>
+    <string name="pref_direct_touch_summary_on">Faça ações no ponto de contato</string>
+    <string name="pref_direct_touch">Toque direto</string>
 </resources>

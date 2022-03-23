@@ -162,4 +162,8 @@
     <string name="pref_rediscovery_indicator">Mettre en avant les serveurs découverts de nouveau</string>
     <string name="pref_discovery_autorun">Exécution automatique</string>
     <string name="pref_gesture_action_pan">Cadre local panoramique</string>
+    <string name="pref_mouse_back">Bouton retour</string>
+    <string name="pref_mouse_back_action_default">Par défaut</string>
+    <string name="pref_mouse_back_action_middle">Clic molette</string>
+    <string name="pref_mouse_back_action_right">Clic droit</string>
 </resources>

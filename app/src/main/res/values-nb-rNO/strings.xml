@@ -162,4 +162,8 @@
     <string name="desc_discovery_stop_btn">Stopp oppdaging av tjenere</string>
     <string name="pref_discovery_autorun">Kjør automatisk</string>
     <string name="pref_discovery_autorun_summary">Oppdag tjenere når hovedsiden vises</string>
+    <string name="pref_mouse_back">«Tilbake»-knapp</string>
+    <string name="pref_mouse_back_action_default">Forvalg</string>
+    <string name="pref_mouse_back_action_right">Høyreklikk</string>
+    <string name="pref_mouse_back_action_middle">Midt-klikk</string>
 </resources>

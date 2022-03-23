@@ -1,0 +1,3 @@
+* 允许按键映射到 SUPER/Window 键（由 Tuan Pham）
+* 确保虚拟元按键始终被释放（由 thechosenreader）
+* 添加了音调符号（重音符号）支持
