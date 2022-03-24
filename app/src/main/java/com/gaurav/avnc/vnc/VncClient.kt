@@ -1,7 +1,6 @@
 package com.gaurav.avnc.vnc
 
 import androidx.annotation.Keep
-import com.gaurav.avnc.vnc.VncClient.Observer
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
@@ -30,15 +29,13 @@ import java.nio.charset.StandardCharsets
  *
  * To release the resources you must call [cleanup] after you are done with
  * this instance.
- *
- * Note: All callbacks in [Observer] are invoked on the thread which called
- * [processServerMessage].
  */
 class VncClient(private val observer: Observer) {
 
     /**
      * Interface for event observer.
      * DO NOT throw exceptions from these methods.
+     * There is NO guarantee about which thread will invoke [Observer] methods.
      */
     interface Observer {
         fun onPasswordRequired(): String
@@ -46,9 +43,9 @@ class VncClient(private val observer: Observer) {
         fun onGotXCutText(text: String)
         fun onFramebufferUpdated()
         fun onFramebufferSizeChanged(width: Int, height: Int)
+        fun onPointerMoved(x: Int, y: Int)
 
         //fun onBell()
-        //fun onCursorMoved(x: Int, y: Int): Boolean
     }
 
     /**
@@ -80,6 +77,27 @@ class VncClient(private val observer: Observer) {
      * In 'View-only' mode input to remote server is disabled
      */
     var viewOnlyMode = false; private set
+
+    /**
+     * Latest pointer position. See [moveClientPointer].
+     */
+    var pointerX = 0; private set
+    var pointerY = 0; private set
+
+    /**
+     * Client-side cursor rendering creates a synchronization issue.
+     * Suppose if pointer is moved to (50,10) by client. A PointerEvent is sent
+     * to the server and cursor is immediately rendered on (50,10).
+     * Some servers (e.g. Vino) will send back a PointerPosition event for (50, 10).
+     * But, by the time that event is received from server, pointer on client
+     * might have already moved to (60,20) (this is almost guaranteed to happen
+     * with touchpad/relative action mode). So the cursor will probably 'jump back'
+     * depending on the order of these events.
+     *
+     * This flags works around the issue by temporarily ignoring serer-side updates.
+     */
+    @Volatile
+    var ignorePointerMovesByServer = false;
 
     /**
      * Setup different properties for this client.
@@ -139,6 +157,26 @@ class VncClient(private val observer: Observer) {
         nativeSendPointerEvent(nativePtr, x, y, mask)
     }
 
+    /**
+     * Updates client-side pointer position.
+     * No event is sent to server.
+     *
+     * Primary use-case is to update pointer position during gestures.
+     * This way we can immediately render the cursor on new position without
+     * waiting for Network IO.
+     *
+     * It also helps with servers which don't send pointer-position updates
+     * if pointer was moved by the client.
+     *
+     * @param x    Horizontal pointer coordinate
+     * @param y    Vertical pointer coordinate
+     */
+    fun moveClientPointer(x: Int, y: Int) = executeSend {
+        pointerX = x
+        pointerY = y
+        observer.onPointerMoved(x, y)
+    }
+
 
     /**
      * Sends text to remote desktop's clipboard.
@@ -157,6 +195,11 @@ class VncClient(private val observer: Observer) {
      * Must be called from an OpenGL ES context (i.e. from renderer thread).
      */
     fun uploadFrameTexture() = nativeUploadFrameTexture(nativePtr)
+
+    /**
+     * Upload cursor shape into framebuffer texture.
+     */
+    fun uploadCursor() = nativeUploadCursor(nativePtr, pointerX, pointerY)
 
     /**
      * Release all resources allocated by the client.
@@ -190,6 +233,7 @@ class VncClient(private val observer: Observer) {
     private external fun nativeGetHeight(clientPtr: Long): Int
     private external fun nativeIsEncrypted(clientPtr: Long): Boolean
     private external fun nativeUploadFrameTexture(clientPtr: Long)
+    private external fun nativeUploadCursor(clientPtr: Long, px: Int, py: Int)
     private external fun nativeGetLastErrorStr(): String
     private external fun nativeCleanup(clientPtr: Long)
 
@@ -215,8 +259,10 @@ class VncClient(private val observer: Observer) {
     private fun cbBell() = Unit // observer.onBell()
 
     @Keep
-    @Suppress("UNUSED_PARAMETER")
-    private fun cbHandleCursorPos(x: Int, y: Int) = true //observer.onCursorMoved(x, y)
+    private fun cbHandleCursorPos(x: Int, y: Int) {
+        if (!ignorePointerMovesByServer)
+            moveClientPointer(x, y)
+    }
 
 
     /**

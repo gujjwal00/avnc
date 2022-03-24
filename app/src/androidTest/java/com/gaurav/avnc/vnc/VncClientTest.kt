@@ -22,6 +22,7 @@ class VncClientTest {
         override fun onCredentialRequired() = UserCredential()
         override fun onFramebufferUpdated() {}
         override fun onFramebufferSizeChanged(width: Int, height: Int) {}
+        override fun onPointerMoved(x: Int, y: Int) {}
         override fun onGotXCutText(text: String) {
             cutText = text
         }

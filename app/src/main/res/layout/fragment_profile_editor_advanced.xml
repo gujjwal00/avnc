@@ -145,17 +145,6 @@
                     app:layout_constraintTop_toBottomOf="@id/use_repeater" />
 
 
-                <!--Local cursor mode (Currently it is only used for 'hiding' remote cursor)-->
-                <CheckBox
-                    android:id="@+id/use_local_cursor"
-                    style="@style/FormField.CheckBox"
-                    android:checked="@={profile.useLocalCursor}"
-                    android:text="@string/title_hide_remote_cursor"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view_only" />
-
-
                 <!--Key Compatibility mode-->
                 <CheckBox
                     android:id="@+id/key_compat_mode"
@@ -164,7 +153,7 @@
                     android:text="@string/title_key_compat_mode"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/use_local_cursor" />
+                    app:layout_constraintTop_toBottomOf="@id/view_only" />
 
                 <ImageButton
                     android:id="@+id/key_compat_mode_help_btn"

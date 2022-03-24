@@ -111,8 +111,15 @@ class Dispatcher(private val activity: VncActivity) {
      * Event receivers
      **************************************************************************/
 
-    fun onGestureStart() = stopFling()
-    fun onGestureStop(p: PointF) = defaultMode.doButtonRelease(p)
+    fun onGestureStart() {
+        viewModel.client.ignorePointerMovesByServer = true
+        stopFling()
+    }
+
+    fun onGestureStop(p: PointF) {
+        defaultMode.doButtonRelease(p)
+        viewModel.client.ignorePointerMovesByServer = false
+    }
 
     fun onTap1(p: PointF) = tap1Action(p)
     fun onTap2(p: PointF) = tap2Action(p)

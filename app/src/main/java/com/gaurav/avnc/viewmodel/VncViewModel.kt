@@ -207,7 +207,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     private fun configureClient() {
-        client.configure(profile.viewOnly, profile.securityType, profile.useLocalCursor)
+        client.configure(profile.viewOnly, profile.securityType, true  /* Hardcoded to true */)
 
         if (profile.useRepeater)
             client.setupRepeater(profile.idOnRepeater)
@@ -341,5 +341,9 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
             frameState.setFramebufferSize(width.toFloat(), height.toFloat())
             fbSizeChangedEvent.fire(frameState)
         }
+    }
+
+    override fun onPointerMoved(x: Int, y: Int) {
+        frameViewRef.get()?.requestRender()
     }
 }

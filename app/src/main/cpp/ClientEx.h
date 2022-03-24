@@ -10,7 +10,7 @@
 #define AVNC_CLIENTEX_H
 
 #include <jni.h>
-
+#include "Cursor.h"
 
 /**
  * We attach some additional data to every rfbClient.
@@ -19,6 +19,12 @@
 struct ClientEx {
     // Reference to managed `VncClient`
     jobject managedClient;
+
+    // Protects concurrent access to framebuffer & cursor data
+    MUTEX(mutex);
+
+    // Cursor data used for client-side cursor rendering
+    Cursor *cursor;
 };
 
 const int ClientExTag = 1;
@@ -51,6 +57,8 @@ void setManagedClient(rfbClient *client, jobject managedClient) {
 ClientEx *assignClientExtension(rfbClient *client) {
     auto ex = (ClientEx *) malloc(sizeof(ClientEx));
     if (ex) {
+        INIT_MUTEX(ex->mutex);
+        ex->cursor = nullptr;
         setClientExtension(client, ex);
     }
     return ex;
@@ -62,6 +70,8 @@ ClientEx *assignClientExtension(rfbClient *client) {
 void freeClientExtension(rfbClient *client) {
     auto ex = getClientExtension(client);
     if (ex) {
+        TINI_MUTEX(ex->mutex);
+        freeCursor(ex->cursor);
         free(ex);
         setClientExtension(client, nullptr);
     }

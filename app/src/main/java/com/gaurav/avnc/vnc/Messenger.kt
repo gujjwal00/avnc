@@ -57,6 +57,7 @@ class Messenger(private val client: VncClient) {
     private fun sendPointerEvent(mask: Int, p: PointF) {
         val x = p.x.toInt()
         val y = p.y.toInt()
+        client.moveClientPointer(x, y)
         execute { client.sendPointerEvent(x, y, mask) }
     }
 

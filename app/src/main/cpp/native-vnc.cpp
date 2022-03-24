@@ -11,6 +11,7 @@
 #include <rfb/rfbclient.h>
 
 #include "ClientEx.h"
+#include "Cursor.h"
 #include "Utility.h"
 
 
@@ -142,10 +143,10 @@ static rfbBool onHandleCursorPos(rfbClient *client, int x, int y) {
     auto env = context.getEnv();
     auto cls = context.managedCls;
 
-    jmethodID mid = env->GetMethodID(cls, "cbHandleCursorPos", "(II)Z");
-    jboolean result = env->CallBooleanMethod(obj, mid, x, y);
+    jmethodID mid = env->GetMethodID(cls, "cbHandleCursorPos", "(II)V");
+    env->CallVoidMethod(obj, mid, x, y);
 
-    return result == JNI_TRUE ? TRUE : FALSE;
+    return TRUE;
 }
 
 static void onFinishedFrameBufferUpdate(rfbClient *client) {
@@ -203,6 +204,22 @@ static rfbBool onMallocFrameBuffer(rfbClient *client) {
     return TRUE;
 }
 
+static void onGotCursorShape(rfbClient *client, int xhot, int yhot, int width, int height, int bytesPerPixel) {
+    auto ex = getClientExtension(client);
+
+    LOCK(ex->mutex);
+
+    //Steel buffers from rfbClient
+    updateCursor(ex->cursor, client->rcSource, client->rcMask, width, height, xhot, yhot);
+    client->rcSource = NULL;
+    client->rcMask = NULL;
+
+    UNLOCK(ex->mutex);
+
+    //Fake framebuffer update to trigger rendering
+    onFinishedFrameBufferUpdate(client);
+}
+
 /**
  * Hooks callbacks to rfbClient.
  */
@@ -214,6 +231,7 @@ static void setCallbacks(rfbClient *client) {
     client->HandleCursorPos = onHandleCursorPos;
     client->FinishedFrameBufferUpdate = onFinishedFrameBufferUpdate;
     client->MallocFrameBuffer = onMallocFrameBuffer;
+    client->GotCursorShape = onGotCursorShape;
 }
 
 
@@ -253,7 +271,10 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeConfigure(JNIEnv *env, jobject thiz, jl
         SetClientAuthSchemes(client, auth, 1);
     }
 
-    client->appData.useRemoteCursor = use_local_cursor;
+    if (use_local_cursor) {
+        client->appData.useRemoteCursor = TRUE;
+        getClientExtension(client)->cursor = newCursor();
+    }
 }
 
 extern "C"
@@ -405,4 +426,79 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeUploadFrameTexture(JNIEnv *env, jobject
     }
 
     UNLOCK(client->fbMutex);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_gaurav_avnc_vnc_VncClient_nativeUploadCursor(JNIEnv *env, jobject thiz, jlong client_ptr, jint px, jint py) {
+
+    auto client = (rfbClient *) client_ptr;
+    auto ex = getClientExtension(client);
+    auto cursor = ex->cursor;
+
+    if (!cursor)
+        return;
+
+    //Current algo for cursor rendering is slightly weird. Main issue is that
+    //glTexSubImage2D() does not perform any composition with target texture.
+    //So, we have to manually blend transparent/invalid pixels of the cursor
+    //with corresponding pixels from framebuffer. scratchBuffer is used for
+    //this composition.
+
+    LOCK(ex->mutex);
+
+    //Effective cursor position in framebuffer
+    int32_t fbCursorX = px - cursor->xHot;
+    int32_t fbCursorY = py - cursor->yHot;
+
+    //Rectangular portion of the framebuffer to be updated.
+    //Cursor can overflow outside the framebuffer if moved near the edges,
+    //but glTexSubImage2D() doesn't allow values outside target texture,
+    //so we need to only update the intersection of framebuffer & cursor.
+    int32_t left = 0, top = 0, right = 0, bottom = 0;
+
+    auto fb = (uint32_t *) client->frameBuffer;
+    auto buffer = (uint32_t *) cursor->buffer;
+    auto scratch = (uint32_t *) cursor->scratchBuffer;
+    auto mask = (uint8_t *) cursor->mask;
+
+    //Scratch buffer index
+    int32_t z = 0;
+
+    for (int32_t y = 0; y < cursor->height; ++y) {
+        for (int32_t x = 0; x < cursor->width; ++x) {
+
+            //Corresponding pixel in framebuffer
+            auto fbX = fbCursorX + x;
+            auto fbY = fbCursorY + y;
+
+            if (fbX >= 0 && fbX < client->fbRealWidth && fbY >= 0 && fbY < client->fbRealHeight) {
+                auto isValidPixel = mask[y * cursor->width + x];
+                if (isValidPixel)
+                    scratch[z++] = buffer[y * cursor->width + x];
+                else
+                    scratch[z++] = fb[fbY * client->fbRealWidth + fbX];
+
+                if (left == 0 && top == 0) {
+                    left = fbX;
+                    top = fbY;
+                }
+                right = fbX;
+                bottom = fbY;
+            }
+        }
+    }
+
+    if (right > left && bottom > top)
+        glTexSubImage2D(GL_TEXTURE_2D,
+                        0,
+                        left,
+                        top,
+                        right - left + 1,
+                        bottom - top + 1,
+                        GL_RGBA,
+                        GL_UNSIGNED_BYTE,
+                        scratch);
+
+    UNLOCK(ex->mutex);
 }
