@@ -102,7 +102,6 @@ class Discovery(private val context: Context) {
      */
     private fun addProfile(name: String, host: String, port: Int) {
         val profile = ServerProfile(
-                ID = (name + host + port).hashCode().toLong(),
                 name = name,
                 host = host,
                 port = port
