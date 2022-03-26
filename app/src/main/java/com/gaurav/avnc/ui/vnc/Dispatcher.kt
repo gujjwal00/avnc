@@ -111,15 +111,8 @@ class Dispatcher(private val activity: VncActivity) {
      * Event receivers
      **************************************************************************/
 
-    fun onGestureStart() {
-        viewModel.client.ignorePointerMovesByServer = true
-        stopFling()
-    }
-
-    fun onGestureStop(p: PointF) {
-        defaultMode.doButtonRelease(p)
-        viewModel.client.ignorePointerMovesByServer = false
-    }
+    fun onGestureStart() = defaultMode.onGestureStart()
+    fun onGestureStop(p: PointF) = defaultMode.onGestureStop(p)
 
     fun onTap1(p: PointF) = tap1Action(p)
     fun onTap2(p: PointF) = tap2Action(p)
@@ -131,7 +124,7 @@ class Dispatcher(private val activity: VncActivity) {
     fun onDrag(sp: PointF, cp: PointF, dx: Float, dy: Float) = dragAction(sp, cp, dx, dy)
 
     fun onScale(scaleFactor: Float, fx: Float, fy: Float) = doScale(scaleFactor, fx, fy)
-    fun onFling(vx: Float, vy: Float) = doFling(vx, vy)
+    fun onFling(vx: Float, vy: Float) = defaultMode.doFling(vx, vy)
 
     fun onMouseButtonDown(button: PointerButton, p: PointF) = directMode.doButtonDown(button, p)
     fun onMouseButtonUp(button: PointerButton, p: PointF) = directMode.doButtonUp(button, p)
@@ -154,9 +147,6 @@ class Dispatcher(private val activity: VncActivity) {
     private fun doScale(scaleFactor: Float, fx: Float, fy: Float) = viewModel.updateZoom(scaleFactor, fx, fy)
     private fun doPan(dx: Float, dy: Float) = viewModel.panFrame(dx, dy)
 
-    private fun doFling(vx: Float, vy: Float) = viewModel.frameScroller.fling(vx, vy)
-    private fun stopFling() = viewModel.frameScroller.stop()
-
     /**
      * Most actions have the same implementation in both modes, only difference being
      * the point where event is sent. [transformPoint] is used for this mode-specific
@@ -171,6 +161,10 @@ class Dispatcher(private val activity: VncActivity) {
         abstract fun transformPoint(p: PointF): PointF?
         abstract fun doMovePointer(p: PointF, dx: Float, dy: Float)
         abstract fun doDrag(p: PointF, dx: Float, dy: Float)
+        abstract fun doFling(vx: Float, vy: Float)
+
+        open fun onGestureStart() {}
+        open fun onGestureStop(p: PointF) = doButtonRelease(p)
 
         fun doButtonDown(button: PointerButton, p: PointF) {
             transformPoint(p)?.let { messenger.sendPointerButtonDown(button, it) }
@@ -238,6 +232,8 @@ class Dispatcher(private val activity: VncActivity) {
         override fun transformPoint(p: PointF) = viewModel.frameState.toFb(p)
         override fun doMovePointer(p: PointF, dx: Float, dy: Float) = doButtonDown(PointerButton.None, p)
         override fun doDrag(p: PointF, dx: Float, dy: Float) = doButtonDown(PointerButton.Left, p)
+        override fun doFling(vx: Float, vy: Float) = viewModel.frameScroller.fling(vx, vy)
+        override fun onGestureStart() = viewModel.frameScroller.stop()
     }
 
     /**
@@ -245,6 +241,16 @@ class Dispatcher(private val activity: VncActivity) {
      */
     private inner class RelativeMode : AbstractMode() {
         private val pointerPosition = PointF(0f, 0f)
+
+        override fun onGestureStart() {
+            super.onGestureStart()
+            viewModel.client.ignorePointerMovesByServer = true
+        }
+
+        override fun onGestureStop(p: PointF) {
+            super.onGestureStop(p)
+            viewModel.client.ignorePointerMovesByServer = false
+        }
 
         override fun transformPoint(p: PointF) = pointerPosition
 
@@ -261,6 +267,8 @@ class Dispatcher(private val activity: VncActivity) {
             doButtonDown(PointerButton.Left, p)
             doMovePointer(p, dx, dy)
         }
+
+        override fun doFling(vx: Float, vy: Float) {} //Disabled
 
         /**
          * As we have no way know the real pointer position (at-least for now), we move
