@@ -455,7 +455,7 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeUploadCursor(JNIEnv *env, jobject thiz,
     //Cursor can overflow outside the framebuffer if moved near the edges,
     //but glTexSubImage2D() doesn't allow values outside target texture,
     //so we need to only update the intersection of framebuffer & cursor.
-    int32_t left = 0, top = 0, right = 0, bottom = 0;
+    int32_t left = -1, top = -1, right = -1, bottom = -1;
 
     auto fb = (uint32_t *) client->frameBuffer;
     auto buffer = (uint32_t *) cursor->buffer;
@@ -479,7 +479,7 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeUploadCursor(JNIEnv *env, jobject thiz,
                 else
                     scratch[z++] = fb[fbY * client->fbRealWidth + fbX];
 
-                if (left == 0 && top == 0) {
+                if (left == -1 && top == -1) {
                     left = fbX;
                     top = fbY;
                 }
@@ -489,7 +489,7 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeUploadCursor(JNIEnv *env, jobject thiz,
         }
     }
 
-    if (right > left && bottom > top)
+    if (left >= 0 && top >= 0)
         glTexSubImage2D(GL_TEXTURE_2D,
                         0,
                         left,
