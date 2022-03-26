@@ -149,11 +149,6 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     val frameScroller = FrameScroller(this)
 
     /**
-     * Fired when size of the native framebuffer changes.
-     */
-    val fbSizeChangedEvent = LiveEvent<FrameState>()
-
-    /**
      * Used for sending events to remote server.
      */
     val messenger = Messenger(client)
@@ -339,7 +334,6 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     override fun onFramebufferSizeChanged(width: Int, height: Int) {
         viewModelScope.launch(Dispatchers.Main) {
             frameState.setFramebufferSize(width.toFloat(), height.toFloat())
-            fbSizeChangedEvent.fire(frameState)
         }
     }
 

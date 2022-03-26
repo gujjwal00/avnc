@@ -61,7 +61,7 @@ class Dispatcher(private val activity: VncActivity) {
      * Action configuration
      **************************************************************************/
     private val directMode = DirectMode()
-    private val relativeMode by lazy { RelativeMode() } //Lazy to avoid pointer sync behaviour
+    private val relativeMode = RelativeMode()
     private val defaultMode = if (gesturePref.directTouch) directMode else relativeMode
 
     private val tap1Action = selectPointAction(gesturePref.tap1)
@@ -244,6 +244,11 @@ class Dispatcher(private val activity: VncActivity) {
 
         override fun onGestureStart() {
             super.onGestureStart()
+            //Initialize with the latest pointer position
+            pointerPosition.apply {
+                x = viewModel.client.pointerX.toFloat()
+                y = viewModel.client.pointerY.toFloat()
+            }
             viewModel.client.ignorePointerMovesByServer = true
         }
 
@@ -269,47 +274,5 @@ class Dispatcher(private val activity: VncActivity) {
         }
 
         override fun doFling(vx: Float, vy: Float) {} //Disabled
-
-        /**
-         * As we have no way know the real pointer position (at-least for now), we move
-         * the remote pointer to center of the screen. This is a crude way of syncing
-         * [pointerPosition] with remote pointer position.
-         *
-         * We have to start somewhere, and center of the screen seems most appropriate.
-         * This is done immediately after connecting (and whenever framebuffer size changes),
-         * If we waited for a gesture before doing this, there would be a sudden jump,
-         * right before the gesture. Another "benefit" is, if connection is fast enough,
-         * user might not even notice our trickery.
-         *
-         * One caveat is, we can sync only after client initialization, but size change event
-         * is likely to fire during initialization. Another problem is activity restart,
-         * which will re-trigger our client state observer. We use [syncPending] to solve
-         * both of these problems.
-         *
-         * We can (hopefully) implement a better solution in the future.
-         */
-
-        private var syncPending = false
-
-        init {
-            viewModel.fbSizeChangedEvent.observe(activity) {
-                syncPending = true
-                syncPosition()
-            }
-            viewModel.state.observe(activity) {
-                syncPosition()
-            }
-        }
-
-        private fun syncPosition() {
-            if (syncPending && viewModel.client.connected) {
-                pointerPosition.apply {
-                    x = viewModel.frameState.fbWidth / 2
-                    y = viewModel.frameState.fbHeight / 2
-                }
-                doButtonDown(PointerButton.None, pointerPosition)
-                syncPending = false
-            }
-        }
     }
 }
