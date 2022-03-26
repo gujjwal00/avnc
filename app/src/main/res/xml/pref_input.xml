@@ -7,6 +7,7 @@
   -->
 
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     app:title="@string/pref_input">
 
     <PreferenceCategory
@@ -76,6 +77,13 @@
             app:key="gesture_drag"
             app:title="@string/pref_drag"
             app:useSimpleSummaryProvider="true" />
+
+        <SeekBarPreference
+            android:max="15"
+            app:defaultValue="10"
+            app:key="gesture_swipe_sensitivity"
+            app:min="5"
+            app:title="@string/pref_swipe_sensitivity" />
     </PreferenceCategory>
 
     <PreferenceCategory

@@ -44,6 +44,7 @@ class AppPreferences(context: Context) {
         val swipe2; get() = prefs.getString("gesture_swipe2", "pan")!!
         val drag; get() = prefs.getString("gesture_drag", "none")!!
         val dragEnabled; get() = (drag != "none")
+        val swipeSensitivity; get() = prefs.getInt("gesture_swipe_sensitivity", 10) / 10f
     }
 
     inner class Input {

@@ -185,6 +185,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     private val multiFingerTapDetector = MultiFingerTapDetector()
     private val dragDetector = DragDetector()
     private val dragEnabled = viewModel.pref.input.gesture.dragEnabled
+    private val swipeSensitivity = viewModel.pref.input.gesture.swipeSensitivity
 
 
     private fun handleGestureEvent(event: MotionEvent): Boolean {
@@ -230,10 +231,12 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     override fun onScroll(e1: MotionEvent, e2: MotionEvent, dX: Float, dY: Float): Boolean {
         val startPoint = e1.point()
         val currentPoint = e2.point()
+        val normalizedDx = -dX * swipeSensitivity
+        val normalizedDy = -dY * swipeSensitivity
 
         when (e2.pointerCount) {
-            1 -> dispatcher.onSwipe1(startPoint, currentPoint, -dX, -dY)
-            2 -> dispatcher.onSwipe2(startPoint, currentPoint, -dX, -dY)
+            1 -> dispatcher.onSwipe1(startPoint, currentPoint, normalizedDx, normalizedDy)
+            2 -> dispatcher.onSwipe2(startPoint, currentPoint, normalizedDx, normalizedDy)
         }
 
         multiFingerTapDetector.reset()
