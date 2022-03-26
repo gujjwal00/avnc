@@ -262,8 +262,8 @@ class Dispatcher(private val activity: VncActivity) {
         override fun doMovePointer(p: PointF, dx: Float, dy: Float) {
             pointerPosition.apply {
                 offset(dx, dy)
-                x = x.coerceIn(0f, viewModel.frameState.fbWidth)
-                y = y.coerceIn(0f, viewModel.frameState.fbHeight)
+                x = x.coerceIn(0f, viewModel.frameState.fbWidth - 1)
+                y = y.coerceIn(0f, viewModel.frameState.fbHeight - 1)
             }
             doButtonDown(PointerButton.None, pointerPosition)
         }
