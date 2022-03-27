@@ -29,15 +29,6 @@
         <item>end</item>
     </string-array>
 
-    <string-array name="tap1_action_entries">
-        <item>@string/pref_gesture_action_none</item>
-        <item>@string/pref_gesture_action_left_click</item>
-    </string-array>
-    <string-array name="tap1_action_values">
-        <item>none</item>
-        <item>left-click</item>
-    </string-array>
-
     <string-array name="tap2_action_entries">
         <item>@string/pref_gesture_action_none</item>
         <item>@string/pref_gesture_action_right_click</item>
