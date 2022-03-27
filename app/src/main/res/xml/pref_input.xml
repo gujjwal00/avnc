@@ -102,6 +102,11 @@
             app:key="hide_local_cursor"
             app:title="@string/pref_hide_local_cursor" />
 
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="hide_remote_cursor"
+            app:title="@string/title_hide_remote_cursor" />
+
         <ListPreference
             app:defaultValue="right"
             app:entries="@array/mouse_back_action_entries"

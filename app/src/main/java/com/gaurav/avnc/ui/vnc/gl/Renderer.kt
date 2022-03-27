@@ -22,6 +22,7 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
 
     private val projectionMatrix = FloatArray(16)
     private val state = viewModel.frameState
+    private val hideCursor = viewModel.pref.input.hideRemoteCursor
     private lateinit var program: FrameProgram
     private lateinit var frame: Frame
 
@@ -86,7 +87,7 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
         program.setUniforms(projectionMatrix)
 
         viewModel.client.uploadFrameTexture()
-        viewModel.client.uploadCursor()
+        if (!hideCursor) viewModel.client.uploadCursor()
 
         frame.updateFbSize(state.fbWidth, state.fbHeight)
         frame.bind(program)

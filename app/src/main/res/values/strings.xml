@@ -68,6 +68,7 @@
     <string name="msg_invalid_vnc_uri">Invalid VNC URI</string>
     <string name="msg_copied_to_clipboard">Copied</string>
     <string name="msg_key_compat_mode_help">Some servers have limited Unicode support. Legacy key events can help input non-English text.</string>
+    <string name="msg_hide_remote_pointer_option_moved">\'Hide remote pointer\' is now available in \n\'Settings → Input → Mouse\'</string>
     <string name="tip_empty_server_list">Server list is empty.\nClick \'<b>+</b>\' to add a server, or\nuse the top address bar to connect directly.</string>
     <string name="tip_urlbar">You can enter IP address, hostname, or \'vnc://\' URI.</string>
     <string name="tip_discovery">Discovery can automatically find supported servers\nrunning on your network.</string>
@@ -140,7 +141,7 @@
     <string name="pref_mouse_passthrough">Mouse passthrough</string>
     <string name="pref_mouse_passthrough_summary_off">Use mouse events for local gestures</string>
     <string name="pref_mouse_passthrough_summary_on">Send mouse events directly to server</string>
-    <string name="pref_hide_local_cursor">Hide local (Android) pointer</string>
+    <string name="pref_hide_local_cursor">Hide local pointer</string>
     <string name="pref_mouse_back">Back button</string>
     <string name="pref_mouse_back_action_default">Default</string>
     <string name="pref_mouse_back_action_right">Right click</string>

@@ -55,6 +55,7 @@ class AppPreferences(context: Context) {
 
         val mousePassthrough; get() = prefs.getBoolean("mouse_passthrough", true)
         val hideLocalCursor; get() = prefs.getBoolean("hide_local_cursor", false)
+        val hideRemoteCursor; get() = prefs.getBoolean("hide_remote_cursor", false)
         val mouseBack; get() = prefs.getString("mouse_back", "right")!!
 
         val kmLanguageSwitchToSuper; get() = prefs.getBoolean("km_language_switch_to_super", false)
