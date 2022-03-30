@@ -22,7 +22,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.gaurav.avnc.*
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.vnc.VncActivity
-import com.gaurav.avnc.vnc.Discovery
 import org.hamcrest.core.AllOf.allOf
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -31,13 +30,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 
-/**
- * For ease of testing, we directly modify the [discovery] instance.
- * TODO: Find better approach to this
- * TODO: Test discovery start/stop
- */
 @RunWith(AndroidJUnit4::class)
 class DiscoveryListTest {
+
+    @Rule
+    @JvmField
+    val activityRule = ActivityScenarioRule(HomeActivity::class.java)
 
     private val testProfile = ServerProfile(name = "Test Profile", host = "123.123.123.123")
     private fun testProfileMatcher() = allOf(
@@ -46,28 +44,23 @@ class DiscoveryListTest {
             hasDescendant(withText(testProfile.host)),
     )
 
-    private lateinit var discovery: Discovery
-
-
-    @Rule
-    @JvmField
-    val activityRule = ActivityScenarioRule(HomeActivity::class.java)
+    private fun addTestProfile() {
+        // Directly modify internal list to simulate discovery
+        activityRule.scenario.onActivity { it.viewModel.discovery.servers.postValue(arrayListOf(testProfile)) }
+        onView(testProfileMatcher()).checkWillBeDisplayed()
+    }
 
 
     @Before
     fun before() {
-        activityRule.scenario.onActivity {
-            discovery = it.viewModel.discovery
-            discovery.stop()
-        }
+        // Stop discovery, otherwise tests will hang due to progressbar animation
+        // We can't even use the stop button
+        activityRule.scenario.onActivity { it.viewModel.stopDiscovery() }
 
         onView(withId(R.id.pager)).perform(swipeLeft())
         onView(withId(R.id.discovered_rv)).checkWithTimeout(matches(isCompletelyDisplayed()))
         onView(withContentDescription(R.string.desc_discovery_btn)).checkWillBeDisplayed()
-        discovery.servers.postValue(arrayListOf(testProfile))
-        onView(testProfileMatcher()).checkWillBeDisplayed()
     }
-
 
     @Test
     fun launchConnection() {
@@ -75,6 +68,7 @@ class DiscoveryListTest {
         Intents.intending(hasComponent(VncActivity::class.qualifiedName))
                 .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, null))
 
+        addTestProfile()
         onView(testProfileMatcher()).doClick()
 
         Intents.intended(hasComponent(VncActivity::class.qualifiedName))
@@ -85,6 +79,7 @@ class DiscoveryListTest {
 
     @Test
     fun launchProfileSave() {
+        addTestProfile()
         onView(allOf(withParent(testProfileMatcher()), withId(R.id.save_btn))).doClick()
 
         onView(withText(R.string.title_add_server_profile)).inRoot(isDialog()).checkIsDisplayed()
@@ -94,6 +89,7 @@ class DiscoveryListTest {
 
     @Test
     fun copyHost() {
+        addTestProfile()
         onView(testProfileMatcher()).doLongClick()
         onView(withText(R.string.title_copy_host)).doClick()
 
@@ -102,10 +98,8 @@ class DiscoveryListTest {
     }
 
     @Test
-    fun emptyListTest() {
-        discovery.servers.postValue(arrayListOf())
-
-        onView(withContentDescription(R.string.desc_discovery_btn)).checkWillBeDisplayed()
+    fun noServerFound() {
+        activityRule.scenario.onActivity { it.viewModel.discovery.servers.postValue(arrayListOf()) }
         onView(withText(R.string.tip_discovery)).checkIsDisplayed()
     }
 }

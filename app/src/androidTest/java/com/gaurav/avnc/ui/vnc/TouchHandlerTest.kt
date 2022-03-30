@@ -45,9 +45,10 @@ class TouchHandlerTest {
         instrumentation.runOnMainSync {
             val viewModel = spyk(VncViewModel(ApplicationProvider.getApplicationContext()))
 
-            // Both of these needs to be mocked
+            // All of these needs to be mocked
             every { viewModel.pref.input.mousePassthrough } returns mousePassthrough
             every { viewModel.pref.input.gesture.dragEnabled } returns dragEnabled
+            every { viewModel.pref.input.gesture.swipeSensitivity } returns 1f
             touchHandler = TouchHandler(viewModel, mockDispatcher)
         }
     }
