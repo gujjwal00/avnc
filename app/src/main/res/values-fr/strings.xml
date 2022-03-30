@@ -136,7 +136,7 @@
     <string name="title_clear">Effacer</string>
     <string name="pref_theme_option_dark">Sombre</string>
     <string name="pref_theme_option_light">Clair</string>
-    <string name="pref_hide_local_cursor">Masquer le pointeur local (Android)</string>
+    <string name="pref_hide_local_cursor">Masquer le pointeur local</string>
     <string name="pref_vk">Touches virtuelles</string>
     <string name="pref_vk_show_all">Afficher toutes les touches</string>
     <string name="pref_mouse">Souris</string>
@@ -166,4 +166,8 @@
     <string name="pref_mouse_back_action_default">Par défaut</string>
     <string name="pref_mouse_back_action_middle">Clic molette</string>
     <string name="pref_mouse_back_action_right">Clic droit</string>
+    <string name="title_default_security">Sécurité par défaut</string>
+    <string name="msg_hide_remote_pointer_option_moved">« Masquer le pointeur distant » est désormais disponible dans
+\n« Paramètres → Saisie → Souris »</string>
+    <string name="pref_swipe_sensitivity">Sensibilité du défilement</string>
 </resources>
