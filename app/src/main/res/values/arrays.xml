@@ -103,12 +103,12 @@
 
     <string-array name="mouse_back_action_entries">
         <item>@string/pref_mouse_back_action_default</item>
-        <item>@string/pref_mouse_back_action_right</item>
-        <item>@string/pref_mouse_back_action_middle</item>
+        <item>@string/pref_gesture_action_middle_click</item>
+        <item>@string/pref_gesture_action_right_click</item>
     </string-array>
     <string-array name="mouse_back_action_values">
         <item>default</item>
-        <item>right</item>
-        <item>middle</item>
+        <item>middle-click</item>
+        <item>right-click</item>
     </string-array>
 </resources>

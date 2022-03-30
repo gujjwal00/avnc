@@ -73,6 +73,8 @@ class Dispatcher(private val activity: VncActivity) {
     private val swipe2Action = selectSwipeAction(gesturePref.swipe2)
     private val dragAction = selectSwipeAction(gesturePref.drag)
 
+    private val mouseBackAction = selectPointAction(viewModel.pref.input.mouseBack)
+
     private fun selectPointAction(actionName: String): (PointF) -> Unit {
         return when (actionName) {
             "left-click" -> { p -> defaultMode.doClick(PointerButton.Left, p) }
@@ -130,6 +132,7 @@ class Dispatcher(private val activity: VncActivity) {
     fun onMouseButtonUp(button: PointerButton, p: PointF) = directMode.doButtonUp(button, p)
     fun onMouseMove(p: PointF) = directMode.doMovePointer(p, 0f, 0f)
     fun onMouseScroll(p: PointF, hs: Float, vs: Float) = directMode.doRemoteScrollFromMouse(p, hs, vs)
+    fun onMouseBack(p: PointF) = mouseBackAction(p)
 
     fun onStylusTap(p: PointF) = directMode.doClick(PointerButton.Left, p)
     fun onStylusDoubleTap(p: PointF) = directMode.doDoubleClick(PointerButton.Left, p)
