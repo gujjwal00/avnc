@@ -166,4 +166,5 @@
     <string name="pref_mouse_back_action_default">Типово</string>
     <string name="pref_mouse_back_action_right">Клацання правою кнопкою</string>
     <string name="pref_mouse_back_action_middle">Клацання середньою кнопкою</string>
+    <string name="pref_swipe_sensitivity">Чутливість ковзання</string>
 </resources>

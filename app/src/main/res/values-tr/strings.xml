@@ -154,7 +154,7 @@
     <string name="pref_long_press">Uzun basma</string>
     <string name="pref_swipe2">İki parmakla kaydırma</string>
     <string name="pref_mouse_passthrough_summary_on">Fare olaylarını doğrudan sunucuya gönder</string>
-    <string name="pref_hide_local_cursor">Yerel (Android) işaretçisini gizle</string>
+    <string name="pref_hide_local_cursor">Yerel işaretçiyi gizle</string>
     <string name="pref_km_language_switch_to_super">Dil Değiştirme → Süper</string>
     <string name="pref_toolbar_alignment">Hizalama</string>
     <string name="pref_clipboard_sync">Panoyu eşzamanla</string>
@@ -166,4 +166,8 @@
     <string name="pref_mouse_back_action_middle">Orta tıklama</string>
     <string name="pref_mouse_back">Geri düğmesi</string>
     <string name="pref_mouse_back_action_default">Öntanımlı</string>
+    <string name="pref_swipe_sensitivity">Kaydırma hassasiyeti</string>
+    <string name="title_default_security">Öntanımlı güvenlik</string>
+    <string name="msg_hide_remote_pointer_option_moved">\'Uzak işaretçiyi gizle\' artık şurada bulunabilir:
+\n\'Ayarlar → Giriş → Fare\'</string>
 </resources>
