@@ -1,0 +1,9 @@
+* Added client-side cursor rendering for improved responsiveness
+* Viewer will now follow the pointer when Direct Mode is disabled
+* Intercept Back key triggered by mouse/touchpad (by Tuan Pham)
+* New preference for swipe sensitivity
+* New language:
+    Turkish (by Fabriel & Oğuz Ersen)
+    Polish (by WaldiS)
+    Chinese (Simplified) (by wang)
+* Note: 'Hide remote pointer' option has moved to Settings
