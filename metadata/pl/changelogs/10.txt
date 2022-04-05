@@ -1,0 +1,9 @@
+* Dodano renderowanie kursora po stronie klienta w celu poprawy responsywności
+* Przeglądarka będzie teraz podążać za wskaźnikiem, gdy tryb bezpośredni jest wyłączony
+* Przechwytywanie klawisza Wstecz wyzwalanego przez mysz/dotyk (autor: Tuan Pham)
+* Nowe preferencje dla czułości przeciągnięcia
+* Nowy język:
+    Turecki (autorstwa Fabriel & Oğuz Ersen)
+    Polski (przez WaldiS)
+    Chiński (uproszczony) (przez wang)
+* Uwaga: opcja 'Ukryj zdalny wskaźnik' została przeniesiona do Ustawień

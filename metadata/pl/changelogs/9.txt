@@ -1,0 +1,9 @@
+* Ulepszone autouzupełnianie logowania
+* Ulepszone wykrywanie serwerów
+* Nowy język:
+     Serbski (autorstwa Саша Петровић)
+     Ukraiński (przez Andrij Mizyk)
+* Zaktualizowany język:
+     Norweski Bokmål (autor: Allan Nordhøy)
+     Perski (autor: Eshagh Shahedany)
+     Francuski (autor: J. Lavoie, Nathan)
