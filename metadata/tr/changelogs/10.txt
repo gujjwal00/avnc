@@ -1,0 +1,9 @@
+* Daha iyi yanıt için istemci tarafı imleç görselleştirme eklendi
+* Görüntüleyici artık Doğrudan Mod devre dışı bırakıldığında işaretçiyi takip edecek
+* Fare/dokunmatik yüzey tarafından tetiklenen Geri tuşunu yakala (Tuan Pham tarafından)
+* Kaydırma hassasiyeti için yeni tercih
+* Yeni dil:
+    Türkçe (Fabriel ve Oğuz Ersen tarafından)
+    Lehçe (WaldiS tarafından)
+    Çince (Basitleştirilmiş) (wang tarafından)
+* Not: 'Uzak işaretçiyi gizle' seçeneği Ayarlar'a taşındı
