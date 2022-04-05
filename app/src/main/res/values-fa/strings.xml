@@ -128,7 +128,7 @@
     <string name="pref_mouse_passthrough">عبور ماوس</string>
     <string name="pref_mouse_passthrough_summary_off">رویدادهای ماوس برای حرکات محلّی استفاده شوند</string>
     <string name="pref_mouse_passthrough_summary_on">رویدادهای ماوس به صورت مستقیم به کارساز فرستاده شوند</string>
-    <string name="pref_hide_local_cursor">پنهان کردن اشاره‌گر محلّی (اندروید)</string>
+    <string name="pref_hide_local_cursor">پنهان کردن اشاره‌گر محلّی</string>
     <string name="pref_vk">کلیدهای مجازی</string>
     <string name="pref_vk_show_all">نمایش همهٔ کلیدها</string>
     <string name="pref_vk_open_with_keyboard">گشودن همراه صفحه‌کلید</string>
@@ -175,4 +175,7 @@
     <string name="pref_swipe_sensitivity">حساسیت به کشیدن</string>
     <string name="desc_discovery_stop_btn">اکتشاف کارسازها را متوقّف کن</string>
     <string name="pref_discovery_autorun_summary">در حالی که در صفحهٔ اصلی هستید، کارسازها را کشف کنید</string>
+    <string name="title_default_security">امنیت پیش‌گزیده</string>
+    <string name="msg_hide_remote_pointer_option_moved">«پنهان کردن اشاره‌گر دوردست» حالا در مسیر
+\n«تنظیمات ← ورودی ← ماوس» در دسترس است</string>
 </resources>
