@@ -44,7 +44,8 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
 
     fun onHoverEvent(event: MotionEvent): Boolean {
         if (event.actionMasked == MotionEvent.ACTION_HOVER_MOVE) {
-            dispatcher.onMouseMove(event.point())
+            lastHoverPoint = event.point()
+            dispatcher.onMouseMove(lastHoverPoint)
             return true
         }
         return false
@@ -58,9 +59,10 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         }
     }
 
+    // Used for back-press interception
+    private var lastHoverPoint = PointF()
     fun onMouseBack() {
-        val p = PointF(viewModel.client.pointerX.toFloat(), viewModel.client.pointerY.toFloat())
-        dispatcher.onMouseBack(p)
+        dispatcher.onMouseBack(lastHoverPoint)
     }
 
     /****************************************************************************************
