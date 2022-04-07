@@ -7,6 +7,7 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
@@ -32,10 +33,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
             android:layout_marginBottom="@dimen/margin_normal"
-            android:drawableEnd="@drawable/ic_gpl"
             android:drawablePadding="@dimen/padding_small"
             android:text='@{@string/app_name + " is released under the GNU General Public License, version 3 or later."}'
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            app:drawableEndCompat="@drawable/ic_gpl" />
 
 
         <TextView

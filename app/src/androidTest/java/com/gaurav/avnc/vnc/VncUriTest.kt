@@ -9,6 +9,7 @@
 package com.gaurav.avnc.vnc
 
 import android.net.Uri
+import com.gaurav.avnc.model.ServerProfile
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -44,6 +45,7 @@ class VncUriTest {
         assertEquals("foo", uri.password)
         assertEquals(2, uri.securityType)
         assertEquals(true, uri.viewOnly)
+        assertEquals(ServerProfile.CHANNEL_TCP, uri.channelType)
     }
 
     @Test
@@ -55,6 +57,7 @@ class VncUriTest {
         assertEquals("foo", uri.password)
         assertEquals(2, uri.securityType)
         assertEquals(true, uri.viewOnly)
+        assertEquals(ServerProfile.CHANNEL_TCP, uri.channelType)
     }
 
     @Test

@@ -29,9 +29,9 @@ class VncClientTest {
     }
 
 
-    lateinit var server: TestServer
-    lateinit var client: VncClient
-    lateinit var observer: TestObserver
+    private lateinit var server: TestServer
+    private lateinit var client: VncClient
+    private lateinit var observer: TestObserver
 
     private val sampleText = "Smelly Cat"
     private val sampleTextWithAccent = "Pokémon Fõbár"

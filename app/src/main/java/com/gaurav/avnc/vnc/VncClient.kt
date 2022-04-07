@@ -97,7 +97,7 @@ class VncClient(private val observer: Observer) {
      * This flags works around the issue by temporarily ignoring serer-side updates.
      */
     @Volatile
-    var ignorePointerMovesByServer = false;
+    var ignorePointerMovesByServer = false
 
     /**
      * Setup different properties for this client.

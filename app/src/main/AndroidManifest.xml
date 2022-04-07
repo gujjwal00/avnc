@@ -24,6 +24,7 @@
 
         <activity-alias
             android:name=".StartupActivity"
+            android:exported="true"
             android:targetActivity=".ui.home.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,6 +34,7 @@
 
         <activity-alias
             android:name=".UriReceiverActivity"
+            android:exported="true"
             android:targetActivity=".ui.vnc.UriReceiverActivity">
 
             <intent-filter>

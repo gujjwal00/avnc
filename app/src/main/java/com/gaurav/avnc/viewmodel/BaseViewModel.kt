@@ -66,7 +66,7 @@ open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
     /**
      * Executes given [block] asynchronously on IO thread.
      */
-    protected fun asyncIO(block: () -> Unit) = asyncIO(block, {})
+    protected fun asyncIO(block: () -> Unit) = asyncIO(block) {}
 
     /**
      * Executes given [block] asynchronously on IO thread.

@@ -45,7 +45,7 @@
                 android:contentDescription="Hide Virtual Keys"
                 android:minWidth="30dp"
                 android:src="@drawable/ic_clear"
-                android:tint="?colorError" />
+                app:tint="?colorError" />
 
             <!--~~~~~~~~~~~~~~~~~~~~~~~~~~ Meta keys ~~~~~~~~~~~~~~~~~~~~~-->
 

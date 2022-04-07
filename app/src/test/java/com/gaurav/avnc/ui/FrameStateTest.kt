@@ -162,7 +162,7 @@ class FrameStateTest {
         val state = FrameState()
         state.setViewportSize(50f, 50f)
         state.setFramebufferSize(100f, 100f)
-        
+
         state.showFbPoint(49f, 49f)
         assertEquals(0f, state.frameX)
         assertEquals(0f, state.frameY)

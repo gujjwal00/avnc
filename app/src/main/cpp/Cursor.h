@@ -95,7 +95,9 @@ void freeCursor(Cursor *cursor) {
     free(cursor);
 }
 
-void updateCursor(Cursor *cursor, uint8_t *buffer, uint8_t *mask, uint16_t width, int height, int xHot, int yHot) {
+void updateCursor(Cursor *cursor, uint8_t *buffer, uint8_t *mask, uint16_t width, uint16_t height,
+                  uint16_t xHot, uint16_t yHot) {
+
     freeCursorBuffers(cursor);
     cursor->buffer = buffer;
     cursor->mask = mask;

@@ -11,7 +11,6 @@
 #include <rfb/rfbclient.h>
 
 #include "ClientEx.h"
-#include "Cursor.h"
 #include "Utility.h"
 
 
@@ -24,7 +23,7 @@ struct JniContext {
     jclass managedCls;              //Managed `VncClient` class
     jmethodID cbFramebufferUpdated; //Cached reference to managed callback
 
-    JNIEnv *getEnv() {
+    JNIEnv *getEnv() const {
         JNIEnv *env = nullptr;
 
         if (vm != nullptr && vm->GetEnv((void **) &env, JNI_VERSION_1_6) == JNI_OK)
@@ -204,13 +203,14 @@ static rfbBool onMallocFrameBuffer(rfbClient *client) {
     return TRUE;
 }
 
-static void onGotCursorShape(rfbClient *client, int xhot, int yhot, int width, int height, int bytesPerPixel) {
+static void onGotCursorShape(rfbClient *client, int xHot, int yHot, int width, int height, int bytesPerPixel) {
     auto ex = getClientExtension(client);
 
     LOCK(ex->mutex);
 
     //Steel buffers from rfbClient
-    updateCursor(ex->cursor, client->rcSource, client->rcMask, width, height, xhot, yhot);
+    updateCursor(ex->cursor, client->rcSource, client->rcMask, (uint16_t) width, (uint16_t) height,
+                 (uint16_t) xHot, (uint16_t) yHot);
     client->rcSource = NULL;
     client->rcMask = NULL;
 
@@ -350,7 +350,7 @@ extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeSendKeyEvent(JNIEnv *env, jobject thiz, jlong client_ptr,
                                                       jlong key, jboolean is_down) {
-    return (jboolean) SendKeyEvent((rfbClient *) client_ptr, (uint32_t) key, is_down);
+    return (jboolean) SendKeyEvent((rfbClient *) client_ptr, (uint32_t) key, is_down ? TRUE : FALSE);
 }
 
 extern "C"
@@ -460,7 +460,7 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeUploadCursor(JNIEnv *env, jobject thiz,
     auto fb = (uint32_t *) client->frameBuffer;
     auto buffer = (uint32_t *) cursor->buffer;
     auto scratch = (uint32_t *) cursor->scratchBuffer;
-    auto mask = (uint8_t *) cursor->mask;
+    auto mask = cursor->mask;
 
     //Scratch buffer index
     int32_t z = 0;
