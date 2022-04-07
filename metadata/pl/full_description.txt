@@ -1,0 +1,16 @@
+AVNC to otwartoźródłowy klient VNC dla systemu Android. Umożliwia on zdalne sterowanie dowolnym urządzeniem wyposażonym w serwer VNC.
+
+Cechy:
+
+- Material Design (z ciemnym motywem)
+- Konfigurowalne gesty
+- Dokładne kodowanie
+- Klawisze wirtualne
+- Tryb obraz w obrazie
+- Tryb tylko do oglądania
+- Wykrywanie serwera Zeroconf
+- Obsługa TLS (AnonTLS, VeNCrypt)
+- Tunel SSH (VNC przez SSH)
+- Serwery importu/eksportu
+- Obsługa Repeatera VNC
+- Synchronizacja schowka z serwerem

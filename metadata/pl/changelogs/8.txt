@@ -1,0 +1,8 @@
+* Dodano tryb trackpada/touchpada
+* Przechwycony klawisz Window & Alt+Tab na Samsung DeX
+* Zoptymalizowany zoom dla zdalnych ekranów w trybie portretowym
+* Poprawiono czułość gestu przeciągania
+* Tłumaczenia: Portugalski-BR (przez João Paulo),
+     Norweski Bokmål (przez Allan Nordhøy),
+     perski (przez Eshagh Shahedany),
+     francuskie (przez J. Lavoie)

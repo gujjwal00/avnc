@@ -1,0 +1,3 @@
+* Ulepszona obsługa skrótów klawiaturowych
+* Ulepszona obsługa znaków diakrytycznych (akcentów)
+* Dodano pełny tryb immersyjny (eksperymentalny).
