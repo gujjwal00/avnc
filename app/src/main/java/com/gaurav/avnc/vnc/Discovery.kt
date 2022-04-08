@@ -83,7 +83,8 @@ class Discovery(private val context: Context) {
             if (nsdManager == null)
                 nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
 
-            nsdManager?.discoverServices(service, NsdManager.PROTOCOL_DNS_SD, listener)
+            runCatching { nsdManager?.discoverServices(service, NsdManager.PROTOCOL_DNS_SD, listener) }
+                    .onFailure { Log.e(javaClass.simpleName, "Unable to start Discovery", it) }
         }
     }
 
@@ -93,7 +94,8 @@ class Discovery(private val context: Context) {
      */
     fun stop() {
         if (isRunning.value == true) {
-            nsdManager?.stopServiceDiscovery(listener)
+            runCatching { nsdManager?.stopServiceDiscovery(listener) }
+                    .onFailure { Log.e(javaClass.simpleName, "Unable to stop Discovery", it) }
         }
     }
 
