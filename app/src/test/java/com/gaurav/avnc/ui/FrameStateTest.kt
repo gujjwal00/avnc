@@ -156,27 +156,4 @@ class FrameStateTest {
         assertEquals(-100f, state.frameX) //Right side of frame and Viewport are aligned
         assertEquals(-100f, state.frameY) //Bottom side of frame and Viewport are aligned
     }
-
-    @Test
-    fun showFbPointTest() {
-        val state = FrameState()
-        state.setViewportSize(50f, 50f)
-        state.setFramebufferSize(100f, 100f)
-
-        state.showFbPoint(49f, 49f)
-        assertEquals(0f, state.frameX)
-        assertEquals(0f, state.frameY)
-
-        state.showFbPoint(50f, 50f)
-        assertEquals(-1f, state.frameX)
-        assertEquals(-1f, state.frameY)
-
-        state.showFbPoint(0f, 0f)
-        assertEquals(0f, state.frameX)
-        assertEquals(0f, state.frameY)
-
-        state.showFbPoint(99f, 99f)
-        assertEquals(-50f, state.frameX)
-        assertEquals(-50f, state.frameY)
-    }
 }

@@ -195,22 +195,12 @@ class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScal
     }
 
     /**
-     * Makes sure that framebuffer point [fbX],[fbY] is visible.
-     * If point is outside of visible area, frame is panned to make the it visible.
+     * Converts given framebuffer point to corresponding point in viewport.
      */
-    fun showFbPoint(fbX: Float, fbY: Float) {
-        val vpX = fbX * scale + frameX
-        val vpY = fbY * scale + frameY
-        var dx = 0f
-        var dy = 0f
-
-        if (vpX < 0) dx = -vpX
-        if (vpX >= vpWidth) dx = vpWidth - vpX - 1
-        if (vpY < 0) dy = -vpY
-        if (vpY >= vpHeight) dy = vpHeight - vpY - 1
-
-        pan(dx, dy)
+    fun toVP(fbPoint: PointF): PointF {
+        return PointF(fbPoint.x * scale + frameX, fbPoint.y * scale + frameY)
     }
+
 
     private fun calculateBaseScale() {
         if (fbHeight == 0F || fbWidth == 0F || windowHeight == 0F)

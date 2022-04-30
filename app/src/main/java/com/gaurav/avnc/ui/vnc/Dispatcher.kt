@@ -269,7 +269,12 @@ class Dispatcher(private val activity: VncActivity) {
                 y = y.coerceIn(0f, viewModel.frameState.fbHeight - 1)
             }
             doButtonDown(PointerButton.None, pointerPosition)
-            viewModel.showFbPoint(pointerPosition)
+
+            //Try to keep the pointer centered on screen
+            val vp = viewModel.frameState.toVP(pointerPosition)
+            val centerDiffX = viewModel.frameState.vpWidth / 2 - vp.x
+            val centerDiffY = viewModel.frameState.vpHeight / 2 - vp.y
+            viewModel.panFrame(centerDiffX, centerDiffY)
         }
 
         override fun doDrag(p: PointF, dx: Float, dy: Float) {
