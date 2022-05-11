@@ -77,6 +77,11 @@
             app:key="gesture_swipe_sensitivity"
             app:min="5"
             app:title="@string/pref_swipe_sensitivity" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            app:key="natural_scrolling"
+            app:title="Natural scrolling" />
     </PreferenceCategory>
 
     <PreferenceCategory

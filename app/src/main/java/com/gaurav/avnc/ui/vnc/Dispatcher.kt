@@ -160,6 +160,7 @@ class Dispatcher(private val activity: VncActivity) {
         private var accumulatedDx = 0F
         private var accumulatedDy = 0F
         private val deltaPerScroll = 20F //For how much dx/dy, one scroll event will be sent
+        private val yScrollDirection = (if (gesturePref.naturalScrolling) 1 else -1)
 
         abstract fun transformPoint(p: PointF): PointF?
         abstract fun doMovePointer(p: PointF, dx: Float, dy: Float)
@@ -193,7 +194,7 @@ class Dispatcher(private val activity: VncActivity) {
 
         fun doRemoteScroll(focus: PointF, dx: Float, dy: Float) {
             accumulatedDx += dx
-            accumulatedDy += dy
+            accumulatedDy += dy * yScrollDirection
 
             //Drain horizontal change
             while (abs(accumulatedDx) >= deltaPerScroll) {

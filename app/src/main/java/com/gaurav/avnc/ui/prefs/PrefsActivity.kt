@@ -8,11 +8,13 @@
 
 package com.gaurav.avnc.ui.prefs
 
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
@@ -93,6 +95,8 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
     }
 
     @Keep class Input : PrefFragment(R.xml.pref_input) {
+        private var naturalScrollingUpdater: OnSharedPreferenceChangeListener? = null
+
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
 
@@ -105,12 +109,22 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
                 }
             }
 
-            findPreference<ListPreferenceEx>("gesture_swipe1")!!.apply {
-                disabledStateSummary = getString(R.string.pref_gesture_action_move_pointer)
+            val swipe1 = findPreference<ListPreferenceEx>("gesture_swipe1")!!
+            val swipe2 = findPreference<ListPreference>("gesture_swipe2")!!
+            val drag = findPreference<ListPreferenceEx>("gesture_drag")!!
+
+            swipe1.apply { disabledStateSummary = getString(R.string.pref_gesture_action_move_pointer) }
+            drag.apply { helpMessage = getText(R.string.msg_drag_gesture_help) }
+
+            // To reduce clutter & avoid 'UI overload', Natural scrolling pref is not visible by default.
+            // It becomes visible only when 'Scroll remote content' option is used.
+            naturalScrollingUpdater = OnSharedPreferenceChangeListener { _, _ ->
+                val pref = findPreference<SwitchPreference>("natural_scrolling")
+                pref?.isVisible = "remote-scroll" in listOf(swipe1.value, swipe2.value, drag.value)
             }
-            findPreference<ListPreferenceEx>("gesture_drag")!!.apply {
-                helpMessage = getText(R.string.msg_drag_gesture_help)
-            }
+            naturalScrollingUpdater?.onSharedPreferenceChanged(null, null) //Initial update
+            swipe1.sharedPreferences.registerOnSharedPreferenceChangeListener(naturalScrollingUpdater)
+
         }
     }
 
