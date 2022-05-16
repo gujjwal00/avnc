@@ -161,7 +161,9 @@ static void onFinishedFrameBufferUpdate(rfbClient *client) {
  */
 static rfbBool onMallocFrameBuffer(rfbClient *client) {
 
-    auto requestedSize = (uint64_t) client->width * client->height * client->format.bitsPerPixel / 8;
+    const auto width = client->width;
+    const auto height = client->height;
+    const auto requestedSize = (uint64_t) width * height * client->format.bitsPerPixel / 8;
 
     if (requestedSize >= SIZE_MAX) {
         rfbClientErr("CRITICAL: cannot allocate frameBuffer, requested size is too large\n");
@@ -169,24 +171,26 @@ static rfbBool onMallocFrameBuffer(rfbClient *client) {
     }
 
     auto allocSize = (size_t) requestedSize;
+    auto ex = getClientExtension(client);
 
-    LOCK(client->fbMutex);
+    LOCK(ex->mutex);
     {
+
         if (client->frameBuffer)
             free(client->frameBuffer);
 
         client->frameBuffer = static_cast<uint8_t *>(malloc(allocSize));
 
         if (client->frameBuffer) {
-            client->fbRealWidth = client->width;
-            client->fbRealHeight = client->height;
+            ex->fbRealWidth = width;
+            ex->fbRealHeight = height;
             memset(client->frameBuffer, 0, allocSize); //Clear any garbage
         } else {
-            client->fbRealWidth = 0;
-            client->fbRealHeight = 0;
+            ex->fbRealWidth = 0;
+            ex->fbRealHeight = 0;
         }
     }
-    UNLOCK(client->fbMutex);
+    UNLOCK(ex->mutex);
 
     if (client->frameBuffer == nullptr) {
         rfbClientErr("CRITICAL: frameBuffer allocation failed\n");
@@ -198,7 +202,7 @@ static rfbBool onMallocFrameBuffer(rfbClient *client) {
     auto cls = context.managedCls;
 
     auto mid = env->GetMethodID(cls, "cbFramebufferSizeChanged", "(II)V");
-    env->CallVoidMethod(obj, mid, client->width, client->height);
+    env->CallVoidMethod(obj, mid, width, height);
 
     return TRUE;
 }
@@ -410,22 +414,23 @@ JNIEXPORT void JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeUploadFrameTexture(JNIEnv *env, jobject thiz,
                                                             jlong client_ptr) {
     auto client = (rfbClient *) client_ptr;
+    auto ex = getClientExtension(client);
 
-    LOCK(client->fbMutex);
+    LOCK(ex->mutex);
 
     if (client->frameBuffer) {
         glTexImage2D(GL_TEXTURE_2D,
                      0,
                      GL_RGBA,
-                     client->fbRealWidth,
-                     client->fbRealHeight,
+                     ex->fbRealWidth,
+                     ex->fbRealHeight,
                      0,
                      GL_RGBA,
                      GL_UNSIGNED_BYTE,
                      client->frameBuffer);
     }
 
-    UNLOCK(client->fbMutex);
+    UNLOCK(ex->mutex);
 }
 
 extern "C"
@@ -472,12 +477,12 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeUploadCursor(JNIEnv *env, jobject thiz,
             auto fbX = fbCursorX + x;
             auto fbY = fbCursorY + y;
 
-            if (fbX >= 0 && fbX < client->fbRealWidth && fbY >= 0 && fbY < client->fbRealHeight) {
+            if (fbX >= 0 && fbX < ex->fbRealWidth && fbY >= 0 && fbY < ex->fbRealHeight) {
                 auto isValidPixel = mask[y * cursor->width + x];
                 if (isValidPixel)
                     scratch[z++] = buffer[y * cursor->width + x];
                 else
-                    scratch[z++] = fb[fbY * client->fbRealWidth + fbX];
+                    scratch[z++] = fb[fbY * ex->fbRealWidth + fbX];
 
                 if (left == -1 && top == -1) {
                     left = fbX;

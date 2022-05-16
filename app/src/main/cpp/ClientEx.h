@@ -20,11 +20,18 @@ struct ClientEx {
     // Reference to managed `VncClient`
     jobject managedClient;
 
-    // Protects concurrent access to framebuffer & cursor data
-    MUTEX(mutex);
+    // Although frame width & height are maintained in rfbClient, those values
+    // are modified before our MallocFrameBuffer callback is triggered, and
+    // we cannot protect them with a mutex. So we maintain the framebuffer
+    // size here, protected with fbMutex.
+    int fbRealWidth;
+    int fbRealHeight;
 
     // Cursor data used for client-side cursor rendering
     Cursor *cursor;
+
+    // Protects modification to framebuffer & cursor
+    MUTEX(mutex);
 };
 
 const int ClientExTag = 1;
