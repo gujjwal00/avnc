@@ -27,6 +27,7 @@ class AppPreferences(context: Context) {
     }
 
     inner class Viewer {
+        val orientation; get() = prefs.getString("viewer_orientation", "auto")
         val fullscreen; get() = prefs.getBoolean("fullscreen_display", true)
         val pipEnabled; get() = prefs.getBoolean("pip_enabled", false)
         val toolbarAlignment; get() = prefs.getString("toolbar_alignment", "start")

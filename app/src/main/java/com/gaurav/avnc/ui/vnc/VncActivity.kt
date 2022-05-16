@@ -12,6 +12,7 @@ import android.app.Activity
 import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Rect
 import android.os.Build
@@ -184,6 +185,8 @@ class VncActivity : AppCompatActivity() {
 
     private fun setupLayout() {
 
+        setupOrientation()
+
         @Suppress("DEPRECATION")
         if (fullscreenMode) {
             window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -220,6 +223,14 @@ class VncActivity : AppCompatActivity() {
                 virtualKeys.onKeyboardClose()
 
             binding.root.updatePadding(bottom = paddingBottom)
+        }
+    }
+
+    private fun setupOrientation() {
+        requestedOrientation = when (viewModel.pref.viewer.orientation) {
+            "portrait" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            "landscape" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            else -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
     }
 

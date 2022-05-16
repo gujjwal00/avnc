@@ -19,6 +19,16 @@
         <item>light</item>
     </string-array>
 
+    <string-array name="orientation_entries">
+        <item>@string/pref_orientation_option_auto</item>
+        <item>@string/pref_orientation_option_portrait</item>
+        <item>@string/pref_orientation_option_landscape</item>
+    </string-array>
+    <string-array name="orientation_values">
+        <item>auto</item>
+        <item>portrait</item>
+        <item>landscape</item>
+    </string-array>
 
     <string-array name="toolbar_alignment_entries">
         <item>@string/pref_toolbar_alignment_option_start</item>

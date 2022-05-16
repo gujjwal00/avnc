@@ -156,6 +156,10 @@
     <string name="pref_km_language_switch_to_super">Language Switch → Super</string>
     <string name="pref_km_back_to_escape">Back → Escape</string>
     <string name="pref_km_back_to_escape_summary">Does not affect the navigation bar</string>
+    <string name="pref_orientation">Screen orientation</string>
+    <string name="pref_orientation_option_auto">Automatic</string>
+    <string name="pref_orientation_option_portrait">Portrait</string>
+    <string name="pref_orientation_option_landscape">Landscape</string>
     <string name="pref_fullscreen">Fullscreen</string>
     <string name="pref_enable_pip">Picture-in-picture</string>
     <string name="pref_toolbar">Toolbar</string>

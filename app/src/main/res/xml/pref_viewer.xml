@@ -10,6 +10,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:title="@string/pref_viewer">
 
+    <ListPreference
+        android:defaultValue="auto"
+        android:entries="@array/orientation_entries"
+        android:entryValues="@array/orientation_values"
+        android:key="viewer_orientation"
+        android:title="@string/pref_orientation"
+        app:useSimpleSummaryProvider="true" />
+
     <SwitchPreference
         app:defaultValue="true"
         app:key="fullscreen_display"
