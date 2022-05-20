@@ -66,6 +66,15 @@ android {
             path file('CMakeLists.txt')
         }
     }
+
+    bundle {
+        density {
+            enableSplit false
+        }
+        language {
+            enableSplit false
+        }
+    }
 }
 
 dependencies {
