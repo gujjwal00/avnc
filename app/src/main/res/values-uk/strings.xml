@@ -66,8 +66,8 @@
     <string name="pref_theme">Тема</string>
     <string name="pref_long_press">Довге натискання</string>
     <string name="pref_swipe2">Ковзання двома пальцями</string>
-    <string name="pref_drag">Перетягування (довге натискання і ковзнути)</string>
-    <string name="pref_hide_local_cursor">Сховати локальний (Android) вказівник</string>
+    <string name="pref_drag">Перетягування</string>
+    <string name="pref_hide_local_cursor">Ховати локальний вказівник</string>
     <string name="pref_vk">Віртуальні клавіші</string>
     <string name="pref_vk_show_all">Показувати всі клавіші</string>
     <string name="pref_km_back_to_escape">Назад → Escape</string>
@@ -167,4 +167,14 @@
     <string name="pref_mouse_back_action_right">Клацання правою кнопкою</string>
     <string name="pref_mouse_back_action_middle">Клацання середньою кнопкою</string>
     <string name="pref_swipe_sensitivity">Чутливість ковзання</string>
+    <string name="title_default_security">Типовий захист</string>
+    <string name="msg_hide_remote_pointer_option_moved">\'Ховати віддалений вказівник\' тепер доступне в
+\n\'Налаштування → Введення → Миша\'</string>
+    <string name="msg_drag_gesture_help">Присвоєння дії жесту Перетягування змінить виявлення довгого натискання:
+\n
+\n<b>Натиснути-утримувати-відпустити</b> → Довге натискання
+\n<b>Натиснути-утримувати-потягнути</b> → Перетягування</string>
+    <string name="pref_orientation">Орієнтація екрана</string>
+    <string name="pref_orientation_option_auto">Автоматична</string>
+    <string name="pref_orientation_option_portrait">Портретна</string>
 </resources>
