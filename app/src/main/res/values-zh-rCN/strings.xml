@@ -91,7 +91,7 @@
     <string name="pref_mouse">鼠标</string>
     <string name="pref_mouse_passthrough">鼠标直通</string>
     <string name="pref_mouse_passthrough_summary_on">将鼠标事件直接发送到服务器</string>
-    <string name="pref_hide_local_cursor">隐藏本地（Android）指针</string>
+    <string name="pref_hide_local_cursor">隐藏本地指针</string>
     <string name="pref_mouse_back">返回按钮</string>
     <string name="pref_mouse_back_action_default">默认</string>
     <string name="pref_mouse_back_action_right">右键单击</string>
@@ -157,10 +157,17 @@
     <string name="pref_gesture_action_open_keyboard">打开键盘</string>
     <string name="pref_sort_server_list">按名称对已保存的服务器进行排序</string>
     <string name="pref_single_tap">单次敲击</string>
-    <string name="pref_vk_open_with_keyboard">用键盘时打开</string>
+    <string name="pref_vk_open_with_keyboard">同时打开键盘</string>
     <string name="pref_mouse_passthrough_summary_off">将鼠标事件用于本地手势</string>
     <string name="pref_toolbar">工具栏</string>
     <string name="pref_zoom_max">最大</string>
     <string name="pref_discovery_autorun_summary">在主页上时发现服务器</string>
     <string name="pref_experimental_toolbar_swipe_close">轻扫以关闭工具栏抽屉</string>
+    <string name="title_default_security">默认安全度</string>
+    <string name="msg_hide_remote_pointer_option_moved">“隐藏远程鼠标”已可从
+\n“设置→输入→鼠标”开启</string>
+    <string name="pref_swipe_sensitivity">调节灵敏度</string>
+    <string name="pref_km_language_switch_to_super">语言切换 → Super 键</string>
+    <string name="pref_km_back_to_escape">退格键 → Esc 键</string>
+    <string name="pref_km_right_alt_to_super">右 Alt 键 → Super （开始菜单）键</string>
 </resources>
