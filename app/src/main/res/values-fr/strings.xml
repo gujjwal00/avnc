@@ -174,4 +174,8 @@
 \n
 \n<b>Appui maintenu</b> → Appui long.
 \n<b>Appui-maintien-glissement</b> → Glissement</string>
+    <string name="pref_orientation">Orientation de l\'écran</string>
+    <string name="pref_orientation_option_auto">Automatique</string>
+    <string name="pref_orientation_option_portrait">Portrait</string>
+    <string name="pref_orientation_option_landscape">Paysage</string>
 </resources>
