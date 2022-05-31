@@ -152,7 +152,7 @@
     <string name="pref_cred_autocomplete_summary">Suggérer les identifiants enregistrés lors de la connexion à de nouveaux serveurs</string>
     <string name="pref_discovery">Découverte</string>
     <string name="pref_clipboard_sync">Synchronisation du presse-papiers</string>
-    <string name="pref_drag">Déplacement (appui long et glissement)</string>
+    <string name="pref_drag">Glisser</string>
     <string name="pref_km_language_switch_to_super">Changement de langue → Super</string>
     <string name="pref_import_export">Importer/Exporter des serveurs</string>
     <string name="pref_keycode_map">Carte des codes-clés</string>
@@ -170,4 +170,12 @@
     <string name="msg_hide_remote_pointer_option_moved">« Masquer le pointeur distant » est désormais disponible dans
 \n« Paramètres → Saisie → Souris »</string>
     <string name="pref_swipe_sensitivity">Sensibilité du défilement</string>
+    <string name="msg_drag_gesture_help">L\'affectation d\'une action à un geste de glissement modifiera la détection de l\'appui long :
+\n
+\n<b>Appui maintenu</b> → Appui long.
+\n<b>Appui-maintien-glissement</b> → Glissement</string>
+    <string name="pref_orientation">Orientation de l\'écran</string>
+    <string name="pref_orientation_option_auto">Automatique</string>
+    <string name="pref_orientation_option_portrait">Portrait</string>
+    <string name="pref_orientation_option_landscape">Paysage</string>
 </resources>

@@ -11,6 +11,6 @@ Cechy:
 - Wykrywanie serwera Zeroconf
 - Obsługa TLS (AnonTLS, VeNCrypt)
 - Tunel SSH (VNC przez SSH)
-- Serwery importu/eksportu
-- Obsługa Repeatera VNC
+- Import/Export serwerów
+- Obsługa VNC Repeater
 - Synchronizacja schowka z serwerem

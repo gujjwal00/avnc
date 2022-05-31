@@ -83,7 +83,7 @@
     <string name="pref_gesture">Gesty</string>
     <string name="pref_swipe1">Przesunięcie jednym palcem</string>
     <string name="pref_swipe2">Przesunięcie dwoma palcami</string>
-    <string name="pref_drag">Przeciągnij (długie naciśnięcie i przeciągnięcie palcem)</string>
+    <string name="pref_drag">Przeciągnij</string>
     <string name="pref_swipe_sensitivity">Czułość przesuwania</string>
     <string name="pref_mouse_passthrough_summary_on">Wysyłanie zdarzeń myszy bezpośrednio do serwera</string>
     <string name="pref_hide_local_cursor">Ukryj wskaźnik lokalny</string>
@@ -96,7 +96,7 @@
     <string name="pref_zoom">Powiększenie</string>
     <string name="pref_zoom_min">Minimum</string>
     <string name="pref_discovery_autorun">Automatyczne uruchamianie</string>
-    <string name="pref_rediscovery_indicator">Wyróżnij ponownie odkryte serwery</string>
+    <string name="pref_rediscovery_indicator">Wyróżnij odkryte ponownie serwery</string>
     <string name="pref_debugging">Debugowanie</string>
     <string name="pref_experimental_toolbar_swipe_close">Przesuń, aby zamknąć szufladę paska narzędzi</string>
     <string name="pref_experimental_immersive_mode_summary">Ukrywa wszystkie paski systemowe w trybie pełnoekranowym</string>
@@ -141,4 +141,37 @@
     <string name="desc_back_btn">Wstecz</string>
     <string name="pref_mouse_passthrough">Przekazywanie myszy</string>
     <string name="pref_mouse_passthrough_summary_off">Używanie zdarzeń myszy do wykonywania gestów lokalnych</string>
+    <string name="msg_hide_remote_pointer_option_moved">Opcja „Ukryj zdalny wskaźnik” jest teraz dostępna w
+\n„Ustawienia → Wejście → Mysz”</string>
+    <string name="pref_gesture_action_remote_scroll">Przewiń zdalną zawartość</string>
+    <string name="pref_mouse_back_action_middle">Kliknij środkowym przyciskiem</string>
+    <string name="pref_vk_show_all">Pokaż wszystkie klawisze</string>
+    <string name="pref_km">Mapowanie klawiszy</string>
+    <string name="pref_km_right_alt_to_super">Prawy Alt → Super</string>
+    <string name="pref_km_back_to_escape">Powrót → Escape</string>
+    <string name="pref_toolbar_alignment">Wyrównanie</string>
+    <string name="pref_toolbar_alignment_option_end">Koniec</string>
+    <string name="pref_discovery_autorun_summary">Odkryj serwery na stronie głównej</string>
+    <string name="pref_discovery">Odkrywanie</string>
+    <string name="pref_import_export">Importuj/Eksportuj serwery</string>
+    <string name="pref_keycode_map">Mapa kodów</string>
+    <string name="pref_direct_touch">Bezpośredni dotyk</string>
+    <string name="pref_direct_touch_summary_on">Wykonuj działania w punkcie kontaktu</string>
+    <string name="pref_mouse_back_action_right">Kliknij prawym przyciskiem</string>
+    <string name="pref_gesture_action_remote_drag">Przeciągnij zdalną zawartość</string>
+    <string name="pref_vk">Wirtualna klawiatura</string>
+    <string name="pref_vk_open_with_keyboard">Otwórz za pomocą klawiatury</string>
+    <string name="title_use_repeater">Użyj wzmacniacza</string>
+    <string name="title_hide_remote_cursor">Ukryj zdalny wskaźnik</string>
+    <string name="pref_direct_touch_summary_off">Wykonaj działania na wskaźniku</string>
+    <string name="pref_km_language_switch_to_super">Zmiana języka → Super</string>
+    <string name="pref_experimental_immersive_mode">Tryb pełnej immersji</string>
+    <string name="msg_drag_gesture_help">Przypisanie akcji do gestu przeciągania zmieni Wykrywanie długiego naciśnięcia:
+\n
+\n<b>Wciśnięcie i zwolnienie </b> → Długie naciśnięcie
+\n<b>Naciśnij-przytrzymaj-przeciągnij</b> → Przeciągnij</string>
+    <string name="pref_orientation">Orientacja ekranu</string>
+    <string name="pref_orientation_option_auto">Automatycznie</string>
+    <string name="pref_orientation_option_portrait">Portret</string>
+    <string name="pref_orientation_option_landscape">Krajobraz</string>
 </resources>

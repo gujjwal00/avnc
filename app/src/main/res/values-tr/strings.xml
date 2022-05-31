@@ -61,7 +61,7 @@
     <string name="pref_direct_touch_summary_off">Eylemleri işaretçinin olduğu yerde yap</string>
     <string name="pref_single_tap">Tek dokunma</string>
     <string name="pref_swipe1">Tek parmakla kaydırma</string>
-    <string name="pref_drag">Sürükleme (uzun bas ve kaydır)</string>
+    <string name="pref_drag">Sürükleme</string>
     <string name="pref_mouse">Fare</string>
     <string name="pref_mouse_passthrough_summary_off">Yerel hareketler için fare olaylarını kullan</string>
     <string name="pref_km">Tuş eşlemeleri</string>
@@ -170,4 +170,12 @@
     <string name="title_default_security">Öntanımlı güvenlik</string>
     <string name="msg_hide_remote_pointer_option_moved">\'Uzak işaretçiyi gizle\' artık şurada bulunabilir:
 \n\'Ayarlar → Giriş → Fare\'</string>
+    <string name="msg_drag_gesture_help">Sürükleme hareketine bir eylem atamak, Uzun basma algılamasını değiştirecektir:
+\n
+\n<b>Basılı tut ve bırak</b> → Uzun bas
+\n<b>Basılı tut ve kaydır</b> → Sürükle</string>
+    <string name="pref_orientation_option_portrait">Dikey</string>
+    <string name="pref_orientation_option_landscape">Yatay</string>
+    <string name="pref_orientation">Ekran yönü</string>
+    <string name="pref_orientation_option_auto">Otomatik</string>
 </resources>

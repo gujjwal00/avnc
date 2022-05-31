@@ -1,0 +1,16 @@
+AVNC ist ein Open Source VNC-Client für Android. Er ermöglicht es dir, jedes Gerät fernzusteuern, auf welchem ein VNC-Server läuft.
+
+Funktionen:
+
+- Material Design (inkl. Dark Theme)
+- Konfigurierbare Gesten
+- Starke Kodierung
+- virtuelle Zusatztasten (z.B. Ctrl, Alt, Tab, Esc, Pfeiltasten...)
+- Bild-in-Bild-Modus
+- Zuschauermodus (View-Only)
+- automatische Zeroconf-Serversuche im LAN
+- TLS-Unterstützung (AnonTLS, VeNCrypt)
+- SSH-Tunnel (VNC getunnelt durch SSH)
+- Exportieren und Importieren der abgespeicherten Server
+- Unterstützung für VNC-Repeater
+- Synchronisation der Zwischenablage
