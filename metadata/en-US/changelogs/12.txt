@@ -1,0 +1,4 @@
+* New preference for natural scrolling
+* New preference for screen orientation
+* Pointer is now centered on screen when Direct Touch is off
+* New language: German (by Pure Incompetence)
