@@ -10,6 +10,7 @@ package com.gaurav.avnc.ui.vnc.gl
 
 import android.opengl.GLES20.*
 import android.util.Log
+import com.gaurav.avnc.BuildConfig
 
 /**
  * Represents the GL program used for Frame rendering.
@@ -34,6 +35,7 @@ class FrameProgram {
     val uProjectionLocation = glGetUniformLocation(program, U_PROJECTION)
     val uTexUnitLocation = glGetUniformLocation(program, U_TEXTURE_UNIT)
     val textureId = createTexture()
+    var validated = false
 
 
     fun setUniforms(projectionMatrix: FloatArray) {
@@ -56,6 +58,13 @@ class FrameProgram {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
         glBindTexture(GL_TEXTURE_2D, 0)
         return texturesObjects[0]
+    }
+
+    fun validate() {
+        if (BuildConfig.DEBUG && !validated) {
+            ShaderCompiler.validateProgram(program)
+            validated = true
+        }
     }
 
     fun useProgram() {

@@ -91,6 +91,8 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
 
         frame.updateFbSize(state.fbWidth, state.fbHeight)
         frame.bind(program)
+
+        program.validate()
         frame.draw()
     }
 }

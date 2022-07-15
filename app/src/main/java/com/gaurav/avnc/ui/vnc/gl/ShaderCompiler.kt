@@ -10,7 +10,6 @@ package com.gaurav.avnc.ui.vnc.gl
 
 import android.opengl.GLES20.*
 import android.util.Log
-import com.gaurav.avnc.BuildConfig
 
 object ShaderCompiler {
 
@@ -76,9 +75,6 @@ object ShaderCompiler {
         if (vertexShaderId == 0 || fragmentShaderId == 0)
             return 0
 
-        val programId = linkProgram(vertexShaderId, fragmentShaderId)
-        if (BuildConfig.DEBUG)
-            validateProgram(programId)
-        return programId
+        return linkProgram(vertexShaderId, fragmentShaderId)
     }
 }
