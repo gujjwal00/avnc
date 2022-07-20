@@ -73,26 +73,11 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             android:textColor="?colorError"
             app:isVisible="@{viewModel.importExportError != null}"
-            app:layout_constraintBottom_toTopOf="@id/auth_msg"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/options_divider"
             app:layout_constraintStart_toStartOf="@id/options_divider"
             app:layout_constraintTop_toBottomOf="@id/delete_current_servers"
             tools:text="A message about export/import result" />
-
-        <TextView
-            android:id="@+id/auth_msg"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:drawablePadding="@dimen/padding_normal"
-            android:text="@{viewModel.canAuthenticateUser ? @string/msg_export_auth_required : @string/msg_export_auth_missing}"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            app:drawableStartCompat="@drawable/ic_info"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/options_divider"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="@id/options_divider"
-            tools:text="@string/msg_export_auth_missing" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

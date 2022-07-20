@@ -10,8 +10,6 @@ package com.gaurav.avnc.viewmodel
 
 import android.app.Application
 import android.net.Uri
-import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricManager.Authenticators
 import androidx.lifecycle.MutableLiveData
 import com.gaurav.avnc.model.ServerProfile
 import kotlinx.serialization.Serializable
@@ -25,13 +23,6 @@ import java.io.IOException
  */
 class PrefsViewModel(app: Application) : BaseViewModel(app) {
 
-    /**
-     * Whether user can be authenticated using Biometric or Device credentials (e.g. PIN, Password)
-     */
-    val canAuthenticateUser by lazy {
-        val types = Authenticators.BIOMETRIC_WEAK or Authenticators.DEVICE_CREDENTIAL
-        BiometricManager.from(app).canAuthenticate(types) == BiometricManager.BIOMETRIC_SUCCESS
-    }
 
     /**************************************************************************
      * Import/Export

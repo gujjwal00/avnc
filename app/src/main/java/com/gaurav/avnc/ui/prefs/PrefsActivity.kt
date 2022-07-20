@@ -20,11 +20,14 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.gaurav.avnc.R
+import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.google.android.material.appbar.MaterialToolbar
 
 class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        DeviceAuthPrompt.applyFingerprintDialogFix(supportFragmentManager)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
