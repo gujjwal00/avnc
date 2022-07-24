@@ -246,6 +246,25 @@ class VncActivity : AppCompatActivity() {
 
         if (viewModel.pref.experimental.swipeCloseToolbar)
             Experimental.setupDrawerCloseOnScrimSwipe(binding.drawerLayout, gravityH)
+
+        //Add System Gesture exclusion rects to allow opening toolbar drawer by swiping from edge
+        if (Build.VERSION.SDK_INT >= 29) {
+            binding.primaryToolbar.addOnLayoutChangeListener { _, left, top, right, bottom, _, _, _, _ ->
+                val root = binding.drawerLayout
+                val rect = Rect(left, top, right, bottom)
+
+                if (left < 0) rect.offset(-left, 0)
+                if (right > root.width) rect.offset(-(right - root.width), 0)
+
+                if (fullscreenMode) {
+                    rect.top = 0
+                    rect.bottom = root.height
+                }
+
+                //Set exclusion rects on root because toolbar may not be visible
+                root.systemGestureExclusionRects = listOf(rect)
+            }
+        }
     }
 
 
