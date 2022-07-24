@@ -70,7 +70,7 @@
     <string name="pref_sort_server_list">Sortiere die gespeicherten Server nach ihren Namen</string>
     <string name="pref_gesture">Gesten</string>
     <string name="pref_swipe2">Wischen mit zwei Fingern</string>
-    <string name="pref_drag">Ziehen (gedrückt halten und wischen)</string>
+    <string name="pref_drag">Ziehen (Drag and Drop)</string>
     <string name="pref_mouse_passthrough">Maus-Passthrough</string>
     <string name="pref_mouse_passthrough_summary_off">Maus-Bewegungen für lokale Gesten verwenden</string>
     <string name="pref_hide_local_cursor">Lokalen Mauszeiger verstecken</string>
@@ -170,4 +170,12 @@
     <string name="pref_direct_touch">Direkte Touch-Umsetzung auf dem Server</string>
     <string name="pref_direct_touch_summary_on">Setze Aktionen direkt am Ort des Tippens um</string>
     <string name="pref_direct_touch_summary_off">Setze Aktionen an einem Mauszeiger um, ähnlich einem Touchpad</string>
+    <string name="pref_orientation">Bildschirmausrichtung</string>
+    <string name="pref_orientation_option_auto">Automatisch (nach Lagesensor)</string>
+    <string name="pref_orientation_option_portrait">Hochformat</string>
+    <string name="pref_orientation_option_landscape">Querformat</string>
+    <string name="msg_drag_gesture_help">Der Ziehgeste eine Aktion zuzuweisen, wird die Erkennung von langem Drücken ändern:
+\n
+\n<b>Drücken-Halten-Loslassen</b> → Lange drücken
+\n<b>Drücken-Halten-Wischen</b> → Drag and Drop</string>
 </resources>
