@@ -75,7 +75,7 @@ class AppPreferences(context: Context) {
 
     inner class Experimental {
         val swipeCloseToolbar; get() = prefs.getBoolean("experimental_vnc_toolbar_swipe_close", true)
-        val immersiveMode; get() = prefs.getBoolean("viewer_immersive_mode", false)
+        val immersiveMode; get() = prefs.getBoolean("viewer_immersive_mode", true)
     }
 
     /**
