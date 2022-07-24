@@ -174,4 +174,5 @@
     <string name="pref_orientation_option_auto">Automatycznie</string>
     <string name="pref_orientation_option_portrait">Portret</string>
     <string name="pref_orientation_option_landscape">Krajobraz</string>
+    <string name="desc_discovery_btn">Odnajduj serwery</string>
 </resources>
