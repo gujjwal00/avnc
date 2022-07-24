@@ -256,7 +256,7 @@ class VncActivity : AppCompatActivity() {
                 if (left < 0) rect.offset(-left, 0)
                 if (right > root.width) rect.offset(-(right - root.width), 0)
 
-                if (fullscreenMode) {
+                if (immersiveMode) {
                     rect.top = 0
                     rect.bottom = root.height
                 }
