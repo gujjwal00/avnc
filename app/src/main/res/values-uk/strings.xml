@@ -59,7 +59,7 @@
     <string name="pref_experimental_summary">Додаткові можливості</string>
     <string name="pref_gesture_action_left_click">Ліве клацання</string>
     <string name="pref_gesture_action_move_pointer">Перемістити вказівник</string>
-    <string name="pref_clipboard_sync">Синхронувати буфери обміну</string>
+    <string name="pref_clipboard_sync">Синхронізувати буфери обміну</string>
     <string name="pref_gesture_action_remote_scroll">Прокрутити віддалений вміст</string>
     <string name="pref_km_language_switch_to_super">Перемикання мови → Super</string>
     <string name="pref_toolbar_alignment_option_start">Початок</string>
@@ -177,4 +177,5 @@
     <string name="pref_orientation">Орієнтація екрана</string>
     <string name="pref_orientation_option_auto">Автоматична</string>
     <string name="pref_orientation_option_portrait">Портретна</string>
+    <string name="pref_orientation_option_landscape">Альбомна</string>
 </resources>
