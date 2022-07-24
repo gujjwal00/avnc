@@ -1,0 +1,3 @@
+* Fixed black screen issue on some Tegra GPUs
+* Excluded viewer's toolbar area from system back gesture
+* New language: Russian
