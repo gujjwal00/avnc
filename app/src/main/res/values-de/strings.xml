@@ -34,8 +34,6 @@
     <string name="msg_invalid_vnc_uri">Ungültige VNC-URI</string>
     <string name="msg_copied_to_clipboard">Kopiert</string>
     <string name="msg_key_compat_mode_help">Einige Server unterstützen Unicode-Zeichen nur teilweise. Legacy key events kann die Eingabe von nicht-englischem Text ermöglichen.</string>
-    <string name="msg_hide_remote_pointer_option_moved">\'Ausblenden des entfernten Mauszeigers\' ist jetzt verfügbar unter
-\n\'Einstellungen → Eingabe → Maus\'</string>
     <string name="tip_empty_server_list">Die Serverliste ist leer.
 \nDrücke \'<b>+</b>\', um einen Server hinzuzufügen, oder
 \nnutze die Adresszeile oben, um direkt eine Verbindung aufzubauen.</string>

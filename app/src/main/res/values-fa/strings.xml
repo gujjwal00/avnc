@@ -176,6 +176,4 @@
     <string name="desc_discovery_stop_btn">اکتشاف کارسازها را متوقّف کن</string>
     <string name="pref_discovery_autorun_summary">در حالی که در صفحهٔ اصلی هستید، کارسازها را کشف کنید</string>
     <string name="title_default_security">امنیت پیش‌گزیده</string>
-    <string name="msg_hide_remote_pointer_option_moved">«پنهان کردن اشاره‌گر دوردست» حالا در مسیر
-\n«تنظیمات ← ورودی ← ماوس» در دسترس است</string>
 </resources>

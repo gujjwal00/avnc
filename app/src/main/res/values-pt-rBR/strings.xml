@@ -175,8 +175,6 @@
     <string name="pref_direct_touch_summary_on">Faça ações no ponto de contato</string>
     <string name="pref_direct_touch">Toque direto</string>
     <string name="title_default_security">Segurança padrão</string>
-    <string name="msg_hide_remote_pointer_option_moved">\'Esconder ponteiro remoto\' agora está disponível em
-\n\'Configurações → Entrada → Mouse\'</string>
     <string name="msg_drag_gesture_help">Ao atribuir ação de gesto de Arrastar você mudará Detecção de toque longo:
 \n
 \n<b>Toque-segure-solte</b> → Toque longo

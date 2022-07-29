@@ -167,8 +167,6 @@
     <string name="pref_mouse_back_action_middle">Clic molette</string>
     <string name="pref_mouse_back_action_right">Clic droit</string>
     <string name="title_default_security">Sécurité par défaut</string>
-    <string name="msg_hide_remote_pointer_option_moved">« Masquer le pointeur distant » est désormais disponible dans
-\n« Paramètres → Saisie → Souris »</string>
     <string name="pref_swipe_sensitivity">Sensibilité du défilement</string>
     <string name="msg_drag_gesture_help">L\'affectation d\'une action à un geste de glissement modifiera la détection de l\'appui long :
 \n

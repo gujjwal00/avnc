@@ -167,7 +167,5 @@
     <string name="pref_mouse_back_action_right">Høyreklikk</string>
     <string name="pref_mouse_back_action_middle">Midt-klikk</string>
     <string name="title_default_security">Forvalgt sikkerhet</string>
-    <string name="msg_hide_remote_pointer_option_moved">«Skjul fjernpeker» er nå tilgjengelig i
-\n«Innstillinger → Inndata → Mus»</string>
     <string name="pref_swipe_sensitivity">Dragningssensitivitet</string>
 </resources>

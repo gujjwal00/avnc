@@ -141,8 +141,6 @@
     <string name="desc_back_btn">Wstecz</string>
     <string name="pref_mouse_passthrough">Przekazywanie myszy</string>
     <string name="pref_mouse_passthrough_summary_off">Używanie zdarzeń myszy do wykonywania gestów lokalnych</string>
-    <string name="msg_hide_remote_pointer_option_moved">Opcja „Ukryj zdalny wskaźnik” jest teraz dostępna w
-\n„Ustawienia → Wejście → Mysz”</string>
     <string name="pref_gesture_action_remote_scroll">Przewiń zdalną zawartość</string>
     <string name="pref_mouse_back_action_middle">Kliknij środkowym przyciskiem</string>
     <string name="pref_vk_show_all">Pokaż wszystkie klawisze</string>

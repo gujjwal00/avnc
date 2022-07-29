@@ -168,8 +168,6 @@
     <string name="pref_mouse_back_action_middle">Клацання середньою кнопкою</string>
     <string name="pref_swipe_sensitivity">Чутливість ковзання</string>
     <string name="title_default_security">Типовий захист</string>
-    <string name="msg_hide_remote_pointer_option_moved">\'Ховати віддалений вказівник\' тепер доступне в
-\n\'Налаштування → Введення → Миша\'</string>
     <string name="msg_drag_gesture_help">Присвоєння дії жесту Перетягування змінить виявлення довгого натискання:
 \n
 \n<b>Натиснути-утримувати-відпустити</b> → Довге натискання

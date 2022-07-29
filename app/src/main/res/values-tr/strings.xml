@@ -168,8 +168,6 @@
     <string name="pref_mouse_back_action_default">Öntanımlı</string>
     <string name="pref_swipe_sensitivity">Kaydırma hassasiyeti</string>
     <string name="title_default_security">Öntanımlı güvenlik</string>
-    <string name="msg_hide_remote_pointer_option_moved">\'Uzak işaretçiyi gizle\' artık şurada bulunabilir:
-\n\'Ayarlar → Giriş → Fare\'</string>
     <string name="msg_drag_gesture_help">Sürükleme hareketine bir eylem atamak, Uzun basma algılamasını değiştirecektir:
 \n
 \n<b>Basılı tut ve bırak</b> → Uzun bas

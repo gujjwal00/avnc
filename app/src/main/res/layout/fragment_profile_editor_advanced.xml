@@ -144,19 +144,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/use_repeater" />
 
-
-                <!--Temporary message about moved option-->
-                <TextView
-                    android:id="@+id/use_local_cursor"
-                    style="@style/FormField.EditText"
-                    android:drawablePadding="@dimen/padding_normal"
-                    android:paddingStart="@dimen/padding_small"
-                    android:paddingTop="0dp"
-                    android:text="@string/msg_hide_remote_pointer_option_moved"
-                    app:drawableStartCompat="@drawable/ic_info"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view_only" />
-
                 <!--Key Compatibility mode-->
                 <CheckBox
                     android:id="@+id/key_compat_mode"
@@ -165,7 +152,7 @@
                     android:text="@string/title_key_compat_mode"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/use_local_cursor" />
+                    app:layout_constraintTop_toBottomOf="@id/view_only" />
 
                 <ImageButton
                     android:id="@+id/key_compat_mode_help_btn"

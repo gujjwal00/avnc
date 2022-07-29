@@ -164,8 +164,6 @@
     <string name="pref_discovery_autorun_summary">在主页上时发现服务器</string>
     <string name="pref_experimental_toolbar_swipe_close">轻扫以关闭工具栏抽屉</string>
     <string name="title_default_security">默认安全度</string>
-    <string name="msg_hide_remote_pointer_option_moved">“隐藏远程鼠标”已可从
-\n“设置→输入→鼠标”开启</string>
     <string name="pref_swipe_sensitivity">调节灵敏度</string>
     <string name="pref_km_language_switch_to_super">语言切换 → Super 键</string>
     <string name="pref_km_back_to_escape">退格键 → Esc 键</string>

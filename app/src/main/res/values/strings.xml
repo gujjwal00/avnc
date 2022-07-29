@@ -69,7 +69,6 @@
     <string name="msg_invalid_vnc_uri">Invalid VNC URI</string>
     <string name="msg_copied_to_clipboard">Copied</string>
     <string name="msg_key_compat_mode_help">Some servers have limited Unicode support. Legacy key events can help input non-English text.</string>
-    <string name="msg_hide_remote_pointer_option_moved">\'Hide remote pointer\' is now available in \n\'Settings → Input → Mouse\'</string>
     <string name="msg_drag_gesture_help">Assigning an action to Drag gesture will change Long press detection:\n\n<b>Press-hold-release</b> → Long press\n<b>Press-hold-swipe</b> → Drag</string>
     <string name="tip_empty_server_list">Server list is empty.\nClick \'<b>+</b>\' to add a server, or\nuse the top address bar to connect directly.</string>
     <string name="tip_urlbar">You can enter IP address, hostname, or \'vnc://\' URI.</string>
