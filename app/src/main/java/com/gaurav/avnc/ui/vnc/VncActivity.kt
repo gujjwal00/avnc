@@ -41,10 +41,14 @@ import java.lang.ref.WeakReference
 
 private const val PROFILE_KEY = "com.gaurav.avnc.server_profile"
 
+fun createVncIntent(context: Context, profile: ServerProfile): Intent {
+    return Intent(context, VncActivity::class.java).apply {
+        putExtra(PROFILE_KEY, profile)
+    }
+}
+
 fun startVncActivity(source: Activity, profile: ServerProfile) {
-    val intent = Intent(source, VncActivity::class.java)
-    intent.putExtra(PROFILE_KEY, profile)
-    source.startActivity(intent)
+    source.startActivity(createVncIntent(source, profile))
 }
 
 fun startVncActivity(source: Activity, uri: VncUri) {
@@ -59,7 +63,7 @@ fun startVncActivity(source: Activity, uri: VncUri) {
  */
 class VncActivity : AppCompatActivity() {
 
-    private val profile by lazy { loadProfile() }
+    private lateinit var profile: ServerProfile
     val viewModel by viewModels<VncViewModel>()
     lateinit var binding: ActivityVncBinding
     private val dispatcher by lazy { Dispatcher(this) }
@@ -69,27 +73,29 @@ class VncActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        profile = loadProfile()
+        viewModel.initConnection(profile)
+
+        //Main UI
         binding = DataBindingUtil.setContentView(this, R.layout.activity_vnc)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+        binding.frameView.initialize(this)
+        viewModel.frameViewRef = WeakReference(binding.frameView)
 
         setupLayout()
-
-        binding.frameView.initialize(this)
-        binding.retryConnectionBtn.setOnClickListener { retryConnection() }
-
-        //Drawers
         setupDrawerLayout()
+
+        //Buttons
         binding.keyboardBtn.setOnClickListener { showKeyboard(); closeDrawers() }
         binding.zoomResetBtn.setOnClickListener { viewModel.resetZoom(); closeDrawers() }
         binding.virtualKeysBtn.setOnClickListener { virtualKeys.show(); closeDrawers() }
+        binding.retryConnectionBtn.setOnClickListener { retryConnection() }
 
-        //ViewModel setup
-        viewModel.frameViewRef = WeakReference(binding.frameView)
+        //Observers
         viewModel.credentialRequest.observe(this) { showCredentialDialog() }
         viewModel.sshHostKeyVerifyRequest.observe(this) { showHostKeyDialog() }
         viewModel.state.observe(this) { onClientStateChanged(it) }
-        viewModel.initConnection(profile) //Should be called after observers has been setup
     }
 
     override fun onResume() {
@@ -116,14 +122,11 @@ class VncActivity : AppCompatActivity() {
 
     private fun loadProfile(): ServerProfile {
         val profile = intent.getParcelableExtra<ServerProfile>(PROFILE_KEY)
-        if (profile != null) {
-            // Make a copy to avoid modifying intent's instance,
-            // because we may need the original if we have to retry connection.
-            return profile.copy()
-        }
+        check(profile != null) { "ServerProfile is missing from VncActivity Intent" }
 
-        Log.e(javaClass.simpleName, "No connection information was passed through Intent.")
-        return ServerProfile()
+        // Make a copy to avoid modifying intent's instance,
+        // because we may need the original if we have to retry connection.
+        return profile.copy()
     }
 
     private fun retryConnection() {

@@ -9,7 +9,6 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.content.Context
-import android.content.Intent
 import android.view.inputmethod.InputMethodManager
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onIdle
@@ -36,8 +35,7 @@ class VncActivityTest {
         testServer.start()
 
         val profile = ServerProfile(host = testServer.host, port = testServer.port)
-        val intent = Intent(targetContext, VncActivity::class.java)
-                .putExtra("com.gaurav.avnc.server_profile", profile)
+        val intent = createVncIntent(targetContext, profile)
 
         ActivityScenario.launch<VncActivity>(intent).use {
             onView(withId(R.id.frame_view)).checkWillBeDisplayed()            // Wait for connection

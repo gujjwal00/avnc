@@ -92,7 +92,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     /**
      * [ServerProfile] used for current connection.
      */
-    var profile = ServerProfile()
+    var profile = ServerProfile(); private set
 
     /**
      * We have two places for connection state (both are synced):
@@ -167,16 +167,14 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
     /**
      * Initialize VNC connection using given profile.
-     * [initConnection] can be called multiple times due to activity restarts.
+     * It may be called multiple times due to activity restarts.
      */
     fun initConnection(profile: ServerProfile) {
-        if (state.value != State.Created)
-            return
-
-        this.profile = profile
-        state.value = State.Connecting
-
-        launchConnection()
+        if (state.value == State.Created) {
+            state.value = State.Connecting
+            this.profile = profile
+            launchConnection()
+        }
     }
 
     private fun launchConnection() {
