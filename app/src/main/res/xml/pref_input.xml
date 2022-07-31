@@ -106,7 +106,7 @@
             app:title="@string/title_hide_remote_cursor" />
 
         <ListPreference
-            app:defaultValue="right"
+            app:defaultValue="right-click"
             app:entries="@array/mouse_back_action_entries"
             app:entryValues="@array/mouse_back_action_values"
             app:key="mouse_back"
