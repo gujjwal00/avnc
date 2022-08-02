@@ -319,8 +319,14 @@ class VncActivity : AppCompatActivity() {
 
         if (canEnter && Build.VERSION.SDK_INT >= 26) {
 
-            val fs = viewModel.frameState
-            val aspectRatio = Rational(fs.fbWidth.toInt(), fs.fbHeight.toInt())
+            var w = viewModel.frameState.fbWidth
+            var h = viewModel.frameState.fbHeight
+
+            // Android require aspect ratio to be less than 2.39
+            w = w.coerceIn(1f, 2.3f * h)
+            h = h.coerceIn(1f, 2.3f * w)
+
+            val aspectRatio = Rational(w.toInt(), h.toInt())
             val param = PictureInPictureParams.Builder().setAspectRatio(aspectRatio).build()
 
             try {
