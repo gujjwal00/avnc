@@ -12,9 +12,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.gaurav.avnc.model.ServerProfile
 
-@Database(entities = [ServerProfile::class], version = 1, exportSchema = true)
+@Database(entities = [ServerProfile::class], version = 2, exportSchema = true)
 abstract class MainDb : RoomDatabase() {
     abstract val serverProfileDao: ServerProfileDao
 
@@ -31,9 +33,22 @@ abstract class MainDb : RoomDatabase() {
         @Synchronized
         fun getInstance(context: Context): MainDb {
             if (instance == null) {
-                instance = Room.databaseBuilder(context, MainDb::class.java, "main").build()
+                instance = Room.databaseBuilder(context, MainDb::class.java, "main")
+                        .addMigrations(Migration_1_2)
+                        .build()
             }
             return instance!!
+        }
+
+        // Added in v2.0.0
+        private val Migration_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE profiles ADD COLUMN useRawEncoding INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE profiles ADD COLUMN zoom1 REAL NOT NULL DEFAULT 1.0")
+                db.execSQL("ALTER TABLE profiles ADD COLUMN zoom2 REAL NOT NULL DEFAULT 1.0")
+                db.execSQL("ALTER TABLE profiles ADD COLUMN gestureStyle TEXT NOT NULL DEFAULT 'auto'")
+                db.execSQL("UPDATE profiles SET imageQuality = 5")
+            }
         }
     }
 }

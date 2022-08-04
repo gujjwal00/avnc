@@ -9,6 +9,7 @@
 package com.gaurav.avnc.model
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
@@ -76,7 +77,27 @@ data class ServerProfile(
          * Specifies the image quality of the frames.
          * This mainly affects the compression level used by some encodings.
          */
-        var imageQuality: Int = 0,
+        var imageQuality: Int = 5,
+
+        /**
+         * Use raw encoding for framebuffer.
+         * This can improve performance when server is running on localhost.
+         */
+        @ColumnInfo(defaultValue = "0")
+        var useRawEncoding: Boolean = false,
+
+        /**
+         * Initial zoom for the viewer.
+         * This will be used in portrait orientation, or when per-orientation zooming is disabled.
+         */
+        @ColumnInfo(defaultValue = "1.0")
+        var zoom1: Float = 1f,
+
+        /**
+         * This will be used in landscape orientation if per-orientation zooming is enabled.
+         */
+        @ColumnInfo(defaultValue = "1.0")
+        var zoom2: Float = 1f,
 
         /**
          * Specifies whether 'View Only' mode should be used.
@@ -96,6 +117,13 @@ data class ServerProfile(
          * If enabled, we will try to emit legacy X KeySym events.
          */
         var keyCompatMode: Boolean = true,
+
+        /**
+         * Preferred style to use for gesture handling.
+         * Possible values: auto, touchscreen, touchpad
+         */
+        @ColumnInfo(defaultValue = "auto")
+        var gestureStyle: String = "auto",
 
         /**
          * Whether UltraVNC Repeater is used for connections.
