@@ -200,7 +200,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     private fun configureClient() {
-        client.configure(profile.viewOnly, profile.securityType, true  /* Hardcoded to true */)
+        client.configure(profile.viewOnly, profile.securityType, true  /* Hardcoded to true */,
+                         profile.imageQuality, profile.useRawEncoding)
 
         if (profile.useRepeater)
             client.setupRepeater(profile.idOnRepeater)

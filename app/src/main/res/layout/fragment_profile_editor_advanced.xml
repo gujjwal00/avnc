@@ -164,6 +164,45 @@
                     app:layout_constraintTop_toTopOf="@id/key_compat_mode"
                     app:tint="?colorControlNormal" />
 
+                <!--Image Quality-->
+                <TextView
+                    android:id="@+id/image_quality_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="48dp"
+                    android:labelFor="@id/image_quality"
+                    android:text="@string/title_image_quality"
+                    app:layout_constraintBottom_toBottomOf="@id/image_quality"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/image_quality" />
+
+                <SeekBar
+                    android:id="@+id/image_quality"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/action_btn_size"
+                    android:layout_marginVertical="@dimen/margin_small"
+                    android:layout_marginStart="@dimen/margin_large"
+                    android:enabled="@{!profile.useRawEncoding}"
+                    android:max="9"
+                    android:minHeight="@dimen/action_btn_size"
+                    android:progress="@={profile.imageQuality}"
+                    app:layout_constraintEnd_toStartOf="@id/raw_encoding"
+                    app:layout_constraintStart_toEndOf="@id/image_quality_label"
+                    app:layout_constraintTop_toBottomOf="@id/key_compat_mode" />
+
+                <CheckBox
+                    android:id="@+id/raw_encoding"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/action_btn_size"
+                    android:layout_marginEnd="@dimen/margin_small"
+                    android:checked="@={profile.useRawEncoding}"
+                    android:onCheckedChanged="@{(_, checked) -> imageQuality.setEnabled(!checked)}"
+                    android:text="@string/title_image_quality_raw"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/image_quality"
+                    app:layout_constraintTop_toTopOf="@id/image_quality" />
+
+
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                 <!-- Security                                                   -->
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -189,7 +228,7 @@
                     android:paddingTop="@dimen/padding_small"
                     android:paddingBottom="@dimen/padding_small"
                     app:layout_constraintStart_toEndOf="@id/security_icon"
-                    app:layout_constraintTop_toBottomOf="@id/key_compat_mode"
+                    app:layout_constraintTop_toBottomOf="@id/image_quality"
                     app:layout_constraintWidth_percent=".6" />
 
                 <!--Username-->

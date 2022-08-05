@@ -30,6 +30,8 @@
     <string name="title_default_security">Default security</string>
     <string name="title_hide_remote_cursor">Hide remote pointer</string>
     <string name="title_key_compat_mode">Send legacy key events</string>
+    <string name="title_image_quality">Image quality</string>
+    <string name="title_image_quality_raw">Raw</string>
     <string name="title_use_ssh_tunnel">Use SSH tunnel</string>
     <string name="title_unknown_ssh_host">Unknown SSH host</string>
     <string name="title_ssh_host_key_changed">SSH host key changed</string>

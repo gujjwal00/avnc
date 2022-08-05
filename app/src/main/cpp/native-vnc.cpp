@@ -266,7 +266,8 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeClientCreate(JNIEnv *env, jobject thiz)
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeConfigure(JNIEnv *env, jobject thiz, jlong client_ptr,
-                                                   jint securityType, jboolean use_local_cursor) {
+                                                   jint securityType, jboolean use_local_cursor, jint image_quality,
+                                                   jboolean use_raw_encoding) {
     auto client = (rfbClient *) client_ptr;
 
     // 0 means all auth types
@@ -279,6 +280,10 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeConfigure(JNIEnv *env, jobject thiz, jl
         client->appData.useRemoteCursor = TRUE;
         getClientExtension(client)->cursor = newCursor();
     }
+
+    client->appData.qualityLevel = image_quality;
+    if (use_raw_encoding)
+        client->appData.encodingsString = "raw";
 }
 
 extern "C"
