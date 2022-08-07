@@ -39,6 +39,15 @@
         <item>end</item>
     </string-array>
 
+    <string-array name="gesture_style_entries">
+        <item>@string/pref_gesture_style_touchscreen</item>
+        <item>@string/pref_gesture_style_touchpad</item>
+    </string-array>
+    <string-array name="gesture_style_values">
+        <item>touchscreen</item>
+        <item>touchpad</item>
+    </string-array>
+
     <string-array name="tap2_action_entries">
         <item>@string/pref_gesture_action_none</item>
         <item>@string/pref_gesture_action_right_click</item>
@@ -120,5 +129,12 @@
         <item>default</item>
         <item>middle-click</item>
         <item>right-click</item>
+    </string-array>
+
+    <!--Dummy string array used for testing-->
+    <string-array name="dummy_array">
+        <item>Item 1</item>
+        <item>Item 2</item>
+        <item>Item 3</item>
     </string-array>
 </resources>

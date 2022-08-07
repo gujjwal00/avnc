@@ -14,12 +14,14 @@
         app:icon="@drawable/ic_gesture"
         app:title="@string/pref_gesture">
 
-        <SwitchPreference
-            app:defaultValue="true"
-            app:key="gesture_direct_touch"
-            app:summaryOff="@string/pref_direct_touch_summary_off"
-            app:summaryOn="@string/pref_direct_touch_summary_on"
-            app:title="@string/pref_direct_touch" />
+        <com.gaurav.avnc.ui.prefs.ListPreferenceEx
+            app:defaultValue="touchscreen"
+            app:entries="@array/gesture_style_entries"
+            app:entryValues="@array/gesture_style_values"
+            app:key="gesture_style"
+            app:title="@string/pref_gesture_style"
+            app:useSimpleSummaryProvider="true"
+            app:widgetLayout="@layout/help_btn" />
 
         <ListPreference
             app:defaultValue="double-click"
@@ -47,7 +49,6 @@
 
         <com.gaurav.avnc.ui.prefs.ListPreferenceEx
             app:defaultValue="pan"
-            app:dependency="gesture_direct_touch"
             app:entries="@array/swipe1_action_entries"
             app:entryValues="@array/swipe1_action_values"
             app:key="gesture_swipe1"

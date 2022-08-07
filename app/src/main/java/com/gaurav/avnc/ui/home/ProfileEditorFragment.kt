@@ -14,7 +14,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.EditText
+import android.widget.SimpleAdapter
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
@@ -185,6 +187,33 @@ class ProfileEditorFragment : DialogFragment() {
             )
 
             security.setEntries(securityTypes, p.securityType) { p.securityType = it }
+
+            //Setup Gesture Style
+            val gestureStyleItems = listOf(
+                    mapOf("name" to getString(R.string.pref_gesture_style_auto),
+                          "description" to getString(R.string.pref_gesture_style_auto_summary),
+                          "value" to "auto"),
+                    mapOf("name" to getString(R.string.pref_gesture_style_touchscreen),
+                          "description" to getString(R.string.pref_gesture_style_touchscreen_summary),
+                          "value" to "touchscreen"),
+                    mapOf("name" to getString(R.string.pref_gesture_style_touchpad),
+                          "description" to getString(R.string.pref_gesture_style_touchpad_summary),
+                          "value" to "touchpad"),
+            )
+
+            val adapter = SimpleAdapter(requireContext(), gestureStyleItems, android.R.layout.simple_spinner_item,
+                                        arrayOf("name", "description"), intArrayOf(android.R.id.text1, android.R.id.text2))
+
+            adapter.setDropDownViewResource(android.R.layout.simple_list_item_2)
+            gestureStyle.adapter = adapter
+            gestureStyle.setSelection(gestureStyleItems.indexOfFirst { it["value"] == p.gestureStyle })
+            gestureStyle.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                    p.gestureStyle = gestureStyleItems[position]["value"]!!
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
         }
 
         return binding.root

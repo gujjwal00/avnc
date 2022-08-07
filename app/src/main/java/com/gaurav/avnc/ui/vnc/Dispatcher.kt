@@ -53,6 +53,7 @@ import kotlin.math.abs
 class Dispatcher(private val activity: VncActivity) {
 
     private val viewModel = activity.viewModel
+    private val profile = viewModel.profile
     private val messenger = viewModel.messenger
     private val gesturePref = viewModel.pref.input.gesture
 
@@ -60,16 +61,18 @@ class Dispatcher(private val activity: VncActivity) {
     /**************************************************************************
      * Action configuration
      **************************************************************************/
+    private val gestureStyle = if (profile.gestureStyle == "auto") gesturePref.style else profile.gestureStyle
+
     private val directMode = DirectMode()
     private val relativeMode = RelativeMode()
-    private val defaultMode = if (gesturePref.directTouch) directMode else relativeMode
+    private val defaultMode = if (gestureStyle == "touchscreen") directMode else relativeMode
 
     private val tap1Action = selectPointAction(gesturePref.tap1)
     private val tap2Action = selectPointAction(gesturePref.tap2)
     private val doubleTapAction = selectPointAction(gesturePref.doubleTap)
     private val longPressAction = selectPointAction(gesturePref.longPress)
 
-    private val swipe1Action = selectSwipeAction(if (gesturePref.directTouch) gesturePref.swipe1 else "move-pointer")
+    private val swipe1Action = selectSwipeAction(if (gestureStyle == "touchpad") "move-pointer" else gesturePref.swipe1)
     private val swipe2Action = selectSwipeAction(gesturePref.swipe2)
     private val dragAction = selectSwipeAction(gesturePref.drag)
 

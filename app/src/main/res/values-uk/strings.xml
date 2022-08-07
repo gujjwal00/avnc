@@ -8,8 +8,7 @@
     <string name="pref_sort_server_list">Сортувати збережені сервери за назвою</string>
     <string name="pref_gesture">Жести</string>
     <string name="pref_prefer_advanced_editor">Відразу відкривати розширені параметри сервера</string>
-    <string name="pref_direct_touch_summary_off">Робити дії з вказівником</string>
-    <string name="pref_direct_touch">Дотик напряму</string>
+    <string name="pref_gesture_style_touchpad_summary">Робити дії з вказівником</string>
     <string name="pref_single_tap">Один дотик</string>
     <string name="pref_swipe1">Ковзання одним пальцем</string>
     <string name="pref_mouse">Мишка</string>
@@ -149,7 +148,7 @@
     <string name="desc_retry_connection_btn">Повторити</string>
     <string name="tip_discovery">Виявлення може автоматично знаходити підтримувані сервери,
 \nщо працюють у Вашій мережі.</string>
-    <string name="pref_direct_touch_summary_on">Робити дії в точці доторкання</string>
+    <string name="pref_gesture_style_touchscreen_summary">Робити дії в точці доторкання</string>
     <string name="pref_double_tap">Подвійний дотик</string>
     <string name="pref_mouse_passthrough">Перехід миші</string>
     <string name="pref_mouse_passthrough_summary_off">Використовувати події миші для локальних жестів</string>

@@ -129,9 +129,8 @@
     <string name="pref_experimental_toolbar_swipe_close_summary">Au cours d\'une session distante, vous pouvez faire glisser pour fermer la barre d\'outils ouverte</string>
     <string name="pref_enable_pip">Picture-in-picture</string>
     <string name="pref_toolbar">Barre d\'outils</string>
-    <string name="pref_direct_touch_summary_on">Effectuer les actions au point de contact</string>
-    <string name="pref_direct_touch">Pointage direct</string>
-    <string name="pref_direct_touch_summary_off">Effectuer les actions au niveau du pointeur</string>
+    <string name="pref_gesture_style_touchscreen_summary">Effectuer les actions au point de contact</string>
+    <string name="pref_gesture_style_touchpad_summary">Effectuer les actions au niveau du pointeur</string>
     <string name="pref_debugging">Débogage</string>
     <string name="title_clear">Effacer</string>
     <string name="pref_theme_option_dark">Sombre</string>

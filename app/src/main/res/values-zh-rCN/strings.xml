@@ -79,9 +79,8 @@
     <string name="pref_theme_option_dark">暗色</string>
     <string name="pref_theme_option_light">亮色</string>
     <string name="pref_gesture">手势</string>
-    <string name="pref_direct_touch">直接触摸</string>
-    <string name="pref_direct_touch_summary_on">在接触点执行操作</string>
-    <string name="pref_direct_touch_summary_off">在指针处执行操作</string>
+    <string name="pref_gesture_style_touchscreen_summary">在接触点执行操作</string>
+    <string name="pref_gesture_style_touchpad_summary">在指针处执行操作</string>
     <string name="pref_two_finger_tap">双指敲击</string>
     <string name="pref_double_tap">双次敲击</string>
     <string name="pref_long_press">长按</string>

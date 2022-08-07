@@ -36,7 +36,7 @@ class AppPreferences(context: Context) {
     }
 
     inner class Gesture {
-        val directTouch; get() = prefs.getBoolean("gesture_direct_touch", true)
+        val style; get() = prefs.getString("gesture_style", "touchscreen")!!
         val tap1 = "left-click" //Preference UI was removed
         val tap2; get() = prefs.getString("gesture_tap2", "open-keyboard")!!
         val doubleTap; get() = prefs.getString("gesture_double_tap", "double-click")!!
@@ -129,6 +129,16 @@ class AppPreferences(context: Context) {
                 is Long -> value = prefs.getLong(key, defValue) as T
                 is Float -> value = prefs.getFloat(key, defValue) as T
             }
+        }
+    }
+
+
+    /****************************** Migrations *******************************/
+    init {
+        if (!prefs.getBoolean("gesture_direct_touch", true)) {
+            prefs.edit().putString("gesture_style", "touchpad")
+                    .remove("gesture_direct_touch")
+                    .apply()
         }
     }
 }

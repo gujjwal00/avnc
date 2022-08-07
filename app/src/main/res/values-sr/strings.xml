@@ -25,11 +25,10 @@
     <string name="pref_gesture_action_right_click">Десни клик</string>
     <string name="pref_gesture_action_double_click">Двоклик</string>
     <string name="pref_mouse_passthrough">Пролаз мишем</string>
-    <string name="pref_direct_touch">Непосредан додир</string>
-    <string name="pref_direct_touch_summary_off">Извршавај радње на показивачу</string>
+    <string name="pref_gesture_style_touchpad_summary">Извршавај радње на показивачу</string>
     <string name="pref_long_press">Дуги притисак</string>
     <string name="pref_vk_open_with_keyboard">Отвори тастатуром</string>
-    <string name="pref_direct_touch_summary_on">Извршавај радње на тачци додира</string>
+    <string name="pref_gesture_style_touchscreen_summary">Извршавај радње на тачци додира</string>
     <string name="pref_mouse">Миш</string>
     <string name="pref_theme">Тема</string>
     <string name="pref_theme_option_light">Светла</string>

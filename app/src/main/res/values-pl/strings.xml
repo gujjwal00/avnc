@@ -153,15 +153,14 @@
     <string name="pref_discovery">Odkrywanie</string>
     <string name="pref_import_export">Importuj/Eksportuj serwery</string>
     <string name="pref_keycode_map">Mapa kodów</string>
-    <string name="pref_direct_touch">Bezpośredni dotyk</string>
-    <string name="pref_direct_touch_summary_on">Wykonuj działania w punkcie kontaktu</string>
+    <string name="pref_gesture_style_touchscreen_summary">Wykonuj działania w punkcie kontaktu</string>
     <string name="pref_mouse_back_action_right">Kliknij prawym przyciskiem</string>
     <string name="pref_gesture_action_remote_drag">Przeciągnij zdalną zawartość</string>
     <string name="pref_vk">Wirtualna klawiatura</string>
     <string name="pref_vk_open_with_keyboard">Otwórz za pomocą klawiatury</string>
     <string name="title_use_repeater">Użyj wzmacniacza</string>
     <string name="title_hide_remote_cursor">Ukryj zdalny wskaźnik</string>
-    <string name="pref_direct_touch_summary_off">Wykonaj działania na wskaźniku</string>
+    <string name="pref_gesture_style_touchpad_summary">Wykonaj działania na wskaźniku</string>
     <string name="pref_km_language_switch_to_super">Zmiana języka → Super</string>
     <string name="pref_experimental_immersive_mode">Tryb pełnej immersji</string>
     <string name="msg_drag_gesture_help">Przypisanie akcji do gestu przeciągania zmieni Wykrywanie długiego naciśnięcia:

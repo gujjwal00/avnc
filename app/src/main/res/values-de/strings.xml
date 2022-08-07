@@ -165,9 +165,8 @@
     <string name="title_ssh_host_key_changed">Der öffentliche Schlüssel des SSH-Zielpunktes hat sich geändert</string>
     <string name="hint_server_id">Server-ID</string>
     <string name="pref_gesture_action_remote_drag">Drag and Drop für entfernte Inhalte</string>
-    <string name="pref_direct_touch">Direkte Touch-Umsetzung auf dem Server</string>
-    <string name="pref_direct_touch_summary_on">Setze Aktionen direkt am Ort des Tippens um</string>
-    <string name="pref_direct_touch_summary_off">Setze Aktionen an einem Mauszeiger um, ähnlich einem Touchpad</string>
+    <string name="pref_gesture_style_touchscreen_summary">Setze Aktionen direkt am Ort des Tippens um</string>
+    <string name="pref_gesture_style_touchpad_summary">Setze Aktionen an einem Mauszeiger um, ähnlich einem Touchpad</string>
     <string name="pref_orientation">Bildschirmausrichtung</string>
     <string name="pref_orientation_option_auto">Automatisch (nach Lagesensor)</string>
     <string name="pref_orientation_option_portrait">Hochformat</string>

@@ -7,7 +7,8 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -203,6 +204,28 @@
                     app:layout_constraintTop_toTopOf="@id/image_quality" />
 
 
+                <!--Gesture style-->
+                <TextView
+                    android:id="@+id/gesture_style_label"
+                    style="@style/FormField.LabelWithIcon"
+                    android:labelFor="@id/gesture_style"
+                    android:text="@string/pref_gesture_style"
+                    app:drawableStartCompat="@drawable/ic_gesture"
+                    app:layout_constraintBottom_toBottomOf="@id/gesture_style"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/gesture_style" />
+
+                <com.gaurav.avnc.util.SpinnerEx
+                    android:id="@+id/gesture_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/action_btn_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/image_quality"
+                    app:layout_constraintTop_toBottomOf="@id/image_quality"
+                    tools:entries="@array/dummy_array" />
+
+
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                 <!-- Security                                                   -->
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -228,7 +251,7 @@
                     android:paddingTop="@dimen/padding_small"
                     android:paddingBottom="@dimen/padding_small"
                     app:layout_constraintStart_toEndOf="@id/security_icon"
-                    app:layout_constraintTop_toBottomOf="@id/image_quality"
+                    app:layout_constraintTop_toBottomOf="@id/gesture_style"
                     app:layout_constraintWidth_percent=".6" />
 
                 <!--Username-->
