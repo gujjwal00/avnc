@@ -1,0 +1,3 @@
+* Small improvement in connection startup speed
+* Fixed a crash on first ever connection when toolbar was aligned to end
+* Fixed a crash when entering picture-in-picture for servers with large aspect ratio
