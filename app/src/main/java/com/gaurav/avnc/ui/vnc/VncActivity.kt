@@ -164,10 +164,10 @@ class VncActivity : AppCompatActivity() {
                 viewModel.pref.runInfo.hasConnectedSuccessfully = true
 
                 // Highlight drawer for first time users
-                binding.drawerLayout.open()
+                binding.drawerLayout.openDrawer(binding.primaryToolbar)
                 lifecycleScope.launchWhenCreated {
                     delay(1500)
-                    binding.drawerLayout.close()
+                    binding.drawerLayout.closeDrawer(binding.primaryToolbar)
                 }
             }
 
