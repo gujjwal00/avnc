@@ -96,7 +96,7 @@
     <style name="VirtualKey">
         <item name="android:layout_height">36dp</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:minWidth">60dp</item>
+        <item name="android:minWidth">50dp</item>
         <item name="android:gravity">center</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body2</item>

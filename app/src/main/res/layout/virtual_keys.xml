@@ -49,6 +49,12 @@
 
             <!--~~~~~~~~~~~~~~~~~~~~~~~~~~ Meta keys ~~~~~~~~~~~~~~~~~~~~~-->
 
+            <ImageButton
+                style="@style/VirtualKey.Image"
+                android:contentDescription="Super key"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_META_LEFT)}"
+                android:src="@drawable/ic_super_key" />
+
             <ToggleButton
                 android:id="@+id/shift_btn"
                 style="@style/VirtualKey.Toggle"
@@ -87,6 +93,14 @@
 
 
             <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~ Arrow keys ~~~~~~~~~~~~~~~~~~~~~~~-->
+
+            <ImageButton
+                style="@style/VirtualKey.Image"
+                android:contentDescription="Left"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_DPAD_LEFT)}"
+                android:src="@drawable/ic_keyboard_arrow_left"
+                app:isRepeatable="@{true}" />
+
             <ImageButton
                 style="@style/VirtualKey.Image"
                 android:contentDescription="Up"
@@ -99,13 +113,6 @@
                 android:contentDescription="Down"
                 android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_DPAD_DOWN)}"
                 android:src="@drawable/ic_keyboard_arrow_down"
-                app:isRepeatable="@{true}" />
-
-            <ImageButton
-                style="@style/VirtualKey.Image"
-                android:contentDescription="Left"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_DPAD_LEFT)}"
-                android:src="@drawable/ic_keyboard_arrow_left"
                 app:isRepeatable="@{true}" />
 
             <ImageButton
