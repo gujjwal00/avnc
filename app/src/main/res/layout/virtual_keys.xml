@@ -75,12 +75,14 @@
             <androidx.appcompat.widget.AppCompatButton
                 style="@style/VirtualKey"
                 android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_TAB)}"
-                android:text="Tab" />
+                android:text="Tab"
+                app:isRepeatable="@{true}" />
 
             <androidx.appcompat.widget.AppCompatButton
                 style="@style/VirtualKey"
                 android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_ESCAPE)}"
                 android:text="Esc"
+                app:isRepeatable="@{true}"
                 app:isVisible="@{showAll}" />
 
 
@@ -89,25 +91,29 @@
                 style="@style/VirtualKey.Image"
                 android:contentDescription="Up"
                 android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_DPAD_UP)}"
-                android:src="@drawable/ic_keyboard_arrow_up" />
+                android:src="@drawable/ic_keyboard_arrow_up"
+                app:isRepeatable="@{true}" />
 
             <ImageButton
                 style="@style/VirtualKey.Image"
                 android:contentDescription="Down"
                 android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_DPAD_DOWN)}"
-                android:src="@drawable/ic_keyboard_arrow_down" />
+                android:src="@drawable/ic_keyboard_arrow_down"
+                app:isRepeatable="@{true}" />
 
             <ImageButton
                 style="@style/VirtualKey.Image"
                 android:contentDescription="Left"
                 android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_DPAD_LEFT)}"
-                android:src="@drawable/ic_keyboard_arrow_left" />
+                android:src="@drawable/ic_keyboard_arrow_left"
+                app:isRepeatable="@{true}" />
 
             <ImageButton
                 style="@style/VirtualKey.Image"
                 android:contentDescription="Right"
                 android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_DPAD_RIGHT)}"
-                android:src="@drawable/ic_keyboard_arrow_right" />
+                android:src="@drawable/ic_keyboard_arrow_right"
+                app:isRepeatable="@{true}" />
 
 
             <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~ Miscellaneous ~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -122,30 +128,35 @@
                 style="@style/VirtualKey"
                 android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_MOVE_END)}"
                 android:text="End"
+                app:isRepeatable="@{true}"
                 app:isVisible="@{showAll}" />
 
             <androidx.appcompat.widget.AppCompatButton
                 style="@style/VirtualKey"
                 android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_PAGE_UP)}"
                 android:text="PgUp"
+                app:isRepeatable="@{true}"
                 app:isVisible="@{showAll}" />
 
             <androidx.appcompat.widget.AppCompatButton
                 style="@style/VirtualKey"
                 android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_PAGE_DOWN)}"
                 android:text="PgDn"
+                app:isRepeatable="@{true}"
                 app:isVisible="@{showAll}" />
 
             <androidx.appcompat.widget.AppCompatButton
                 style="@style/VirtualKey"
                 android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_INSERT)}"
                 android:text="Insert"
+                app:isRepeatable="@{true}"
                 app:isVisible="@{showAll}" />
 
             <androidx.appcompat.widget.AppCompatButton
                 style="@style/VirtualKey"
                 android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_FORWARD_DEL)}"
                 android:text="Delete"
+                app:isRepeatable="@{true}"
                 app:isVisible="@{showAll}" />
 
         </LinearLayout>
