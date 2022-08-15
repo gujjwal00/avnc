@@ -13,6 +13,9 @@ import android.os.Build
 import android.view.*
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.PointerButton
+import kotlin.math.PI
+import kotlin.math.abs
+import kotlin.math.atan2
 import kotlin.math.max
 
 /**
@@ -170,11 +173,13 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     private val gestureDetector = GestureDetector(viewModel.app, this)
     private val multiFingerTapDetector = MultiFingerTapDetector()
     private val dragDetector = DragDetector()
+    private val swipeVsScale = SwipeVsScale()
     private val dragEnabled = viewModel.pref.input.gesture.dragEnabled
     private val swipeSensitivity = viewModel.pref.input.gesture.swipeSensitivity
 
 
     private fun handleGestureEvent(event: MotionEvent): Boolean {
+        swipeVsScale.onTouchEvent(event)
         dragDetector.onTouchEvent(event)
         multiFingerTapDetector.onTouchEvent(event)
         scaleDetector.onTouchEvent(event)
@@ -184,7 +189,8 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     override fun onScaleBegin(detector: ScaleGestureDetector) = true
     override fun onScaleEnd(detector: ScaleGestureDetector) {}
     override fun onScale(detector: ScaleGestureDetector): Boolean {
-        dispatcher.onScale(detector.scaleFactor, detector.focusX, detector.focusY)
+        if (swipeVsScale.shouldScale())
+            dispatcher.onScale(detector.scaleFactor, detector.focusX, detector.focusY)
         return true
     }
 
@@ -222,7 +228,8 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
 
         when (e2.pointerCount) {
             1 -> dispatcher.onSwipe1(startPoint, currentPoint, normalizedDx, normalizedDy)
-            2 -> dispatcher.onSwipe2(startPoint, currentPoint, normalizedDx, normalizedDy)
+            2 -> if (swipeVsScale.shouldSwipe())
+                dispatcher.onSwipe2(startPoint, currentPoint, normalizedDx, normalizedDy)
         }
 
         multiFingerTapDetector.reset()
@@ -340,6 +347,108 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
             startEvent?.recycle()
             startEvent = null
             fingerCount = 0
+        }
+    }
+
+    /**
+     * Swipe vs Scale detector.
+     *
+     * Many two-finger gestures are detected as both swipe & scale gestures because
+     * [GestureDetector] & [ScaleGestureDetector] work independently. This works
+     * very well when two-finger swipe pref is set to 'pan' (default value).
+     * But when the pref is set to 'remote-scroll', this independent detection
+     * becomes an issue. When user tries to scale, it frequently triggers remote
+     * scrolling. And when user tries to scroll, it triggers scaling.
+     *
+     * This class tries to clearly differentiate between these two gestures.
+     * It works by tracking the fingers, and calculating the angle between two paths.
+     * Then [decide] between two gestures by comparing the angle to some thresholds.
+     *
+     * This class can mis-detect some gestures because fingers don't always move
+     * perfectly, but it does provide huge improvement over existing situation.
+     */
+    private inner class SwipeVsScale {
+        private val enabled = viewModel.pref.input.gesture.swipe2 == "remote-scroll"
+        private var detecting = false
+        private var scaleDetected = false
+        private var swipeDetected = false
+
+        private var f1Id = 0 // Finger 1
+        private var f2Id = 0 // Finger 2
+        private val f1Start = PointF()
+        private val f2Start = PointF()
+        private val f1Current = PointF()
+        private val f2Current = PointF()
+
+
+        fun onTouchEvent(e: MotionEvent) {
+            if (!enabled)
+                return
+
+            when (e.actionMasked) {
+                MotionEvent.ACTION_DOWN,
+                MotionEvent.ACTION_CANCEL,
+                MotionEvent.ACTION_UP,
+                MotionEvent.ACTION_POINTER_UP -> {
+                    detecting = false
+                    scaleDetected = false
+                    swipeDetected = false
+                }
+
+                MotionEvent.ACTION_POINTER_DOWN -> {
+                    detecting = e.pointerCount == 2
+                    if (detecting) {
+                        f1Id = e.getPointerId(0)
+                        f2Id = e.getPointerId(1)
+                        f1Start.set(e.getX(f1Id), e.getY(f1Id))
+                        f2Start.set(e.getX(f2Id), e.getY(f2Id))
+                        f1Current.set(f1Start)
+                        f2Current.set(f2Start)
+                    }
+                }
+
+                MotionEvent.ACTION_MOVE -> {
+                    if (detecting) {
+                        f1Current.set(e.getX(f1Id), e.getY(f1Id))
+                        f2Current.set(e.getX(f2Id), e.getY(f2Id))
+                    }
+                }
+            }
+        }
+
+        fun shouldScale(): Boolean {
+            decide()
+            return !enabled || (detecting && scaleDetected)
+        }
+
+        fun shouldSwipe(): Boolean {
+            decide()
+            return !enabled || (detecting && swipeDetected)
+        }
+
+        /**
+         * Decides if gesture can be considered a swipe/scale
+         */
+        private fun decide() {
+            if (!detecting)
+                return
+
+            val t1 = theta(f1Start, f1Current)
+            val t2 = theta(f2Start, f2Current)
+            val diff = abs(t1 - t2)
+
+            scaleDetected = diff > 45
+            swipeDetected = diff < 30
+        }
+
+        /**
+         * Returns the angle made by line [p1]->[p2] with the positive x-axis.
+         * Returned angle will be in range [0, 360]
+         */
+        private fun theta(p1: PointF, p2: PointF): Double {
+            val theta = atan2(p2.y - p1.y, p2.x - p1.x)
+            val degree = (theta / PI) * 180
+            return (degree + 360) % 360 // Map [-180, 180] to [0, 360]
         }
     }
 }
