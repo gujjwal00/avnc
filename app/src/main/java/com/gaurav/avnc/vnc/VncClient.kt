@@ -171,7 +171,7 @@ class VncClient(private val observer: Observer) {
      * @param x    Horizontal pointer coordinate
      * @param y    Vertical pointer coordinate
      */
-    fun moveClientPointer(x: Int, y: Int) = executeSend {
+    fun moveClientPointer(x: Int, y: Int) {
         pointerX = x
         pointerY = y
         observer.onPointerMoved(x, y)
