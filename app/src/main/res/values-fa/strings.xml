@@ -122,7 +122,7 @@
     <string name="pref_long_press">فشار طولانی</string>
     <string name="pref_swipe1">سُر دادن یک-انگشت</string>
     <string name="pref_swipe2">سُر دادن دو-انگشت</string>
-    <string name="pref_drag">کشیدن (فشار طولانی و سُر دادن)</string>
+    <string name="pref_drag">کشیدن</string>
     <string name="pref_mouse">ماوس</string>
     <string name="pref_mouse_passthrough">عبور ماوس</string>
     <string name="pref_mouse_passthrough_summary_off">رویدادهای ماوس برای حرکات محلّی استفاده شوند</string>
@@ -164,4 +164,12 @@
     <string name="pref_swipe_sensitivity">حساسیت به کشیدن</string>
     <string name="desc_discovery_stop_btn">اکتشاف کارسازها را متوقّف کن</string>
     <string name="pref_discovery_autorun_summary">در حالی که در صفحهٔ اصلی هستید، کارسازها را کشف کنید</string>
+    <string name="msg_drag_gesture_help">اختصاص دادن یک کنش به حرکت کشیدن، تشخیص فشار طولانی را تغییر می‌دهد:
+\n
+\n<b>فشار طولانی و رها کردن</b> ← فشار طولانی
+\n<b>فشار طولانی و سُر دادن</b> ← کشیدن</string>
+    <string name="pref_orientation_option_auto">خودکار</string>
+    <string name="pref_orientation_option_landscape">افقی</string>
+    <string name="pref_orientation_option_portrait">عمودی</string>
+    <string name="pref_orientation">جهت صفحه نمایش</string>
 </resources>
