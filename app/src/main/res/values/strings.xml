@@ -62,6 +62,8 @@
     <string name="msg_about_app">A fast and secure VNC client. Remotely view and control any device running a VNC server.\n\n\nAVNC is an open source and copyleft software — made with help from many contributors.</string>
     <string name="msg_server_profile_added">Server added</string>
     <string name="msg_server_profile_deleted">Server deleted</string>
+    <string name="msg_zoom_reset">Zoom reset to 100%</string>
+    <string name="msg_zoom_saved">Saved current zoom as default</string>
     <string name="msg_pip_not_supported">Not supported on this device</string>
     <string name="msg_ptr_hiding_not_supported">Not supported on this device</string>
     <string name="msg_loading">Loading…</string>
@@ -90,7 +92,9 @@
     <string name="desc_discovery_running">Discovering servers on you network</string>
     <string name="desc_keyboard_btn">Open keyboard</string>
     <string name="desc_virtual_keys_btn">Show virtual keys</string>
+    <string name="desc_zoom_options_btn">Zoom options</string>
     <string name="desc_reset_zoom_btn">Reset zoom</string>
+    <string name="desc_save_zoom_btn">Save current zoom as default</string>
     <string name="desc_retry_connection_btn">Retry</string>
     <string name="desc_back_btn">Back</string>
     <string name="desc_clear_url_btn">Clear</string>
@@ -176,6 +180,7 @@
     <string name="pref_zoom">Zoom</string>
     <string name="pref_zoom_min">Minimum</string>
     <string name="pref_zoom_max">Maximum</string>
+    <string name="pref_per_orientation_zoom">Separate zoom for each orientation</string>
     <string name="pref_clipboard_sync">Clipboard sync</string>
     <string name="pref_saved_server_lock_summary">Require biometric/password unlock to connect</string>
     <string name="pref_saved_server_lock">Lock saved servers</string>

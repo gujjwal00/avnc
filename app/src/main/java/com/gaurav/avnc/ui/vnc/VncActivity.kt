@@ -21,6 +21,7 @@ import android.util.Log
 import android.util.Rational
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updatePadding
@@ -93,7 +94,9 @@ class VncActivity : AppCompatActivity() {
 
         //Buttons
         binding.keyboardBtn.setOnClickListener { showKeyboard(); closeDrawers() }
-        binding.zoomResetBtn.setOnClickListener { viewModel.resetZoom(); closeDrawers() }
+        binding.zoomOptions.setOnLongClickListener { resetZoom(); closeDrawers(); true }
+        binding.zoomResetBtn.setOnClickListener { resetZoom(); closeDrawers() }
+        binding.zoomSaveBtn.setOnClickListener { saveZoom(); closeDrawers() }
         binding.virtualKeysBtn.setOnClickListener { virtualKeys.show(); closeDrawers() }
         binding.retryConnectionBtn.setOnClickListener { retryConnection() }
 
@@ -165,6 +168,16 @@ class VncActivity : AppCompatActivity() {
         HostKeyFragment().show(supportFragmentManager, "HostKeyFragment")
     }
 
+    private fun resetZoom() {
+        viewModel.resetZoom()
+        Toast.makeText(this, getString(R.string.msg_zoom_reset), Toast.LENGTH_SHORT).show()
+    }
+
+    private fun saveZoom() {
+        viewModel.saveZoom()
+        Toast.makeText(this, getString(R.string.msg_zoom_saved), Toast.LENGTH_SHORT).show()
+    }
+
     fun showKeyboard() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
@@ -174,7 +187,10 @@ class VncActivity : AppCompatActivity() {
         virtualKeys.onKeyboardOpen()
     }
 
-    private fun closeDrawers() = binding.drawerLayout.closeDrawers()
+    private fun closeDrawers() {
+        binding.zoomOptions.isChecked = false
+        binding.drawerLayout.closeDrawers()
+    }
 
     private fun onClientStateChanged(newState: VncViewModel.State) {
         if (newState == VncViewModel.State.Connected) {

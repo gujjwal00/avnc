@@ -61,27 +61,63 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center_vertical"
-                android:background="@drawable/bg_round_rect"
-                android:orientation="vertical">
+                android:animateLayoutChanges="true">
 
-                <ImageButton
-                    android:id="@+id/keyboard_btn"
-                    style="@style/ImageButton"
-                    android:contentDescription="@string/desc_keyboard_btn"
-                    android:src="@drawable/ic_keyboard" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_round_rect"
+                    android:orientation="vertical">
 
-                <ImageButton
-                    android:id="@+id/virtual_keys_btn"
-                    style="@style/ImageButton"
-                    android:contentDescription="@string/desc_virtual_keys_btn"
-                    android:src="@drawable/ic_keyboard_mini" />
+                    <ImageButton
+                        android:id="@+id/keyboard_btn"
+                        style="@style/ImageButton"
+                        android:contentDescription="@string/desc_keyboard_btn"
+                        android:src="@drawable/ic_keyboard" />
 
-                <ImageButton
-                    android:id="@+id/zoom_reset_btn"
-                    style="@style/ImageButton"
-                    android:contentDescription="@string/desc_reset_zoom_btn"
-                    android:src="@drawable/ic_zoom_reset" />
+                    <ImageButton
+                        android:id="@+id/virtual_keys_btn"
+                        style="@style/ImageButton"
+                        android:contentDescription="@string/desc_virtual_keys_btn"
+                        android:src="@drawable/ic_keyboard_mini" />
 
+                    <ToggleButton
+                        android:id="@+id/zoom_options"
+                        style="@style/ImageButton"
+                        android:background="@drawable/bg_toggle_button"
+                        android:contentDescription="@string/desc_zoom_options_btn"
+                        android:drawableStart="@drawable/ic_zoom_options"
+                        android:foreground="?selectableItemBackground"
+                        android:gravity="center"
+                        android:padding="12dp"
+                        android:textOff=""
+                        android:textOn=""
+                        tools:ignore="UnusedAttribute" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:background="@drawable/bg_round_rect"
+                    app:isVisible="@{zoomOptions.checked}">
+
+                    <ImageButton
+                        android:id="@+id/zoom_reset_btn"
+                        style="@style/ImageButton"
+                        android:contentDescription="@string/desc_reset_zoom_btn"
+                        android:src="@drawable/ic_zoom_reset" />
+
+                    <ImageButton
+                        android:id="@+id/zoom_save_btn"
+                        style="@style/ImageButton"
+                        android:alpha="@{viewModel.profile.ID != 0 ? 1f : .25f}"
+                        android:contentDescription="@string/desc_save_zoom_btn"
+                        android:enabled="@{viewModel.profile.ID != 0}"
+                        android:src="@drawable/ic_save" />
+
+                </LinearLayout>
             </LinearLayout>
 
         </androidx.drawerlayout.widget.DrawerLayout>

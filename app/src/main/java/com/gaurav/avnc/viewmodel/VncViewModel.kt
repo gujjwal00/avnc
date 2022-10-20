@@ -146,7 +146,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     /**
      * Holds information about scaling, translation etc.
      */
-    val frameState = FrameState(pref)
+    val frameState = with(pref.viewer) { FrameState(zoomMin, zoomMax, perOrientationZoom) }
 
     /**
      * Used for scrolling/animating the frame.
@@ -178,6 +178,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         if (state.value == State.Created) {
             state.value = State.Connecting
             this.profile = profile
+            frameState.setZoom(profile.zoom1, profile.zoom2)
             launchConnection()
         }
     }
@@ -271,7 +272,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     fun resetZoom() {
-        frameState.resetZoom()
+        frameState.setZoom(1f, 1f)
         frameViewRef.get()?.requestRender()
     }
 
@@ -283,6 +284,12 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     fun moveFrameTo(x: Float, y: Float) {
         frameState.moveTo(x, y)
         frameViewRef.get()?.requestRender()
+    }
+
+    fun saveZoom() {
+        profile.zoom1 = frameState.zoomScale1
+        profile.zoom2 = frameState.zoomScale2
+        saveProfile()
     }
 
     /**************************************************************************

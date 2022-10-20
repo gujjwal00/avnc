@@ -9,7 +9,6 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.graphics.PointF
-import com.gaurav.avnc.util.AppPreferences
 import kotlin.math.max
 import kotlin.math.min
 
@@ -76,10 +75,12 @@ import kotlin.math.min
  * - Maximum window space is utilized
  *
  * 2. Zoom Scale [zoomScale] :
- * This is the user controlled part. It always starts at 1 (100% zoom), and only updated in response
- * to pinch gestures. Conceptually, it works 'on top of' the base scale.
+ * This is the user controlled part. It is updated only in response to pinch gestures.
+ * To allow different zoom in different orientations, two separate zoom scales are maintained
+ * in [zoomScale1] & [zoomScale2]. Based on user preference and current orientation, [zoomScale]
+ * will be delegated to one of these.
  *
- *
+ * Conceptually, zoom scale works 'on top of' the base scale.
  * Effective scale [scale] is calculated as the product of these two parts, so:
 
  *      FrameSize = (FramebufferSize * BaseScale) * ZoomScale
@@ -93,13 +94,11 @@ import kotlin.math.min
  * Renderer thread may see half-updated state. But it should "eventually" settle down
  * because any change in frame state is usually followed by a new render request.
  */
-class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScale: Float = 5F) {
-
-    constructor(prefs: AppPreferences) : this(prefs.viewer.zoomMin, prefs.viewer.zoomMax)
-
-    var baseScale = 1F; private set
-    var zoomScale = 1F; private set
-    val scale get() = baseScale * zoomScale
+class FrameState(
+        private val minZoomScale: Float = 0.5F,
+        private val maxZoomScale: Float = 5F,
+        private val usePerOrientationZoom: Boolean = false
+) {
 
     //Frame position, relative to top-left corner (0,0)
     var frameX = 0F; private set
@@ -116,6 +115,18 @@ class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScal
     //Size of activity window
     var windowWidth = 0F; private set
     var windowHeight = 0F; private set
+
+    //Scaling
+    var zoomScale1 = 1F; private set
+    var zoomScale2 = 1F; private set
+    private val useZoomScale1 get() = (!usePerOrientationZoom || windowHeight > windowWidth)
+
+    var baseScale = 1F; private set
+    var zoomScale
+        get() = if (useZoomScale1) zoomScale1 else zoomScale2
+        private set(value) = if (useZoomScale1) zoomScale1 = value else zoomScale2 = value
+
+    val scale get() = baseScale * zoomScale
 
 
     fun setFramebufferSize(w: Float, h: Float) {
@@ -152,8 +163,9 @@ class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScal
         return zoomScale / oldScale //Applied scale factor
     }
 
-    fun resetZoom() {
-        zoomScale = 1F
+    fun setZoom(zoom1: Float, zoom2: Float) {
+        zoomScale1 = zoom1
+        zoomScale2 = zoom2
         coerceValues()
     }
 
@@ -216,7 +228,8 @@ class FrameState(private val minZoomScale: Float = 0.5F, private val maxZoomScal
      * Makes sure state values are within constraints.
      */
     private fun coerceValues() {
-        zoomScale = zoomScale.coerceIn(minZoomScale, maxZoomScale)
+        zoomScale1 = zoomScale1.coerceIn(minZoomScale, maxZoomScale)
+        zoomScale2 = zoomScale2.coerceIn(minZoomScale, maxZoomScale)
         frameX = coercePosition(frameX, vpWidth, fbWidth)
         frameY = coercePosition(frameY, vpHeight, fbHeight)
     }

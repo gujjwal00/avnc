@@ -111,6 +111,39 @@ class FrameStateTest {
     }
 
     @Test
+    fun perOrientationZoomScaleEnabledTest() {
+        val state = FrameState(usePerOrientationZoom = true)
+
+        state.setWindowSize(100f, 50f)
+        state.updateZoom(2f)
+        assertEquals(2F, state.zoomScale)
+
+        //Zoom scale should be separate for each orientation
+        state.setWindowSize(50f, 100f)
+        assertEquals(1f, state.zoomScale)
+
+        state.updateZoom(5f)
+        assertEquals(5f, state.zoomScale)
+
+        //Restore orientation
+        state.setWindowSize(100f, 50f)
+        assertEquals(2f, state.zoomScale)
+    }
+
+    @Test
+    fun perOrientationZoomScaleDisabledTest() {
+        val state = FrameState(usePerOrientationZoom = false)
+
+        state.setWindowSize(100f, 50f)
+        state.updateZoom(2f)
+        assertEquals(2F, state.zoomScale)
+
+        //Zoom scale should be same in all orientations
+        state.setWindowSize(50f, 100f)
+        assertEquals(2f, state.zoomScale)
+    }
+
+    @Test
     fun positionCoerceTest1() {
         val state = FrameState()
         state.setViewportSize(100f, 100f)
