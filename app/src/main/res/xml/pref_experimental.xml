@@ -21,4 +21,9 @@
         app:summary="@string/pref_experimental_immersive_mode_summary"
         app:title="@string/pref_experimental_immersive_mode" />
 
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="viewer_draw_behind_cutout"
+        app:title="Draw behind display cutout" />
+
 </PreferenceScreen>

@@ -262,6 +262,12 @@ class VncActivity : AppCompatActivity() {
 
             binding.root.updatePadding(bottom = paddingBottom)
         }
+
+        if (Build.VERSION.SDK_INT >= 28 && viewModel.pref.experimental.drawBehindCutout) {
+            window.attributes = window.attributes.apply {
+                layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            }
+        }
     }
 
     private fun setupOrientation() {
