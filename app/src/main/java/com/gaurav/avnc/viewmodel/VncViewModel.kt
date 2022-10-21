@@ -118,6 +118,11 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     val credentialRequest = LiveRequest<Boolean, UserCredential>(UserCredential(), viewModelScope)
 
     /**
+     * Fired to unlock saved servers.
+     */
+    val serverUnlockRequest = LiveRequest<Any?, Boolean>(false, viewModelScope)
+
+    /**
      * List of known credentials. Used for providing suggestion when
      * new credentials are required.
      */
@@ -182,7 +187,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
             runCatching {
 
-                configureClient()
+                preConnect()
                 connect()
                 processMessages()
 
@@ -199,7 +204,11 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         }
     }
 
-    private fun configureClient() {
+    private fun preConnect() {
+        if (profile.ID != 0L && pref.server.lockSavedServer)
+            if (!serverUnlockRequest.requestResponse(null))
+                throw IOException("Could not unlock server")
+
         client.configure(profile.viewOnly, profile.securityType, true  /* Hardcoded to true */,
                          profile.imageQuality, profile.useRawEncoding)
 

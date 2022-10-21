@@ -143,7 +143,25 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
         }
     }
 
-    @Keep class Server : PrefFragment(R.xml.pref_server)
+    @Keep class Server : PrefFragment(R.xml.pref_server) {
+        private val authPrompt by lazy { DeviceAuthPrompt(requireActivity()) }
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            val savedServerLock = findPreference<SwitchPreference>("lock_saved_server")!!
+
+            if (authPrompt.canLaunch()) {
+                authPrompt.init({ savedServerLock.isChecked = !savedServerLock.isChecked }, { })
+                savedServerLock.setOnPreferenceChangeListener { _, _ ->
+                    authPrompt.launch(getString(R.string.title_unlock_dialog))
+                    false
+                }
+            } else {
+                savedServerLock.isEnabled = false
+            }
+        }
+    }
+
     @Keep class Tools : PrefFragment(R.xml.pref_tools)
     @Keep class Experimental : PrefFragment(R.xml.pref_experimental)
 }

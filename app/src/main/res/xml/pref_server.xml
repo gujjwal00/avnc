@@ -15,6 +15,12 @@
         app:key="clipboard_sync"
         app:title="@string/pref_clipboard_sync" />
 
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="lock_saved_server"
+        app:summary="@string/pref_saved_server_lock_summary"
+        app:title="@string/pref_saved_server_lock" />
+
     <PreferenceCategory
         app:icon="@drawable/ic_key"
         app:title="@string/pref_credential">

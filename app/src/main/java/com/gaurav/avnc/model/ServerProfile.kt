@@ -108,7 +108,7 @@ data class ServerProfile(
         /**
          * Whether the cursor should be drawn by client instead of server.
          * It's value is currently ignored, and hardcoded to true.
-         * See [com.gaurav.avnc.viewmodel.VncViewModel.configureClient]
+         * See [com.gaurav.avnc.viewmodel.VncViewModel.preConnect]
          */
         var useLocalCursor: Boolean = true,
 

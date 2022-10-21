@@ -46,6 +46,8 @@
     <string name="title_open_source_libraries">Open source libraries</string>
     <string name="title_report_bug">Report an issue</string>
     <string name="title_github_repo">Source code</string>
+    <string name="title_unlock_dialog">Unlock to continue</string>
+
 
     <string name="hint_urlbar">Connect to a Server</string>
     <string name="hint_server_name">Name (e.g. Work PC)</string>
@@ -175,6 +177,8 @@
     <string name="pref_zoom_min">Minimum</string>
     <string name="pref_zoom_max">Maximum</string>
     <string name="pref_clipboard_sync">Clipboard sync</string>
+    <string name="pref_saved_server_lock_summary">Require biometric/password unlock to connect</string>
+    <string name="pref_saved_server_lock">Lock saved servers</string>
     <string name="pref_credential">Login</string>
     <string name="pref_cred_autocomplete">Auto-completion</string>
     <string name="pref_cred_autocomplete_summary">Suggest saved logins when connecting to new servers</string>

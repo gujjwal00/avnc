@@ -30,6 +30,7 @@ import androidx.lifecycle.lifecycleScope
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.Experimental
 import com.gaurav.avnc.util.SamsungDex
 import com.gaurav.avnc.viewmodel.VncViewModel
@@ -70,8 +71,11 @@ class VncActivity : AppCompatActivity() {
     val touchHandler by lazy { TouchHandler(viewModel, dispatcher) }
     val keyHandler by lazy { KeyHandler(dispatcher, profile.keyCompatMode, viewModel.pref) }
     private val virtualKeys by lazy { VirtualKeys(this) }
+    private val serverUnlockPrompt = DeviceAuthPrompt(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        DeviceAuthPrompt.applyFingerprintDialogFix(supportFragmentManager)
+
         super.onCreate(savedInstanceState)
         profile = loadProfile()
         viewModel.initConnection(profile)
@@ -85,6 +89,7 @@ class VncActivity : AppCompatActivity() {
 
         setupLayout()
         setupDrawerLayout()
+        setupServerUnlock()
 
         //Buttons
         binding.keyboardBtn.setOnClickListener { showKeyboard(); closeDrawers() }
@@ -135,6 +140,20 @@ class VncActivity : AppCompatActivity() {
         if (!isFinishing) {
             startActivity(intent)
             finish()
+        }
+    }
+
+    private fun setupServerUnlock() {
+        serverUnlockPrompt.init(
+                onSuccess = { viewModel.serverUnlockRequest.offerResponse(true) },
+                onFail = { viewModel.serverUnlockRequest.offerResponse(false) }
+        )
+
+        viewModel.serverUnlockRequest.observe(this) {
+            if (serverUnlockPrompt.canLaunch())
+                serverUnlockPrompt.launch(getString(R.string.title_unlock_dialog))
+            else
+                viewModel.serverUnlockRequest.offerResponse(true)
         }
     }
 
