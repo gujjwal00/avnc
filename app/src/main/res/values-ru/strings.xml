@@ -29,7 +29,6 @@
     <string name="hint_port">Порт</string>
     <string name="hint_server_id">Идентификатор сервера</string>
     <string name="msg_exported">Экспортировано</string>
-    <string name="msg_export_auth_missing">Ваше устройство не защищено. Включите блокировку экрана для обеспечения возможности аутентификации перед экспортом.</string>
     <string name="msg_copied_to_clipboard">Скопировано</string>
     <string name="desc_saved_servers_tab">Сохранённые серверы</string>
     <string name="desc_discovered_servers_tab">Найденные серверы</string>
@@ -99,8 +98,6 @@
     <string name="pref_hide_local_cursor">Скрыть локальный курсор</string>
     <string name="pref_mouse_back">Кнопка \"назад\"</string>
     <string name="pref_mouse_back_action_default">По-умолчанию</string>
-    <string name="pref_mouse_back_action_right">Правая кнопка мыши</string>
-    <string name="pref_mouse_back_action_middle">Средняя кнопка мыши</string>
     <string name="pref_vk">Виртуальные клавиши</string>
     <string name="pref_km_right_alt_to_super">Правый Alt → Super</string>
     <string name="pref_zoom_min">Минимум</string>

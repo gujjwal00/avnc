@@ -59,7 +59,6 @@
     <string name="msg_imported">Importado</string>
     <string name="msg_exported">Exportado</string>
     <string name="msg_export_auth_required">Autenticar primeiro para poder exportar servidores</string>
-    <string name="msg_export_auth_missing">Seu dispositivo não está seguro. Ative o bloqueio da tela para permitir a autenticação antes de exportar.</string>
     <string name="msg_invalid_key_file">Arquivo de chave privada inválido</string>
     <string name="msg_invalid_vnc_uri">A URI do VNC inválida</string>
     <string name="msg_copied_to_clipboard">Copiado</string>
@@ -159,9 +158,7 @@
     <string name="desc_discovery_stop_btn">Parar a descoberta de servidores</string>
     <string name="pref_gesture_style_touchpad_summary">Faça ações no ponteiro</string>
     <string name="pref_mouse_back_action_default">Padrão</string>
-    <string name="pref_mouse_back_action_right">Clique com botão direito</string>
     <string name="pref_mouse_back">Botão Voltar</string>
-    <string name="pref_mouse_back_action_middle">Clique com botão do meio</string>
     <string name="pref_discovery_autorun">Execução automática</string>
     <string name="pref_discovery_autorun_summary">Descubra servidores enquanto estiver na página inicial</string>
     <string name="pref_rediscovery_indicator">Destaque servidores redescobertos</string>

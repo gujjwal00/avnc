@@ -125,7 +125,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     inner class StylusGestureListener : GestureDetector.SimpleOnGestureListener() {
         private var scrolling = false
 
-        override fun onDown(e: MotionEvent?): Boolean {
+        override fun onDown(e: MotionEvent): Boolean {
             scrolling = false
             return true
         }
@@ -220,9 +220,8 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         return true
     }
 
-    override fun onScroll(e1: MotionEvent?, e2: MotionEvent, dX: Float, dY: Float): Boolean {
-        // As weird as it may be, e1 can be null on some devices
-        val startPoint = e1?.point() ?: return false
+    override fun onScroll(e1: MotionEvent, e2: MotionEvent, dX: Float, dY: Float): Boolean {
+        val startPoint = e1.point()
         val currentPoint = e2.point()
         val normalizedDx = -dX * swipeSensitivity
         val normalizedDy = -dY * swipeSensitivity

@@ -35,7 +35,7 @@ class UrlBarActivity : AppCompatActivity() {
         val binding = DataBindingUtil.setContentView<ActivityUrlBinding>(this, R.layout.activity_url)
 
         binding.url.setOnEditorActionListener { _, _, _ -> go(binding.url.text.toString()) }
-        binding.backBtn.setOnClickListener { onBackPressed() }
+        binding.backBtn.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
         binding.clearBtn.setOnClickListener {
             if (binding.url.text.isEmpty())
                 finish()

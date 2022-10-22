@@ -12,6 +12,7 @@ import android.app.Application
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.vnc.Discovery
 
@@ -25,7 +26,7 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
         Transformations.switchMap(pref.ui.sortServerList) {
             if (it) serverProfileDao.getSortedLiveList()
             else serverProfileDao.getLiveList()
-        }!!
+        }
     }
 
     /**
@@ -70,7 +71,7 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
 
     fun startDiscovery() {
         autoStopped = false
-        discovery.start()
+        discovery.start(viewModelScope)
     }
 
     fun stopDiscovery() {
@@ -139,7 +140,7 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
         Transformations.switchMap(pref.server.rediscoveryIndicator) {
             if (it) prepareRediscoveredProfiles()
             else MutableLiveData(null)
-        }!!
+        }
     }
 
     private fun prepareRediscoveredProfiles() = with(MediatorLiveData<List<ServerProfile>>()) {

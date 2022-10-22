@@ -104,7 +104,6 @@
     <string name="msg_imported">İçe aktarıldı</string>
     <string name="hint_key_password">Anahtar parolası</string>
     <string name="msg_exported">Dışa aktarıldı</string>
-    <string name="msg_export_auth_missing">Aygıtınız güvenli değil. Dışa aktarmadan önce kimlik doğrulamasını etkinleştirmek için ekran kilidini etkinleştirin.</string>
     <string name="msg_copied_to_clipboard">Kopyalandı</string>
     <string name="msg_key_compat_mode_help">Bazı sunucular sınırlı Unicode desteğine sahiptir. Eski tuş olayları, İngilizce olmayan metinlerin girilmesine yardımcı olabilir.</string>
     <string name="msg_export_auth_required">Sunucuları dışa aktarmak için kimliğinizi doğrulayın</string>
@@ -154,8 +153,6 @@
     <string name="pref_discovery_autorun">Otomatik çalıştır</string>
     <string name="pref_mouse_passthrough">Fare geçişi</string>
     <string name="pref_vk_open_with_keyboard">Klavye ile aç</string>
-    <string name="pref_mouse_back_action_right">Sağ tıklama</string>
-    <string name="pref_mouse_back_action_middle">Orta tıklama</string>
     <string name="pref_mouse_back">Geri düğmesi</string>
     <string name="pref_mouse_back_action_default">Öntanımlı</string>
     <string name="pref_swipe_sensitivity">Kaydırma hassasiyeti</string>

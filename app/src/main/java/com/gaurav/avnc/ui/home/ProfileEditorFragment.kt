@@ -58,6 +58,7 @@ class ProfileEditorFragment : DialogFragment() {
     private var profile = ServerProfile()
 
     private fun loadProfile(savedInstanceState: Bundle?) {
+        @Suppress("DEPRECATION")
         profile = savedInstanceState?.getParcelable("EditorProfile")
                   ?: viewModel.editProfileEvent.value
                   ?: profile
@@ -291,8 +292,7 @@ class ProfileEditorFragment : DialogFragment() {
 
         lifecycleScope.launch(Dispatchers.IO) {
 
-            val stream = requireContext().contentResolver.openInputStream(uri)
-            val text = stream?.bufferedReader()?.readText() ?: ""
+            val text = requireContext().contentResolver.openInputStream(uri).use { it?.reader()?.readText() ?: "" }
             val pem = runCatching { PEMDecoder.parsePEM(text.toCharArray()) }
             val encrypted = runCatching { PEMDecoder.isPEMEncrypted(pem.getOrNull()) }.getOrNull() ?: false
 

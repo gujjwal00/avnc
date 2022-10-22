@@ -93,7 +93,6 @@
     <string name="pref_hide_local_cursor">隐藏本地指针</string>
     <string name="pref_mouse_back">返回按钮</string>
     <string name="pref_mouse_back_action_default">默认</string>
-    <string name="pref_mouse_back_action_right">右键单击</string>
     <string name="pref_vk">虚拟按键</string>
     <string name="pref_vk_show_all">显示所有按键</string>
     <string name="pref_km">按键映射</string>
@@ -122,13 +121,11 @@
     <string name="title_unknown_ssh_host">未知 SSH 主机</string>
     <string name="title_github_repo">源码</string>
     <string name="msg_loading">正在加载…</string>
-    <string name="pref_mouse_back_action_middle">中键单击</string>
     <string name="title_continue">继续</string>
     <string name="title_delete_servers_before_import">导入前删除当前服务器</string>
     <string name="title_change">更改</string>
     <string name="title_open_source_libraries">开源库</string>
     <string name="title_report_bug">报告问题</string>
-    <string name="msg_export_auth_missing">你的设备不安全。在导出前打开屏幕锁定以启用身份验证。</string>
     <string name="msg_about_app">快速安全的 VNC 客户端。远程查看和控制运行 VNC 服务器的任何设备。
 \n
 \n

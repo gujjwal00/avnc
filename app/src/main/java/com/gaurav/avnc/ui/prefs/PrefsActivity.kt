@@ -43,7 +43,7 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        onBackPressedDispatcher.onBackPressed()
         return true
     }
 
@@ -51,7 +51,7 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
      * Starts new fragment corresponding to given [pref].
      */
     override fun onPreferenceStartFragment(caller: PreferenceFragmentCompat, pref: Preference): Boolean {
-        val fragment = supportFragmentManager.fragmentFactory.instantiate(classLoader, pref.fragment)
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(classLoader, pref.fragment!!)
 
         supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_host, fragment)
@@ -138,7 +138,7 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
                 pref?.isVisible = "remote-scroll" in listOf(swipe1.value, swipe2.value, drag.value)
             }
             naturalScrollingUpdater?.onSharedPreferenceChanged(null, null) //Initial update
-            swipe1.sharedPreferences.registerOnSharedPreferenceChangeListener(naturalScrollingUpdater)
+            swipe1.sharedPreferences?.registerOnSharedPreferenceChangeListener(naturalScrollingUpdater)
 
         }
     }

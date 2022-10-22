@@ -127,7 +127,6 @@
     <string name="msg_server_profile_deleted">Serwer usunięto</string>
     <string name="msg_imported">Importowane</string>
     <string name="msg_exported">Eksportowane</string>
-    <string name="msg_export_auth_missing">Twoje urządzenie nie jest zabezpieczone. Włącz blokadę ekranu, aby umożliwić uwierzytelnianie przed eksportem.</string>
     <string name="tip_discovery">Funkcja Discovery może automatycznie znaleźć obsługiwane serwery
 \ndziałające w sieci.</string>
     <string name="desc_add_new_server_btn">Dodaj serwer</string>
@@ -136,7 +135,6 @@
     <string name="pref_mouse_passthrough">Przekazywanie myszy</string>
     <string name="pref_mouse_passthrough_summary_off">Używanie zdarzeń myszy do wykonywania gestów lokalnych</string>
     <string name="pref_gesture_action_remote_scroll">Przewiń zdalną zawartość</string>
-    <string name="pref_mouse_back_action_middle">Kliknij środkowym przyciskiem</string>
     <string name="pref_vk_show_all">Pokaż wszystkie klawisze</string>
     <string name="pref_km">Mapowanie klawiszy</string>
     <string name="pref_km_right_alt_to_super">Prawy Alt → Super</string>
@@ -148,7 +146,6 @@
     <string name="pref_import_export">Importuj/Eksportuj serwery</string>
     <string name="pref_keycode_map">Mapa kodów</string>
     <string name="pref_gesture_style_touchscreen_summary">Wykonuj działania w punkcie kontaktu</string>
-    <string name="pref_mouse_back_action_right">Kliknij prawym przyciskiem</string>
     <string name="pref_gesture_action_remote_drag">Przeciągnij zdalną zawartość</string>
     <string name="pref_vk">Wirtualna klawiatura</string>
     <string name="pref_vk_open_with_keyboard">Otwórz za pomocą klawiatury</string>

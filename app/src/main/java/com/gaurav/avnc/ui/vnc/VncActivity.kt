@@ -24,6 +24,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
@@ -123,6 +124,7 @@ class VncActivity : AppCompatActivity() {
     }
 
     private fun loadProfile(): ServerProfile {
+        @Suppress("DEPRECATION")
         val profile = intent.getParcelableExtra<ServerProfile>(PROFILE_KEY)
         check(profile != null) { "ServerProfile is missing from VncActivity Intent" }
 
@@ -276,8 +278,9 @@ class VncActivity : AppCompatActivity() {
 
         // Update Toolbar gravity
         val gravityH = if (viewModel.pref.viewer.toolbarAlignment == "start") Gravity.START else Gravity.END
-
         val lp = binding.primaryToolbar.layoutParams as DrawerLayout.LayoutParams
+
+        @SuppressLint("WrongConstant")
         lp.gravity = gravityH or Gravity.CENTER_VERTICAL
         binding.primaryToolbar.layoutParams = lp
 
@@ -383,7 +386,8 @@ class VncActivity : AppCompatActivity() {
         enterPiPMode()
     }
 
-    override fun onPictureInPictureModeChanged(inPiP: Boolean, newConfig: Configuration?) {
+    @RequiresApi(26)
+    override fun onPictureInPictureModeChanged(inPiP: Boolean, newConfig: Configuration) {
         super.onPictureInPictureModeChanged(inPiP, newConfig)
         if (inPiP) {
             closeDrawers()

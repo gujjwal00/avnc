@@ -40,7 +40,6 @@
     <string name="msg_imported">Importé</string>
     <string name="msg_exported">Exporté</string>
     <string name="msg_export_auth_required">Authentifiez-vous pour exporter des serveurs</string>
-    <string name="msg_export_auth_missing">Votre appareil n\'est pas sécurisé. Activez le verrouillage de l\'écran pour permettre l\'authentification avant l\'exportation.</string>
     <string name="msg_invalid_key_file">Fichier de clé privée invalide</string>
     <string name="msg_invalid_vnc_uri">URI VNC invalide</string>
     <string name="msg_copied_to_clipboard">Copié</string>
@@ -156,9 +155,6 @@
     <string name="pref_gesture_action_pan">Cadre local panoramique</string>
     <string name="pref_mouse_back">Bouton retour</string>
     <string name="pref_mouse_back_action_default">Par défaut</string>
-    <string name="pref_mouse_back_action_middle">Clic molette</string>
-    <string name="pref_mouse_back_action_right">Clic droit</string>
-    <string name="title_default_security">Sécurité par défaut</string>
     <string name="pref_swipe_sensitivity">Sensibilité du défilement</string>
     <string name="msg_drag_gesture_help">L\'affectation d\'une action à un geste de glissement modifiera la détection de l\'appui long :
 \n

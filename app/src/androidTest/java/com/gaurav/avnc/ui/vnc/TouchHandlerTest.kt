@@ -49,6 +49,7 @@ class TouchHandlerTest {
             every { viewModel.pref.input.mousePassthrough } returns mousePassthrough
             every { viewModel.pref.input.gesture.dragEnabled } returns dragEnabled
             every { viewModel.pref.input.gesture.swipeSensitivity } returns 1f
+            every { viewModel.pref.input.gesture.swipe2 } returns "remote-scroll"
             touchHandler = TouchHandler(viewModel, mockDispatcher)
         }
     }

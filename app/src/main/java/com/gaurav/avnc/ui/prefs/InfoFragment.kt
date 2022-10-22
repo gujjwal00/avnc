@@ -11,6 +11,7 @@ package com.gaurav.avnc.ui.prefs
 import android.os.Bundle
 import android.view.*
 import androidx.annotation.Keep
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -28,12 +29,12 @@ import kotlinx.coroutines.withContext
  * It also allows copying the value to clipboard.
  */
 @Keep
-abstract class InfoFragment : Fragment() {
+abstract class InfoFragment : Fragment(), MenuProvider {
 
     var text = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        setHasOptionsMenu(true)
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
 
         val binding = FragmentInfoBinding.inflate(inflater, container, false)
 
@@ -55,11 +56,14 @@ abstract class InfoFragment : Fragment() {
         activity?.title = getTitle()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menu.add(getString(android.R.string.copy))
                 .setOnMenuItemClickListener { copyToClipboard(); true }
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
     }
+
+    //Click handlers are directly attached to menu items
+    override fun onMenuItemSelected(menuItem: MenuItem) = false
 
     private fun copyToClipboard() {
         activityViewModels<PrefsViewModel>().value.setClipboardText(text)
@@ -79,8 +83,8 @@ class LogsFragment : InfoFragment() {
     /**
      * In addition to Copy, users can Clear the logs
      */
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        super.onCreateMenu(menu, menuInflater)
         menu.add(getString(R.string.title_clear)).setOnMenuItemClickListener {
             Debugging.clearLogs()
             Snackbar.make(requireView(), "Cleared!", Snackbar.LENGTH_SHORT).show()

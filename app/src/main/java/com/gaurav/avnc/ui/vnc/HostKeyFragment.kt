@@ -15,7 +15,6 @@ import androidx.fragment.app.activityViewModels
 import com.gaurav.avnc.R
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.util.*
 
 /**
  * This dialog is used to get user-confirmation before connecting to unknown SSH servers.
@@ -31,7 +30,7 @@ class HostKeyFragment : DialogFragment() {
         val message = """
                  |
                  |Host:   ${hostKey.host}
-                 |Key type:   ${hostKey.algo.toUpperCase(Locale.ENGLISH)}
+                 |Key type:   ${hostKey.algo.uppercase()}
                  |Key fingerprint: 
                  |  
                  |${hostKey.getFingerprint()}

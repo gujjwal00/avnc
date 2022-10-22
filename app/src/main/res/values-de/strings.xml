@@ -29,7 +29,6 @@
 \n
 \n
 \nAVNC ist eine Open-Source- und Copyleft-Software, die mit Hilfe vieler Mitwirkender erstellt wurde.</string>
-    <string name="msg_export_auth_missing">Dein Gerät ist nicht gesichert. Aktiviere eine Displaysperre, um die das Exportieren damit zu authentifizieren.</string>
     <string name="msg_invalid_key_file">Ungültiger private key</string>
     <string name="msg_invalid_vnc_uri">Ungültige VNC-URI</string>
     <string name="msg_copied_to_clipboard">Kopiert</string>
@@ -142,9 +141,7 @@
     <string name="pref_swipe1">Wischen mit einem Finger</string>
     <string name="pref_mouse">Maus</string>
     <string name="pref_double_tap">Doppeltippen</string>
-    <string name="pref_mouse_back_action_right">Rechtsklick</string>
     <string name="pref_vk">Virtuelle Tasten</string>
-    <string name="pref_mouse_back_action_middle">Mittelklick</string>
     <string name="pref_toolbar_alignment_option_start">Links</string>
     <string name="pref_enable_pip">Bild in Bild</string>
     <string name="pref_zoom_max">Maximum</string>

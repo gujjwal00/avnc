@@ -1,11 +1,11 @@
 buildscript {
-    ext.kotlin_version = '1.4.31'
+    ext.kotlin_version = '1.6.10'
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:4.0.2"
+        classpath 'com.android.tools.build:gradle:7.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
     }
@@ -14,30 +14,10 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-/**
- * Temporary workaround to enable CMake 3.10 compatibility for WolfSSL
- */
-try {
-    def cl = file('extern/wolfssl/CMakeLists.txt')
-
-    def Fix1Old = 'cmake_minimum_required(VERSION 3.16)'
-    def Fix1New = 'cmake_minimum_required(VERSION 3.10)'
-    def Fix2Old = 'list(JOIN HEADER_EXCLUDE "|" EXCLUDED_HEADERS_REGEX)'
-    def Fix2New = 'string(REPLACE ";" "|" EXCLUDED_HEADERS_REGEX "${HEADER_EXCLUDE}")'
-
-    cl.text = cl.text.replace(Fix1Old, Fix1New).replace(Fix2Old, Fix2New)
-
-    gradle.buildFinished {
-        cl.text = cl.text.replace(Fix1New, Fix1Old).replace(Fix2New, Fix2Old)
-    }
-} catch (FileNotFoundException ignored) {
 }

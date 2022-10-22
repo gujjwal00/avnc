@@ -70,7 +70,6 @@
     <string name="msg_imported">Imported</string>
     <string name="msg_exported">Exported</string>
     <string name="msg_export_auth_required">Authenticate to export servers</string>
-    <string name="msg_export_auth_missing">Your device is not secured. Turn on screen lock to enable authentication before export.</string>
     <string name="msg_invalid_key_file">Invalid private key file</string>
     <string name="msg_invalid_vnc_uri">Invalid VNC URI</string>
     <string name="msg_copied_to_clipboard">Copied</string>
@@ -157,8 +156,6 @@
     <string name="pref_hide_local_cursor">Hide local pointer</string>
     <string name="pref_mouse_back">Back button</string>
     <string name="pref_mouse_back_action_default">Default</string>
-    <string name="pref_mouse_back_action_right">Right click</string>
-    <string name="pref_mouse_back_action_middle">Middle click</string>
     <string name="pref_vk">Virtual keys</string>
     <string name="pref_vk_show_all">Show all keys</string>
     <string name="pref_vk_open_with_keyboard">Open with keyboard</string>

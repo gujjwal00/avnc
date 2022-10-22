@@ -138,7 +138,6 @@
     <string name="pref_gesture_action_right_click">Праве клацання</string>
     <string name="pref_two_finger_tap">Торкання двома пальцями</string>
     <string name="title_remember">Памʼятати</string>
-    <string name="msg_export_auth_missing">Ваш пристрій не захищено. Увімкніть блокування екрана, щоб дозволити автентифікування перед експортуванням.</string>
     <string name="msg_key_compat_mode_help">Деякі сервери мають обмежену підтримку Unicode. Успадковані події клавіш допоможуть вводити не-англійський текст.</string>
     <string name="desc_retry_connection_btn">Повторити</string>
     <string name="tip_discovery">Виявлення може автоматично знаходити підтримувані сервери,
@@ -156,8 +155,6 @@
     <string name="pref_discovery_autorun_summary">Виявляти сервери поки на домашній сторінці</string>
     <string name="pref_mouse_back">Кнопка назад</string>
     <string name="pref_mouse_back_action_default">Типово</string>
-    <string name="pref_mouse_back_action_right">Клацання правою кнопкою</string>
-    <string name="pref_mouse_back_action_middle">Клацання середньою кнопкою</string>
     <string name="pref_swipe_sensitivity">Чутливість ковзання</string>
     <string name="title_default_security">Типовий захист</string>
     <string name="msg_drag_gesture_help">Присвоєння дії жесту Перетягування змінить виявлення довгого натискання:

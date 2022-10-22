@@ -60,7 +60,6 @@
     <string name="msg_imported">درون‌ریزی شد</string>
     <string name="msg_exported">برون‌ریزی شد</string>
     <string name="msg_export_auth_required">احراز هویت برای برون‌ریزی کارسازها</string>
-    <string name="msg_export_auth_missing">افزارهٔ شما ایمن نیست. پیش از برون‌ریزی قفل صفحه‌تان را برای بکار انداختن احراز هویت، روشن کنید.</string>
     <string name="msg_invalid_key_file">پروندهٔ کلید خصوصی نامعتبر</string>
     <string name="msg_invalid_vnc_uri">VNC URI نامعتبر</string>
     <string name="msg_copied_to_clipboard">رونویسی شد</string>
@@ -160,8 +159,6 @@
     <string name="pref_gesture_style_touchpad_summary">در جای اشاره‌گر کنش کن</string>
     <string name="pref_mouse_back">دکمهٔ بازگشت</string>
     <string name="pref_mouse_back_action_default">پیش‌گزیده</string>
-    <string name="pref_mouse_back_action_right">کلیک راست</string>
-    <string name="pref_mouse_back_action_middle">کلیک وسط</string>
     <string name="pref_discovery_autorun">اجرای خودکار</string>
     <string name="pref_rediscovery_indicator">کارسازهای کشف شده را برجسته کن</string>
     <string name="pref_swipe_sensitivity">حساسیت به کشیدن</string>

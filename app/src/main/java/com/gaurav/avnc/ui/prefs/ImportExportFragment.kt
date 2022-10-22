@@ -31,7 +31,7 @@ import java.util.*
 class ImportExportFragment : Fragment() {
 
     private val importFilePicker = registerForActivityResult(OpenableDocument()) { import(it) }
-    private val exportFilePicker = registerForActivityResult(ActivityResultContracts.CreateDocument()) { export(it) }
+    private val exportFilePicker = registerForActivityResult(ActivityResultContracts.CreateDocument("*/*")) { export(it) }
 
     private lateinit var binding: FragmentImportExportBinding
     private val viewModel by activityViewModels<PrefsViewModel>()

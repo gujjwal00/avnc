@@ -147,7 +147,6 @@
     <string name="title_use_repeater">Bruk gjentaker</string>
     <string name="tip_discovery">Oppdagelse kan automatisk finne støttede tjenere
 \npå nettverket ditt.</string>
-    <string name="msg_export_auth_missing">Skru på skjermlås for å kreve identitetsbekreftelse før eksport.</string>
     <string name="pref_gesture_style_touchscreen_summary">Utfør handlinger ved berøring</string>
     <string name="pref_gesture_style_touchpad_summary">Utfør handlinger ved peker</string>
     <string name="pref_rediscovery_indicator">Framhev tjenere som oppdages igjen</string>
@@ -156,8 +155,5 @@
     <string name="pref_discovery_autorun_summary">Oppdag tjenere når hovedsiden vises</string>
     <string name="pref_mouse_back">«Tilbake»-knapp</string>
     <string name="pref_mouse_back_action_default">Forvalg</string>
-    <string name="pref_mouse_back_action_right">Høyreklikk</string>
-    <string name="pref_mouse_back_action_middle">Midt-klikk</string>
-    <string name="title_default_security">Forvalgt sikkerhet</string>
     <string name="pref_swipe_sensitivity">Dragningssensitivitet</string>
 </resources>

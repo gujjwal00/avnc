@@ -129,7 +129,6 @@
     <string name="msg_imported">Увезено</string>
     <string name="msg_exported">Извезено</string>
     <string name="msg_export_auth_required">Пријавите се ради извоза служитеља</string>
-    <string name="msg_export_auth_missing">Ваш уређај није обезбеђен. Укључите закључавање заслона ради омогућавања пријаве пре извоза.</string>
     <string name="msg_invalid_key_file">Датотека личног кључа није исправна</string>
     <string name="msg_copied_to_clipboard">Умножено</string>
     <string name="msg_key_compat_mode_help">Неки служитељи имају ограничену подршку уникода. Застарели догађаји дугмади могу помоћи за неенглеско писмо.</string>

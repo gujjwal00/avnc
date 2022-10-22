@@ -17,7 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
  * This is needed because OpenDocument doesn't specify [Intent.CATEGORY_OPENABLE]
  */
 class OpenableDocument : ActivityResultContracts.OpenDocument() {
-    override fun createIntent(context: Context, input: Array<out String>): Intent {
+    override fun createIntent(context: Context, input: Array<String>): Intent {
         return super.createIntent(context, input).addCategory(Intent.CATEGORY_OPENABLE)
     }
 }

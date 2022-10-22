@@ -340,12 +340,12 @@ class KeyHandler(private val dispatcher: Dispatcher, private val compatMode: Boo
     private fun toCodePoints(string: String): IntArray {
         //Handle simple & most probable case
         if (string.length == 1)
-            return cpCache.apply { this[0] = string[0].toInt() }
+            return cpCache.apply { this[0] = string[0].code }
 
         if (Build.VERSION.SDK_INT >= 24)
             return string.codePoints().toArray()
 
         //Otherwise, do simple conversion (will be incorrect non-MBP code points)
-        return string.map { it.toInt() }.toIntArray()
+        return string.map { it.code }.toIntArray()
     }
 }

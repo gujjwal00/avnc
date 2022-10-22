@@ -14,8 +14,8 @@ import android.net.nsd.NsdServiceInfo
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.gaurav.avnc.model.ServerProfile
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -70,7 +70,7 @@ class Discovery(private val context: Context) {
      *-        stopped   :isRunning = false
      *-
      */
-    fun start() {
+    fun start(scope: CoroutineScope) {
         if (isRunning.value == true) {
             return
         }
@@ -79,7 +79,7 @@ class Discovery(private val context: Context) {
         if (servers.value?.size != 0) servers.value = ArrayList() //Forget known servers
 
         // Construction of NSD manager is done on a background thread because it appears to be quite heavy.
-        GlobalScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             if (nsdManager == null)
                 nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
 
@@ -170,7 +170,7 @@ class Discovery(private val context: Context) {
      */
     private inner class ResolveListener : NsdManager.ResolveListener {
         override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
-            addProfile(serviceInfo.serviceName, serviceInfo.host.hostAddress, serviceInfo.port)
+            addProfile(serviceInfo.serviceName, serviceInfo.host.hostAddress!!, serviceInfo.port)
         }
 
         override fun onResolveFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
