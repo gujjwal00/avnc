@@ -75,7 +75,6 @@
     <string name="pref_enable_pip">Картинка-в-картинці</string>
     <string name="pref_toolbar_alignment_option_end">Кінець</string>
     <string name="pref_zoom_min">Найменше</string>
-    <string name="pref_experimental_immersive_mode_summary">Ховає всі системні панелі в повноекранному режимі</string>
     <string name="pref_import_export">Імпорт/експорт серверів</string>
     <string name="pref_keycode_map">Мапа кодів клавіш</string>
     <string name="title_delete">Видалити</string>
@@ -151,7 +150,6 @@
     <string name="pref_mouse_passthrough_summary_on">Надсилати події миші відразу на сервер</string>
     <string name="pref_vk_open_with_keyboard">Відкривати з клавіатурою</string>
     <string name="pref_km">Мапування клавіш</string>
-    <string name="pref_experimental_immersive_mode">Повний імерсивний режим</string>
     <string name="pref_rediscovery_indicator">Виділяти попередньо виявлені сервери</string>
     <string name="desc_discovery_stop_btn">Зупинити виявлення серверів</string>
     <string name="pref_discovery_autorun">Автозапуск</string>

@@ -138,6 +138,4 @@
     <string name="pref_orientation_option_landscape">Ландшафтная</string>
     <string name="pref_fullscreen">Полноэкранный режим</string>
     <string name="pref_clipboard_sync">Синхронизация буфера обмена</string>
-    <string name="pref_experimental_immersive_mode">Режим полного присутствия</string>
-    <string name="pref_experimental_immersive_mode_summary">Скрывает все системные панели в полноэкранном режиме</string>
 </resources>

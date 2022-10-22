@@ -219,7 +219,6 @@ class VncActivity : AppCompatActivity() {
      ************************************************************************************/
 
     private val fullscreenMode by lazy { viewModel.pref.viewer.fullscreen }
-    private val immersiveMode by lazy { viewModel.pref.experimental.immersiveMode }
 
     private fun setupLayout() {
 
@@ -299,7 +298,7 @@ class VncActivity : AppCompatActivity() {
                 if (left < 0) rect.offset(-left, 0)
                 if (right > root.width) rect.offset(-(right - root.width), 0)
 
-                if (immersiveMode) {
+                if (fullscreenMode) {
                     rect.top = 0
                     rect.bottom = root.height
                 }
@@ -358,7 +357,7 @@ class VncActivity : AppCompatActivity() {
 
     @Suppress("DEPRECATION")
     private fun updateSystemUiVisibility() {
-        if (!fullscreenMode || !immersiveMode)
+        if (!fullscreenMode)
             return
 
         val flags = View.SYSTEM_UI_FLAG_FULLSCREEN or

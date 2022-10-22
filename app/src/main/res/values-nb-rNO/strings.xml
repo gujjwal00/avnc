@@ -74,8 +74,6 @@
     <string name="pref_clipboard_sync">Utklippstavlesynkronisering</string>
     <string name="pref_discovery">Oppdagelse</string>
     <string name="title_import">Importer</string>
-    <string name="pref_experimental_immersive_mode">Helt oppslukende modus</string>
-    <string name="pref_experimental_immersive_mode_summary">Skjuler alle systemfelter i fullskjermsmodus</string>
     <string name="desc_add_new_server_btn">Legg til tjener</string>
     <string name="title_copy_name">Kopier navn</string>
     <string name="title_export">Eksporter</string>

@@ -155,8 +155,6 @@
     <string name="pref_toolbar_alignment_option_end">Final</string>
     <string name="pref_hide_local_cursor">Esconder ponteiro local</string>
     <string name="title_clear">Limpar</string>
-    <string name="pref_experimental_immersive_mode">Modo totalmente imersivo</string>
-    <string name="pref_experimental_immersive_mode_summary">Oculta todas as barras do sistema em modo de tela cheia</string>
     <string name="msg_ptr_hiding_not_supported">Não suportado neste dispositivo</string>
     <string name="desc_discovery_stop_btn">Parar a descoberta de servidores</string>
     <string name="pref_gesture_style_touchpad_summary">Faça ações no ponteiro</string>

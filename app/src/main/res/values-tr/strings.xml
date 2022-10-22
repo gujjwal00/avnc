@@ -80,8 +80,6 @@
     <string name="pref_debugging">Hata ayıklama</string>
     <string name="pref_logs">Günlük kayıtları</string>
     <string name="pref_keycode_map">Tuş kodu eşlemesi</string>
-    <string name="pref_experimental_immersive_mode">Tam odaklanma modu</string>
-    <string name="pref_experimental_immersive_mode_summary">Tam ekran modunda tüm sistem çubuklarını gizler</string>
     <string name="title_save">Kaydet</string>
     <string name="title_key_compat_mode">Eski tuş olaylarını gönder</string>
     <string name="title_hide_remote_cursor">Uzak işaretçiyi gizle</string>

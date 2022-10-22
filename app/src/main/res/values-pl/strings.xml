@@ -98,7 +98,6 @@
     <string name="pref_discovery_autorun">Automatyczne uruchamianie</string>
     <string name="pref_rediscovery_indicator">Wyróżnij odkryte ponownie serwery</string>
     <string name="pref_debugging">Debugowanie</string>
-    <string name="pref_experimental_immersive_mode_summary">Ukrywa wszystkie paski systemowe w trybie pełnoekranowym</string>
     <string name="desc_discovery_stop_btn">Zatrzymaj wykrywanie serwerów</string>
     <string name="desc_virtual_keys_btn">Pokaż wirtualną klawiaturę</string>
     <string name="desc_discovery_running">Wykrywanie serwerów w sieci</string>
@@ -157,7 +156,6 @@
     <string name="title_hide_remote_cursor">Ukryj zdalny wskaźnik</string>
     <string name="pref_gesture_style_touchpad_summary">Wykonaj działania na wskaźniku</string>
     <string name="pref_km_language_switch_to_super">Zmiana języka → Super</string>
-    <string name="pref_experimental_immersive_mode">Tryb pełnej immersji</string>
     <string name="msg_drag_gesture_help">Przypisanie akcji do gestu przeciągania zmieni Wykrywanie długiego naciśnięcia:
 \n
 \n<b>Wciśnięcie i zwolnienie </b> → Długie naciśnięcie

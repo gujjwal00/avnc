@@ -98,8 +98,6 @@
     <string name="tip_empty_server_list">La liste des serveurs est vide.
 \nCliquez sur « <b>+</b> » ; pour ajouter un serveur, ou
 \nUtilisez la barre d\'adresse supérieure pour vous connecter directement.</string>
-    <string name="pref_experimental_immersive_mode">Mode immersif complet</string>
-    <string name="pref_experimental_immersive_mode_summary">Masquer toutes les barres du système en mode plein écran</string>
     <string name="pref_theme_option_system">Système</string>
     <string name="pref_swipe2">Glissement à deux doigts</string>
     <string name="pref_double_tap">Appui double</string>

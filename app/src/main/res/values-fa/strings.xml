@@ -150,8 +150,6 @@
     <string name="pref_debugging">اشکال زدایی</string>
     <string name="pref_logs">گزارشات</string>
     <string name="pref_keycode_map">نقشهٔ کد کلید</string>
-    <string name="pref_experimental_immersive_mode">حالت کاملاً فراگیر</string>
-    <string name="pref_experimental_immersive_mode_summary">تمام نوارهای سامانه را در حالت تمام صفحه پنهان می‌کند</string>
     <string name="title_clear">پاک‌کردن</string>
     <string name="pref_theme_option_light">روشن</string>
     <string name="pref_toolbar_alignment_option_end">پایان</string>
