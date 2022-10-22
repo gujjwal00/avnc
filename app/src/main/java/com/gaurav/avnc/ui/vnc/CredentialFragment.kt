@@ -47,7 +47,7 @@ class CredentialFragment : DialogFragment() {
      */
     private fun prepareDialog(): Dialog {
         return MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.title_credentials_required)
+                .setTitle(R.string.title_login)
                 .setView(binding.root)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
                     val username = binding.username.text.toString()

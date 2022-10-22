@@ -99,7 +99,7 @@
     <string name="title_change">Змінити</string>
     <string name="title_about">Про застосунок</string>
     <string name="title_undo">Відмінити</string>
-    <string name="title_credentials_required">Вхід</string>
+    <string name="title_login">Вхід</string>
     <string name="title_key_compat_mode">Надсилати успадковані події клавіш</string>
     <string name="title_report_bug">Звіт про ваду</string>
     <string name="title_github_repo">Вихідний код</string>

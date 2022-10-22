@@ -18,7 +18,7 @@
     <string name="title_save">Salvar</string>
     <string name="title_undo">Desfazer</string>
     <string name="title_settings">Configurações</string>
-    <string name="title_credentials_required">Autenticação</string>
+    <string name="title_login">Autenticação</string>
     <string name="title_remember">Salvar</string>
     <string name="title_export">Exportar</string>
     <string name="title_import">Importar</string>

@@ -10,7 +10,7 @@
     <string name="title_save">Enregistrer</string>
     <string name="title_undo">Annuler</string>
     <string name="title_settings">Paramètres</string>
-    <string name="title_credentials_required">Se connecter</string>
+    <string name="title_login">Se connecter</string>
     <string name="title_export">Exporter</string>
     <string name="title_import">Importer</string>
     <string name="title_view_only_mode">Visualisation uniquement</string>

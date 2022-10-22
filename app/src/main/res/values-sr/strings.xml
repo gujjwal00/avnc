@@ -93,7 +93,7 @@
     <string name="title_save">Сачувај</string>
     <string name="title_undo">Опозови</string>
     <string name="title_settings">Поставке</string>
-    <string name="title_credentials_required">Пријава</string>
+    <string name="title_login">Пријава</string>
     <string name="title_remember">Запамти</string>
     <string name="title_export">Извези</string>
     <string name="title_import">Увези</string>

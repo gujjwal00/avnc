@@ -8,7 +8,7 @@
     <string name="title_cancel">Отменить</string>
     <string name="title_save">Сохранить</string>
     <string name="title_settings">Настройки</string>
-    <string name="title_credentials_required">Войти</string>
+    <string name="title_login">Войти</string>
     <string name="title_export">Экспорт</string>
     <string name="title_import">Импорт</string>
     <string name="title_view_only_mode">Только просмотр</string>

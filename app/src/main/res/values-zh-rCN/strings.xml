@@ -2,7 +2,7 @@
 <resources>
     <string name="title_add_server_profile">添加服务器</string>
     <string name="title_hide_remote_cursor">隐藏远程指针</string>
-    <string name="title_credentials_required">登录</string>
+    <string name="title_login">登录</string>
     <string name="title_edit_server_profile">编辑服务器</string>
     <string name="title_duplicate">复本</string>
     <string name="title_edit">编辑</string>

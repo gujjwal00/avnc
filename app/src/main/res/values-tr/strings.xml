@@ -9,7 +9,7 @@
     <string name="title_cancel">İptal</string>
     <string name="title_undo">Geri al</string>
     <string name="title_settings">Ayarlar</string>
-    <string name="title_credentials_required">Oturum aç</string>
+    <string name="title_login">Oturum aç</string>
     <string name="title_remember">Hatırla</string>
     <string name="title_export">Dışa aktar</string>
     <string name="title_import">İçe aktar</string>

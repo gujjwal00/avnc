@@ -18,7 +18,7 @@
     <string name="title_save">ذخیره</string>
     <string name="title_undo">برگردان</string>
     <string name="title_settings">تنظیمات</string>
-    <string name="title_credentials_required">ورود</string>
+    <string name="title_login">ورود</string>
     <string name="title_remember">به یاد داشتن</string>
     <string name="title_export">برون‌ریزی</string>
     <string name="title_import">درون‌ریزی</string>

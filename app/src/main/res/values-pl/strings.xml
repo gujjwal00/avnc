@@ -117,7 +117,7 @@
     <string name="title_edit">Edytuj</string>
     <string name="title_duplicate">Duplikuj</string>
     <string name="title_copy_host">Kopiuj hosta</string>
-    <string name="title_credentials_required">Logowanie</string>
+    <string name="title_login">Logowanie</string>
     <string name="title_remember">Zapamiętaj</string>
     <string name="title_export">Eksportuj</string>
     <string name="title_import">Importuj</string>

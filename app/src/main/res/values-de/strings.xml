@@ -8,7 +8,7 @@
     <string name="title_advanced">Erweitert</string>
     <string name="title_undo">Rückgängig machen</string>
     <string name="title_settings">Einstellungen</string>
-    <string name="title_credentials_required">Anmelden</string>
+    <string name="title_login">Anmelden</string>
     <string name="title_remember">Speichern</string>
     <string name="title_export">Exportieren</string>
     <string name="title_import">Importieren</string>

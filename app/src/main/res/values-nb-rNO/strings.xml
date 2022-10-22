@@ -10,7 +10,7 @@
     <string name="title_copy_host">Kopier vert</string>
     <string name="title_advanced">Avansert</string>
     <string name="title_cancel">Avbryt</string>
-    <string name="title_credentials_required">Innlogging</string>
+    <string name="title_login">Innlogging</string>
     <string name="title_remember">Husk</string>
     <string name="title_duplicate">Dupliser</string>
     <string name="title_view_only_mode">Skrivebeskyttet</string>
