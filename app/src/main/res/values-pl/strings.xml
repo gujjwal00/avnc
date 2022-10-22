@@ -98,7 +98,6 @@
     <string name="pref_discovery_autorun">Automatyczne uruchamianie</string>
     <string name="pref_rediscovery_indicator">Wyróżnij odkryte ponownie serwery</string>
     <string name="pref_debugging">Debugowanie</string>
-    <string name="pref_experimental_toolbar_swipe_close">Przesuń, aby zamknąć szufladę paska narzędzi</string>
     <string name="pref_experimental_immersive_mode_summary">Ukrywa wszystkie paski systemowe w trybie pełnoekranowym</string>
     <string name="desc_discovery_stop_btn">Zatrzymaj wykrywanie serwerów</string>
     <string name="desc_virtual_keys_btn">Pokaż wirtualną klawiaturę</string>
@@ -116,7 +115,6 @@
     <string name="pref_zoom_max">Maximum</string>
     <string name="pref_clipboard_sync">Synchronizacja schowka</string>
     <string name="pref_logs">Dzienniki</string>
-    <string name="pref_experimental_toolbar_swipe_close_summary">Podczas sesji zdalnej możesz przesunąć palcem, aby zamknąć aktualnie otwarty pasek narzędzi</string>
     <string name="title_edit">Edytuj</string>
     <string name="title_duplicate">Duplikuj</string>
     <string name="title_copy_host">Kopiuj hosta</string>

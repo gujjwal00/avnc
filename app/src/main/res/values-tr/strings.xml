@@ -80,7 +80,6 @@
     <string name="pref_debugging">Hata ayıklama</string>
     <string name="pref_logs">Günlük kayıtları</string>
     <string name="pref_keycode_map">Tuş kodu eşlemesi</string>
-    <string name="pref_experimental_toolbar_swipe_close">Araç çubuğu çekmecesini kapatmak için kaydır</string>
     <string name="pref_experimental_immersive_mode">Tam odaklanma modu</string>
     <string name="pref_experimental_immersive_mode_summary">Tam ekran modunda tüm sistem çubuklarını gizler</string>
     <string name="title_save">Kaydet</string>
@@ -136,7 +135,6 @@
     <string name="pref_toolbar_alignment_option_start">Başlangıç</string>
     <string name="pref_discovery">Keşif</string>
     <string name="pref_discovery_autorun_summary">Ana sayfadayken sunucuları keşfet</string>
-    <string name="pref_experimental_toolbar_swipe_close_summary">Uzak bir oturum sırasında, o anda açık olan araç çubuğunu kapatmak için kaydırabilirsiniz</string>
     <string name="pref_theme_option_system">Sistem</string>
     <string name="pref_gesture_action_remote_scroll">Uzak içeriği kaydır</string>
     <string name="pref_gesture_action_remote_drag">Uzak içeriği sürükle</string>

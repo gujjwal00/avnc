@@ -192,8 +192,6 @@
     <string name="pref_debugging">Debugging</string>
     <string name="pref_logs">Logs</string>
     <string name="pref_keycode_map">Keycode map</string>
-    <string name="pref_experimental_toolbar_swipe_close">Swipe to close toolbar drawer</string>
-    <string name="pref_experimental_toolbar_swipe_close_summary">During a remote session, you can swipe to close currently open Toolbar</string>
     <string name="pref_experimental_immersive_mode">Full immersive mode</string>
     <string name="pref_experimental_immersive_mode_summary">Hides all system bars in fullscreen mode</string>
 </resources>

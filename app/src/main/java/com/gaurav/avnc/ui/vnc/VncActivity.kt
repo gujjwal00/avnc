@@ -8,6 +8,7 @@
 
 package com.gaurav.avnc.ui.vnc
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.PictureInPictureParams
 import android.content.Context
@@ -32,7 +33,6 @@ import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.util.DeviceAuthPrompt
-import com.gaurav.avnc.util.Experimental
 import com.gaurav.avnc.util.SamsungDex
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.VncUri
@@ -288,8 +288,7 @@ class VncActivity : AppCompatActivity() {
         lp.gravity = gravityH or Gravity.CENTER_VERTICAL
         binding.primaryToolbar.layoutParams = lp
 
-        if (viewModel.pref.experimental.swipeCloseToolbar)
-            Experimental.setupDrawerCloseOnScrimSwipe(binding.drawerLayout, gravityH)
+        setupDrawerCloseOnScrimSwipe(binding.drawerLayout, gravityH)
 
         //Add System Gesture exclusion rects to allow opening toolbar drawer by swiping from edge
         if (Build.VERSION.SDK_INT >= 29) {
@@ -311,6 +310,51 @@ class VncActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Normally, drawers in [DrawerLayout] are closed by two gestures:
+     * 1. Swipe 'on' the drawer
+     * 2. Tap inside Scrim (dimmed region outside of drawer)
+     *
+     * Notably, swiping inside scrim area does NOT hide the drawer. This can be jarring
+     * to users if drawer is relatively small & most of the layout area acts as scrim.
+     * The toolbar drawer is affected by this issue.
+     *
+     * This function attempts to detect these swipe gestures and close the drawer
+     * when they happen.
+     *
+     * [drawerGravity] can be [Gravity.START] or [Gravity.END]
+     *
+     * Note: It will set a custom TouchListener on [drawerLayout].
+     */
+    @SuppressLint("ClickableViewAccessibility", "RtlHardcoded")
+    private fun setupDrawerCloseOnScrimSwipe(drawerLayout: DrawerLayout, drawerGravity: Int) {
+
+        drawerLayout.setOnTouchListener(object : View.OnTouchListener {
+            var drawerOpen = false
+
+            val detector = GestureDetector(drawerLayout.context, object : GestureDetector.SimpleOnGestureListener() {
+
+                override fun onFling(e1: MotionEvent, e2: MotionEvent, vX: Float, vY: Float): Boolean {
+                    val absGravity = Gravity.getAbsoluteGravity(drawerGravity, drawerLayout.layoutDirection)
+                    if ((absGravity == Gravity.LEFT && vX < 0) || (absGravity == Gravity.RIGHT && vX > 0)) {
+                        drawerLayout.closeDrawer(drawerGravity)
+                        drawerOpen = false
+                    }
+                    return true
+                }
+            })
+
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+                if (event.actionMasked == MotionEvent.ACTION_DOWN)
+                    drawerOpen = drawerLayout.isDrawerOpen(drawerGravity)
+
+                if (drawerOpen)
+                    detector.onTouchEvent(event)
+
+                return false
+            }
+        })
+    }
 
     @Suppress("DEPRECATION")
     private fun updateSystemUiVisibility() {

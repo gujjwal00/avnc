@@ -78,7 +78,6 @@
     <string name="pref_experimental_immersive_mode_summary">Ховає всі системні панелі в повноекранному режимі</string>
     <string name="pref_import_export">Імпорт/експорт серверів</string>
     <string name="pref_keycode_map">Мапа кодів клавіш</string>
-    <string name="pref_experimental_toolbar_swipe_close">Ковзнути, щоб закрити шторку панелі засобів</string>
     <string name="title_delete">Видалити</string>
     <string name="title_edit_server_profile">Змінити сервер</string>
     <string name="title_duplicate">Дублювати</string>
@@ -149,7 +148,6 @@
     <string name="pref_double_tap">Подвійний дотик</string>
     <string name="pref_mouse_passthrough">Перехід миші</string>
     <string name="pref_mouse_passthrough_summary_off">Використовувати події миші для локальних жестів</string>
-    <string name="pref_experimental_toolbar_swipe_close_summary">Під час віддаленого сеансу Ви можете ковзнути, щоб закрити відкриту панель засобів</string>
     <string name="pref_mouse_passthrough_summary_on">Надсилати події миші відразу на сервер</string>
     <string name="pref_vk_open_with_keyboard">Відкривати з клавіатурою</string>
     <string name="pref_km">Мапування клавіш</string>

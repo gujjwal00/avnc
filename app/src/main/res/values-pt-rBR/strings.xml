@@ -148,8 +148,6 @@
     <string name="pref_debugging">Depuração</string>
     <string name="pref_logs">Registros</string>
     <string name="pref_keycode_map">Mapa de códigos de teclado</string>
-    <string name="pref_experimental_toolbar_swipe_close">Deslize para fechar a barra de ferramentas</string>
-    <string name="pref_experimental_toolbar_swipe_close_summary">Durante uma sessão remota, você pode deslizar para fechar a barra de ferramentas aberta neste momento</string>
     <string name="pref_theme_option_system">Sistema</string>
     <string name="pref_theme_option_dark">Escuro</string>
     <string name="pref_theme_option_light">Claro</string>

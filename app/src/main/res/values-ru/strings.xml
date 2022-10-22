@@ -57,7 +57,6 @@
     <string name="pref_single_tap">Одиночное нажатие</string>
     <string name="pref_discovery">Обнаружение</string>
     <string name="pref_discovery_autorun">Автозапуск</string>
-    <string name="pref_experimental_toolbar_swipe_close_summary">Во время удалённой сессии, вы можете сделать свайп для закрытия открытой панели инструментов</string>
     <string name="pref_gesture_action_none">Нет</string>
     <string name="pref_gesture_action_right_click">Правая кнопка мыши</string>
     <string name="pref_gesture_action_double_click">Двойное нажатие</string>

@@ -90,7 +90,6 @@
     <string name="pref_discovery">Automatische Suche</string>
     <string name="pref_import_export">Server ex- und importieren</string>
     <string name="pref_logs">Protokolle / Logs</string>
-    <string name="pref_experimental_toolbar_swipe_close_summary">Während einer Fernwartung können Sie die aktuell geöffnete Symbolleiste durch Wischen schließen</string>
     <string name="pref_experimental_immersive_mode">Immersiver Modus</string>
     <string name="title_edit_server_profile">Server bearbeiten</string>
     <string name="title_edit">Bearbeiten</string>
@@ -152,7 +151,6 @@
     <string name="pref_zoom_max">Maximum</string>
     <string name="pref_clipboard_sync">Zwischenablage syncronisieren</string>
     <string name="pref_keycode_map">Keycode-Übersicht</string>
-    <string name="pref_experimental_toolbar_swipe_close">Wischen zum Schließen der Symbolleiste</string>
     <string name="pref_discovery_autorun_summary">Schon auf der Startseite automatisch nach Servern suchen</string>
     <string name="pref_rediscovery_indicator">Wiederentdeckte Server hervorheben</string>
     <string name="pref_debugging">Fehlersuche</string>

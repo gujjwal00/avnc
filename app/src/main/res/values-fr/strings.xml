@@ -99,7 +99,6 @@
 \nCliquez sur « <b>+</b> » ; pour ajouter un serveur, ou
 \nUtilisez la barre d\'adresse supérieure pour vous connecter directement.</string>
     <string name="pref_experimental_immersive_mode">Mode immersif complet</string>
-    <string name="pref_experimental_toolbar_swipe_close">Faîtes glisser pour fermer le menu de la barre d\'outils</string>
     <string name="pref_experimental_immersive_mode_summary">Masquer toutes les barres du système en mode plein écran</string>
     <string name="pref_theme_option_system">Système</string>
     <string name="pref_swipe2">Glissement à deux doigts</string>
@@ -126,7 +125,6 @@
     <string name="pref_gesture_action_open_keyboard">Ouvrir le clavier</string>
     <string name="pref_prefer_advanced_editor">Ouvrir directement les options avancées du serveur</string>
     <string name="pref_logs">Journaux</string>
-    <string name="pref_experimental_toolbar_swipe_close_summary">Au cours d\'une session distante, vous pouvez faire glisser pour fermer la barre d\'outils ouverte</string>
     <string name="pref_enable_pip">Picture-in-picture</string>
     <string name="pref_toolbar">Barre d\'outils</string>
     <string name="pref_gesture_style_touchscreen_summary">Effectuer les actions au point de contact</string>

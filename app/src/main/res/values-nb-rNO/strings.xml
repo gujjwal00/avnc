@@ -104,8 +104,6 @@
     <string name="pref_toolbar_alignment">Justering</string>
     <string name="pref_enable_pip">Bilde-i-bilde</string>
     <string name="pref_drag">Dra (lang-trykk og så sveip)</string>
-    <string name="pref_experimental_toolbar_swipe_close">Dra for å lukke verktøysskuff</string>
-    <string name="pref_experimental_toolbar_swipe_close_summary">Under fjernøkter kan du dra for å lukke verktøylinjen</string>
     <string name="title_clear">Tøm</string>
     <string name="title_hide_remote_cursor">Skjul fjernpeker</string>
     <string name="desc_retry_connection_btn">Prøv igjen</string>

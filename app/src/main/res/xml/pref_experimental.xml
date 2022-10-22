@@ -11,12 +11,6 @@
 
     <SwitchPreference
         app:defaultValue="true"
-        app:key="experimental_vnc_toolbar_swipe_close"
-        app:summary="@string/pref_experimental_toolbar_swipe_close_summary"
-        app:title="@string/pref_experimental_toolbar_swipe_close" />
-
-    <SwitchPreference
-        app:defaultValue="true"
         app:key="viewer_immersive_mode"
         app:summary="@string/pref_experimental_immersive_mode_summary"
         app:title="@string/pref_experimental_immersive_mode" />

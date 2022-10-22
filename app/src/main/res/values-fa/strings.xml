@@ -150,8 +150,6 @@
     <string name="pref_debugging">اشکال زدایی</string>
     <string name="pref_logs">گزارشات</string>
     <string name="pref_keycode_map">نقشهٔ کد کلید</string>
-    <string name="pref_experimental_toolbar_swipe_close">برای بستن کشوی نوار ابزار، انگشت خود را بکشید</string>
-    <string name="pref_experimental_toolbar_swipe_close_summary">در طول یک جلسهٔ از راه دور، می‌توانید برای بستن نوار ابزار در حال حاضر باز، انگشت خود را بکشید</string>
     <string name="pref_experimental_immersive_mode">حالت کاملاً فراگیر</string>
     <string name="pref_experimental_immersive_mode_summary">تمام نوارهای سامانه را در حالت تمام صفحه پنهان می‌کند</string>
     <string name="title_clear">پاک‌کردن</string>
