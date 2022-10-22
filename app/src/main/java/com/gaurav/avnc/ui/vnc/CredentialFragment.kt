@@ -97,21 +97,24 @@ class CredentialFragment : DialogFragment() {
      * different servers running on different addresses/ports.
      */
     private fun setupAutoComplete() {
-        if (!viewModel.pref.server.credAutocomplete) {
-            binding.usernameLayout.endIconMode = TextInputLayout.END_ICON_NONE
-            binding.passwordLayout.endIconMode = TextInputLayout.END_ICON_NONE
+        if (viewModel.pref.server.lockSavedServer)
             return
-        }
 
         viewModel.knownCredentials.observe(this) { list ->
             val usernames = list.map { it.username }.filter { it.isNotEmpty() }.distinct()
             val passwords = preparePasswordSuggestions(list)
 
-            val usernameAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, usernames)
-            val passwordAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, passwords)
+            if (usernames.isNotEmpty()) {
+                val usernameAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, usernames)
+                binding.username.setAdapter(usernameAdapter)
+                binding.usernameLayout.endIconMode = TextInputLayout.END_ICON_DROPDOWN_MENU
+            }
 
-            binding.username.setAdapter(usernameAdapter)
-            binding.password.setAdapter(passwordAdapter)
+            if (passwords.isNotEmpty()) {
+                val passwordAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, passwords)
+                binding.password.setAdapter(passwordAdapter)
+                binding.passwordLayout.endIconMode = TextInputLayout.END_ICON_DROPDOWN_MENU
+            }
         }
     }
 

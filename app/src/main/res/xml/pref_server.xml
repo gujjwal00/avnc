@@ -22,18 +22,6 @@
         app:title="@string/pref_saved_server_lock" />
 
     <PreferenceCategory
-        app:icon="@drawable/ic_key"
-        app:title="@string/pref_credential">
-
-        <SwitchPreference
-            app:defaultValue="true"
-            app:key="cred_autocomplete"
-            app:summary="@string/pref_cred_autocomplete_summary"
-            app:title="@string/pref_cred_autocomplete" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
         app:icon="@drawable/ic_search"
         app:title="@string/pref_discovery">
 

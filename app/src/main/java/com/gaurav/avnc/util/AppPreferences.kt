@@ -68,7 +68,6 @@ class AppPreferences(context: Context) {
     }
 
     inner class Server {
-        val credAutocomplete; get() = prefs.getBoolean("cred_autocomplete", true)
         val clipboardSync; get() = prefs.getBoolean("clipboard_sync", true)
         val lockSavedServer; get() = prefs.getBoolean("lock_saved_server", false)
         val discoveryAutorun; get() = prefs.getBoolean("discovery_autorun", true)

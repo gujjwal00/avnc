@@ -45,7 +45,6 @@
     <string name="pref_km_language_switch_to_super">Промена језика → супер</string>
     <string name="pref_km_back_to_escape">Назад → бег</string>
     <string name="pref_km_back_to_escape_summary">Не утиче на траку навођења</string>
-    <string name="pref_credential">Пријава</string>
     <string name="desc_discovered_servers_tab">Откривени служитељи</string>
     <string name="desc_save_discovered_server_btn">Сачувај</string>
     <string name="desc_discovery_btn">Откриј служитеље</string>
@@ -77,8 +76,6 @@
     <string name="pref_zoom_min">Најмање</string>
     <string name="pref_zoom_max">Највише</string>
     <string name="pref_clipboard_sync">Услкађивање складишта исечака</string>
-    <string name="pref_cred_autocomplete">Самопопуна</string>
-    <string name="pref_cred_autocomplete_summary">Предлаже сачуване пријаве при повезивању са новим служитељем</string>
     <string name="pref_discovery">Откривање</string>
     <string name="pref_import_export">Увези/извези служитеље</string>
     <string name="pref_debugging">Отклон грешака</string>

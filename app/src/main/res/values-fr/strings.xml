@@ -146,9 +146,6 @@
     <string name="pref_km_right_alt_to_super">Alt Droite → Super</string>
     <string name="pref_zoom_min">Minimum</string>
     <string name="pref_zoom_max">Maximum</string>
-    <string name="pref_credential">Connexion</string>
-    <string name="pref_cred_autocomplete">Autocomplétion</string>
-    <string name="pref_cred_autocomplete_summary">Suggérer les identifiants enregistrés lors de la connexion à de nouveaux serveurs</string>
     <string name="pref_discovery">Découverte</string>
     <string name="pref_clipboard_sync">Synchronisation du presse-papiers</string>
     <string name="pref_drag">Glisser</string>

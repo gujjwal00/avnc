@@ -86,7 +86,6 @@
     <string name="pref_toolbar_alignment_option_end">Rechts</string>
     <string name="pref_zoom">Zoom</string>
     <string name="pref_zoom_min">Minimum</string>
-    <string name="pref_credential">Anmelden</string>
     <string name="pref_discovery_autorun">Automatische Suche</string>
     <string name="pref_discovery">Automatische Suche</string>
     <string name="pref_import_export">Server ex- und importieren</string>
@@ -152,8 +151,6 @@
     <string name="pref_enable_pip">Bild in Bild</string>
     <string name="pref_zoom_max">Maximum</string>
     <string name="pref_clipboard_sync">Zwischenablage syncronisieren</string>
-    <string name="pref_cred_autocomplete">Auto-Vervollständigung</string>
-    <string name="pref_cred_autocomplete_summary">Schlage gespeicherte Zugangsdaten bei neuen Servern vor</string>
     <string name="pref_keycode_map">Keycode-Übersicht</string>
     <string name="pref_experimental_toolbar_swipe_close">Wischen zum Schließen der Symbolleiste</string>
     <string name="pref_discovery_autorun_summary">Schon auf der Startseite automatisch nach Servern suchen</string>

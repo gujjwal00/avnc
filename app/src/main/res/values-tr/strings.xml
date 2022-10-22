@@ -75,8 +75,6 @@
     <string name="pref_zoom">Yakınlaştır</string>
     <string name="pref_zoom_min">En az</string>
     <string name="pref_zoom_max">En fazla</string>
-    <string name="pref_credential">Oturum aç</string>
-    <string name="pref_cred_autocomplete">Otomatik tamamla</string>
     <string name="pref_rediscovery_indicator">Yeniden keşfedilen sunucuları vurgula</string>
     <string name="pref_import_export">Sunucuları içe/dışa aktar</string>
     <string name="pref_debugging">Hata ayıklama</string>
@@ -157,7 +155,6 @@
     <string name="pref_km_language_switch_to_super">Dil Değiştirme → Süper</string>
     <string name="pref_toolbar_alignment">Hizalama</string>
     <string name="pref_clipboard_sync">Panoyu eşzamanla</string>
-    <string name="pref_cred_autocomplete_summary">Yeni sunuculara bağlanırken kayıtlı oturum açma bilgilerini öner</string>
     <string name="pref_discovery_autorun">Otomatik çalıştır</string>
     <string name="pref_mouse_passthrough">Fare geçişi</string>
     <string name="pref_vk_open_with_keyboard">Klavye ile aç</string>

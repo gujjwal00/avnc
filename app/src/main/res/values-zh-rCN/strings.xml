@@ -106,9 +106,6 @@
     <string name="pref_zoom">缩放</string>
     <string name="pref_zoom_min">最小</string>
     <string name="pref_clipboard_sync">剪贴板同步</string>
-    <string name="pref_credential">登录</string>
-    <string name="pref_cred_autocomplete">自动完成</string>
-    <string name="pref_cred_autocomplete_summary">连接到新服务器时建议保存登录信息</string>
     <string name="pref_discovery">发现</string>
     <string name="pref_discovery_autorun">自动运行</string>
     <string name="pref_rediscovery_indicator">突出显示重新发现的服务器</string>

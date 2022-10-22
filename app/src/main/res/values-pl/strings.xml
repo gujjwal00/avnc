@@ -113,12 +113,9 @@
     <string name="pref_two_finger_tap">Stuknięcie dwoma palcami</string>
     <string name="pref_long_press">Długie naciśnięcie</string>
     <string name="pref_fullscreen">Pełny ekran</string>
-    <string name="pref_credential">Logowanie</string>
-    <string name="pref_cred_autocomplete">Autouzupełnianie</string>
     <string name="pref_zoom_max">Maximum</string>
     <string name="pref_clipboard_sync">Synchronizacja schowka</string>
     <string name="pref_logs">Dzienniki</string>
-    <string name="pref_cred_autocomplete_summary">Sugeruj zapisywanie loginów przy łączeniu się z nowymi serwerami</string>
     <string name="pref_experimental_toolbar_swipe_close_summary">Podczas sesji zdalnej możesz przesunąć palcem, aby zamknąć aktualnie otwarty pasek narzędzi</string>
     <string name="title_edit">Edytuj</string>
     <string name="title_duplicate">Duplikuj</string>

@@ -72,12 +72,9 @@
     <string name="pref_km_back_to_escape">Назад → Escape</string>
     <string name="pref_km_back_to_escape_summary">Не впливає на панель пересування</string>
     <string name="pref_zoom_max">Найбільше</string>
-    <string name="pref_cred_autocomplete">Автодоповнення</string>
     <string name="pref_enable_pip">Картинка-в-картинці</string>
     <string name="pref_toolbar_alignment_option_end">Кінець</string>
     <string name="pref_zoom_min">Найменше</string>
-    <string name="pref_credential">Вхід</string>
-    <string name="pref_cred_autocomplete_summary">Пропонувати збережені дані входу під час зʼєднання з новими серверами</string>
     <string name="pref_experimental_immersive_mode_summary">Ховає всі системні панелі в повноекранному режимі</string>
     <string name="pref_import_export">Імпорт/експорт серверів</string>
     <string name="pref_keycode_map">Мапа кодів клавіш</string>

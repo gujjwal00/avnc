@@ -184,9 +184,6 @@
     <string name="pref_clipboard_sync">Clipboard sync</string>
     <string name="pref_saved_server_lock_summary">Require biometric/password unlock to connect</string>
     <string name="pref_saved_server_lock">Lock saved servers</string>
-    <string name="pref_credential">Login</string>
-    <string name="pref_cred_autocomplete">Auto-completion</string>
-    <string name="pref_cred_autocomplete_summary">Suggest saved logins when connecting to new servers</string>
     <string name="pref_discovery">Discovery</string>
     <string name="pref_discovery_autorun">Autorun</string>
     <string name="pref_discovery_autorun_summary">Discover servers while on homepage</string>

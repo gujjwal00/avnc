@@ -145,9 +145,6 @@
     <string name="pref_zoom_min">کمینه</string>
     <string name="pref_zoom_max">بیشینه</string>
     <string name="pref_clipboard_sync">همگام‌سازی تخته‌گیره</string>
-    <string name="pref_credential">ورود</string>
-    <string name="pref_cred_autocomplete">تکمیل خودکار</string>
-    <string name="pref_cred_autocomplete_summary">هنگام اتّصال به کارسازهای جدید، ورودهای ذخیره شده را پیشنهاد می‌دهد</string>
     <string name="pref_discovery">اکتشاف</string>
     <string name="pref_import_export">درون‌ریزی/برون‌ریزی کارسازها</string>
     <string name="pref_debugging">اشکال زدایی</string>

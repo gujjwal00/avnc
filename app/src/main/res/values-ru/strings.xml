@@ -105,7 +105,6 @@
     <string name="pref_vk">Виртуальные клавиши</string>
     <string name="pref_km_right_alt_to_super">Правый Alt → Super</string>
     <string name="pref_zoom_min">Минимум</string>
-    <string name="pref_cred_autocomplete">Авто-завершение</string>
     <string name="pref_zoom_max">Максимум</string>
     <string name="pref_orientation">Ориентация экрана</string>
     <string name="pref_orientation_option_auto">Автоматически</string>
@@ -140,7 +139,6 @@
     <string name="pref_orientation_option_landscape">Ландшафтная</string>
     <string name="pref_fullscreen">Полноэкранный режим</string>
     <string name="pref_clipboard_sync">Синхронизация буфера обмена</string>
-    <string name="pref_credential">Вход</string>
     <string name="pref_experimental_immersive_mode">Режим полного присутствия</string>
     <string name="pref_experimental_immersive_mode_summary">Скрывает все системные панели в полноэкранном режиме</string>
 </resources>
