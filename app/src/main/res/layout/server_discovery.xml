@@ -28,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/desc_discovered_list"
+            app:isVisible="@{!viewModel.discovery.servers.empty}"
             tools:listitem="@layout/server_discovery_item" />
 
         <TextView

@@ -58,6 +58,10 @@ class ServerTabs(val activity: HomeActivity) {
         discoveredServersTab = tabLayout.getTabAt(1)!!
         discoveredServersTab.setIcon(R.drawable.ic_search)
         discoveredServersTab.setContentDescription(R.string.desc_discovered_servers_tab)
+
+        //ViewPager2 uses a RecyclerView internally, and sets it's DescendantFocusability
+        //to 'FOCUS_BEFORE_DESCENDANTS', effectively breaking navigation via D-pad or arrow keys.
+        pager.forEach { (it as ViewGroup).descendantFocusability = ViewGroup.FOCUS_AFTER_DESCENDANTS }
     }
 
     fun showSavedServers() {

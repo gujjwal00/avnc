@@ -26,6 +26,7 @@
             android:id="@+id/servers_rv"
             style="@style/ServerList"
             android:layout_width="match_parent"
+            app:isVisible="@{!viewModel.serverProfiles.empty}"
             android:layout_height="match_parent"
             android:contentDescription="@string/desc_saved_servers_list"
             tools:listitem="@layout/server_saved_item" />
