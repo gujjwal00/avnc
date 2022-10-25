@@ -27,11 +27,11 @@
     <string name="title_export">Export</string>
     <string name="title_import">Import</string>
     <string name="title_view_only_mode">View-only</string>
-    <string name="title_default_security">Default security</string>
     <string name="title_hide_remote_cursor">Hide remote pointer</string>
     <string name="title_key_compat_mode">Send legacy key events</string>
     <string name="title_image_quality">Image quality</string>
     <string name="title_image_quality_raw">Raw</string>
+    <string name="title_vnc_security">Security</string>
     <string name="title_use_ssh_tunnel">Use SSH tunnel</string>
     <string name="title_unknown_ssh_host">Unknown SSH host</string>
     <string name="title_ssh_host_key_changed">SSH host key changed</string>
@@ -47,6 +47,8 @@
     <string name="title_report_bug">Report an issue</string>
     <string name="title_github_repo">Source code</string>
     <string name="title_unlock_dialog">Unlock to continue</string>
+    <string name="title_automatic">Automatic</string>
+    <string name="title_none">None</string>
 
 
     <string name="hint_urlbar">Connect to a Server</string>
@@ -116,7 +118,7 @@
     <string name="pref_experimental">Experimental</string>
     <string name="pref_experimental_summary">Extra goodies</string>
 
-    <string name="pref_gesture_action_none">None</string>
+    <string name="pref_gesture_action_none" translatable="false">@string/title_none</string>
     <string name="pref_gesture_action_left_click">Left-click</string>
     <string name="pref_gesture_action_middle_click">Middle-click</string>
     <string name="pref_gesture_action_right_click">Right-click</string>
@@ -135,7 +137,7 @@
     <string name="pref_sort_server_list">Sort saved servers by name</string>
     <string name="pref_gesture">Gestures</string>
     <string name="pref_gesture_style">Gesture style</string>
-    <string name="pref_gesture_style_auto">Automatic</string>
+    <string name="pref_gesture_style_auto" translatable="false">@string/title_automatic</string>
     <string name="pref_gesture_style_auto_summary">Based on app Settings</string>
     <string name="pref_gesture_style_touchscreen">Touchscreen</string>
     <string name="pref_gesture_style_touchscreen_summary">Do actions at touch-point</string>

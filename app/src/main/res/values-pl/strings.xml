@@ -49,7 +49,6 @@
     <string name="title_delete_servers_before_import">Usuń bieżące serwery przed importem</string>
     <string name="msg_ptr_hiding_not_supported">Brak wsparcia dla tego urządzenia</string>
     <string name="title_continue">Kontynuuj</string>
-    <string name="title_default_security">Domyślne zabezpieczenie</string>
     <string name="desc_reset_zoom_btn">Zresetuj powiększenie</string>
     <string name="desc_retry_connection_btn">Ponów próbę</string>
     <string name="desc_clear_url_btn">Wyczyść</string>
@@ -66,7 +65,7 @@
     <string name="pref_tools_summary">Import/Eksport, debugowanie</string>
     <string name="pref_experimental">Eksperymentalne</string>
     <string name="pref_experimental_summary">Dodatkowe gadżety</string>
-    <string name="pref_gesture_action_none">Żaden</string>
+    <string name="title_none">Żaden</string>
     <string name="pref_gesture_action_middle_click">Środkowy przycisk</string>
     <string name="pref_gesture_action_left_click">Lewy przycisk</string>
     <string name="pref_gesture_action_right_click">Prawy przycisk</string>

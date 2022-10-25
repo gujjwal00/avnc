@@ -66,7 +66,7 @@
     <string name="pref_server_summary">登录、发现</string>
     <string name="pref_tools_summary">导入/导出、调试</string>
     <string name="pref_experimental">试验性</string>
-    <string name="pref_gesture_action_none">无</string>
+    <string name="title_none">无</string>
     <string name="pref_gesture_action_left_click">左键单击</string>
     <string name="pref_gesture_action_middle_click">中键单击</string>
     <string name="pref_gesture_action_right_click">右键单击</string>
@@ -152,7 +152,6 @@
     <string name="pref_toolbar">工具栏</string>
     <string name="pref_zoom_max">最大</string>
     <string name="pref_discovery_autorun_summary">在主页上时发现服务器</string>
-    <string name="title_default_security">默认安全度</string>
     <string name="pref_swipe_sensitivity">调节灵敏度</string>
     <string name="pref_km_language_switch_to_super">语言切换 → Super 键</string>
     <string name="pref_km_back_to_escape">退格键 → Esc 键</string>

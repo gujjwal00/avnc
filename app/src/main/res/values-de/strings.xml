@@ -60,7 +60,7 @@
     <string name="pref_tools_summary">Importieren/Exportieren, Debugging</string>
     <string name="pref_experimental">Experimentelles</string>
     <string name="pref_experimental_summary">Weitere Optionen</string>
-    <string name="pref_gesture_action_none">Nichts</string>
+    <string name="title_none">Nichts</string>
     <string name="pref_gesture_action_pan">Lokale Ansicht verschieben</string>
     <string name="pref_theme">Design</string>
     <string name="pref_theme_option_system">System</string>
@@ -151,7 +151,6 @@
     <string name="pref_rediscovery_indicator">Wiederentdeckte Server hervorheben</string>
     <string name="pref_debugging">Fehlersuche</string>
     <string name="title_unknown_ssh_host">Unbekannter SSH-Zielpunkt</string>
-    <string name="title_default_security">Standard-Sicherheit</string>
     <string name="title_ssh_host_key_changed">Der öffentliche Schlüssel des SSH-Zielpunktes hat sich geändert</string>
     <string name="hint_server_id">Server-ID</string>
     <string name="pref_gesture_action_remote_drag">Drag and Drop für entfernte Inhalte</string>

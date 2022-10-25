@@ -21,7 +21,7 @@
     <string name="pref_server_summary">Пријава</string>
     <string name="pref_tools_summary">Увоз/извоз, исправке грешака</string>
     <string name="pref_experimental_summary">Додатна добра</string>
-    <string name="pref_gesture_action_none">Ништа</string>
+    <string name="title_none">Ништа</string>
     <string name="pref_gesture_action_right_click">Десни клик</string>
     <string name="pref_gesture_action_double_click">Двоклик</string>
     <string name="pref_mouse_passthrough">Пролаз мишем</string>

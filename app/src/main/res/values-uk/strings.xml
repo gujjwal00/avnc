@@ -133,7 +133,7 @@
     <string name="pref_server_summary">Вхід, виявлення</string>
     <string name="pref_tools_summary">Імпортування/експортування, зневадження</string>
     <string name="pref_experimental">Експериментальне</string>
-    <string name="pref_gesture_action_none">Нічого</string>
+    <string name="title_none">Нічого</string>
     <string name="pref_gesture_action_middle_click">Середнє клацання</string>
     <string name="pref_gesture_action_right_click">Праве клацання</string>
     <string name="pref_two_finger_tap">Торкання двома пальцями</string>
@@ -156,7 +156,6 @@
     <string name="pref_mouse_back">Кнопка назад</string>
     <string name="pref_mouse_back_action_default">Типово</string>
     <string name="pref_swipe_sensitivity">Чутливість ковзання</string>
-    <string name="title_default_security">Типовий захист</string>
     <string name="msg_drag_gesture_help">Присвоєння дії жесту Перетягування змінить виявлення довгого натискання:
 \n
 \n<b>Натиснути-утримувати-відпустити</b> → Довге натискання

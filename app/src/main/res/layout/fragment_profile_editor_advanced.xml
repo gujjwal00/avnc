@@ -230,29 +230,24 @@
                 <!-- Security                                                   -->
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-                <ImageView
-                    android:id="@+id/security_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_normal"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_shield"
-                    android:tintMode="src_in"
+                <TextView
+                    android:id="@+id/security_label"
+                    style="@style/FormField.LabelWithIcon"
+                    android:text="@string/title_vnc_security"
+                    app:drawableStartCompat="@drawable/ic_shield"
                     app:layout_constraintBottom_toBottomOf="@id/security"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/security"
-                    app:tint="?colorControlNormal" />
+                    app:layout_constraintTop_toTopOf="@id/security" />
 
                 <com.gaurav.avnc.util.SpinnerEx
                     android:id="@+id/security"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:minHeight="40dp"
-                    android:paddingTop="@dimen/padding_small"
-                    android:paddingBottom="@dimen/padding_small"
-                    app:layout_constraintStart_toEndOf="@id/security_icon"
+                    android:minHeight="@dimen/action_btn_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/gesture_style"
                     app:layout_constraintTop_toBottomOf="@id/gesture_style"
-                    app:layout_constraintWidth_percent=".6" />
+                    tools:entries="@array/dummy_array" />
 
                 <!--Username-->
                 <EditText

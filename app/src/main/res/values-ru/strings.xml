@@ -15,7 +15,6 @@
     <string name="msg_invalid_key_file">недействительный файл приватного ключа</string>
     <string name="pref_servers">Серверы</string>
     <string name="pref_mouse">Мышь</string>
-    <string name="title_default_security">Безопасность по-умолчанию</string>
     <string name="title_delete_servers_before_import">Удалите текущие серверы перед импортом</string>
     <string name="title_password">Пароль</string>
     <string name="title_change">Изменить</string>
@@ -56,7 +55,7 @@
     <string name="pref_single_tap">Одиночное нажатие</string>
     <string name="pref_discovery">Обнаружение</string>
     <string name="pref_discovery_autorun">Автозапуск</string>
-    <string name="pref_gesture_action_none">Нет</string>
+    <string name="title_none">Нет</string>
     <string name="pref_gesture_action_right_click">Правая кнопка мыши</string>
     <string name="pref_gesture_action_double_click">Двойное нажатие</string>
     <string name="pref_vk_show_all">Показать все клавиши</string>

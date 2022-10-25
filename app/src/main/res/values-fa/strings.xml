@@ -102,7 +102,7 @@
     <string name="pref_tools_summary">درون‌ریزی/برون‌ریزی، اشکال زدایی</string>
     <string name="pref_experimental">آزمایشی</string>
     <string name="pref_experimental_summary">چیزهای اضافی</string>
-    <string name="pref_gesture_action_none">هیچ</string>
+    <string name="title_none">هیچ</string>
     <string name="pref_gesture_action_left_click">کلیک-چپ</string>
     <string name="pref_gesture_action_middle_click">کلیک-وسط</string>
     <string name="pref_gesture_action_right_click">کلیک-راست</string>
@@ -164,5 +164,4 @@
     <string name="pref_swipe_sensitivity">حساسیت به کشیدن</string>
     <string name="desc_discovery_stop_btn">اکتشاف کارسازها را متوقّف کن</string>
     <string name="pref_discovery_autorun_summary">در حالی که در صفحهٔ اصلی هستید، کارسازها را کشف کنید</string>
-    <string name="title_default_security">امنیت پیش‌گزیده</string>
 </resources>

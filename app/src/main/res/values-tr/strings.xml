@@ -51,7 +51,7 @@
     <string name="pref_input_summary">Hareketler, fare, sanal tuşlar</string>
     <string name="pref_servers">Sunucular</string>
     <string name="pref_experimental_summary">Ek güzellikler</string>
-    <string name="pref_gesture_action_none">Hiçbiri</string>
+    <string name="title_none">Hiçbiri</string>
     <string name="pref_gesture_action_left_click">Sol tıklama</string>
     <string name="pref_gesture_action_double_click">Çift tıklama</string>
     <string name="pref_gesture_action_move_pointer">İşaretçiyi hareket ettir</string>
@@ -156,7 +156,6 @@
     <string name="pref_mouse_back">Geri düğmesi</string>
     <string name="pref_mouse_back_action_default">Öntanımlı</string>
     <string name="pref_swipe_sensitivity">Kaydırma hassasiyeti</string>
-    <string name="title_default_security">Öntanımlı güvenlik</string>
     <string name="msg_drag_gesture_help">Sürükleme hareketine bir eylem atamak, Uzun basma algılamasını değiştirecektir:
 \n
 \n<b>Basılı tut ve bırak</b> → Uzun bas

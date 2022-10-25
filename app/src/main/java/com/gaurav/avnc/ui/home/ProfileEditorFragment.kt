@@ -180,8 +180,8 @@ class ProfileEditorFragment : DialogFragment() {
 
             // TODO Move it to proper place
             val securityTypes = mapOf(
-                    getString(R.string.title_default_security) to 0,
-                    getString(R.string.pref_gesture_action_none) to 1,
+                    getString(R.string.title_automatic) to 0,
+                    getString(R.string.title_none) to 1,
                     "VncAuth" to 2,
                     "AnonTLS" to 18,
                     "VeNCrypt" to 19
@@ -202,7 +202,7 @@ class ProfileEditorFragment : DialogFragment() {
                           "value" to "touchpad"),
             )
 
-            val adapter = SimpleAdapter(requireContext(), gestureStyleItems, android.R.layout.simple_spinner_item,
+            val adapter = SimpleAdapter(requireContext(), gestureStyleItems, android.R.layout.simple_list_item_1,
                                         arrayOf("name", "description"), intArrayOf(android.R.id.text1, android.R.id.text2))
 
             adapter.setDropDownViewResource(android.R.layout.simple_list_item_2)

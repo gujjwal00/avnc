@@ -59,7 +59,7 @@
     <string name="title_duplicate">Dupliquer</string>
     <string name="msg_ptr_hiding_not_supported">Non pris en charge sur cet appareil</string>
     <string name="desc_clear_url_btn">Effacer</string>
-    <string name="pref_gesture_action_none">Aucun</string>
+    <string name="title_none">Aucun</string>
     <string name="pref_gesture_action_right_click">Clic droit</string>
     <string name="title_open_source_libraries">Bibliothèques open source</string>
     <string name="pref_tools_summary">Importation/Exportation, déboggage</string>
