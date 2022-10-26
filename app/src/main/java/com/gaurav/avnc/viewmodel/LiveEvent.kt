@@ -24,7 +24,7 @@ import androidx.lifecycle.Observer
  * be marked as 'handled' and any future observers will NOT be notified.
  *
  * This is the main difference between this class & [LiveData]. [LiveData] will
- * notify the future observers to bring them up-to date. This can happens during
+ * notify the future observers to bring them up-to date. This can happen during
  * Activity restarts where old observers are detached and new ones are attached.
  *
  * This class is used for events which should be handled only once.

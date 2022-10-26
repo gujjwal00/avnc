@@ -105,7 +105,7 @@ class SshTunnel(private val viewModel: VncViewModel) {
         // Hence, if we pass 0 as local port to let the system pick a port for us, we have no way
         // to know the port system picked.
         // So we create a temporary ServerSocket, close it immediately and try to use its port.
-        // But between the close-reuse, that port can be assigned to someone else so we try again.
+        // But between the close-reuse, that port can be assigned to someone else, so we try again.
         for (i in 1..50) {
             val attemptedPort = with(ServerSocket(0)) { close(); localPort }
             val address = InetSocketAddress(localHost, attemptedPort)
