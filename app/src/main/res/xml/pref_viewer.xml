@@ -19,14 +19,19 @@
         app:useSimpleSummaryProvider="true" />
 
     <SwitchPreference
+        app:defaultValue="false"
+        app:key="pip_enabled"
+        app:title="@string/pref_enable_pip" />
+
+    <SwitchPreference
         app:defaultValue="true"
         app:key="fullscreen_display"
         app:title="@string/pref_fullscreen" />
 
     <SwitchPreference
         app:defaultValue="false"
-        app:key="pip_enabled"
-        app:title="@string/pref_enable_pip" />
+        app:key="viewer_draw_behind_cutout"
+        app:title="@string/pref_display_cutout" />
 
     <PreferenceCategory
         app:icon="@drawable/ic_zoom_in"

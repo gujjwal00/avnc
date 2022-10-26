@@ -171,6 +171,7 @@
     <string name="pref_orientation_option_portrait">Portrait</string>
     <string name="pref_orientation_option_landscape">Landscape</string>
     <string name="pref_fullscreen">Fullscreen</string>
+    <string name="pref_display_cutout">Draw behind display cutout (experimental)</string>
     <string name="pref_enable_pip">Picture-in-picture</string>
     <string name="pref_toolbar">Toolbar</string>
     <string name="pref_toolbar_alignment">Alignment</string>

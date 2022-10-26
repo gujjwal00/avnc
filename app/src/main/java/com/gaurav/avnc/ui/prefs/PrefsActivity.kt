@@ -163,5 +163,4 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
     }
 
     @Keep class Tools : PrefFragment(R.xml.pref_tools)
-    @Keep class Experimental : PrefFragment(R.xml.pref_experimental)
 }

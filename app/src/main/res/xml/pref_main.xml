@@ -39,10 +39,4 @@
         app:summary="@string/pref_tools_summary"
         app:title="@string/pref_tools" />
 
-    <Preference
-        app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$Experimental"
-        app:icon="@drawable/ic_experimental"
-        app:summary="@string/pref_experimental_summary"
-        app:title="@string/pref_experimental" />
-
 </PreferenceScreen>
