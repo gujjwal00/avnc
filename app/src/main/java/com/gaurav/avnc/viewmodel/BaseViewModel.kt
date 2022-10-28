@@ -17,10 +17,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.db.MainDb
 import com.gaurav.avnc.util.AppPreferences
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 /**
  * Base view model.
@@ -64,20 +61,12 @@ open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     /**
-     * Executes given [block] asynchronously on IO thread.
+     * Launches a new coroutine using [viewModelScope], and executes [block] in that coroutine.
      */
-    protected fun asyncIO(block: () -> Unit) = asyncIO(block) {}
-
-    /**
-     * Executes given [block] asynchronously on IO thread.
-     * After [block] has completed, [onFinish] will be executed on Main thread.
-     */
-    protected fun asyncIO(block: () -> Unit, onFinish: () -> Unit): Job {
-        return viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO) {
-                block()
-            }
-            onFinish()
-        }
+    protected fun async(dispatcher: CoroutineDispatcher, block: suspend CoroutineScope.() -> Unit): Job {
+        return viewModelScope.launch(dispatcher) { this.block() }
     }
+
+    protected fun asyncMain(block: suspend CoroutineScope.() -> Unit) = async(Dispatchers.Main, block)
+    protected fun asyncIO(block: suspend CoroutineScope.() -> Unit) = async(Dispatchers.IO, block)
 }

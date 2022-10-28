@@ -11,6 +11,7 @@ package com.gaurav.avnc.viewmodel
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
+import androidx.room.withTransaction
 import com.gaurav.avnc.model.ServerProfile
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
@@ -92,7 +93,7 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
 
                 //Update database
                 if (deleteCurrentServers) {
-                    db.runInTransaction {
+                    db.withTransaction {
                         serverProfileDao.deleteAll()
                         serverProfileDao.insert(data.profiles)
                     }

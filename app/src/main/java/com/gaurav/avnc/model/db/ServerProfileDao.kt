@@ -24,23 +24,23 @@ interface ServerProfileDao {
 
     //Synchronous version
     @Query("SELECT * FROM profiles")
-    fun getList(): List<ServerProfile>
+    suspend fun getList(): List<ServerProfile>
 
     @Query("SELECT name, host, username, password FROM profiles")
     fun getCredentials(): LiveData<List<LoginInfo>>
 
     @Insert
-    fun insert(profile: ServerProfile): Long
+    suspend fun insert(profile: ServerProfile): Long
 
     @Insert
-    fun insert(profiles: List<ServerProfile>)
+    suspend fun insert(profiles: List<ServerProfile>)
 
     @Update
-    fun update(profile: ServerProfile)
+    suspend fun update(profile: ServerProfile)
 
     @Delete
-    fun delete(profile: ServerProfile)
+    suspend fun delete(profile: ServerProfile)
 
     @Query("DELETE FROM profiles")
-    fun deleteAll()
+    suspend fun deleteAll()
 }

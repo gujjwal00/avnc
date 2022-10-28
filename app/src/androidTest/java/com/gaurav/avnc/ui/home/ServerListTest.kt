@@ -23,6 +23,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.gaurav.avnc.*
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.vnc.VncActivity
+import kotlinx.coroutines.runBlocking
 import org.hamcrest.core.AllOf.allOf
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -56,7 +57,7 @@ class ServerListTest {
 
     @Before
     fun before() {
-        dbRule.db.serverProfileDao.insert(testProfile)
+        runBlocking { dbRule.db.serverProfileDao.insert(testProfile) }
     }
 
     @Test
@@ -113,9 +114,11 @@ class ServerListTest {
         val prefEditor = PreferenceManager.getDefaultSharedPreferences(targetContext).edit()
 
         with(dbRule.db.serverProfileDao) {
-            deleteAll()
-            insert(ServerProfile(name = "pqr"))
-            insert(ServerProfile(name = "abc"))
+            runBlocking {
+                deleteAll()
+                insert(ServerProfile(name = "pqr"))
+                insert(ServerProfile(name = "abc"))
+            }
         }
 
         //Without sorting, "pqr" should be above "abc", as it was inserted first

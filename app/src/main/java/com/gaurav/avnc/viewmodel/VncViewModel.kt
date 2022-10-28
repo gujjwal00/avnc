@@ -251,7 +251,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      */
     fun saveProfile() {
         if (profile.ID != 0L)
-            asyncIO { serverProfileDao.update(profile) }
+            asyncMain { serverProfileDao.update(profile) }
     }
 
     /**************************************************************************

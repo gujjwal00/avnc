@@ -9,6 +9,7 @@
 package com.gaurav.avnc
 
 import com.gaurav.avnc.model.db.MainDb
+import kotlinx.coroutines.runBlocking
 import org.junit.rules.ExternalResource
 
 /**
@@ -20,6 +21,6 @@ class DatabaseRule : ExternalResource() {
     val db by lazy { MainDb.getInstance(targetContext) }
 
     override fun before() {
-        db.serverProfileDao.deleteAll()
+        runBlocking { db.serverProfileDao.deleteAll() }
     }
 }
