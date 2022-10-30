@@ -42,6 +42,8 @@ class UrlBarActivity : AppCompatActivity() {
             else
                 binding.url.setText("")
         }
+
+        binding.url.requestFocus()
     }
 
     private fun go(url: String): Boolean {
