@@ -22,7 +22,11 @@
             app:title="@string/pref_logs" />
 
         <Preference
-            app:fragment="com.gaurav.avnc.ui.prefs.KeyCodeMapFragment"
-            app:title="@string/pref_keycode_map" />
+            app:fragment="com.gaurav.avnc.ui.prefs.TouchTestFragment"
+            app:title="@string/pref_touch_test" />
+
+        <Preference
+            app:fragment="com.gaurav.avnc.ui.prefs.KeyTestFragment"
+            app:title="@string/pref_key_test" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -10,7 +10,6 @@ package com.gaurav.avnc.util
 
 import android.net.Uri
 import android.os.Build
-import android.view.KeyEvent
 import com.gaurav.avnc.BuildConfig
 
 /**
@@ -24,11 +23,11 @@ object Debugging {
      */
     fun logcat(): String {
         try {
-            return ProcessBuilder("logcat", "-d")
+            return ProcessBuilder("logcat", "-d", "*")
                     .redirectErrorStream(true)
                     .start()
                     .inputStream
-                    .bufferedReader()
+                    .reader()
                     .readText()
         } catch (t: Throwable) {
             return "Error getting logs: ${t.message}"
@@ -41,26 +40,6 @@ object Debugging {
         } catch (t: Throwable) {
             //Ignore
         }
-    }
-
-    /**
-     * This returns a map of various properties of key-codes.
-     * Can be useful if some keys are not working as intended.
-     */
-    fun keyCodeMap(): String {
-        val builder = StringBuilder()
-
-        builder.append("#   KeyCode   Unicode   Printing?   Label\n")
-        for (i in 0..KeyEvent.getMaxKeyCode()) {
-            val e = KeyEvent(KeyEvent.ACTION_DOWN, i)
-
-            val s = String.format("%4d  %-40s  %5d %5b  %c      \n",
-                                  i, KeyEvent.keyCodeToString(i), e.unicodeChar, e.isPrintingKey, e.displayLabel)
-
-            builder.append(s)
-        }
-
-        return builder.toString()
     }
 
     /**
@@ -80,5 +59,24 @@ object Debugging {
         """.trimMargin()
 
         return "?body=${Uri.encode(body)}"
+    }
+
+    /**
+     * Wraps given logs into a <details> element.
+     * This is useful for GitHub comments.
+     */
+    fun wrapLogs(title: String, logs: String): String {
+        return """
+            <details>
+            <summary>$title</summary>
+            <p>
+            
+            ```python
+            {logs}
+            ```
+            
+            </p>
+            </details>
+            """.trimIndent().replace("{logs}", logs)
     }
 }

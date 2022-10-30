@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_normal"
+        tools:ignore="HardcodedText">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:background="@drawable/bg_round_rect"
+            android:backgroundTint="@color/colorUrlBarBackground"
+            android:minHeight="100dp">
+
+            <EditText
+                android:id="@+id/preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:autofillHints=""
+                android:background="@android:color/transparent"
+                android:hint="
+1. Tap here to open keyboard (if required)\n
+2. Press the keys you want to record\n
+3. Tap 'Copy' to copy event logs"
+                android:imeOptions="flagNoExtractUi|flagNoFullscreen"
+                android:inputType="text" />
+
+            <com.gaurav.avnc.ui.prefs.KeyTestView
+                android:id="@+id/input_area"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="@dimen/action_btn_size">
+
+            <CheckBox
+                android:id="@+id/auto_copy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Copy automatically on exit" />
+
+            <Button
+                android:id="@+id/reset_btn"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|bottom"
+                android:text="Reset" />
+
+            <Button
+                android:id="@+id/copy_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:text="@android:string/copy" />
+
+        </FrameLayout>
+    </LinearLayout>
+</layout>
