@@ -11,7 +11,6 @@ package com.gaurav.avnc.ui.home
 import android.app.Activity
 import android.app.Instrumentation
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.swipeLeft
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
@@ -57,9 +56,8 @@ class DiscoveryListTest {
         // We can't even use the stop button
         activityRule.scenario.onActivity { it.viewModel.stopDiscovery() }
 
-        onView(withId(R.id.pager)).perform(swipeLeft())
-        onView(withId(R.id.discovered_rv)).checkWithTimeout(matches(isCompletelyDisplayed()))
-        onView(withContentDescription(R.string.desc_discovery_btn)).checkWillBeDisplayed()
+        onView(withContentDescription(R.string.desc_discovered_servers_tab)).doClick()
+        onView(withContentDescription(R.string.desc_discovery_btn)).checkWithTimeout(matches(isCompletelyDisplayed()))
     }
 
     @Test
