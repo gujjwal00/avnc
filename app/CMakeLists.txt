@@ -77,6 +77,7 @@ avnc_check_submodule(libvncserver)
 
 set(AVNC_LIBVNC_SRC_DIR ${AVNC_EXTERN_DIR}/libvncserver)
 set(AVNC_LIBVNC_BUILD_DIR ${CMAKE_BINARY_DIR}/libvncserver)
+set(WITH_LIBSSH2 OFF CACHE BOOL "Find LibSSH" FORCE)
 
 add_subdirectory(${AVNC_LIBVNC_SRC_DIR} ${AVNC_LIBVNC_BUILD_DIR})  # (source dir, build dir)
 
