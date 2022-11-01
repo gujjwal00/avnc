@@ -77,7 +77,7 @@ class KeyHandlerTest {
     }
 
     private fun sendKey(keyCode: Int, uChar: Char) {
-        sendKey(keyCode, uChar.toInt())
+        sendKey(keyCode, uChar.code)
     }
 
     private fun sendAccent(accent: Int) {
@@ -96,55 +96,55 @@ class KeyHandlerTest {
     @Test
     fun simpleChar() {
         keyHandler.onKey(KeyEvent.KEYCODE_A)
-        assertEquals('a'.toInt(), dispatchedKeyDowns.firstOrNull())
+        assertEquals('a'.code, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
     fun charWithShift() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_SHIFT_ON)
-        assertEquals('A'.toInt(), dispatchedKeyDowns.firstOrNull())
+        assertEquals('A'.code, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
     fun charWithShiftCtrl() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_SHIFT_ON or KeyEvent.META_CTRL_ON)
-        assertEquals('A'.toInt(), dispatchedKeyDowns.firstOrNull())
+        assertEquals('A'.code, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
     fun charWithShiftCtrlAlt() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_SHIFT_ON or KeyEvent.META_CTRL_ON or KeyEvent.META_ALT_ON)
-        assertEquals('A'.toInt(), dispatchedKeyDowns.firstOrNull())
+        assertEquals('A'.code, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
     fun charWithCapslock() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON)
-        assertEquals('A'.toInt(), dispatchedKeyDowns.firstOrNull())
+        assertEquals('A'.code, dispatchedKeyDowns.firstOrNull())
     }
 
     /*@Test  // Android itself is broken on CapsLock + Shift
     fun charWithCapslockShift() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON or KeyEvent.META_SHIFT_ON)
-        assertEquals('a'.toInt(), dispatchedKeys.firstOrNull())
+        assertEquals('a'.code, dispatchedKeys.firstOrNull())
     }*/
 
     @Test
     fun charWithCapslockCtrl() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON or KeyEvent.META_CTRL_ON)
-        assertEquals('A'.toInt(), dispatchedKeyDowns.firstOrNull())
+        assertEquals('A'.code, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
     fun charWithCapslockAlt() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON or KeyEvent.META_ALT_ON)
-        assertEquals('A'.toInt(), dispatchedKeyDowns.firstOrNull())
+        assertEquals('A'.code, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
     fun numpadWithNumlock() {
         sendKeyWithMeta(KeyEvent.KEYCODE_NUMPAD_1, KeyEvent.META_NUM_LOCK_ON)
-        assertEquals('1'.toInt(), dispatchedKeyDowns.firstOrNull())
+        assertEquals('1'.code, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
@@ -188,7 +188,7 @@ class KeyHandlerTest {
     fun diacriticTest_charAfterAccent() {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_A, 'a')
-        assertEquals('ã'.toInt(), dispatchedKeyDowns.firstOrNull())
+        assertEquals('ã'.code, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
@@ -196,7 +196,7 @@ class KeyHandlerTest {
         sendDown(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
         sendKey(KeyEvent.KEYCODE_A, 'a')
         sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
-        assertEquals('ã'.toInt(), dispatchedKeyDowns.firstOrNull())
+        assertEquals('ã'.code, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
@@ -204,30 +204,30 @@ class KeyHandlerTest {
         // Here we test key up/down events for accents and characters mixed in
         // non-sequential order. This case can happen when you type quickly.
 
-        sendDown(KeyEvent.KEYCODE_A, 'a'.toInt())
+        sendDown(KeyEvent.KEYCODE_A, 'a'.code)
         sendDown(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
-        sendUp(KeyEvent.KEYCODE_A, 'a'.toInt())
+        sendUp(KeyEvent.KEYCODE_A, 'a'.code)
         sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
-        sendDown(KeyEvent.KEYCODE_A, 'a'.toInt())
-        sendUp(KeyEvent.KEYCODE_A, 'a'.toInt())
+        sendDown(KeyEvent.KEYCODE_A, 'a'.code)
+        sendUp(KeyEvent.KEYCODE_A, 'a'.code)
 
-        assertEquals('a'.toInt(), dispatchedKeyDowns[0]) // First should be normal, as accent was pressed later
-        assertEquals('ã'.toInt(), dispatchedKeyDowns[1]) // Second should be accented
+        assertEquals('a'.code, dispatchedKeyDowns[0]) // First should be normal, as accent was pressed later
+        assertEquals('ã'.code, dispatchedKeyDowns[1]) // Second should be accented
     }
 
     @Test
     fun diacriticTest_interMixedUpDowns2() {
         // Another variation of intermixed up/downs
 
-        sendDown(KeyEvent.KEYCODE_A, 'a'.toInt())
+        sendDown(KeyEvent.KEYCODE_A, 'a'.code)
         sendDown(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
-        sendUp(KeyEvent.KEYCODE_A, 'a'.toInt())
-        sendDown(KeyEvent.KEYCODE_A, 'a'.toInt())
-        sendUp(KeyEvent.KEYCODE_A, 'a'.toInt())
+        sendUp(KeyEvent.KEYCODE_A, 'a'.code)
+        sendDown(KeyEvent.KEYCODE_A, 'a'.code)
+        sendUp(KeyEvent.KEYCODE_A, 'a'.code)
         sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
 
-        assertEquals('a'.toInt(), dispatchedKeyDowns[0])
-        assertEquals('ã'.toInt(), dispatchedKeyDowns[1])
+        assertEquals('a'.code, dispatchedKeyDowns[0])
+        assertEquals('ã'.code, dispatchedKeyDowns[1])
     }
 
     @Test
@@ -235,15 +235,15 @@ class KeyHandlerTest {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_A, 'a') // First one should be accented,
         sendKey(KeyEvent.KEYCODE_A, 'a') // next one should be normal
-        assertEquals('ã'.toInt(), dispatchedKeyDowns[0])
-        assertEquals('a'.toInt(), dispatchedKeyDowns[1])
+        assertEquals('ã'.code, dispatchedKeyDowns[0])
+        assertEquals('a'.code, dispatchedKeyDowns[1])
     }
 
     @Test
     fun diacriticTest_capitalCharAfterAccent() {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_A, 'A')
-        assertEquals('Ã'.toInt(), dispatchedKeyDowns.firstOrNull())
+        assertEquals('Ã'.code, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
@@ -251,7 +251,7 @@ class KeyHandlerTest {
         sendAccent(ACCENT_CIRCUMFLEX)
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_A, 'a')
-        assertEquals('ẫ'.toInt() + 0x1000000, dispatchedKeyDowns.firstOrNull())
+        assertEquals('ẫ'.code + 0x1000000, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
@@ -262,7 +262,7 @@ class KeyHandlerTest {
         sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
 
         sendKey(KeyEvent.KEYCODE_A, 'a')
-        assertEquals('ẫ'.toInt() + 0x1000000, dispatchedKeyDowns.firstOrNull())
+        assertEquals('ẫ'.code + 0x1000000, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
@@ -273,7 +273,7 @@ class KeyHandlerTest {
         sendUp(0, ACCENT_CIRCUMFLEX or KeyCharacterMap.COMBINING_ACCENT)
 
         sendKey(KeyEvent.KEYCODE_A, 'a')
-        assertEquals('ẫ'.toInt() + 0x1000000, dispatchedKeyDowns.firstOrNull())
+        assertEquals('ẫ'.code + 0x1000000, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
@@ -283,7 +283,7 @@ class KeyHandlerTest {
         sendKey(KeyEvent.KEYCODE_A, 'a')
         sendUp(0, ACCENT_CIRCUMFLEX or KeyCharacterMap.COMBINING_ACCENT)
         sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
-        assertEquals('ẫ'.toInt() + 0x1000000, dispatchedKeyDowns.firstOrNull())
+        assertEquals('ẫ'.code + 0x1000000, dispatchedKeyDowns.firstOrNull())
     }
 
     @Test
@@ -306,7 +306,7 @@ class KeyHandlerTest {
         sendKey(KeyEvent.KEYCODE_B, 'b')  // This will stop composition,
         sendKey(KeyEvent.KEYCODE_B, 'b')  // next char will be passed through
         assertEquals(1, dispatchedKeyDowns.size)
-        assertEquals('b'.toInt(), dispatchedKeyDowns.first())
+        assertEquals('b'.code, dispatchedKeyDowns.first())
     }
 
     @Test

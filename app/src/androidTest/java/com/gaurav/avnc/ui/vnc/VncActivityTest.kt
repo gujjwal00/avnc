@@ -86,7 +86,7 @@ class VncActivityTest {
             onView(withId(R.id.frame_view)).doTypeText(text)
         }
 
-        val sentByClient = text.toCharArray().map { it.toInt() }.toList()
+        val sentByClient = text.toCharArray().map { it.code }.toList()
         val receivedOnServer = testServer.receivedKeySyms.filter { it != XKeySym.XK_Shift_L }.toList()
 
         Assert.assertEquals(sentByClient, receivedOnServer)
