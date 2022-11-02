@@ -54,7 +54,7 @@
             app:title="@string/pref_zoom_max" />
 
         <SwitchPreference
-            app:defaultValue="false"
+            app:defaultValue="true"
             app:key="per_orientation_zoom"
             app:title="@string/pref_per_orientation_zoom" />
     </PreferenceCategory>

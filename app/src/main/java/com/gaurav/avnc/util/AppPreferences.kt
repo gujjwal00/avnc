@@ -33,7 +33,7 @@ class AppPreferences(context: Context) {
         val toolbarAlignment; get() = prefs.getString("toolbar_alignment", "start")
         val zoomMax; get() = prefs.getInt("zoom_max", 500) / 100F
         val zoomMin; get() = prefs.getInt("zoom_min", 50) / 100F
-        val perOrientationZoom; get() = prefs.getBoolean("per_orientation_zoom", false)
+        val perOrientationZoom; get() = prefs.getBoolean("per_orientation_zoom", true)
     }
 
     inner class Gesture {
