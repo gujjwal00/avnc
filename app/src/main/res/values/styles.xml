@@ -102,6 +102,10 @@
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body2</item>
     </style>
 
+    <style name="VirtualKey.Compact">
+        <item name="android:minWidth">36dp</item>
+    </style>
+
     <style name="VirtualKey.Image">
         <item name="android:minWidth">46dp</item>
     </style>

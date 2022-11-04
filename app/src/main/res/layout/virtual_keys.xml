@@ -166,6 +166,92 @@
                 app:isRepeatable="@{true}"
                 app:isVisible="@{showAll}" />
 
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~ Function Keys ~~~~~~~~~~~~~~~~~~~~~~~-->
+
+            <androidx.appcompat.widget.AppCompatButton
+                style="@style/VirtualKey.Compact"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F1)}"
+                android:text="F1"
+                app:isRepeatable="@{true}"
+                app:isVisible="@{showAll}" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                style="@style/VirtualKey.Compact"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F2)}"
+                android:text="F2"
+                app:isRepeatable="@{true}"
+                app:isVisible="@{showAll}" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                style="@style/VirtualKey.Compact"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F3)}"
+                android:text="F3"
+                app:isRepeatable="@{true}"
+                app:isVisible="@{showAll}" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                style="@style/VirtualKey.Compact"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F4)}"
+                android:text="F4"
+                app:isRepeatable="@{true}"
+                app:isVisible="@{showAll}" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                style="@style/VirtualKey.Compact"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F5)}"
+                android:text="F5"
+                app:isRepeatable="@{true}"
+                app:isVisible="@{showAll}" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                style="@style/VirtualKey.Compact"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F6)}"
+                android:text="F6"
+                app:isRepeatable="@{true}"
+                app:isVisible="@{showAll}" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                style="@style/VirtualKey.Compact"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F7)}"
+                android:text="F7"
+                app:isRepeatable="@{true}"
+                app:isVisible="@{showAll}" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                style="@style/VirtualKey.Compact"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F8)}"
+                android:text="F8"
+                app:isRepeatable="@{true}"
+                app:isVisible="@{showAll}" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                style="@style/VirtualKey.Compact"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F9)}"
+                android:text="F9"
+                app:isRepeatable="@{true}"
+                app:isVisible="@{showAll}" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                style="@style/VirtualKey.Compact"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F10)}"
+                android:text="F10"
+                app:isRepeatable="@{true}"
+                app:isVisible="@{showAll}" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                style="@style/VirtualKey.Compact"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F11)}"
+                android:text="F11"
+                app:isRepeatable="@{true}"
+                app:isVisible="@{showAll}" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                style="@style/VirtualKey.Compact"
+                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F12)}"
+                android:text="F12"
+                app:isRepeatable="@{true}"
+                app:isVisible="@{showAll}" />
+
         </LinearLayout>
     </HorizontalScrollView>
 </layout>
