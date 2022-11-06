@@ -57,6 +57,8 @@ class HomeActivity : AppCompatActivity() {
         viewModel.profileDeletedEvent.observe(this) { showProfileDeletedMsg(it) }
         viewModel.newConnectionEvent.observe(this) { startVncActivity(this, it) }
         viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }
+
+        showWelcomeMsg()
     }
 
     override fun onStart() {
@@ -137,5 +139,16 @@ class HomeActivity : AppCompatActivity() {
 
     private fun updateDiscoveryBadge(list: List<ServerProfile>) {
         tabs.updateDiscoveryBadge(list.size)
+    }
+
+    private fun showWelcomeMsg() {
+        if (!viewModel.pref.runInfo.hasShownV2WelcomeMsg) {
+            viewModel.pref.runInfo.hasShownV2WelcomeMsg = true
+            @Suppress("DEPRECATION")
+            packageManager.getPackageInfo(packageName, 0).let {
+                if (it.lastUpdateTime > it.firstInstallTime)
+                    WelcomeFragment().show(supportFragmentManager, "WelcomeV2")
+            }
+        }
     }
 }

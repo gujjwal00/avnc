@@ -10,6 +10,7 @@ package com.gaurav.avnc.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.preference.PreferenceManager
 
@@ -85,7 +86,11 @@ class AppPreferences(context: Context) {
     inner class RunInfo {
         var hasConnectedSuccessfully: Boolean
             get() = prefs.getBoolean("run_info_has_connected_successfully", false)
-            set(value) = prefs.edit().putBoolean("run_info_has_connected_successfully", value).apply()
+            set(value) = prefs.edit { putBoolean("run_info_has_connected_successfully", value) }
+
+        var hasShownV2WelcomeMsg
+            get() = prefs.getBoolean("run_info_has_shown_v2_welcome_msg", false)
+            set(value) = prefs.edit { putBoolean("run_info_has_shown_v2_welcome_msg", value) }
     }
 
     val ui = UI()

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_normal"
+        tools:ignore="HardcodedText">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="🎉 Welcome to AVNC v2 🎉"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="Use per-orientation zoom, change default zoom, control image quality, improved virtual keys, and much more. See what's new in version 2."
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+        <Button
+            android:id="@+id/changelog_btn"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="What's New"
+            app:icon="@drawable/ic_info" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="Like using AVNC? Rate AVNC on Play Store to let us know."
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+        <Button
+            android:id="@+id/rate_btn"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="Rate"
+            app:icon="@drawable/ic_star" />
+
+
+        <ImageButton
+            android:id="@+id/close_btn"
+            style="@style/ImageButton"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:contentDescription="Close"
+            android:src="@drawable/ic_clear" />
+
+    </LinearLayout>
+</layout>
