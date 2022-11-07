@@ -21,9 +21,8 @@
 - VNC Repeater support
 - Clipboard Sync with server
 
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
-     alt="Get it on F-Droid"
-     height="80">](https://f-droid.org/packages/com.gaurav.avnc/)
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.gaurav.avnc/)
+[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Play Store" height="80">](https://play.google.com/store/apps/details?id=com.gaurav.avnc)
 
 ### Screenshots
 
@@ -50,7 +49,7 @@ Tools required:
 To get started, simply clone the repo and initialize submodules:
 
 ```bash
-git clone git@github.com:gujjwal00/avnc.git
+git clone https://github.com/gujjwal00/avnc.git
 cd avnc
 git submodule update --init --depth 1
 ```
@@ -61,5 +60,7 @@ Read [Architecture.kt](app/src/main/java/com/gaurav/avnc/Architecture.kt) (prefe
 Android Studio) to know more about the code.
 
 
-### Translation
+##
 You can translate AVNC on [Weblate](https://hosted.weblate.org/engage/avnc/).
+
+[<img src="https://hosted.weblate.org/widgets/avnc/-/open-graph.png" alt="Translation status" height="200" />](https://hosted.weblate.org/engage/avnc/)
