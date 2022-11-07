@@ -31,6 +31,7 @@ class AppPreferences(context: Context) {
         val orientation; get() = prefs.getString("viewer_orientation", "auto")
         val fullscreen; get() = prefs.getBoolean("fullscreen_display", true)
         val pipEnabled; get() = prefs.getBoolean("pip_enabled", false)
+        val drawBehindCutout; get() = prefs.getBoolean("viewer_draw_behind_cutout", false)
         val toolbarAlignment; get() = prefs.getString("toolbar_alignment", "start")
         val zoomMax; get() = prefs.getInt("zoom_max", 500) / 100F
         val zoomMin; get() = prefs.getInt("zoom_min", 50) / 100F
@@ -75,10 +76,6 @@ class AppPreferences(context: Context) {
         val rediscoveryIndicator = LivePref("rediscovery_indicator", true)
     }
 
-    inner class Experimental {
-        val drawBehindCutout; get() = prefs.getBoolean("viewer_draw_behind_cutout", false)
-    }
-
     /**
      * These are used for one-time features/tips.
      * These are not exposed to user.
@@ -97,7 +94,6 @@ class AppPreferences(context: Context) {
     val viewer = Viewer()
     val input = Input()
     val server = Server()
-    val experimental = Experimental()
     val runInfo = RunInfo()
 
 
@@ -140,10 +136,9 @@ class AppPreferences(context: Context) {
 
     /****************************** Migrations *******************************/
     init {
-        if (!prefs.getBoolean("gesture_direct_touch", true)) {
-            prefs.edit().putString("gesture_style", "touchpad")
-                    .remove("gesture_direct_touch")
-                    .apply()
+        if (!prefs.getBoolean("gesture_direct_touch", true)) prefs.edit {
+            remove("gesture_direct_touch")
+            putString("gesture_style", "touchpad")
         }
 
         if (!prefs.getBoolean("natural_scrolling", true)) prefs.edit {
