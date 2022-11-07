@@ -80,9 +80,9 @@
             app:title="@string/pref_swipe_sensitivity" />
 
         <SwitchPreference
-            android:defaultValue="true"
-            app:key="natural_scrolling"
-            app:title="Natural scrolling" />
+            android:defaultValue="false"
+            app:key="invert_vertical_scrolling"
+            app:title="@string/pref_invert_vertical_scrolling" />
     </PreferenceCategory>
 
     <PreferenceCategory

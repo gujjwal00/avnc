@@ -151,6 +151,7 @@
     <string name="pref_swipe2">Two-finger swipe</string>
     <string name="pref_drag">Drag</string>
     <string name="pref_swipe_sensitivity">Swipe sensitivity</string>
+    <string name="pref_invert_vertical_scrolling">Invert vertical scrolling</string>
     <string name="pref_mouse">Mouse</string>
     <string name="pref_mouse_passthrough">Mouse passthrough</string>
     <string name="pref_mouse_passthrough_summary_off">Use mouse events for local gestures</string>

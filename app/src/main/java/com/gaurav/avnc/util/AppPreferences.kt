@@ -48,7 +48,7 @@ class AppPreferences(context: Context) {
         val drag; get() = prefs.getString("gesture_drag", "none")!!
         val dragEnabled; get() = (drag != "none")
         val swipeSensitivity; get() = prefs.getInt("gesture_swipe_sensitivity", 10) / 10f
-        val naturalScrolling; get() = prefs.getBoolean("natural_scrolling", true)
+        val invertVerticalScrolling; get() = prefs.getBoolean("invert_vertical_scrolling", false)
     }
 
     inner class Input {
@@ -144,6 +144,11 @@ class AppPreferences(context: Context) {
             prefs.edit().putString("gesture_style", "touchpad")
                     .remove("gesture_direct_touch")
                     .apply()
+        }
+
+        if (!prefs.getBoolean("natural_scrolling", true)) prefs.edit {
+            remove("natural_scrolling")
+            putBoolean("invert_vertical_scrolling", true)
         }
     }
 }

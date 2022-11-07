@@ -163,7 +163,7 @@ class Dispatcher(private val activity: VncActivity) {
         private var accumulatedDx = 0F
         private var accumulatedDy = 0F
         private val deltaPerScroll = 20F //For how much dx/dy, one scroll event will be sent
-        private val yScrollDirection = (if (gesturePref.naturalScrolling) 1 else -1)
+        private val yScrollDirection = (if (gesturePref.invertVerticalScrolling) -1 else 1)
 
         abstract fun transformPoint(p: PointF): PointF?
         abstract fun doMovePointer(p: PointF, dx: Float, dy: Float)
