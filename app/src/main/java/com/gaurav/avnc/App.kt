@@ -9,11 +9,13 @@
 package com.gaurav.avnc
 
 import android.app.Application
+import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatDelegate
 import com.gaurav.avnc.util.AppPreferences
 
 class App : Application() {
 
+    @Keep
     lateinit var prefs: AppPreferences
 
     override fun onCreate() {
