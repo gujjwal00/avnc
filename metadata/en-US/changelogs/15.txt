@@ -1,0 +1,8 @@
+* Per-orientation zoom
+* Configurable default zoom
+* Per-server gesture styles
+* Lock saved servers
+* Image quality controls
+* Repeatable virtual keys
+* Improved two-finger-swipe vs pinch detection
+* New language: Korean, by Hoseok Seo
