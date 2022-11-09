@@ -164,4 +164,24 @@
     <string name="pref_orientation_option_auto">Automatique</string>
     <string name="pref_orientation_option_portrait">Portrait</string>
     <string name="pref_orientation_option_landscape">Paysage</string>
+    <string name="msg_zoom_reset">Zoom réinitialisé à 100 %</string>
+    <string name="desc_zoom_options_btn">Options du zoom</string>
+    <string name="desc_save_zoom_btn">Enregistrer le zoom actuel comme valeur par défaut</string>
+    <string name="pref_gesture_style">Style de geste</string>
+    <string name="pref_gesture_style_auto_summary">Basé sur les paramètres de l\'appli</string>
+    <string name="pref_gesture_style_touchscreen">Écran tactile</string>
+    <string name="pref_gesture_style_touchpad">Pavé tactile</string>
+    <string name="pref_display_cutout">Tirer derrière la découpe de l\'écran (expérimental)</string>
+    <string name="pref_per_orientation_zoom">Zoom séparé pour chaque orientation</string>
+    <string name="pref_saved_server_lock_summary">Déverrouillage biométrique/mot de passe obligatoire pour se connecter</string>
+    <string name="pref_saved_server_lock">Verrouiller les serveurs enregistrés</string>
+    <string name="title_image_quality">Qualité de l\'image</string>
+    <string name="title_unlock_dialog">Déverrouiller pour continuer</string>
+    <string name="title_image_quality_raw">Brute</string>
+    <string name="title_vnc_security">Sécurité</string>
+    <string name="title_automatic">Automatique</string>
+    <string name="msg_zoom_saved">Sauvegarde du zoom actuel comme valeur par défaut</string>
+    <string name="pref_touch_test">Test tactile</string>
+    <string name="pref_key_test">Test des touches</string>
+    <string name="pref_invert_vertical_scrolling">Inverser le défilement vertical</string>
 </resources>
