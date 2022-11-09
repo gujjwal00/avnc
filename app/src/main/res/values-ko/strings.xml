@@ -80,7 +80,7 @@
     <string name="pref_tools">도구</string>
     <string name="pref_server_summary">로그인, 검색</string>
     <string name="pref_tools_summary">가져오기/내보내기, 디버깅</string>
-    <string name="pref_experimental">실험적</string>
+    <string name="pref_experimental">실험용</string>
     <string name="pref_experimental_summary">추가 기능</string>
     <string name="pref_gesture_action_left_click">왼쪽 클릭</string>
     <string name="pref_gesture_action_middle_click">가운데 클릭</string>
