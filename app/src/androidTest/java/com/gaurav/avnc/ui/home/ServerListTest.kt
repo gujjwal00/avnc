@@ -10,7 +10,7 @@ package com.gaurav.avnc.ui.home
 
 import android.app.Activity
 import android.app.Instrumentation
-import androidx.preference.PreferenceManager
+import androidx.core.content.edit
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.PositionAssertions.isCompletelyAbove
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -111,8 +111,6 @@ class ServerListTest {
 
     @Test
     fun sortServers() {
-        val prefEditor = PreferenceManager.getDefaultSharedPreferences(targetContext).edit()
-
         with(dbRule.db.serverProfileDao) {
             runBlocking {
                 deleteAll()
@@ -122,12 +120,12 @@ class ServerListTest {
         }
 
         //Without sorting, "pqr" should be above "abc", as it was inserted first
-        prefEditor.putBoolean("sort_server_list", false).apply()
+        targetPrefs.edit { putBoolean("sort_server_list", false) }
         onView(withText("pqr")).checkWithTimeout(isCompletelyAbove(withText("abc")))
 
 
         //With sorting, "abc" should be above "pqr"
-        prefEditor.putBoolean("sort_server_list", true).commit()
+        targetPrefs.edit { putBoolean("sort_server_list", true) }
         onView(withText("abc")).checkWithTimeout(isCompletelyAbove(withText("pqr")))
     }
 }

@@ -10,6 +10,7 @@ package com.gaurav.avnc.ui.home
 
 import android.app.Activity
 import android.app.Instrumentation
+import androidx.core.content.edit
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
@@ -22,15 +23,23 @@ import com.gaurav.avnc.*
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.vnc.VncActivity
 import org.hamcrest.core.AllOf.allOf
+import org.junit.*
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
 import org.junit.runner.RunWith
 
 
 @RunWith(AndroidJUnit4::class)
 class DiscoveryListTest {
+
+    companion object {
+        @BeforeClass
+        @JvmStatic
+        fun beforeTests() = targetPrefs.edit { putBoolean("discovery_autorun", false) }
+
+        @AfterClass
+        @JvmStatic
+        fun afterTests() = targetPrefs.edit { putBoolean("discovery_autorun", true) }
+    }
 
     @Rule
     @JvmField
@@ -52,10 +61,6 @@ class DiscoveryListTest {
 
     @Before
     fun before() {
-        // Stop discovery, otherwise tests will hang due to progressbar animation
-        // We can't even use the stop button
-        activityRule.scenario.onActivity { it.viewModel.stopDiscovery() }
-
         onView(withContentDescription(R.string.desc_discovered_servers_tab)).doClick()
         onView(withContentDescription(R.string.desc_discovery_btn)).checkWithTimeout(matches(isCompletelyDisplayed()))
     }

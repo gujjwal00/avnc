@@ -29,6 +29,11 @@ class TouchHandlerTest {
 
     /************************* Setup  ************************************************************/
 
+    // Delays before taking next steps
+    private val DELAY_BETWEEN_DOUBLE_TAPS = ViewConfiguration.getDoubleTapTimeout() - 150L
+    private val DELAY_FOR_SINGLE_TAP_CONFIRM = ViewConfiguration.getDoubleTapTimeout() + 200L
+    private val DELAY_FOR_LONG_PRESS_CONFIRM = ViewConfiguration.getLongPressTimeout() + 200L
+
     private lateinit var touchHandler: TouchHandler
     private lateinit var mockDispatcher: Dispatcher
     private val testPoint = PointF(10f, 10f)
@@ -39,6 +44,18 @@ class TouchHandlerTest {
             mockDispatcher = mockk(relaxed = true)
             touchHandler = TouchHandler(VncViewModel(ApplicationProvider.getApplicationContext()), mockDispatcher)
         }
+        warmup()
+    }
+
+    // Internally, mocks & spies seems to be lazily initialized, and the initialization takes
+    // quite a while. This is problematic here because gesture detection is sensitive to timing of
+    // generated events. So we eagerly trigger the initialization, to avoid messing with timings in
+    // actual tests.
+    private fun warmup() {
+        mockDispatcher.onXKeySym(0, false)
+        createEvent(MotionEvent.ACTION_DOWN, testPoint)
+        createMouseEvent(MotionEvent.ACTION_DOWN, testPoint)
+        createStylusEvent(MotionEvent.ACTION_DOWN, testPoint)
     }
 
     private fun setupWithPref(mousePassthrough: Boolean = false, dragEnabled: Boolean = false) {
@@ -101,7 +118,6 @@ class TouchHandlerTest {
 
     /************************* Gesture Tests *******************************************************/
 
-    private val timeoutGrace = 100L
     private fun sendDown(p: PointF = testPoint) = sendEvent(createEvent(MotionEvent.ACTION_DOWN, p))
     private fun sendUp(p: PointF = testPoint) = sendEvent(createEvent(MotionEvent.ACTION_UP, p))
     private fun sendMove(p: PointF) = sendEvent(createEvent(MotionEvent.ACTION_MOVE, p))
@@ -110,7 +126,7 @@ class TouchHandlerTest {
     fun singleTap() {
         sendDown()
         sendUp()
-        Thread.sleep(ViewConfiguration.getDoubleTapTimeout() + timeoutGrace)
+        Thread.sleep(DELAY_FOR_SINGLE_TAP_CONFIRM)
         verify { mockDispatcher.onTap1(testPoint) }
     }
 
@@ -118,7 +134,7 @@ class TouchHandlerTest {
     fun doubleTap() {
         sendDown()
         sendUp()
-        Thread.sleep(50) //Required due to the minimum time limit in GestureDetector
+        Thread.sleep(DELAY_BETWEEN_DOUBLE_TAPS)
         sendDown()
         sendUp()
         verify { mockDispatcher.onDoubleTap(testPoint) }
@@ -137,7 +153,7 @@ class TouchHandlerTest {
     fun longPress() {
         setupWithPref(dragEnabled = false)
         sendDown()
-        Thread.sleep(ViewConfiguration.getLongPressTimeout() + timeoutGrace)
+        Thread.sleep(DELAY_FOR_LONG_PRESS_CONFIRM)
         verify { mockDispatcher.onLongPress(testPoint) }
     }
 
@@ -165,14 +181,14 @@ class TouchHandlerTest {
 
     @Test
     fun scale() {
-        val a1 = PointF(100f, 100f)
-        val a2 = PointF(10f, 10f)
-        val b1 = PointF(200f, 200f)
-        val b2 = PointF(300f, 300f)
+        val a1 = PointF(300f, 300f)
+        val b1 = PointF(400f, 400f)
 
         sendDown(a1)
         sendEvent(createEvent2(MotionEvent.ACTION_POINTER_DOWN, a1, b1))
-        sendEvent(createEvent2(MotionEvent.ACTION_MOVE, a2, b2))
+        sendEvent(createEvent2(MotionEvent.ACTION_MOVE, PointF(200f, 200f), PointF(500f, 500f)))
+        sendEvent(createEvent2(MotionEvent.ACTION_MOVE, PointF(100f, 100f), PointF(600f, 600f)))
+        sendEvent(createEvent2(MotionEvent.ACTION_MOVE, PointF(10f, 10f), PointF(690f, 690f)))
         verify { mockDispatcher.onScale(any(), any(), any()) }
     }
 
@@ -184,7 +200,7 @@ class TouchHandlerTest {
         val a2 = PointF(150f, 150f)
 
         sendDown(a1)
-        Thread.sleep(ViewConfiguration.getLongPressTimeout() + timeoutGrace)
+        Thread.sleep(DELAY_FOR_LONG_PRESS_CONFIRM)
         sendMove(a2)
         sendUp(a2)
 
@@ -278,7 +294,7 @@ class TouchHandlerTest {
     fun stylusTap() {
         sendStylusDown()
         sendStylusUp()
-        Thread.sleep(ViewConfiguration.getDoubleTapTimeout() + timeoutGrace)
+        Thread.sleep(DELAY_FOR_SINGLE_TAP_CONFIRM)
         verify { mockDispatcher.onStylusTap(testPoint) }
     }
 
@@ -286,7 +302,7 @@ class TouchHandlerTest {
     fun stylusDoubleTap() {
         sendStylusDown()
         sendStylusUp()
-        Thread.sleep(50) //Required due to the minimum time limit in GestureDetector
+        Thread.sleep(DELAY_BETWEEN_DOUBLE_TAPS)
         sendStylusDown()
         sendStylusUp()
         verify { mockDispatcher.onStylusDoubleTap(testPoint) }
@@ -295,7 +311,7 @@ class TouchHandlerTest {
     @Test
     fun stylusLongPress() {
         sendStylusDown()
-        Thread.sleep(ViewConfiguration.getLongPressTimeout() + timeoutGrace)
+        Thread.sleep(DELAY_FOR_LONG_PRESS_CONFIRM)
         verify { mockDispatcher.onStylusLongPress(testPoint) }
     }
 

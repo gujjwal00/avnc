@@ -9,6 +9,7 @@
 package com.gaurav.avnc
 
 import android.os.SystemClock
+import androidx.preference.PreferenceManager
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.ViewInteraction
@@ -24,6 +25,7 @@ import org.hamcrest.core.IsNot.not
  */
 val instrumentation; get() = InstrumentationRegistry.getInstrumentation()!!
 val targetContext; get() = instrumentation.targetContext!!
+val targetPrefs by lazy { PreferenceManager.getDefaultSharedPreferences(targetContext)!! }
 
 /**
  * Shorthands

@@ -8,9 +8,10 @@
 
 package com.gaurav.avnc.util
 
-import androidx.preference.PreferenceManager
+import androidx.core.content.edit
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.gaurav.avnc.targetContext
+import com.gaurav.avnc.targetPrefs
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,10 +23,10 @@ class AppPreferenceTest {
     // should be set to 'touchpad'
     @Test
     fun gestureStyleMigrationTest() {
-        PreferenceManager.getDefaultSharedPreferences(targetContext).edit()
-                .remove("gesture_style")
-                .putBoolean("gesture_direct_touch", false)
-                .apply()
+        targetPrefs.edit {
+            remove("gesture_style")
+            putBoolean("gesture_direct_touch", false)
+        }
 
         val appPrefs = AppPreferences(targetContext)
         assertEquals(appPrefs.input.gesture.style, "touchpad")
