@@ -164,4 +164,24 @@
     <string name="pref_orientation_option_landscape">Yatay</string>
     <string name="pref_orientation">Ekran yönü</string>
     <string name="pref_orientation_option_auto">Otomatik</string>
+    <string name="title_image_quality_raw">Ham</string>
+    <string name="title_unlock_dialog">Devam etmek için kilidi aç</string>
+    <string name="msg_zoom_reset">Yakınlaştırma %100\'e sıfırlandı</string>
+    <string name="msg_zoom_saved">Geçerli yakınlaştırma öntanımlı olarak kaydedildi</string>
+    <string name="pref_gesture_style">Hareket biçimi</string>
+    <string name="pref_per_orientation_zoom">Her yön için ayrı yakınlaştırma</string>
+    <string name="title_vnc_security">Güvenlik</string>
+    <string name="pref_gesture_style_auto_summary">Uygulama ayarlarına göre</string>
+    <string name="pref_display_cutout">Ekran kesmesinin arkasına çiz (deneysel)</string>
+    <string name="title_image_quality">Görüntü kalitesi</string>
+    <string name="title_automatic">Otomatik</string>
+    <string name="desc_save_zoom_btn">Geçerli yakınlaştırmayı öntanımlı olarak kaydet</string>
+    <string name="desc_zoom_options_btn">Yakınlaştırma seçenekleri</string>
+    <string name="pref_gesture_style_touchscreen">Dokunmatik ekran</string>
+    <string name="pref_gesture_style_touchpad">Dokunmatik yüzey</string>
+    <string name="pref_saved_server_lock_summary">Bağlanmak için biyometrik/parola kilidini gerektir</string>
+    <string name="pref_saved_server_lock">Kayıtlı sunucuları kilitle</string>
+    <string name="pref_touch_test">Dokunma testi</string>
+    <string name="pref_key_test">Tuş testi</string>
+    <string name="pref_invert_vertical_scrolling">Dikey kaydırmayı tersine çevir</string>
 </resources>

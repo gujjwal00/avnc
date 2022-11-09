@@ -156,4 +156,29 @@
     <string name="pref_mouse_back">«Tilbake»-knapp</string>
     <string name="pref_mouse_back_action_default">Forvalg</string>
     <string name="pref_swipe_sensitivity">Dragningssensitivitet</string>
+    <string name="msg_drag_gesture_help">Tildelning av en handling til dragningshåndvending endrer lang-trykk-oppdagelse:
+\n
+\n<b>Trykk-hold-slipp</b> → Lang-trykk
+\n<b>Trykk-hold-dra</b> → Dra</string>
+    <string name="msg_zoom_reset">Forstørrelse tilbakestilt til 100%</string>
+    <string name="msg_zoom_saved">Lagret nåværende forstørrelse som forvalg</string>
+    <string name="pref_saved_server_lock">Lås lagrede tjenere</string>
+    <string name="title_image_quality_raw">Rå-data</string>
+    <string name="title_image_quality">Bildekvalitet</string>
+    <string name="title_vnc_security">Sikkerhet</string>
+    <string name="title_unlock_dialog">Lås opp for å fortsette</string>
+    <string name="desc_zoom_options_btn">Forstørrelsesinnstillinger</string>
+    <string name="desc_save_zoom_btn">Lagre nåværende forstørrelse som forvalg</string>
+    <string name="pref_gesture_style">Håndvendingsstil</string>
+    <string name="pref_gesture_style_auto_summary">Basert på programinnstillinger</string>
+    <string name="pref_orientation">Skjermretning</string>
+    <string name="pref_orientation_option_landscape">Liggende</string>
+    <string name="title_automatic">Automatisk</string>
+    <string name="pref_gesture_style_touchscreen">Pekeskjerm</string>
+    <string name="pref_orientation_option_auto">Automatisk</string>
+    <string name="pref_orientation_option_portrait">Stående</string>
+    <string name="pref_gesture_style_touchpad">Pekeflate</string>
+    <string name="pref_display_cutout">Tegn bak skjermutklipp (eksperimentelt)</string>
+    <string name="pref_per_orientation_zoom">Egen forstørrelse for hver skjermretning</string>
+    <string name="pref_saved_server_lock_summary">Krev biometri/passordsopplåsning for å koble til</string>
 </resources>

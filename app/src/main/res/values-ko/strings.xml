@@ -80,7 +80,7 @@
     <string name="pref_tools">도구</string>
     <string name="pref_server_summary">로그인, 검색</string>
     <string name="pref_tools_summary">가져오기/내보내기, 디버깅</string>
-    <string name="pref_experimental">실험적</string>
+    <string name="pref_experimental">실험용</string>
     <string name="pref_experimental_summary">추가 기능</string>
     <string name="pref_gesture_action_left_click">왼쪽 클릭</string>
     <string name="pref_gesture_action_middle_click">가운데 클릭</string>
@@ -160,4 +160,25 @@
     <string name="pref_toolbar_alignment_option_start">시작</string>
     <string name="pref_debugging">디버깅</string>
     <string name="pref_zoom_max">최대</string>
+    <string name="title_vnc_security">보안</string>
+    <string name="title_unlock_dialog">계속하려면 잠금 해제</string>
+    <string name="title_automatic">자동</string>
+    <string name="title_none">없음</string>
+    <string name="desc_zoom_options_btn">확대/축소 옵션</string>
+    <string name="pref_gesture_style_auto_summary">앱 설정 기반</string>
+    <string name="pref_gesture_style_touchscreen">터치스크린</string>
+    <string name="pref_gesture_style_touchscreen_summary">접점에서 작업 수행</string>
+    <string name="pref_saved_server_lock">저장된 서버 잠금</string>
+    <string name="title_login">로그인</string>
+    <string name="title_image_quality">이미지 품질</string>
+    <string name="msg_zoom_reset">100%로 확대/축소 재설정</string>
+    <string name="title_image_quality_raw">원시</string>
+    <string name="msg_zoom_saved">현재 확대/축소를 기본값으로 저장</string>
+    <string name="desc_save_zoom_btn">현재 확대/축소를 기본값으로 저장</string>
+    <string name="pref_gesture_style">제스처 스타일</string>
+    <string name="pref_gesture_style_touchpad">터치패드</string>
+    <string name="pref_gesture_style_touchpad_summary">포인터에서 작업 수행</string>
+    <string name="pref_display_cutout">디스플레이 컷아웃 뒤에 그리기(실험용)</string>
+    <string name="pref_per_orientation_zoom">각 방향에 대한 별도의 확대/축소</string>
+    <string name="pref_saved_server_lock_summary">연결하려면 생체 인식/비밀번호 잠금 해제 필요</string>
 </resources>
