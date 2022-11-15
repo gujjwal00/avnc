@@ -115,7 +115,8 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     private val stylusGestureDetector = GestureDetector(viewModel.app, StylusGestureListener())
 
     private fun handleStylusEvent(event: MotionEvent): Boolean {
-        if (event.isFromSource(InputDevice.SOURCE_STYLUS)) {
+        if (event.isFromSource(InputDevice.SOURCE_STYLUS) &&
+            event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
             stylusGestureDetector.onTouchEvent(event)
             return true
         }
