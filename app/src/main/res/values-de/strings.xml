@@ -64,15 +64,15 @@
     <string name="pref_gesture_action_pan">Lokale Ansicht verschieben</string>
     <string name="pref_theme">Design</string>
     <string name="pref_theme_option_system">System</string>
-    <string name="pref_sort_server_list">Sortiere die gespeicherten Server nach ihren Namen</string>
+    <string name="pref_sort_server_list">Gespeicherte Server nach Namen sortieren</string>
     <string name="pref_gesture">Gesten</string>
     <string name="pref_swipe2">Wischen mit zwei Fingern</string>
     <string name="pref_drag">Ziehen (Drag and Drop)</string>
-    <string name="pref_mouse_passthrough">Maus-Passthrough</string>
+    <string name="pref_mouse_passthrough">Maus-Durchleitung</string>
     <string name="pref_mouse_passthrough_summary_off">Maus-Bewegungen für lokale Gesten verwenden</string>
     <string name="pref_hide_local_cursor">Lokalen Mauszeiger verstecken</string>
     <string name="pref_mouse_back_action_default">Standard</string>
-    <string name="pref_vk_show_all">Zeige alle Tasten</string>
+    <string name="pref_vk_show_all">Alle Tasten anzeigen</string>
     <string name="pref_vk_open_with_keyboard">Mit der Tastatur öffnen</string>
     <string name="pref_km">Tastenzuordnungen</string>
     <string name="pref_km_back_to_escape">Zurück → Escape</string>
@@ -82,13 +82,13 @@
     <string name="pref_fullscreen">Vollbild</string>
     <string name="pref_toolbar">Werkzeugleiste</string>
     <string name="pref_toolbar_alignment">Ausrichtung</string>
-    <string name="pref_toolbar_alignment_option_end">Rechts</string>
+    <string name="pref_toolbar_alignment_option_end">Ende</string>
     <string name="pref_zoom">Zoom</string>
     <string name="pref_zoom_min">Minimum</string>
     <string name="pref_discovery_autorun">Automatische Suche</string>
-    <string name="pref_discovery">Automatische Suche</string>
-    <string name="pref_import_export">Server ex- und importieren</string>
-    <string name="pref_logs">Protokolle / Logs</string>
+    <string name="pref_discovery">Entdeckung</string>
+    <string name="pref_import_export">Server importieren/exportieren</string>
+    <string name="pref_logs">Protokolle</string>
     <string name="title_edit_server_profile">Server bearbeiten</string>
     <string name="title_edit">Bearbeiten</string>
     <string name="title_clear">Löschen</string>
@@ -112,7 +112,7 @@
     <string name="msg_imported">Importiert</string>
     <string name="msg_export_auth_required">Authentifiziere dich, um die Server zu exportieren</string>
     <string name="msg_exported">Exportiert</string>
-    <string name="pref_long_press">Tippen und gedrückt halten</string>
+    <string name="pref_long_press">Langes Drücken</string>
     <string name="pref_mouse_back">Zurück-Schaltfläche</string>
     <string name="desc_back_btn">Zurück</string>
     <string name="desc_settings_btn">Einstellungen</string>
@@ -133,7 +133,7 @@
     <string name="pref_theme_option_dark">Dunkel</string>
     <string name="pref_theme_option_light">Hell</string>
     <string name="pref_gesture_action_double_click">Doppelklick</string>
-    <string name="pref_prefer_advanced_editor">Zeige sofort die erweiterten Server-Optionen an</string>
+    <string name="pref_prefer_advanced_editor">Erweiterte Serveroptionen direkt öffnen</string>
     <string name="pref_two_finger_tap">Tippen mit zwei Fingern</string>
     <string name="pref_swipe_sensitivity">Wisch-Empfindlichkeit</string>
     <string name="pref_mouse_passthrough_summary_on">Maus-Bewegungen direkt an den Server durchreichen</string>
@@ -142,10 +142,10 @@
     <string name="pref_mouse">Maus</string>
     <string name="pref_double_tap">Doppeltippen</string>
     <string name="pref_vk">Virtuelle Tasten</string>
-    <string name="pref_toolbar_alignment_option_start">Links</string>
+    <string name="pref_toolbar_alignment_option_start">Start</string>
     <string name="pref_enable_pip">Bild in Bild</string>
     <string name="pref_zoom_max">Maximum</string>
-    <string name="pref_clipboard_sync">Zwischenablage syncronisieren</string>
+    <string name="pref_clipboard_sync">Zwischenablage synchronisieren</string>
     <string name="pref_keycode_map">Keycode-Übersicht</string>
     <string name="pref_discovery_autorun_summary">Schon auf der Startseite automatisch nach Servern suchen</string>
     <string name="pref_rediscovery_indicator">Wiederentdeckte Server hervorheben</string>
@@ -154,14 +154,34 @@
     <string name="title_ssh_host_key_changed">Der öffentliche Schlüssel des SSH-Zielpunktes hat sich geändert</string>
     <string name="hint_server_id">Server-ID</string>
     <string name="pref_gesture_action_remote_drag">Drag and Drop für entfernte Inhalte</string>
-    <string name="pref_gesture_style_touchscreen_summary">Setze Aktionen direkt am Ort des Tippens um</string>
-    <string name="pref_gesture_style_touchpad_summary">Setze Aktionen an einem Mauszeiger um, ähnlich einem Touchpad</string>
+    <string name="pref_gesture_style_touchscreen_summary">Aktionen am Berührungspunkt ausführen</string>
+    <string name="pref_gesture_style_touchpad_summary">Aktionen am Zeiger ausführen</string>
     <string name="pref_orientation">Bildschirmausrichtung</string>
-    <string name="pref_orientation_option_auto">Automatisch (nach Lagesensor)</string>
+    <string name="pref_orientation_option_auto">Automatisch</string>
     <string name="pref_orientation_option_portrait">Hochformat</string>
     <string name="pref_orientation_option_landscape">Querformat</string>
     <string name="msg_drag_gesture_help">Der Ziehgeste eine Aktion zuzuweisen, wird die Erkennung von langem Drücken ändern:
 \n
 \n<b>Drücken-Halten-Loslassen</b> → Lange drücken
 \n<b>Drücken-Halten-Wischen</b> → Drag and Drop</string>
+    <string name="pref_display_cutout">Hinter Bildschirmausschnitt zeichnen (experimentell)</string>
+    <string name="pref_key_test">Tastentest</string>
+    <string name="pref_gesture_style">Gestenstil</string>
+    <string name="pref_invert_vertical_scrolling">Vertikalen Bildlauf umkehren</string>
+    <string name="pref_saved_server_lock_summary">Entsperren mit biometrischen Merkmalen/Passwort zum Verbinden erforderlich</string>
+    <string name="pref_saved_server_lock">Gespeicherte Server sperren</string>
+    <string name="pref_touch_test">Berührungstest</string>
+    <string name="pref_per_orientation_zoom">Separater Zoom für jede Ausrichtung</string>
+    <string name="title_image_quality">Bildqualität</string>
+    <string name="title_image_quality_raw">Roh</string>
+    <string name="title_vnc_security">Sicherheit</string>
+    <string name="title_unlock_dialog">Zum Fortfahren entsperren</string>
+    <string name="title_automatic">Automatisch</string>
+    <string name="msg_zoom_reset">Zoom auf 100% zurücksetzen</string>
+    <string name="msg_zoom_saved">Aktuellen Zoom als Standard speichern</string>
+    <string name="desc_zoom_options_btn">Zoom-Optionen</string>
+    <string name="desc_save_zoom_btn">Aktuellen Zoom als Standard speichern</string>
+    <string name="pref_gesture_style_auto_summary">Basierend auf App-Einstellungen</string>
+    <string name="pref_gesture_style_touchscreen">Tastbildschirm</string>
+    <string name="pref_gesture_style_touchpad">Tastfeld</string>
 </resources>
