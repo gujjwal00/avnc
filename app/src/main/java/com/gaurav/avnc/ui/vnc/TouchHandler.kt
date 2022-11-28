@@ -12,6 +12,7 @@ import android.content.Context
 import android.graphics.PointF
 import android.os.Build
 import android.view.*
+import com.gaurav.avnc.util.SimpleOnGestureListener
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.PointerButton
 import kotlin.math.PI
@@ -124,7 +125,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         return false
     }
 
-    inner class StylusGestureListener : GestureDetector.SimpleOnGestureListener() {
+    inner class StylusGestureListener : SimpleOnGestureListener() {
         private var scrolling = false
 
         override fun onDown(e: MotionEvent): Boolean {
@@ -147,7 +148,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
             dispatcher.onStylusLongPress(e.point())
         }
 
-        override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
+        override fun checkedOnScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
             // Scrolling with stylus button pressed is currently used for scale gesture
             if (e2.buttonState and MotionEvent.BUTTON_STYLUS_PRIMARY == 0) {
 
@@ -324,7 +325,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         private var currentDownEvent: MotionEvent? = null
 
 
-        private inner class InnerListener1 : GestureDetector.SimpleOnGestureListener() {
+        private inner class InnerListener1 : SimpleOnGestureListener() {
             override fun onLongPress(e: MotionEvent) {
                 if (doubleTapDetected)
                     return // Ignore long-press triggered during double-tap-swipe
@@ -339,7 +340,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
             }
         }
 
-        private inner class InnerListener2 : GestureDetector.SimpleOnGestureListener() {
+        private inner class InnerListener2 : SimpleOnGestureListener() {
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                 listener.onSingleTapConfirmed(e)
                 return true
@@ -352,11 +353,11 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
 
             override fun onDoubleTapEvent(e: MotionEvent) = innerDetector3.onTouchEvent(e)
 
-            override fun onScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
+            override fun checkedOnScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
         }
 
-        private inner class InnerListener3 : GestureDetector.SimpleOnGestureListener() {
-            override fun onScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
+        private inner class InnerListener3 : SimpleOnGestureListener() {
+            override fun checkedOnScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
         }
 
         private fun handleScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float): Boolean {
