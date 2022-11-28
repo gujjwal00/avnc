@@ -8,6 +8,7 @@
 
 package com.gaurav.avnc.ui.vnc
 
+import android.content.Context
 import android.graphics.PointF
 import android.os.Build
 import android.view.*
@@ -164,16 +165,10 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
 
 
     /****************************************************************************************
-     * Finger Gestures
-     *
-     * In addition to gestures supported by [GestureDetector] & [ScaleGestureDetector],
-     * we use [DragDetector] & [MultiFingerTapDetector] for more gestures.
-     *
+     * Finger Gestures (and everything else beside mouse & stylus)
      ****************************************************************************************/
     private val scaleDetector = ScaleGestureDetector(viewModel.app, this).apply { isQuickScaleEnabled = false }
-    private val gestureDetector = GestureDetector(viewModel.app, this)
-    private val multiFingerTapDetector = MultiFingerTapDetector()
-    private val dragDetector = DragDetector()
+    private val gestureDetector = GestureDetectorEx(viewModel.app, FingerGestureListener())
     private val swipeVsScale = SwipeVsScale()
     private val dragEnabled = viewModel.pref.input.gesture.dragEnabled
     private val swipeSensitivity = viewModel.pref.input.gesture.swipeSensitivity
@@ -181,8 +176,6 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
 
     private fun handleGestureEvent(event: MotionEvent): Boolean {
         swipeVsScale.onTouchEvent(event)
-        dragDetector.onTouchEvent(event)
-        multiFingerTapDetector.onTouchEvent(event)
         scaleDetector.onTouchEvent(event)
         return gestureDetector.onTouchEvent(event)
     }
@@ -195,161 +188,248 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         return true
     }
 
-    override fun onDown(e: MotionEvent) = true
+    private inner class FingerGestureListener : GestureDetectorEx.GestureListenerEx {
 
-    override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-        dispatcher.onTap1(e.point())
-        return true
-    }
+        override fun onSingleTapConfirmed(e: MotionEvent) = dispatcher.onTap1(e.point())
+        override fun onDoubleTapConfirmed(e: MotionEvent) = dispatcher.onDoubleTap(e.point())
 
-    override fun onDoubleTap(e: MotionEvent): Boolean {
-        dispatcher.onDoubleTap(e.point())
-        return true
-    }
-
-    override fun onLongPress(e: MotionEvent) {
-        viewModel.frameViewRef.get()?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-
-        if (dragEnabled)
-            dragDetector.onLongPress(e)
-        else
-            dispatcher.onLongPress(e.point())
-    }
-
-    override fun onFling(e1: MotionEvent, e2: MotionEvent, vX: Float, vY: Float): Boolean {
-        dispatcher.onFling(vX, vY)
-        return true
-    }
-
-    override fun onScroll(e1: MotionEvent, e2: MotionEvent, dX: Float, dY: Float): Boolean {
-        val startPoint = e1.point()
-        val currentPoint = e2.point()
-        val normalizedDx = -dX * swipeSensitivity
-        val normalizedDy = -dY * swipeSensitivity
-
-        when (e2.pointerCount) {
-            1 -> dispatcher.onSwipe1(startPoint, currentPoint, normalizedDx, normalizedDy)
-            2 -> if (swipeVsScale.shouldSwipe())
-                dispatcher.onSwipe2(startPoint, currentPoint, normalizedDx, normalizedDy)
+        override fun onMultiFingerTap(e: MotionEvent, fingerCount: Int) {
+            when (fingerCount) {
+                2 -> dispatcher.onTap2(e.point())
+                // Taps by 3+ fingers are not exposed yet
+            }
         }
 
-        multiFingerTapDetector.reset()
-        return true
-    }
+        override fun onLongPress(e: MotionEvent) {
+            viewModel.frameViewRef.get()?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
 
+            // If long-press-drag is disabled, we can dispatch long-press immediately
+            if (!dragEnabled) dispatcher.onLongPress(e.point())
+        }
+
+        override fun onLongPressConfirmed(e: MotionEvent) {
+            if (dragEnabled) dispatcher.onLongPress(e.point())
+        }
+
+
+        override fun onScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float) {
+            val startPoint = e1.point()
+            val currentPoint = e2.point()
+            val normalizedDx = dx * swipeSensitivity
+            val normalizedDy = dy * swipeSensitivity
+
+            when (e2.pointerCount) {
+                1 -> dispatcher.onSwipe1(startPoint, currentPoint, normalizedDx, normalizedDy)
+                2 -> if (swipeVsScale.shouldSwipe())
+                    dispatcher.onSwipe2(startPoint, currentPoint, normalizedDx, normalizedDy)
+            }
+        }
+
+        override fun onScrollAfterLongPress(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float) {
+            dispatcher.onDrag(e1.point(), e2.point(), dx, dy)
+        }
+
+        override fun onScrollAfterDoubleTap(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float) {
+            //todo implement
+        }
+
+        override fun onFling(velocityX: Float, velocityY: Float) {
+            dispatcher.onFling(velocityX, velocityY)
+        }
+    }
 
     /**
-     * Utility class for detecting drag gesture.
+     * Stock [GestureDetector] only detects the most common gestures. But we need to
+     * detect some more gestures to provide maximum flexibility to the user.
      *
-     * Detection:
-     *
-     *  1. Wait for the long-press from [gestureDetector] before doing anything.
-     *  2. Once long-press is detected, start looking at incoming events.
-     *  3. If [MotionEvent.ACTION_UP] is received next, send long-press.
-     *  4. If scroll event is received from [scrollDetector], start dragging.
-     *  5. Reset, if gesture is finished, or another finger goes down.
-     *
-     * But, if long-press detection is enabled for a [GestureDetector] object, it will not report
-     * scroll events after long-press. So, we rely on [gestureDetector] for long-press detection,
-     * and use a separate object [scrollDetector] for scroll events.
-     *
-     * Left mouse button pressed during dragging is automatically released
-     * by [Dispatcher.onGestureStop].
+     * [GestureDetectorEx] is used to for this purpose. It internally uses stock
+     * [GestureDetector], and some custom event processing to detect more gestures.
      */
-    private inner class DragDetector {
-        private var longPressDetected = false
-        private var isDragging = false
-        private var startPoint = PointF()
-        private val scrollDetector = GestureDetector(viewModel.app, ScrollListener()).apply {
-            setIsLongpressEnabled(false)
+    private class GestureDetectorEx(context: Context, val listener: GestureListenerEx) {
+
+        /**
+         * Detected gestures. Some of these come directly from stock [GestureDetector],
+         * while the following are custom detected:
+         *
+         * [onDoubleTapConfirmed]
+         * To support double-tap-drag gesture, double-tap is not immediately triggered on
+         * ACTION_DOWN of second tap. Instead, [doubleTapDetected] flag is set, and when
+         * final ACTION_UP is received (within timeout), [onDoubleTapConfirmed] is called.
+         *
+         * [onMultiFingerTap]
+         * Maximum number of fingers that went down is tracked in [maxFingerDown]. If
+         * ACTION_UP is received within a timeout, and more than one finger went down
+         * without any scrolling, [onMultiFingerTap] is called.
+         *
+         * [onLongPressConfirmed]
+         * Similar to [onDoubleTapConfirmed], to support long-press-drag, we wait for
+         * ACTION_UP to confirm long-press.
+         * Note: [onLongPress] is always called immediately. It enables haptic feedback
+         * and supports cases where waiting for [onLongPressConfirmed] is not necessary.
+         *
+         * [onScrollAfterDoubleTap]
+         * This is the double-tap-drag gesture. If scrolling after [doubleTapDetected] flag
+         * is set, [onScrollAfterDoubleTap] is called.
+         *
+         * [onScrollAfterLongPress]
+         * This is the long-press-drag gesture. If scrolling after [longPressDetected] flag
+         * is set, [onScrollAfterLongPress] is called.
+         */
+        interface GestureListenerEx {
+            fun onSingleTapConfirmed(e: MotionEvent)
+            fun onDoubleTapConfirmed(e: MotionEvent)
+            fun onMultiFingerTap(e: MotionEvent, fingerCount: Int)
+
+            fun onLongPress(e: MotionEvent)
+            fun onLongPressConfirmed(e: MotionEvent)
+
+            fun onScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float)
+            fun onScrollAfterLongPress(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float)
+            fun onScrollAfterDoubleTap(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float)
+
+            fun onFling(velocityX: Float, velocityY: Float)
         }
 
-        private inner class ScrollListener : GestureDetector.SimpleOnGestureListener() {
-            override fun onScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float): Boolean {
-                if (longPressDetected) {
-                    if (!isDragging) {
-                        isDragging = true
 
-                        //Send first drag event at startPoint, otherwise drag gesture
-                        //will start off by (at-least) touch-slope used by GestureDetector
-                        dispatcher.onDrag(startPoint, startPoint, 0f, 0f)
-                    }
+        /**
+         * Stock [GestureDetector] has two unwanted behaviours:
+         * - If long-press or double-tap is detected, scroll events will not be reported anymore.
+         * - If you don't lift the finger after double-tap, a long-press will be triggered.
+         *
+         * Fortunately, [GestureDetector] lets us disable long-press detection, which allows us
+         * to use a combination of multiple [GestureDetector]s to overcome the restrictions:
+         *
+         * -                                 +------------------+
+         * -                              +->| [innerDetector1] |
+         * -                              |  +------------------+
+         * -                              |   (long-press, fling)
+         * -   +----------------+  event  |
+         * -   | [onTouchEvent] |---------+
+         * -   +----------------+         |
+         * -                              |
+         * -                              |  +------------------+  double-tap event   +------------------+
+         * -                              +->| [innerDetector2] |-------------------->| [innerDetector3] |
+         * -                                 +------------------+                     +------------------+
+         * -                                   (taps, scrolls)                         (double-tap scroll)
+         *
+         */
+        private val innerDetector1 = GestureDetector(context, InnerListener1())
+        private val innerDetector2 = GestureDetector(context, InnerListener2()).apply { setIsLongpressEnabled(false) }
+        private val innerDetector3 = GestureDetector(context, InnerListener3()).apply { setIsLongpressEnabled(false) }
 
-                    dispatcher.onDrag(startPoint, e2.point(), -dx, -dy)
-                }
+        private var longPressDetected = false
+        private var doubleTapDetected = false
+        private var scrolling = false
+        private var maxFingerDown = 0
+        private var currentDownEvent: MotionEvent? = null
+
+
+        private inner class InnerListener1 : GestureDetector.SimpleOnGestureListener() {
+            override fun onLongPress(e: MotionEvent) {
+                if (doubleTapDetected)
+                    return // Ignore long-press triggered during double-tap-swipe
+
+                longPressDetected = true
+                listener.onLongPress(e)
+            }
+
+            override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+                listener.onFling(velocityX, velocityY)
                 return true
             }
         }
 
-        fun onLongPress(e: MotionEvent) {
-            longPressDetected = true
-            startPoint = e.point()
-        }
-
-        fun onTouchEvent(event: MotionEvent) {
-            if (!dragEnabled)
-                return
-
-            scrollDetector.onTouchEvent(event)
-
-            val action = event.actionMasked
-            if (action == MotionEvent.ACTION_UP && longPressDetected && !isDragging)
-                dispatcher.onLongPress(event.point())
-
-            when (action) {
-                MotionEvent.ACTION_UP,
-                MotionEvent.ACTION_POINTER_DOWN,
-                MotionEvent.ACTION_CANCEL -> {
-                    longPressDetected = false
-                    isDragging = false
-                }
+        private inner class InnerListener2 : GestureDetector.SimpleOnGestureListener() {
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                listener.onSingleTapConfirmed(e)
+                return true
             }
+
+            override fun onDoubleTap(e: MotionEvent): Boolean {
+                doubleTapDetected = true
+                return true
+            }
+
+            override fun onDoubleTapEvent(e: MotionEvent) = innerDetector3.onTouchEvent(e)
+
+            override fun onScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
         }
-    }
 
-    /**
-     * Detects 'tapping' by two or more fingers.
-     *
-     * Detection:
-     *
-     *  1. First finger goes down. We start tracking by updating [startEvent]
-     *  2. More fingers go down. [fingerCount] is used to track them
-     *  3. Fingers start going up
-     *  4. Last finger goes up. Timestamps are checked to ensure the gesture
-     *     was finished within a  timeout, and if more than 1 finger went down,
-     *     appropriate handler is invoked.
-     *
-     * If fingers are moved after going down, user probably intends to pan/scale,
-     * so tap detection is stopped if we receive [onScroll].
-     */
-    private inner class MultiFingerTapDetector {
-        private var startEvent: MotionEvent? = null
-        private var fingerCount = 0
+        private inner class InnerListener3 : GestureDetector.SimpleOnGestureListener() {
+            override fun onScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
+        }
 
-        fun onTouchEvent(e: MotionEvent) {
+        private fun handleScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float): Boolean {
+            if (!scrolling) {
+                scrolling = true
+                // Send first scroll event on initial touch-down point, because GestureDetector
+                // requires certain amount of finger movement before scroll is triggered, and
+                // we don't want to 'loose' that small movement.
+                callOnScroll(e1, e1, 0f, 0f)
+            }
+
+            callOnScroll(e1, e2, -dx, -dy)
+            return true
+        }
+
+        private fun callOnScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float) {
+            if (doubleTapDetected)
+                listener.onScrollAfterDoubleTap(e1, e2, dx, dy)
+            else if (longPressDetected)
+                listener.onScrollAfterLongPress(e1, e2, dx, dy)
+            else
+                listener.onScroll(e1, e2, dx, dy)
+        }
+
+        /**
+         * Event receiver
+         */
+        fun onTouchEvent(e: MotionEvent): Boolean {
+            innerDetector1.onTouchEvent(e)
+            innerDetector2.onTouchEvent(e)
+
             when (e.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    maxFingerDown = 1
+                    currentDownEvent = MotionEvent.obtain(e)
+                }
 
-                MotionEvent.ACTION_DOWN -> startEvent = MotionEvent.obtain(e)
-                MotionEvent.ACTION_POINTER_DOWN -> fingerCount = max(fingerCount, e.pointerCount)
-                MotionEvent.ACTION_CANCEL -> reset()
+                MotionEvent.ACTION_POINTER_DOWN -> {
+                    maxFingerDown = max(maxFingerDown, e.pointerCount)
+                }
 
-                MotionEvent.ACTION_UP -> startEvent?.let { startEvent ->
-                    if ((e.eventTime - startEvent.eventTime) <= ViewConfiguration.getDoubleTapTimeout())
-                        when (fingerCount) {
-                            2 -> dispatcher.onTap2(startEvent.point())
-                            // Taps by 3+ fingers are not exposed yet
-                        }
+                MotionEvent.ACTION_UP -> {
+                    currentDownEvent?.let { downEvent ->
+                        if (longPressDetected && !doubleTapDetected && !scrolling && maxFingerDown <= 1)
+                            listener.onLongPressConfirmed(downEvent)
+
+                        if (doubleTapDetected && !longPressDetected && !scrolling && maxFingerDown <= 1)
+                            listener.onDoubleTapConfirmed(downEvent)
+
+                        val gestureDuration = (e.eventTime - downEvent.eventTime)
+                        if (maxFingerDown > 1 && !scrolling && gestureDuration < ViewConfiguration.getDoubleTapTimeout())
+                            listener.onMultiFingerTap(downEvent, maxFingerDown)
+                    }
+
                     reset()
                 }
+
+                MotionEvent.ACTION_CANCEL -> reset()
             }
+
+            return true
         }
 
-        fun reset() {
-            startEvent?.recycle()
-            startEvent = null
-            fingerCount = 0
+        private fun reset() {
+            longPressDetected = false
+            doubleTapDetected = false
+            scrolling = false
+            maxFingerDown = 0
+            currentDownEvent?.recycle()
+            currentDownEvent = null
         }
     }
+
 
     /**
      * Swipe vs Scale detector.
