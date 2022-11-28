@@ -16,7 +16,9 @@ import com.trilead.ssh2.LocalPortForwarder
 import com.trilead.ssh2.ServerHostKeyVerifier
 import java.io.File
 import java.io.IOException
+import java.net.InetAddress
 import java.net.InetSocketAddress
+import java.net.NoRouteToHostException
 import java.net.ServerSocket
 import java.security.MessageDigest
 
@@ -87,9 +89,7 @@ class SshTunnel(private val viewModel: VncViewModel) {
      */
     fun open() {
         val profile = viewModel.profile
-        val connection = Connection(profile.sshHost, profile.sshPort)
-
-        connection.connect(HostKeyVerifier(viewModel))
+        val connection = connect(profile)
         this.connection = connection
 
         if (profile.sshAuthType == ServerProfile.SSH_AUTH_PASSWORD)
@@ -121,6 +121,23 @@ class SshTunnel(private val viewModel: VncViewModel) {
 
         if (localPort == 0)
             throw IOException("Cannot find a local port for SSH Tunnel")
+    }
+
+    /**
+     * It is possible for a host to have multiple IP addresses.
+     * If connection failed due to [NoRouteToHostException], we try the next address (if available).
+     */
+    private fun connect(profile: ServerProfile): Connection {
+        for (address in InetAddress.getAllByName(profile.sshHost)) {
+            try {
+                return Connection(address.hostAddress, profile.sshPort).apply { connect(HostKeyVerifier(viewModel)) }
+            } catch (e: IOException) {
+                if (e.cause is NoRouteToHostException) continue
+                else throw e
+            }
+        }
+        // We will reach here only if every address throws NoRouteToHostException
+        throw NoRouteToHostException("Unreachable SSH host: ${profile.sshHost}")
     }
 
     /**
