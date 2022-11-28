@@ -8,6 +8,7 @@
 
 package com.gaurav.avnc.ui.vnc
 
+import android.graphics.Point
 import android.graphics.PointF
 import android.os.SystemClock
 import android.view.InputDevice
@@ -279,6 +280,57 @@ class TouchHandlerTest {
         verify { mockDispatcher.onMouseMove(testPoint) }
     }
 
+    /********************* Swipe vs Scale detection  *************************/
+    private val EXPECT_NONE = 0
+    private val EXPECT_SCALE = 1
+    private val EXPECT_SWIPE = 2
+
+    /**
+     * [p1Step] Step-size for pointer 1
+     * [p2Step] Step-size for pointer 2
+     * [expect] Expected gesture to be detected
+     */
+    private fun runSwipeVsScaleTest(p1Step: Point, p2Step: Point, expect: Int) {
+        // SwipeVsScale is ony used when 2-finger swipe is set to 'remote-scroll'
+        targetPrefs.edit { putString("gesture_swipe2", "remote-scroll") }
+        setup()
+
+        val p1 = PointF(500f, 500f)
+        val p2 = PointF(1000f, 1000f)
+
+        sendDown(p1)
+        sendEvent(Factory.obtainPointerDownEvent(downEvent, p1, p2))
+        repeat(30) {
+            p1.offset(p1Step.x.toFloat(), p1Step.y.toFloat())
+            p2.offset(p2Step.x.toFloat(), p2Step.y.toFloat())
+            sendEvent(Factory.obtainMoveEvent(downEvent, p1, p2))
+        }
+
+        if (expect == EXPECT_SWIPE) verify { mockDispatcher.onSwipe2(any(), any(), any(), any()) }
+        else verify(exactly = 0) { mockDispatcher.onSwipe2(any(), any(), any(), any()) }
+
+        if (expect == EXPECT_SCALE) verify { mockDispatcher.onScale(any(), any(), any()) }
+        else verify(exactly = 0) { mockDispatcher.onScale(any(), any(), any()) }
+    }
+
+    @Test
+    fun swipeVsScale() {
+        runSwipeVsScaleTest(Point(-10, -10), Point(10, 10), EXPECT_SCALE) // Pinch-out
+        runSwipeVsScaleTest(Point(10, 10), Point(-10, -10), EXPECT_SCALE) // Pinch-in
+        runSwipeVsScaleTest(Point(0, -10), Point(0, 10), EXPECT_SCALE) // 1st up, 2nd down
+        runSwipeVsScaleTest(Point(0, 10), Point(0, -10), EXPECT_SCALE) // 1st down, 2nd up
+        runSwipeVsScaleTest(Point(-6, 10), Point(6, 10), EXPECT_SCALE) // >45 degree
+
+        runSwipeVsScaleTest(Point(0, 10), Point(0, 10), EXPECT_SWIPE) // Parallel down
+        runSwipeVsScaleTest(Point(0, -10), Point(0, -10), EXPECT_SWIPE) // Parallel up
+        runSwipeVsScaleTest(Point(10, 0), Point(10, 0), EXPECT_SWIPE) // Parallel right
+        runSwipeVsScaleTest(Point(-10, 0), Point(-10, 0), EXPECT_SWIPE) // Parallel left
+        runSwipeVsScaleTest(Point(-2, 10), Point(2, 10), EXPECT_SWIPE) // <30 degree
+
+        runSwipeVsScaleTest(Point(-4, 10), Point(4, 10), EXPECT_NONE) // 30-45 degree
+        runSwipeVsScaleTest(Point(-3, 10), Point(3, 10), EXPECT_NONE) // 30-45 degree
+    }
+
 
     /************************ Event Generation ***************************************************/
     object Factory {
@@ -296,7 +348,7 @@ class TouchHandlerTest {
 
             return Array(count) {
                 PointerProperties().apply {
-                    id = it
+                    id = it + 5 // Use larger ids to detect accidental misuse of pointer-id as pointer-index
                     toolType = pointerToolType
                 }
             }

@@ -401,8 +401,8 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
                     if (detecting) {
                         f1Id = e.getPointerId(0)
                         f2Id = e.getPointerId(1)
-                        f1Start.set(e.getX(f1Id), e.getY(f1Id))
-                        f2Start.set(e.getX(f2Id), e.getY(f2Id))
+                        f1Start.set(e.getX(0), e.getY(0))
+                        f2Start.set(e.getX(1), e.getY(1))
                         f1Current.set(f1Start)
                         f2Current.set(f2Start)
                     }
@@ -410,8 +410,12 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
 
                 MotionEvent.ACTION_MOVE -> {
                     if (detecting) {
-                        f1Current.set(e.getX(f1Id), e.getY(f1Id))
-                        f2Current.set(e.getX(f2Id), e.getY(f2Id))
+                        val i1 = e.findPointerIndex(f1Id)
+                        val i2 = e.findPointerIndex(f2Id)
+                        if (i1 != -1 && i2 != -1) {
+                            f1Current.set(e.getX(i1), e.getY(i1))
+                            f2Current.set(e.getX(i2), e.getY(i2))
+                        }
                     }
                 }
             }
