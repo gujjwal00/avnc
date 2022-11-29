@@ -181,4 +181,7 @@
     <string name="pref_display_cutout">디스플레이 컷아웃 뒤에 그리기(실험용)</string>
     <string name="pref_per_orientation_zoom">각 방향에 대한 별도의 확대/축소</string>
     <string name="pref_saved_server_lock_summary">연결하려면 생체 인식/비밀번호 잠금 해제 필요</string>
+    <string name="pref_invert_vertical_scrolling">세로 스크롤 반전</string>
+    <string name="pref_touch_test">터치 테스트</string>
+    <string name="pref_key_test">키 테스트</string>
 </resources>

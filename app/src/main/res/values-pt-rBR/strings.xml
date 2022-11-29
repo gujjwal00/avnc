@@ -130,7 +130,7 @@
     <string name="pref_vk_show_all">Mostrar todas teclas</string>
     <string name="pref_vk_open_with_keyboard">Abrir com teclado</string>
     <string name="pref_km">Mapeamento de teclas</string>
-    <string name="pref_km_right_alt_to_super">Right Alt → Super</string>
+    <string name="pref_km_right_alt_to_super">Alt direito → Super</string>
     <string name="pref_km_language_switch_to_super">Alteração de idioma → Super</string>
     <string name="pref_km_back_to_escape">Voltar → Escape</string>
     <string name="pref_km_back_to_escape_summary">Não afeta a barra de navegação</string>
@@ -172,4 +172,24 @@
     <string name="pref_orientation_option_auto">Automática</string>
     <string name="pref_orientation_option_portrait">Vertical</string>
     <string name="pref_orientation_option_landscape">Horizontal</string>
+    <string name="pref_invert_vertical_scrolling">Inverter rolagem vertical</string>
+    <string name="pref_saved_server_lock">Bloquear servidores salvos</string>
+    <string name="pref_key_test">Teste de teclado</string>
+    <string name="pref_touch_test">Teste de toque</string>
+    <string name="title_image_quality">Qualidade de imagem</string>
+    <string name="title_image_quality_raw">Imagem não processada</string>
+    <string name="title_vnc_security">Segurança</string>
+    <string name="title_unlock_dialog">Desbloqueie para continuar</string>
+    <string name="title_automatic">Automático</string>
+    <string name="msg_zoom_reset">Zoom redefinido para 100%</string>
+    <string name="msg_zoom_saved">Zoom atual definido como padrão</string>
+    <string name="desc_zoom_options_btn">Opções de zoom</string>
+    <string name="desc_save_zoom_btn">Definir zoom atual como padrão</string>
+    <string name="pref_gesture_style">Modo de gesto</string>
+    <string name="pref_gesture_style_auto_summary">Baseado em Configurações do app</string>
+    <string name="pref_gesture_style_touchscreen">Touch screen</string>
+    <string name="pref_gesture_style_touchpad">Touch pad</string>
+    <string name="pref_display_cutout">Desenhe atrás do corte da tela (experimental)</string>
+    <string name="pref_saved_server_lock_summary">Requer desbloqueio biométrico/senha para conectar</string>
+    <string name="pref_per_orientation_zoom">Zoom separado para cada orientação</string>
 </resources>
