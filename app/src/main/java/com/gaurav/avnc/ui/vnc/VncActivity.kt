@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.util.Log
 import android.util.Rational
 import android.view.*
+import android.view.WindowInsets.Type
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -224,6 +225,10 @@ class VncActivity : AppCompatActivity() {
         if (fullscreenMode) {
             window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
             window.decorView.setOnSystemUiVisibilityChangeListener { updateSystemUiVisibility() }
+            window.decorView.setOnApplyWindowInsetsListener { v, insets ->
+                maybeToggleNavigationBar(insets)
+                v.onApplyWindowInsets(insets)
+            }
         }
 
         binding.root.addOnLayoutChangeListener { v, _, _, _, _, _, _, _, _ ->
@@ -261,6 +266,21 @@ class VncActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= 28 && viewModel.pref.viewer.drawBehindCutout) {
             window.attributes = window.attributes.apply {
                 layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            }
+        }
+    }
+
+    private fun maybeToggleNavigationBar(insets: WindowInsets) {
+        // On API 30, Android doesn't automatically show the navigation bar with keyboard.
+        // So to hide the keyboard, user has to first swipe to un-hide the navigation bar
+        // and then tap on Back button. To avoid this, we manually show the navigation bar
+        // whenever keyboard is visible. Although only API 30 seems to be affected, fix is
+        // applied on 30+ APIs, to ensure consistency.
+        if (Build.VERSION.SDK_INT >= 30) {
+            if (insets.isVisible(Type.ime())) {
+                window.insetsController?.show(Type.navigationBars())
+            } else if (viewModel.client.connected) {
+                window.insetsController?.hide(Type.navigationBars())
             }
         }
     }
