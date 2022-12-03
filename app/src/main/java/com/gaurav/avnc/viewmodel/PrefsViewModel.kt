@@ -63,9 +63,9 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
                 val json = serializer.encodeToString(data)
 
                 // Write out
-                app.contentResolver.openOutputStream(uri).use {
-                    it?.writer()?.write(json) ?: throw IOException("Unable to write the file.")
-                }
+                app.contentResolver.openOutputStream(uri)?.use { stream ->
+                    stream.writer().use { it.write(json) }
+                } ?: throw IOException("Unable to write the file.")
 
             }.let {
                 importExportError.postValue(it.exceptionOrNull()?.message)
@@ -82,9 +82,9 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
         asyncIO {
             runCatching {
 
-                val json = app.contentResolver.openInputStream(uri).use {
-                    it?.reader()?.readText() ?: throw IOException("Unable to read the file.")
-                }
+                val json = app.contentResolver.openInputStream(uri)?.use { stream ->
+                    stream.reader().use { it.readText() }
+                } ?: throw IOException("Unable to read the file.")
 
                 // Deserialize
                 val data = serializer.decodeFromString<Container>(json)
