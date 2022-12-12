@@ -21,12 +21,14 @@ import android.os.Bundle
 import android.util.Log
 import android.util.Rational
 import android.view.*
-import android.view.WindowInsets.Type
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat.Type
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
@@ -216,15 +218,18 @@ class VncActivity : AppCompatActivity() {
      ************************************************************************************/
 
     private val fullscreenMode by lazy { viewModel.pref.viewer.fullscreen }
+    private val insetController by lazy { WindowCompat.getInsetsController(window, window.decorView) }
 
     private fun setupLayout() {
 
         setupOrientation()
 
-        @Suppress("DEPRECATION")
         if (fullscreenMode) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            window.decorView.setOnSystemUiVisibilityChangeListener { updateSystemUiVisibility() }
+            if (Build.VERSION.SDK_INT < 30) {
+                @Suppress("DEPRECATION")
+                window.decorView.setOnSystemUiVisibilityChangeListener { updateSystemUiVisibility() }
+            }
+
             window.decorView.setOnApplyWindowInsetsListener { v, insets ->
                 maybeToggleNavigationBar(insets)
                 v.onApplyWindowInsets(insets)
@@ -278,9 +283,9 @@ class VncActivity : AppCompatActivity() {
         // applied on 30+ APIs, to ensure consistency.
         if (Build.VERSION.SDK_INT >= 30) {
             if (insets.isVisible(Type.ime())) {
-                window.insetsController?.show(Type.navigationBars())
+                insetController.show(Type.navigationBars())
             } else if (viewModel.client.connected) {
-                window.insetsController?.hide(Type.navigationBars())
+                insetController.hide(Type.navigationBars())
             }
         }
     }
@@ -372,22 +377,22 @@ class VncActivity : AppCompatActivity() {
         })
     }
 
-    @Suppress("DEPRECATION")
     private fun updateSystemUiVisibility() {
         if (!fullscreenMode)
             return
 
-        val flags = View.SYSTEM_UI_FLAG_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        if (viewModel.client.connected) {
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+            insetController.hide(Type.systemBars())
+            insetController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
-        window.decorView.apply {
-            if (viewModel.client.connected)
-                systemUiVisibility = systemUiVisibility or flags
-            else
-                systemUiVisibility = systemUiVisibility and flags.inv()
+            if (Build.VERSION.SDK_INT < 30) {
+                @Suppress("DEPRECATION")
+                window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            }
+        } else {
+            WindowCompat.setDecorFitsSystemWindows(window, true)
+            insetController.show(Type.systemBars())
         }
     }
 
