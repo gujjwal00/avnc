@@ -9,6 +9,7 @@
 package com.gaurav.avnc.util
 
 import android.view.View
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 
@@ -16,4 +17,9 @@ import androidx.databinding.BindingAdapter
 @BindingAdapter("isVisible")
 fun visibilityAdapter(view: View, isVisible: Boolean) {
     view.isVisible = isVisible
+}
+
+@BindingAdapter("isInvisible")
+fun invisibilityAdapter(view: View, isInvisible: Boolean) {
+    view.isInvisible = isInvisible
 }
