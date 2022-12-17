@@ -23,7 +23,9 @@ import com.gaurav.avnc.ui.about.AboutActivity
 import com.gaurav.avnc.ui.prefs.PrefsActivity
 import com.gaurav.avnc.ui.vnc.startVncActivity
 import com.gaurav.avnc.util.Debugging
+import com.gaurav.avnc.util.MsgDialog
 import com.gaurav.avnc.viewmodel.HomeViewModel
+import com.gaurav.avnc.vnc.VncClient
 import com.google.android.material.snackbar.Snackbar
 
 /**
@@ -55,7 +57,7 @@ class HomeActivity : AppCompatActivity() {
         viewModel.editProfileEvent.observe(this) { showProfileEditor() }
         viewModel.profileInsertedEvent.observe(this) { onProfileInserted(it) }
         viewModel.profileDeletedEvent.observe(this) { showProfileDeletedMsg(it) }
-        viewModel.newConnectionEvent.observe(this) { startVncActivity(this, it) }
+        viewModel.newConnectionEvent.observe(this) { startNewConnection(it) }
         viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }
 
         showWelcomeMsg()
@@ -84,6 +86,11 @@ class HomeActivity : AppCompatActivity() {
         }
         binding.drawerLayout.close()
         return true
+    }
+
+    private fun startNewConnection(profile: ServerProfile) {
+        if (checkNativeLib())
+            startVncActivity(this, profile)
     }
 
     /**
@@ -150,5 +157,19 @@ class HomeActivity : AppCompatActivity() {
                     WelcomeFragment().show(supportFragmentManager, "WelcomeV2")
             }
         }
+    }
+
+    /**
+     * Warns about missing native library.
+     * This can happen if AVNC is installed by copying APK from a device with different architecture.
+     */
+    private fun checkNativeLib(): Boolean {
+        return runCatching {
+            VncClient.loadLibrary()
+        }.onFailure {
+            val msg = "You may have installed AVNC using an incorrect APK. " +
+                      "Please install correct version from F-Droid or Google Play."
+            MsgDialog.show(supportFragmentManager, "Native library is missing!", msg)
+        }.isSuccess
     }
 }

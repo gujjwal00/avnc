@@ -269,11 +269,15 @@ class VncClient(private val observer: Observer) {
      * Native library initialization
      */
     companion object {
+        fun loadLibrary() {
+            System.loadLibrary("native-vnc")
+        }
+
         @JvmStatic
         private external fun initLibrary()
 
         init {
-            System.loadLibrary("native-vnc")
+            loadLibrary()
             initLibrary()
         }
     }
