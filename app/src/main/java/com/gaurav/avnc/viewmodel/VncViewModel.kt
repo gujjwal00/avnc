@@ -63,7 +63,7 @@ import java.lang.ref.WeakReference
  * via OpenGL ES. [frameState] is read from this thread to decide how/where frame
  * should be drawn.
  */
-class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
+class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel(app), VncClient.Observer {
 
     /**
      * Connection lifecycle:
@@ -88,11 +88,6 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     val client = VncClient(this)
-
-    /**
-     * [ServerProfile] used for current connection.
-     */
-    var profile = ServerProfile(); private set
 
     /**
      * We have two places for connection state (both are synced):
@@ -171,13 +166,12 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      **************************************************************************/
 
     /**
-     * Initialize VNC connection using given profile.
-     * It may be called multiple times due to activity restarts.
+     * Initialize VNC connection.
+     * It can be called multiple times due to activity restarts.
      */
-    fun initConnection(profile: ServerProfile) {
+    fun initConnection() {
         if (state.value == State.Created) {
             state.value = State.Connecting
-            this.profile = profile
             frameState.setZoom(profile.zoom1, profile.zoom2)
             launchConnection()
         }

@@ -33,6 +33,8 @@ import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.model.ServerProfile
@@ -69,12 +71,11 @@ fun startVncActivity(source: Activity, uri: VncUri) {
  */
 class VncActivity : AppCompatActivity() {
 
-    private lateinit var profile: ServerProfile
-    val viewModel by viewModels<VncViewModel>()
+    lateinit var viewModel: VncViewModel
     lateinit var binding: ActivityVncBinding
     private val dispatcher by lazy { Dispatcher(this) }
     val touchHandler by lazy { TouchHandler(viewModel, dispatcher) }
-    val keyHandler by lazy { KeyHandler(dispatcher, profile.keyCompatMode, viewModel.pref) }
+    val keyHandler by lazy { KeyHandler(dispatcher, viewModel.profile.keyCompatMode, viewModel.pref) }
     private val virtualKeys by lazy { VirtualKeys(this) }
     private val serverUnlockPrompt = DeviceAuthPrompt(this)
 
@@ -82,8 +83,8 @@ class VncActivity : AppCompatActivity() {
         DeviceAuthPrompt.applyFingerprintDialogFix(supportFragmentManager)
 
         super.onCreate(savedInstanceState)
-        profile = loadProfile()
-        viewModel.initConnection(profile)
+        loadViewModel(savedInstanceState)
+        viewModel.initConnection()
 
         //Main UI
         binding = DataBindingUtil.setContentView(this, R.layout.activity_vnc)
@@ -126,14 +127,20 @@ class VncActivity : AppCompatActivity() {
         binding.frameView.onPause()
     }
 
-    private fun loadProfile(): ServerProfile {
-        @Suppress("DEPRECATION")
-        val profile = intent.getParcelableExtra<ServerProfile>(PROFILE_KEY)
-        check(profile != null) { "ServerProfile is missing from VncActivity Intent" }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(PROFILE_KEY, viewModel.profile)
+    }
 
-        // Make a copy to avoid modifying intent's instance,
-        // because we may need the original if we have to retry connection.
-        return profile.copy()
+    private fun loadViewModel(savedState: Bundle?) {
+        @Suppress("DEPRECATION")
+        val profile = savedState?.getParcelable(PROFILE_KEY)
+                      // Make a copy because original is required for retrying connection
+                      ?: intent.getParcelableExtra<ServerProfile?>(PROFILE_KEY)?.copy()
+                      ?: throw IllegalStateException("ServerProfile is required for VncActivity")
+
+        val factory = viewModelFactory { initializer { VncViewModel(profile, application) } }
+        viewModel = viewModels<VncViewModel> { factory }.value
     }
 
     private fun retryConnection() {

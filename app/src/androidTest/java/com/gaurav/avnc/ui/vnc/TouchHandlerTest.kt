@@ -20,6 +20,7 @@ import androidx.core.content.edit
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.filters.SdkSuppress
 import com.gaurav.avnc.instrumentation
+import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.targetPrefs
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.PointerButton
@@ -48,7 +49,7 @@ class TouchHandlerTest {
     fun setup() {
         instrumentation.runOnMainSync {
             mockDispatcher = mockk(relaxed = true)
-            touchHandler = TouchHandler(VncViewModel(ApplicationProvider.getApplicationContext()), mockDispatcher)
+            touchHandler = TouchHandler(VncViewModel(ServerProfile(), ApplicationProvider.getApplicationContext()), mockDispatcher)
         }
 
         // Internally, mocks seems to be lazily initialized, and the initialization can take some time.
