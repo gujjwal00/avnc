@@ -303,7 +303,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
          * -                                 +------------------+
          * -                              +->| [innerDetector1] |
          * -                              |  +------------------+
-         * -                              |   (long-press, fling)
+         * -                              |   (tap, long-press)
          * -   +----------------+  event  |
          * -   | [onTouchEvent] |---------+
          * -   +----------------+         |
@@ -311,7 +311,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
          * -                              |  +------------------+  double-tap event   +------------------+
          * -                              +->| [innerDetector2] |-------------------->| [innerDetector3] |
          * -                                 +------------------+                     +------------------+
-         * -                                   (taps, scrolls)                         (double-tap scroll)
+         * -                                    (double-tap)                           (double-tap-swipe)
          *
          */
         private val innerDetector1 = GestureDetector(context, InnerListener1())
@@ -326,6 +326,11 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
 
 
         private inner class InnerListener1 : SimpleOnGestureListener() {
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                listener.onSingleTapConfirmed(e)
+                return true
+            }
+
             override fun onLongPress(e: MotionEvent) {
                 if (doubleTapDetected)
                     return // Ignore long-press triggered during double-tap-swipe
@@ -341,11 +346,6 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         }
 
         private inner class InnerListener2 : SimpleOnGestureListener() {
-            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                listener.onSingleTapConfirmed(e)
-                return true
-            }
-
             override fun onDoubleTap(e: MotionEvent): Boolean {
                 doubleTapDetected = true
                 return true
