@@ -99,7 +99,7 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
     }
 
     @Keep class Input : PrefFragment(R.xml.pref_input) {
-        private var naturalScrollingUpdater: OnSharedPreferenceChangeListener? = null
+        private var invertScrollingUpdater: OnSharedPreferenceChangeListener? = null
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -131,14 +131,15 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
 
             style.helpMessage = HtmlCompat.fromHtml(styleHelp, 0)
 
-            // To reduce clutter & avoid 'UI overload', Natural scrolling pref is not visible by default.
-            // It becomes visible only when 'Scroll remote content' option is used.
-            naturalScrollingUpdater = OnSharedPreferenceChangeListener { _, _ ->
-                val pref = findPreference<SwitchPreference>("natural_scrolling")
-                pref?.isVisible = "remote-scroll" in listOf(swipe1.value, swipe2.value, drag.value)
+            // To reduce clutter & avoid 'UI overload', pref to invert vertical scrolling is
+            // only visible when 'Scroll remote content' option is used.
+            invertScrollingUpdater = OnSharedPreferenceChangeListener { prefs, _ ->
+                findPreference<SwitchPreference>("invert_vertical_scrolling")!!.apply {
+                    isVisible = prefs.all.values.contains("remote-scroll")
+                }
             }
-            naturalScrollingUpdater?.onSharedPreferenceChanged(null, null) //Initial update
-            swipe1.sharedPreferences?.registerOnSharedPreferenceChangeListener(naturalScrollingUpdater)
+            invertScrollingUpdater?.onSharedPreferenceChanged(swipe1.sharedPreferences, null) //Initial update
+            swipe1.sharedPreferences?.registerOnSharedPreferenceChangeListener(invertScrollingUpdater)
 
         }
     }
