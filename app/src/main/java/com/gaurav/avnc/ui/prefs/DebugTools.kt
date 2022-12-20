@@ -17,6 +17,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.annotation.Keep
+import androidx.core.text.PrecomputedTextCompat
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -30,7 +31,9 @@ import com.gaurav.avnc.viewmodel.PrefsViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.ref.WeakReference
 
 abstract class DebugFragment : Fragment() {
     abstract fun title(): String
@@ -63,14 +66,23 @@ class LogsFragment : DebugFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentLogsBinding.inflate(inflater, container, false)
 
-        lifecycleScope.launchWhenCreated {
+        lifecycleScope.launch {
+            val textViewRef = WeakReference(binding.text)
+            var precomputedText: PrecomputedTextCompat? = null
+
             withContext(Dispatchers.IO) {
                 logs = Debugging.logcat()
+                textViewRef.get()?.let {
+                    val params = PrecomputedTextCompat.Params.Builder(it.paint).build()
+                    precomputedText = PrecomputedTextCompat.create(logs, params)
+                }
             }
 
-            binding.text.text = logs
-            delay(100)
-            binding.vScroll.fullScroll(View.FOCUS_DOWN)
+            precomputedText?.let {
+                binding.text.text = it
+                delay(100)
+                binding.vScroll.fullScroll(View.FOCUS_DOWN)
+            }
         }
 
         binding.clearBtn.setOnClickListener {
