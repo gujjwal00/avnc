@@ -199,24 +199,21 @@ class VncActivity : AppCompatActivity() {
     }
 
     private fun onClientStateChanged(newState: VncViewModel.State) {
-        if (newState == VncViewModel.State.Connected) {
+        val isConnected = (newState == VncViewModel.State.Connected)
 
-            if (!viewModel.pref.runInfo.hasConnectedSuccessfully) {
-                viewModel.pref.runInfo.hasConnectedSuccessfully = true
+        if (isConnected && !viewModel.pref.runInfo.hasConnectedSuccessfully) {
+            viewModel.pref.runInfo.hasConnectedSuccessfully = true
 
-                // Highlight drawer for first time users
-                binding.drawerLayout.openDrawer(binding.primaryToolbar)
-                lifecycleScope.launchWhenCreated {
-                    delay(1500)
-                    binding.drawerLayout.closeDrawer(binding.primaryToolbar)
-                }
+            // Highlight drawer for first time users
+            binding.drawerLayout.openDrawer(binding.primaryToolbar)
+            lifecycleScope.launchWhenCreated {
+                delay(1500)
+                binding.drawerLayout.closeDrawer(binding.primaryToolbar)
             }
-
-            SamsungDex.setMetaKeyCapture(this, true)
-        } else {
-            SamsungDex.setMetaKeyCapture(this, false)
         }
 
+        binding.frameView.keepScreenOn = isConnected
+        SamsungDex.setMetaKeyCapture(this, isConnected)
         updateSystemUiVisibility()
     }
 
