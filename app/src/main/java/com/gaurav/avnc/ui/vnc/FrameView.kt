@@ -80,7 +80,7 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        frameState.setViewportSize(w.toFloat(), h.toFloat())
+        if (!isInEditMode) frameState.setViewportSize(w.toFloat(), h.toFloat())
     }
 
     override fun onCreateInputConnection(outAttrs: EditorInfo): InputConnection {
