@@ -26,10 +26,8 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
+import androidx.core.view.*
 import androidx.core.view.WindowInsetsCompat.Type
-import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.updatePadding
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
@@ -200,21 +198,34 @@ class VncActivity : AppCompatActivity() {
 
     private fun onClientStateChanged(newState: VncViewModel.State) {
         val isConnected = (newState == VncViewModel.State.Connected)
+        val drawerLockMode = if (isConnected) DrawerLayout.LOCK_MODE_UNDEFINED else DrawerLayout.LOCK_MODE_LOCKED_CLOSED
 
+        binding.drawerLayout.setDrawerLockMode(drawerLockMode)
+        binding.frameView.keepScreenOn = isConnected
+        SamsungDex.setMetaKeyCapture(this, isConnected)
+        updateSystemUiVisibility()
+        updateStatusContainerVisibility(isConnected)
+        highlightDrawer(isConnected)
+    }
+
+    private fun updateStatusContainerVisibility(isConnected: Boolean) {
+        binding.statusContainer.isVisible = true
+        binding.statusContainer
+                .animate()
+                .alpha(if (isConnected) 0f else 1f)
+                .withEndAction { binding.statusContainer.isVisible = !isConnected }
+    }
+
+    // Highlight drawer for first time users
+    private fun highlightDrawer(isConnected: Boolean) {
         if (isConnected && !viewModel.pref.runInfo.hasConnectedSuccessfully) {
             viewModel.pref.runInfo.hasConnectedSuccessfully = true
-
-            // Highlight drawer for first time users
             binding.drawerLayout.openDrawer(binding.primaryToolbar)
             lifecycleScope.launchWhenCreated {
                 delay(1500)
                 binding.drawerLayout.closeDrawer(binding.primaryToolbar)
             }
         }
-
-        binding.frameView.keepScreenOn = isConnected
-        SamsungDex.setMetaKeyCapture(this, isConnected)
-        updateSystemUiVisibility()
     }
 
     /************************************************************************************

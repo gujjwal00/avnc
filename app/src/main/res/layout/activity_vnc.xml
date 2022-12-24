@@ -33,15 +33,13 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:animateLayoutChanges="true">
+        android:layout_height="match_parent">
 
 
         <androidx.drawerlayout.widget.DrawerLayout
             android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:isInvisible="@{viewModel.state != State.Connected}">
+            android:layout_height="match_parent">
 
 
             <!--FrameView-->
@@ -131,10 +129,10 @@
 
         <!--Status-->
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/status_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?colorSurface"
-            app:isVisible="@{viewModel.state != State.Connected}">
+            android:background="?colorSurface">
 
             <ProgressBar
                 style="@style/Widget.AppCompat.ProgressBar"
