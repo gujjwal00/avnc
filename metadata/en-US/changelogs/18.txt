@@ -1,0 +1,2 @@
+* Fixed unexpected Left-click generated on long press
+* Fixed screen remaining ON while disconnected on some devices
