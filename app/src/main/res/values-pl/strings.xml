@@ -162,4 +162,21 @@
     <string name="pref_orientation_option_landscape">Krajobraz</string>
     <string name="desc_discovery_btn">Odnajduj serwery</string>
     <string name="msg_export_auth_required">Uwierzytelnij się, aby eksportować serwery</string>
+    <string name="pref_invert_vertical_scrolling">Odwróć przewijanie w pionie</string>
+    <string name="pref_per_orientation_zoom">Oddzielne powiększenie dla każdej orientacji</string>
+    <string name="pref_touch_test">Test dotyku</string>
+    <string name="title_vnc_security">Bezpieczeństwo</string>
+    <string name="title_automatic">Automatycznie</string>
+    <string name="msg_zoom_reset">Zoom zresetowany do 100%</string>
+    <string name="msg_zoom_saved">Zapisano bieżące powiększenie jako domyślne</string>
+    <string name="desc_save_zoom_btn">Zapisano bieżące powiększenie jako domyślne</string>
+    <string name="pref_gesture_style">Styl gestów</string>
+    <string name="pref_gesture_style_touchscreen">Ekran dotykowy</string>
+    <string name="pref_saved_server_lock">Zablokuj zapisane serwery</string>
+    <string name="desc_zoom_options_btn">Opcje powiększenia</string>
+    <string name="title_unlock_dialog">Odblokuj, aby kontynuować</string>
+    <string name="title_image_quality">Jakość obrazu</string>
+    <string name="hint_repeater_host">Host przekaźnika</string>
+    <string name="pref_gesture_style_auto_summary">W oparciu o ustawienia aplikacji</string>
+    <string name="pref_saved_server_lock_summary">Wymagaj odblokowania biometrycznego/hasła do połączenia</string>
 </resources>

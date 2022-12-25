@@ -164,4 +164,23 @@
     <string name="pref_orientation_option_auto">自动</string>
     <string name="pref_orientation_option_portrait">竖屏</string>
     <string name="pref_orientation_option_landscape">横屏</string>
+    <string name="pref_invert_vertical_scrolling">倒转垂直滚动</string>
+    <string name="pref_touch_test">触控测试</string>
+    <string name="pref_key_test">密钥测试</string>
+    <string name="title_image_quality">图片质量</string>
+    <string name="title_image_quality_raw">原始</string>
+    <string name="title_vnc_security">安全性</string>
+    <string name="title_unlock_dialog">解锁继续</string>
+    <string name="title_automatic">自动</string>
+    <string name="msg_zoom_saved">保存当前缩放比为默认</string>
+    <string name="desc_save_zoom_btn">保存当前缩放比为默认</string>
+    <string name="pref_gesture_style">手势样式</string>
+    <string name="pref_gesture_style_touchscreen">触摸屏</string>
+    <string name="pref_gesture_style_touchpad">触摸板</string>
+    <string name="pref_saved_server_lock">锁定保存的服务器</string>
+    <string name="msg_zoom_reset">重置缩放比到 100%</string>
+    <string name="desc_zoom_options_btn">缩放选项</string>
+    <string name="pref_gesture_style_auto_summary">基于应用设置</string>
+    <string name="pref_per_orientation_zoom">不同方向设置不同缩放比</string>
+    <string name="pref_saved_server_lock_summary">要求生物特征/密码解锁才能连接</string>
 </resources>
