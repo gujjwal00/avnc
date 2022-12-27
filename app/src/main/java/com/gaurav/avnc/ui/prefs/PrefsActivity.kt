@@ -15,7 +15,6 @@ import android.os.Bundle
 import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
-import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
@@ -115,11 +114,10 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
 
             val style = findPreference<ListPreferenceEx>("gesture_style")!!
             val swipe1 = findPreference<ListPreferenceEx>("gesture_swipe1")!!
-            val swipe2 = findPreference<ListPreference>("gesture_swipe2")!!
-            val drag = findPreference<ListPreferenceEx>("gesture_drag")!!
+            val longPressSwipe = findPreference<ListPreferenceEx>("gesture_long_press_swipe")!!
 
             swipe1.disabledStateSummary = getString(R.string.pref_gesture_action_move_pointer)
-            drag.helpMessage = getText(R.string.msg_drag_gesture_help)
+            longPressSwipe.helpMessage = getText(R.string.msg_drag_gesture_help)
 
             swipe1.isEnabled = style.value != "touchpad"
             style.setOnPreferenceChangeListener { _, value -> swipe1.isEnabled = value != "touchpad"; true }

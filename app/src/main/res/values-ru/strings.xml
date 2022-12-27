@@ -92,7 +92,6 @@
     <string name="pref_long_press">Длительное нажатие</string>
     <string name="pref_swipe1">Свайп одним пальцем</string>
     <string name="pref_swipe2">Свайп двумя пальцами</string>
-    <string name="pref_drag">Перетаскивание</string>
     <string name="pref_swipe_sensitivity">Чувствительность свайпа</string>
     <string name="pref_hide_local_cursor">Скрыть локальный курсор</string>
     <string name="pref_mouse_back">Кнопка \"назад\"</string>

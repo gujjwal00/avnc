@@ -82,7 +82,6 @@
     <string name="pref_gesture">Gesty</string>
     <string name="pref_swipe1">Przesunięcie jednym palcem</string>
     <string name="pref_swipe2">Przesunięcie dwoma palcami</string>
-    <string name="pref_drag">Przeciągnij</string>
     <string name="pref_swipe_sensitivity">Czułość przesuwania</string>
     <string name="pref_mouse_passthrough_summary_on">Wysyłanie zdarzeń myszy bezpośrednio do serwera</string>
     <string name="pref_hide_local_cursor">Ukryj wskaźnik lokalny</string>

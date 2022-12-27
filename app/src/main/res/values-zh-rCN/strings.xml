@@ -86,7 +86,6 @@
     <string name="pref_long_press">长按</string>
     <string name="pref_swipe1">单指轻扫</string>
     <string name="pref_swipe2">双指轻扫</string>
-    <string name="pref_drag">拖动</string>
     <string name="pref_mouse">鼠标</string>
     <string name="pref_mouse_passthrough">鼠标直通</string>
     <string name="pref_mouse_passthrough_summary_on">将鼠标事件直接发送到服务器</string>

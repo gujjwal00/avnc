@@ -61,7 +61,6 @@
     <string name="pref_gesture_style_touchpad_summary">Eylemleri işaretçinin olduğu yerde yap</string>
     <string name="pref_single_tap">Tek dokunma</string>
     <string name="pref_swipe1">Tek parmakla kaydırma</string>
-    <string name="pref_drag">Sürükleme</string>
     <string name="pref_mouse">Fare</string>
     <string name="pref_mouse_passthrough_summary_off">Yerel hareketler için fare olaylarını kullan</string>
     <string name="pref_km">Tuş eşlemeleri</string>

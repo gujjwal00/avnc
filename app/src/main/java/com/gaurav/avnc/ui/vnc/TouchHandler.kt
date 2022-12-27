@@ -171,7 +171,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     private val scaleDetector = ScaleGestureDetector(viewModel.app, this).apply { isQuickScaleEnabled = false }
     private val gestureDetector = GestureDetectorEx(viewModel.app, FingerGestureListener())
     private val swipeVsScale = SwipeVsScale()
-    private val dragEnabled = viewModel.pref.input.gesture.dragEnabled
+    private val longPressSwipeEnabled = viewModel.pref.input.gesture.longPressSwipeEnabled
     private val swipeSensitivity = viewModel.pref.input.gesture.swipeSensitivity
 
 
@@ -204,12 +204,12 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         override fun onLongPress(e: MotionEvent) {
             viewModel.frameViewRef.get()?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
 
-            // If long-press-drag is disabled, we can dispatch long-press immediately
-            if (!dragEnabled) dispatcher.onLongPress(e.point())
+            // If long-press-swipe is disabled, we can dispatch long-press immediately
+            if (!longPressSwipeEnabled) dispatcher.onLongPress(e.point())
         }
 
         override fun onLongPressConfirmed(e: MotionEvent) {
-            if (dragEnabled) dispatcher.onLongPress(e.point())
+            if (longPressSwipeEnabled) dispatcher.onLongPress(e.point())
         }
 
 
@@ -227,11 +227,11 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         }
 
         override fun onScrollAfterLongPress(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float) {
-            dispatcher.onDrag(e1.point(), e2.point(), dx, dy)
+            dispatcher.onLongPressSwipe(e1.point(), e2.point(), dx, dy)
         }
 
         override fun onScrollAfterDoubleTap(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float) {
-            //todo implement
+            dispatcher.onDoubleTapSwipe(e1.point(), e2.point(), dx, dy)
         }
 
         override fun onFling(velocityX: Float, velocityY: Float) {
@@ -253,7 +253,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
          * while the following are custom detected:
          *
          * [onDoubleTapConfirmed]
-         * To support double-tap-drag gesture, double-tap is not immediately triggered on
+         * To support double-tap-swipe gesture, double-tap is not immediately triggered on
          * ACTION_DOWN of second tap. Instead, [doubleTapDetected] flag is set, and when
          * final ACTION_UP is received (within timeout), [onDoubleTapConfirmed] is called.
          *
@@ -263,17 +263,17 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
          * without any scrolling, [onMultiFingerTap] is called.
          *
          * [onLongPressConfirmed]
-         * Similar to [onDoubleTapConfirmed], to support long-press-drag, we wait for
+         * Similar to [onDoubleTapConfirmed], to support long-press-swipe, we wait for
          * ACTION_UP to confirm long-press.
          * Note: [onLongPress] is always called immediately. It enables haptic feedback
          * and supports cases where waiting for [onLongPressConfirmed] is not necessary.
          *
          * [onScrollAfterDoubleTap]
-         * This is the double-tap-drag gesture. If scrolling after [doubleTapDetected] flag
+         * This is the double-tap-swipe gesture. If scrolling after [doubleTapDetected] flag
          * is set, [onScrollAfterDoubleTap] is called.
          *
          * [onScrollAfterLongPress]
-         * This is the long-press-drag gesture. If scrolling after [longPressDetected] flag
+         * This is the long-press-swipe gesture. If scrolling after [longPressDetected] flag
          * is set, [onScrollAfterLongPress] is called.
          */
         interface GestureListenerEx {

@@ -67,7 +67,6 @@
     <string name="pref_sort_server_list">Gespeicherte Server nach Namen sortieren</string>
     <string name="pref_gesture">Gesten</string>
     <string name="pref_swipe2">Wischen mit zwei Fingern</string>
-    <string name="pref_drag">Ziehen (Drag and Drop)</string>
     <string name="pref_mouse_passthrough">Maus-Durchleitung</string>
     <string name="pref_mouse_passthrough_summary_off">Maus-Bewegungen für lokale Gesten verwenden</string>
     <string name="pref_hide_local_cursor">Lokalen Mauszeiger verstecken</string>

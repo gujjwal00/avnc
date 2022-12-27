@@ -65,7 +65,6 @@
     <string name="pref_theme">Тема</string>
     <string name="pref_long_press">Довге натискання</string>
     <string name="pref_swipe2">Ковзання двома пальцями</string>
-    <string name="pref_drag">Перетягування</string>
     <string name="pref_hide_local_cursor">Ховати локальний вказівник</string>
     <string name="pref_vk">Віртуальні клавіші</string>
     <string name="pref_vk_show_all">Показувати всі клавіші</string>

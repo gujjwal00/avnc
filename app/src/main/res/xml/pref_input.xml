@@ -64,11 +64,19 @@
             app:useSimpleSummaryProvider="true" />
 
         <com.gaurav.avnc.ui.prefs.ListPreferenceEx
+            app:defaultValue="remote-drag"
+            app:entries="@array/double_tap_swipe_action_entries"
+            app:entryValues="@array/double_tap_swipe_action_values"
+            app:key="gesture_double_tap_swipe"
+            app:title="@string/pref_double_tap_swipe"
+            app:useSimpleSummaryProvider="true" />
+
+        <com.gaurav.avnc.ui.prefs.ListPreferenceEx
             app:defaultValue="none"
-            app:entries="@array/drag_action_entries"
-            app:entryValues="@array/drag_action_values"
-            app:key="gesture_drag"
-            app:title="@string/pref_drag"
+            app:entries="@array/long_press_action_entries"
+            app:entryValues="@array/long_press_action_values"
+            app:key="gesture_long_press_swipe"
+            app:title="@string/pref_long_press_swipe"
             app:useSimpleSummaryProvider="true"
             app:widgetLayout="@layout/help_btn" />
 

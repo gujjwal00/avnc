@@ -46,8 +46,9 @@ class AppPreferences(context: Context) {
         val longPress; get() = prefs.getString("gesture_long_press", "right-click")!!
         val swipe1; get() = prefs.getString("gesture_swipe1", "pan")!!
         val swipe2; get() = prefs.getString("gesture_swipe2", "pan")!!
-        val drag; get() = prefs.getString("gesture_drag", "none")!!
-        val dragEnabled; get() = (drag != "none")
+        val doubleTapSwipe; get() = prefs.getString("gesture_double_tap_swipe", "remote-drag")!!
+        val longPressSwipe; get() = prefs.getString("gesture_long_press_swipe", "none")!!
+        val longPressSwipeEnabled; get() = (longPressSwipe != "none")
         val swipeSensitivity; get() = prefs.getInt("gesture_swipe_sensitivity", 10) / 10f
         val invertVerticalScrolling; get() = prefs.getBoolean("invert_vertical_scrolling", false)
     }
@@ -145,6 +146,13 @@ class AppPreferences(context: Context) {
         if (!prefs.getBoolean("natural_scrolling", true)) prefs.edit {
             remove("natural_scrolling")
             putBoolean("invert_vertical_scrolling", true)
+        }
+
+        prefs.getString("gesture_drag", null)?.let {
+            prefs.edit {
+                remove("gesture_drag")
+                putString("gesture_long_press_swipe", it)
+            }
         }
     }
 }

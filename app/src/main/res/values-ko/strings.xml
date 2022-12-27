@@ -94,7 +94,6 @@
     <string name="pref_single_tap">한 번 탭</string>
     <string name="pref_two_finger_tap">두 손가락 탭</string>
     <string name="pref_swipe1">한 손가락 밀기</string>
-    <string name="pref_drag">드래그</string>
     <string name="pref_swipe_sensitivity">밀도 감도</string>
     <string name="pref_mouse">마우스</string>
     <string name="pref_mouse_passthrough">마우스 패스스루</string>

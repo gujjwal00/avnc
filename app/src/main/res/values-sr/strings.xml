@@ -37,7 +37,6 @@
     <string name="pref_double_tap">Двоструки тап</string>
     <string name="pref_swipe1">Прелаз једним прстом</string>
     <string name="pref_vk">Тастатура заслона</string>
-    <string name="pref_drag">Превуци (дуги притисак и прелаз)</string>
     <string name="pref_km">Распоред дугмади</string>
     <string name="pref_fullscreen">Пуни приказ</string>
     <string name="pref_hide_local_cursor">Сакриј местни (Андроидов) показивач</string>

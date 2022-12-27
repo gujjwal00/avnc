@@ -122,7 +122,6 @@
     <string name="pref_long_press">فشار طولانی</string>
     <string name="pref_swipe1">سُر دادن یک-انگشت</string>
     <string name="pref_swipe2">سُر دادن دو-انگشت</string>
-    <string name="pref_drag">کشیدن</string>
     <string name="pref_mouse">ماوس</string>
     <string name="pref_mouse_passthrough">عبور ماوس</string>
     <string name="pref_mouse_passthrough_summary_off">رویدادهای ماوس برای حرکات محلّی استفاده شوند</string>

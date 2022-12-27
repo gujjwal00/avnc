@@ -74,7 +74,8 @@ class Dispatcher(private val activity: VncActivity) {
 
     private val swipe1Action = selectSwipeAction(if (gestureStyle == "touchpad") "move-pointer" else gesturePref.swipe1)
     private val swipe2Action = selectSwipeAction(gesturePref.swipe2)
-    private val dragAction = selectSwipeAction(gesturePref.drag)
+    private val doubleTapSwipeAction = selectSwipeAction(gesturePref.doubleTapSwipe)
+    private val longPressSwipeAction = selectSwipeAction(gesturePref.longPressSwipe)
 
     private val mouseBackAction = selectPointAction(viewModel.pref.input.mouseBack)
 
@@ -126,7 +127,8 @@ class Dispatcher(private val activity: VncActivity) {
 
     fun onSwipe1(sp: PointF, cp: PointF, dx: Float, dy: Float) = swipe1Action(sp, cp, dx, dy)
     fun onSwipe2(sp: PointF, cp: PointF, dx: Float, dy: Float) = swipe2Action(sp, cp, dx, dy)
-    fun onDrag(sp: PointF, cp: PointF, dx: Float, dy: Float) = dragAction(sp, cp, dx, dy)
+    fun onDoubleTapSwipe(sp: PointF, cp: PointF, dx: Float, dy: Float) = doubleTapSwipeAction(sp, cp, dx, dy)
+    fun onLongPressSwipe(sp: PointF, cp: PointF, dx: Float, dy: Float) = longPressSwipeAction(sp, cp, dx, dy)
 
     fun onScale(scaleFactor: Float, fx: Float, fy: Float) = doScale(scaleFactor, fx, fy)
     fun onFling(vx: Float, vy: Float) = defaultMode.doFling(vx, vy)

@@ -140,7 +140,7 @@ class TouchHandlerTest {
     }
 
     @Test
-    fun drag() {
+    fun longPressSwipe() {
         setupWithPref(dragEnabled = true)
 
         val a1 = PointF(100f, 100f)
@@ -152,7 +152,25 @@ class TouchHandlerTest {
         sendUp(a2)
 
         verifyOrder {
-            mockDispatcher.onDrag(a1, a2, 50f, 50f)
+            mockDispatcher.onLongPressSwipe(a1, a2, 50f, 50f)
+            mockDispatcher.onGestureStop(a2)
+        }
+    }
+
+    @Test
+    fun doubleTapSwipe() {
+        val a1 = PointF(100f, 100f)
+        val a2 = PointF(150f, 150f)
+
+        sendDown(a1)
+        sendUp(a1)
+        Thread.sleep(Delay.BETWEEN_DOUBLE_TAPS)
+        sendDown(a1)
+        sendMove(a2)
+        sendUp(a2)
+
+        verifyOrder {
+            mockDispatcher.onDoubleTapSwipe(a1, a2, 50f, 50f)
             mockDispatcher.onGestureStop(a2)
         }
     }

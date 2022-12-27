@@ -121,7 +121,6 @@
     <string name="pref_long_press">Toque longo</string>
     <string name="pref_swipe1">Deslize com 1 dedo</string>
     <string name="pref_swipe2">Deslize com 2 dedos</string>
-    <string name="pref_drag">Arrastar</string>
     <string name="pref_mouse">Mouse</string>
     <string name="pref_mouse_passthrough">Passagem do mouse</string>
     <string name="pref_mouse_passthrough_summary_off">Use eventos do mouse para gestos locais</string>
