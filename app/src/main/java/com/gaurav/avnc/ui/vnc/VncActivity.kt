@@ -201,6 +201,7 @@ class VncActivity : AppCompatActivity() {
         val drawerLockMode = if (isConnected) DrawerLayout.LOCK_MODE_UNDEFINED else DrawerLayout.LOCK_MODE_LOCKED_CLOSED
 
         binding.drawerLayout.setDrawerLockMode(drawerLockMode)
+        binding.frameView.isVisible = isConnected
         binding.frameView.keepScreenOn = isConnected
         SamsungDex.setMetaKeyCapture(this, isConnected)
         updateSystemUiVisibility()
