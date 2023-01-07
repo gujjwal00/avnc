@@ -9,6 +9,7 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.graphics.PointF
+import android.graphics.RectF
 import kotlin.math.max
 import kotlin.math.min
 
@@ -26,25 +27,30 @@ import kotlin.math.min
  *
  * Window: Top-level window of the application/activity.
  *
- * Viewport: This is the area of screen where frame is rendered. It is denoted by [FrameView].
+ * Viewport: This is the area of window where frame is rendered. It is denoted by [FrameView].
  *
- *     Window denotes the 'total' area available to our activity while viewport
- *     denotes the 'visible to user' area. Normally they would be same but
- *     viewport can be smaller than window (e.g. if soft keyboard is visible).
+ * Safe area: Area inside viewport which is safe for interaction with frame, maintained in [safeArea].
  *
- *     +---------------------------+
- *     |                           |
- *     |         ViewPort          |
- *     |                           |   Window
- *     +---------------------------+
- *     |      Soft Keyboard        |
- *     +---------------------------+
+ *     Window denotes 'total' area available to our activity, viewport denotes 'visible to user'
+ *     area, and safe area denotes 'able to click' area. Most of the time all three will be equal,
+ *     but viewport can be smaller than window (e.g. if soft keyboard is visible), and safe area
+ *     can be smaller than viewport (e.g. due to display cutout).
  *
- *     Differentiating between window & viewport allows us to handle layout changes more
- *     easily and cleanly. We use window size to calculate base scale because we don't want
- *     to change scale when keyboard is shown/hidden. And viewport size is used for coercing
- *     frame position so that user can pan the whole frame even if keyboard is visible.
+ *     +---------------------------+   -   -
+ *     |         \Cutout/          |   |   | Viewport
+ *     |                           |   |   |   -
+ *     |                           |   |   |   | SafeArea
+ *     +---------------------------+   |   -   -
+ *     |      Soft Keyboard        |   | Window
+ *     +---------------------------+   -
  *
+ *     Differentiating between these allows us to handle layout changes more easily and cleanly.
+ *     We use window size to calculate base scale because we don't want to change scale when
+ *     keyboard is shown/hidden. Viewport size is used for rendering the frame, fully immersive.
+ *     Safe area is used to coerce frame position so that user can pan every part of frame inside
+ *     safe area to interact with it.
+ *
+ * See [LayoutManager] for more information about these values.
  *
  * State & Coordinates
  * ===================
@@ -116,6 +122,8 @@ class FrameState(
     var windowWidth = 0F; private set
     var windowHeight = 0F; private set
 
+    var safeArea = RectF(); private set
+
     //Scaling
     var zoomScale1 = 1F; private set
     var zoomScale2 = 1F; private set
@@ -146,6 +154,11 @@ class FrameState(
         windowWidth = w
         windowHeight = h
         calculateBaseScale()
+        coerceValues()
+    }
+
+    fun setSafeArea(rect: RectF) {
+        safeArea = rect
         coerceValues()
     }
 
@@ -230,18 +243,22 @@ class FrameState(
     private fun coerceValues() {
         zoomScale1 = zoomScale1.coerceIn(minZoomScale, maxZoomScale)
         zoomScale2 = zoomScale2.coerceIn(minZoomScale, maxZoomScale)
-        frameX = coercePosition(frameX, vpWidth, fbWidth)
-        frameY = coercePosition(frameY, vpHeight, fbHeight)
+
+        if (safeArea.isEmpty || !safeArea.intersect(0f, 0f, vpWidth, vpHeight))
+            safeArea = RectF(0f, 0f, vpWidth, vpHeight)
+
+        frameX = coercePosition(frameX, safeArea.left, safeArea.right, fbWidth)
+        frameY = coercePosition(frameY, safeArea.top, safeArea.bottom, fbHeight)
     }
 
     /**
      * Coerce position value in a direction (horizontal/vertical).
      */
-    private fun coercePosition(current: Float, vp: Float, fb: Float): Float {
+    private fun coercePosition(current: Float, safeMin: Float, safeMax: Float, fb: Float): Float {
         val scaledFb = (fb * scale)
-        val diff = vp - scaledFb
+        val diff = (safeMax - safeMin) - scaledFb
 
-        return if (diff >= 0) diff / 2   //Frame will be smaller than viewport, so center it
-        else current.coerceIn(diff, 0F)  //otherwise, make sure viewport is completely filled.
+        return if (diff >= 0) diff / 2 + safeMin       //Frame will be smaller than safe area, so center it
+        else current.coerceIn(diff + safeMin, safeMin) //otherwise, make sure safe area is completely filled.
     }
 }

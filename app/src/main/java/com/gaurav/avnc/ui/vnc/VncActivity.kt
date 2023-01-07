@@ -27,7 +27,6 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.*
-import androidx.core.view.WindowInsetsCompat.Type
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
@@ -74,8 +73,9 @@ class VncActivity : AppCompatActivity() {
     private val dispatcher by lazy { Dispatcher(this) }
     val touchHandler by lazy { TouchHandler(viewModel, dispatcher) }
     val keyHandler by lazy { KeyHandler(dispatcher, viewModel.profile.keyCompatMode, viewModel.pref) }
-    private val virtualKeys by lazy { VirtualKeys(this) }
+    val virtualKeys by lazy { VirtualKeys(this) }
     private val serverUnlockPrompt = DeviceAuthPrompt(this)
+    private val layoutManager by lazy { LayoutManager(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         DeviceAuthPrompt.applyFingerprintDialogFix(supportFragmentManager)
@@ -199,7 +199,7 @@ class VncActivity : AppCompatActivity() {
         binding.frameView.isVisible = isConnected
         binding.frameView.keepScreenOn = isConnected
         SamsungDex.setMetaKeyCapture(this, isConnected)
-        updateSystemUiVisibility()
+        layoutManager.onConnectionStateChanged()
         updateStatusContainerVisibility(isConnected)
         highlightDrawer(isConnected)
     }
@@ -229,74 +229,16 @@ class VncActivity : AppCompatActivity() {
      ************************************************************************************/
 
     private val fullscreenMode by lazy { viewModel.pref.viewer.fullscreen }
-    private val insetController by lazy { WindowCompat.getInsetsController(window, window.decorView) }
 
     private fun setupLayout() {
 
         setupOrientation()
+        layoutManager.initialize()
 
-        if (fullscreenMode) {
-            if (Build.VERSION.SDK_INT < 30) {
-                @Suppress("DEPRECATION")
-                window.decorView.setOnSystemUiVisibilityChangeListener { updateSystemUiVisibility() }
-            }
-
-            window.decorView.setOnApplyWindowInsetsListener { v, insets ->
-                maybeToggleNavigationBar(insets)
-                v.onApplyWindowInsets(insets)
-            }
-        }
-
-        binding.root.addOnLayoutChangeListener { v, _, _, _, _, _, _, _, _ ->
-            viewModel.frameState.setWindowSize(v.width.toFloat(), v.height.toFloat())
-        }
-
-        //This is used to handle cases where a system view (e.g. soft keyboard) is covering
-        //some part of our window. We retrieve the visible area and add padding to our
-        //root view so that its content is resized to that area.
-        //This will trigger the resize of frame view allowing it to handle the available space.
-        val visibleFrame = Rect()
-        val rootLocation = intArrayOf(0, 0)
-        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
-            binding.root.getWindowVisibleDisplayFrame(visibleFrame)
-
-            // Normally, the root view will cover the whole screen, but on devices
-            // with display-cutout it will be letter-boxed by the system.
-            // In that case the root view won't start from (0,0).
-            // So we have to offset the visibleFame (which is in display coordinates)
-            // to make sure it is relative to our root view.
-            binding.root.getLocationOnScreen(rootLocation)
-            visibleFrame.offset(-rootLocation[0], -rootLocation[1])
-
-            var paddingBottom = binding.root.bottom - visibleFrame.bottom
-            if (paddingBottom < 0)
-                paddingBottom = 0
-
-            //Try to guess if keyboard is closing
-            if (paddingBottom == 0 && binding.root.paddingBottom != 0)
-                virtualKeys.onKeyboardClose()
-
-            binding.root.updatePadding(bottom = paddingBottom)
-        }
 
         if (Build.VERSION.SDK_INT >= 28 && viewModel.pref.viewer.drawBehindCutout) {
             window.attributes = window.attributes.apply {
                 layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-            }
-        }
-    }
-
-    private fun maybeToggleNavigationBar(insets: WindowInsets) {
-        // On API 30, Android doesn't automatically show the navigation bar with keyboard.
-        // So to hide the keyboard, user has to first swipe to un-hide the navigation bar
-        // and then tap on Back button. To avoid this, we manually show the navigation bar
-        // whenever keyboard is visible. Although only API 30 seems to be affected, fix is
-        // applied on 30+ APIs, to ensure consistency.
-        if (Build.VERSION.SDK_INT >= 30) {
-            if (insets.isVisible(Type.ime())) {
-                insetController.show(Type.navigationBars())
-            } else if (viewModel.client.connected) {
-                insetController.hide(Type.navigationBars())
             }
         }
     }
@@ -388,31 +330,10 @@ class VncActivity : AppCompatActivity() {
         })
     }
 
-    private fun updateSystemUiVisibility() {
-        if (!fullscreenMode)
-            return
-
-        if (viewModel.client.connected) {
-            WindowCompat.setDecorFitsSystemWindows(window, false)
-            insetController.hide(Type.systemBars())
-            insetController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-
-            if (Build.VERSION.SDK_INT < 30) {
-                @Suppress("DEPRECATION")
-                window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            }
-        } else {
-            WindowCompat.setDecorFitsSystemWindows(window, true)
-            insetController.show(Type.systemBars())
-        }
-    }
-
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) {
-            updateSystemUiVisibility()
-            viewModel.sendClipboardText()
-        }
+        layoutManager.onWindowFocusChanged(hasFocus)
+        if (hasFocus) viewModel.sendClipboardText()
     }
 
 

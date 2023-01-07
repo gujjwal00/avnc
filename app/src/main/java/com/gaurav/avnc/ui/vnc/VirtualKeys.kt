@@ -27,18 +27,20 @@ class VirtualKeys(activity: VncActivity) {
     private val stub = activity.binding.virtualKeysStub
     private var openedWithKb = false
 
+    val container: View? get() = stub.root
+
     fun show() {
         init()
-        stub.root?.visibility = View.VISIBLE
+        container?.visibility = View.VISIBLE
     }
 
     fun hide() {
-        stub.root?.visibility = View.GONE
+        container?.visibility = View.GONE
         openedWithKb = false //Reset flag
     }
 
     fun onKeyboardOpen() {
-        if (pref.vkOpenWithKeyboard && stub.root?.visibility != View.VISIBLE) {
+        if (pref.vkOpenWithKeyboard && container?.visibility != View.VISIBLE) {
             show()
             openedWithKb = true
         }

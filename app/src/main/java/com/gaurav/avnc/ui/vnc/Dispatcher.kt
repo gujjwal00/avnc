@@ -276,8 +276,8 @@ class Dispatcher(private val activity: VncActivity) {
 
             //Try to keep the pointer centered on screen
             val vp = viewModel.frameState.toVP(pointerPosition)
-            val centerDiffX = viewModel.frameState.vpWidth / 2 - vp.x
-            val centerDiffY = viewModel.frameState.vpHeight / 2 - vp.y
+            val centerDiffX = viewModel.frameState.safeArea.centerX() - vp.x
+            val centerDiffY = viewModel.frameState.safeArea.centerY() - vp.y
             viewModel.panFrame(centerDiffX, centerDiffY)
         }
 

@@ -47,24 +47,25 @@ class FrameScroller(val viewModel: VncViewModel) {
 
         val x = fs.frameX
         val y = fs.frameY
+        val safe = fs.safeArea
 
         /**
          * Fling limits.
          *
          * There are two cases:
          *
-         * 1) x >= 0 : It means frame is completely visible and centered horizontally.
-         *             In this case both minX,maxX = x (ie. no movement possible).
+         * 1) x >= safeLeft : It means frame is completely visible and centered horizontally.
+         *                    In this case both minX,maxX = x (ie. no movement possible).
 
-         * 2) x < 0  : Here, 'scaled frame width' > 'viewport width'. In this case
-         *             minX is negative and maxX = 0.
+         * 2) x < safeLeft  : Here, 'scaled frame width' > 'safe width'. In this case
+         *                    minX is negative and maxX = safeLeft.
          *
          * minY,maxY are calculated similarly.
          */
-        val minX = if (x >= 0) x else fs.vpWidth - (fs.fbWidth * fs.scale)
-        val maxX = if (x >= 0) x else 0F
-        val minY = if (y >= 0) y else fs.vpHeight - (fs.fbHeight * fs.scale)
-        val maxY = if (y >= 0) y else 0F
+        val minX = if (x >= safe.left) x else (safe.width()) - (fs.fbWidth * fs.scale)
+        val maxX = if (x >= safe.left) x else safe.left
+        val minY = if (y >= safe.top) y else (safe.height()) - (fs.fbHeight * fs.scale)
+        val maxY = if (y >= safe.top) y else safe.top
 
         xAnimator.apply {
             setStartValue(x)

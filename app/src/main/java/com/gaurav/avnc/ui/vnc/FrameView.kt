@@ -78,11 +78,6 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
             pointerIcon = PointerIcon.getSystemIcon(context, PointerIcon.TYPE_NULL)
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-        if (!isInEditMode) frameState.setViewportSize(w.toFloat(), h.toFloat())
-    }
-
     override fun onCreateInputConnection(outAttrs: EditorInfo): InputConnection {
         outAttrs.imeOptions = outAttrs.imeOptions or
                 EditorInfo.IME_FLAG_NO_EXTRACT_UI or
