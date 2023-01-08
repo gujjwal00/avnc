@@ -444,6 +444,8 @@ class VncActivity : AppCompatActivity() {
 
             var w = viewModel.frameState.fbWidth
             var h = viewModel.frameState.fbHeight
+            if (w <= 0 || h <= 0)
+                return
 
             // Android require aspect ratio to be less than 2.39
             w = w.coerceIn(1f, 2.3f * h)
