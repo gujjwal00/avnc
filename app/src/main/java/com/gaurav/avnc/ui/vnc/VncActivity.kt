@@ -109,11 +109,6 @@ class VncActivity : AppCompatActivity() {
         viewModel.state.observe(this) { onClientStateChanged(it) }
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.sendClipboardText()
-    }
-
     override fun onStart() {
         super.onStart()
         binding.frameView.onResume()
@@ -414,7 +409,10 @@ class VncActivity : AppCompatActivity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) updateSystemUiVisibility()
+        if (hasFocus) {
+            updateSystemUiVisibility()
+            viewModel.sendClipboardText()
+        }
     }
 
 
