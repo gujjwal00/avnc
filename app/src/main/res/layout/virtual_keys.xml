@@ -49,11 +49,12 @@
 
             <!--~~~~~~~~~~~~~~~~~~~~~~~~~~ Meta keys ~~~~~~~~~~~~~~~~~~~~~-->
 
-            <ImageButton
-                style="@style/VirtualKey.Image"
+            <ToggleButton
+                android:id="@+id/super_btn"
+                style="@style/VirtualKey.Toggle.Image"
                 android:contentDescription="Super key"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_META_LEFT)}"
-                android:src="@drawable/ic_super_key" />
+                android:drawableStart="@drawable/ic_super_key"
+                app:onCheckedChangeListener="@{(v,checked) -> h.onKeyEvent(KeyEvent.KEYCODE_META_LEFT, checked)}" />
 
             <ToggleButton
                 android:id="@+id/shift_btn"

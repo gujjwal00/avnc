@@ -113,4 +113,11 @@
     <style name="VirtualKey.Toggle">
         <item name="android:background">@drawable/bg_toggle_button</item>
     </style>
+
+    <style name="VirtualKey.Toggle.Image">
+        <item name="android:minWidth">48dp</item>
+        <item name="android:textOff" />
+        <item name="android:textOn" />
+        <item name="android:padding">12dp</item>
+    </style>
 </resources>

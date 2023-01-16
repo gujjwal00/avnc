@@ -54,6 +54,7 @@ class VirtualKeys(activity: VncActivity) {
     fun releaseMetaKeys() {
         val binding = stub.binding as? VirtualKeysBinding
         binding?.apply {
+            superBtn.isChecked = false
             shiftBtn.isChecked = false
             ctrlBtn.isChecked = false
             altBtn.isChecked = false
