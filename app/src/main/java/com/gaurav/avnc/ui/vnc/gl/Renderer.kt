@@ -27,7 +27,7 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
     private lateinit var frame: Frame
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        glClearColor(.1f, .1f, .1f, 1f)
+        glClearColor(0f, 0f, 0f, 1f)
 
         frame = Frame()
         program = FrameProgram()
