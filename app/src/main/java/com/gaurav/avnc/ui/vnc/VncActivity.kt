@@ -81,7 +81,11 @@ class VncActivity : AppCompatActivity() {
         DeviceAuthPrompt.applyFingerprintDialogFix(supportFragmentManager)
 
         super.onCreate(savedInstanceState)
-        loadViewModel(savedInstanceState)
+        if (!loadViewModel(savedInstanceState)) {
+            finish()
+            return
+        }
+
         viewModel.initConnection()
 
         //Main UI
@@ -125,22 +129,26 @@ class VncActivity : AppCompatActivity() {
         outState.putParcelable(PROFILE_KEY, viewModel.profile)
     }
 
-    private fun loadViewModel(savedState: Bundle?) {
+    private fun loadViewModel(savedState: Bundle?): Boolean {
         @Suppress("DEPRECATION")
         val profile = savedState?.getParcelable(PROFILE_KEY)
-                      // Make a copy because original is required for retrying connection
-                      ?: intent.getParcelableExtra<ServerProfile?>(PROFILE_KEY)?.copy()
-                      ?: throw IllegalStateException("ServerProfile is required for VncActivity")
+                      ?: intent.getParcelableExtra<ServerProfile?>(PROFILE_KEY)
+
+        if (profile == null) {
+            Toast.makeText(this, "Error: Missing Server Info", Toast.LENGTH_LONG).show()
+            return false
+        }
 
         val factory = viewModelFactory { initializer { VncViewModel(profile, application) } }
         viewModel = viewModels<VncViewModel> { factory }.value
+        return true
     }
 
     private fun retryConnection() {
         //We simply create a new activity to force creation of new ViewModel
         //which effectively restarts the connection.
         if (!isFinishing) {
-            startActivity(intent)
+            startVncActivity(this, viewModel.profile)
             finish()
         }
     }
