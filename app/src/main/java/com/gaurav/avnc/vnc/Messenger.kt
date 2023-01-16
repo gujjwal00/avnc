@@ -23,25 +23,19 @@ class Messenger(private val client: VncClient) {
      **************************************************************************/
 
     private val sender = Executors.newSingleThreadExecutor()
+    private val senderLock = Any()
 
     private fun execute(action: Runnable) {
-        sender.execute(action)
+        synchronized(senderLock) {
+            if (!sender.isShutdown)
+                sender.execute(action)
+        }
     }
 
     fun cleanup() {
-        if (sender.isShutdown)
-            return
-
-        sender.shutdownNow()
-
-        try {
-            sender.awaitTermination(60, TimeUnit.SECONDS)
-        } catch (e: InterruptedException) {
-            Log.w(javaClass.simpleName, "Interrupted while waiting for Sender thread to shutdown!")
-        }
-
-        if (!sender.isShutdown)
-            Log.w(javaClass.simpleName, "Unable to shutdown Sender thread!")
+        synchronized(senderLock) { sender.shutdownNow() }
+        runCatching { sender.awaitTermination(60, TimeUnit.SECONDS) }
+        if (!sender.isTerminated) Log.w(javaClass.simpleName, "Unable to fully stop Sender thread!")
     }
 
 
