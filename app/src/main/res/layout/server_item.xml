@@ -48,6 +48,31 @@
             app:layout_constraintTop_toBottomOf="@id/name"
             tools:text="192.168.1.1 | 5901" />
 
+        <TextView
+            android:id="@+id/ssh_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:text='@{"(" + profile.sshHost + (profile.sshPort == 22 ? "" :  " | " + profile.sshPort) + ")"}'
+            app:isVisible="@{profile.channelType == ServerProfile.CHANNEL_SSH_TUNNEL &amp;&amp; !profile.host.equals(profile.sshHost)}"
+            app:layout_constraintStart_toEndOf="@id/address"
+            app:layout_constraintTop_toTopOf="@id/address"
+            tools:text="(10.0.5.5 | 23)" />
+
+        <ImageView
+            android:id="@+id/ssh_hint_icon"
+            android:layout_width="@dimen/server_card_hint_icon_size"
+            android:layout_height="@dimen/server_card_hint_icon_size"
+            android:layout_margin="@dimen/margin_normal"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_ssh"
+            android:tintMode="src_in"
+            app:isVisible="@{profile.channelType == ServerProfile.CHANNEL_SSH_TUNNEL}"
+            app:layout_constraintBottom_toBottomOf="@id/address"
+            app:layout_constraintStart_toEndOf="@id/ssh_address"
+            app:layout_constraintTop_toTopOf="@id/address"
+            app:tint="?android:textColorSecondary" />
+
         <ImageView
             android:id="@+id/password_hint_icon"
             android:layout_width="@dimen/server_card_hint_icon_size"
@@ -58,7 +83,7 @@
             android:tintMode="src_in"
             app:isVisible="@{profile.password.length() != 0}"
             app:layout_constraintBottom_toBottomOf="@id/address"
-            app:layout_constraintStart_toEndOf="@id/address"
+            app:layout_constraintStart_toEndOf="@id/ssh_hint_icon"
             app:layout_constraintTop_toTopOf="@id/address"
             app:tint="?android:textColorSecondary" />
 
@@ -75,20 +100,6 @@
             app:layout_constraintStart_toEndOf="@id/password_hint_icon"
             app:layout_constraintTop_toTopOf="@id/address"
             app:tint="?android:textColorSecondary" />
-
-        <ImageView
-            android:layout_width="@dimen/server_card_hint_icon_size"
-            android:layout_height="@dimen/server_card_hint_icon_size"
-            android:layout_margin="@dimen/margin_normal"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_ssh"
-            android:tintMode="src_in"
-            app:isVisible="@{profile.channelType == ServerProfile.CHANNEL_SSH_TUNNEL}"
-            app:layout_constraintBottom_toBottomOf="@id/address"
-            app:layout_constraintStart_toEndOf="@id/view_only_hint_icon"
-            app:layout_constraintTop_toTopOf="@id/address"
-            app:tint="?android:textColorSecondary" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
