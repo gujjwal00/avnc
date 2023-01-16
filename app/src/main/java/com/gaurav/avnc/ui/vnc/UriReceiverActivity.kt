@@ -12,7 +12,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.gaurav.avnc.R
+import com.gaurav.avnc.model.db.MainDb
 import com.gaurav.avnc.vnc.VncUri
+import kotlinx.coroutines.runBlocking
 
 /**
  * Handles intents with 'vnc' URI.
@@ -28,20 +30,37 @@ class UriReceiverActivity : Activity() {
 
         val uri = getUri()
 
-        if (uri.host.isEmpty())
-            Toast.makeText(this, R.string.msg_invalid_vnc_uri, Toast.LENGTH_LONG).show()
+        if (uri.connectionName.isNotBlank())
+            launchSavedProfile(uri.connectionName)
         else
-            startVncActivity(this, uri)
+            launchUri(uri)
 
         finish()
     }
 
     private fun getUri(): VncUri {
-        if (intent.data?.scheme == "vnc") {
-            return VncUri(intent.data!!)
+        if (intent.data?.scheme != "vnc") {
+            Log.e(javaClass.simpleName, "Invalid intent!")
+            return VncUri("")
         }
 
-        Log.e(javaClass.simpleName, "Invalid intent!")
-        return VncUri("")
+        return VncUri(intent.data!!)
+    }
+
+    private fun launchUri(uri: VncUri) {
+        if (uri.host.isEmpty())
+            Toast.makeText(this, R.string.msg_invalid_vnc_uri, Toast.LENGTH_LONG).show()
+        else
+            startVncActivity(this, uri)
+    }
+
+    private fun launchSavedProfile(name: String) {
+        val dao = MainDb.getInstance(this).serverProfileDao
+        val profile = runBlocking { dao.getByName(name) }.firstOrNull() // Blocking IO on Main thread
+
+        if (profile == null)
+            Toast.makeText(this, "No server found with name '$name'", Toast.LENGTH_LONG).show()
+        else
+            startVncActivity(this, profile)
     }
 }

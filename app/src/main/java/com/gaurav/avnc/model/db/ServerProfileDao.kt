@@ -26,6 +26,9 @@ interface ServerProfileDao {
     @Query("SELECT * FROM profiles")
     suspend fun getList(): List<ServerProfile>
 
+    @Query("SELECT * FROM profiles WHERE name = :name")
+    suspend fun getByName(name: String): List<ServerProfile>
+
     @Query("SELECT name, host, username, password FROM profiles")
     fun getCredentials(): LiveData<List<LoginInfo>>
 
