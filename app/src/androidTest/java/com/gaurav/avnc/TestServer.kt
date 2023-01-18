@@ -8,7 +8,6 @@
 
 package com.gaurav.avnc
 
-import kotlinx.coroutines.*
 import java.io.InputStream
 import java.net.ServerSocket
 import java.nio.ByteBuffer
@@ -39,7 +38,7 @@ class TestServer(name: String = "Friends") {
     //Server config
     private val ss = ServerSocket(0)
     private val cutTextQueue = LinkedTransferQueue<String>()
-    private lateinit var serverJob: Job
+    private val serverJob = Thread { theServer() }
     val host = ss.inetAddress.hostAddress!!
     val port = ss.localPort
     var receivedKeySyms = arrayListOf<Int>()
@@ -47,11 +46,11 @@ class TestServer(name: String = "Friends") {
 
 
     fun start() {
-        serverJob = GlobalScope.launch(Dispatchers.IO) { theServer() }
+        serverJob.start()
     }
 
     fun awaitStop() {
-        runBlocking { serverJob.join() }
+        serverJob.join(30_000)
     }
 
     fun sendCutText(str: String) {
