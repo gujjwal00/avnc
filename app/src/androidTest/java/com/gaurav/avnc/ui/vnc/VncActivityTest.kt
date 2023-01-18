@@ -10,12 +10,12 @@ package com.gaurav.avnc.ui.vnc
 
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
+import androidx.core.content.edit
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onIdle
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.contrib.DrawerActions
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.gaurav.avnc.*
 import com.gaurav.avnc.model.ServerProfile
@@ -91,4 +91,32 @@ class VncActivityTest {
 
         Assert.assertEquals(sentByClient, receivedOnServer)
     }
+
+    @Test
+    fun autoReconnectEnabled() {
+        targetPrefs.edit { putBoolean("auto_reconnect", true) }
+        try {
+            val intent = createVncIntent(targetContext, ServerProfile(host = "CentralPerk.test"))
+            ActivityScenario.launch<VncActivity>(intent).use {
+                onView(withId(R.id.auto_reconnect_progress)).checkWillBeDisplayed()
+                Thread.sleep(1500)
+                onView(withId(R.id.auto_reconnect_progress)).check(ProgressAssertion { it > 0 })
+            }
+        } finally {
+            targetPrefs.edit { putBoolean("auto_reconnect", false) }
+        }
+    }
+
+    @Test
+    fun autoReconnectDisabled() {
+        targetPrefs.edit { putBoolean("auto_reconnect", false) }
+        val intent = createVncIntent(targetContext, ServerProfile(host = "CentralPerk.test"))
+        ActivityScenario.launch<VncActivity>(intent).use {
+            onView(withId(R.id.auto_reconnect_progress)).checkIsNotDisplayed()
+            Thread.sleep(1500)
+            onView(withId(R.id.auto_reconnect_progress)).check(ProgressAssertion { it == 0 })
+        }
+    }
+
+
 }

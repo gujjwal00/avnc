@@ -29,7 +29,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.gaurav.avnc.R
@@ -40,6 +42,7 @@ import com.gaurav.avnc.util.SamsungDex
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.VncUri
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 
 /********** [VncActivity] startup helpers *********************************/
@@ -105,7 +108,7 @@ class VncActivity : AppCompatActivity() {
         binding.zoomResetBtn.setOnClickListener { resetZoom(); closeDrawers() }
         binding.zoomSaveBtn.setOnClickListener { saveZoom(); closeDrawers() }
         binding.virtualKeysBtn.setOnClickListener { virtualKeys.show(); closeDrawers() }
-        binding.retryConnectionBtn.setOnClickListener { retryConnection() }
+        binding.reconnectBtn.setOnClickListener { retryConnection() }
 
         //Observers
         viewModel.credentialRequest.observe(this) { showCredentialDialog() }
@@ -210,6 +213,7 @@ class VncActivity : AppCompatActivity() {
         layoutManager.onConnectionStateChanged()
         updateStatusContainerVisibility(isConnected)
         highlightDrawer(isConnected)
+        autoReconnect(newState)
     }
 
     private fun updateStatusContainerVisibility(isConnected: Boolean) {
@@ -228,6 +232,25 @@ class VncActivity : AppCompatActivity() {
             lifecycleScope.launchWhenCreated {
                 delay(1500)
                 binding.drawerLayout.closeDrawer(binding.primaryToolbar)
+            }
+        }
+    }
+
+    private var autoReconnecting = false
+    private fun autoReconnect(state: VncViewModel.State) {
+        if (autoReconnecting || state != VncViewModel.State.Disconnected || !viewModel.pref.server.autoReconnect)
+            return
+
+        autoReconnecting = true
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                val timeout = 5 //seconds, must be >1
+                repeat(timeout) {
+                    binding.autoReconnectProgress.setProgressCompat((100 * it) / (timeout - 1), true)
+                    delay(1000)
+                    if (it >= (timeout - 1))
+                        retryConnection()
+                }
             }
         }
     }

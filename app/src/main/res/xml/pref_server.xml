@@ -21,6 +21,11 @@
         app:summary="@string/pref_saved_server_lock_summary"
         app:title="@string/pref_saved_server_lock" />
 
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="auto_reconnect"
+        app:title="@string/pref_auto_reconnect" />
+
     <PreferenceCategory
         app:icon="@drawable/ic_search"
         app:title="@string/pref_discovery">

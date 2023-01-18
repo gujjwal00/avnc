@@ -9,8 +9,11 @@
 package com.gaurav.avnc
 
 import android.os.SystemClock
+import android.view.View
+import android.widget.ProgressBar
 import androidx.preference.PreferenceManager
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.*
@@ -18,7 +21,9 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.platform.app.InstrumentationRegistry
 import com.gaurav.avnc.viewmodel.BaseViewModel
+import junit.framework.AssertionFailedError
 import org.hamcrest.core.IsNot.not
+import org.junit.Assert
 
 /**
  * Global accessors
@@ -68,4 +73,15 @@ fun getClipboardText(): String? {
         text = BaseViewModel(ApplicationProvider.getApplicationContext<App>()).getClipboardText()
     }
     return text
+}
+
+/**
+ * Asserts that given [test] passes against current progress of a [ProgressBar].
+ */
+class ProgressAssertion(private val test: (Int) -> Boolean) : ViewAssertion {
+    override fun check(view: View?, noViewFoundException: NoMatchingViewException?) {
+        noViewFoundException?.let { throw it }
+        if (view !is ProgressBar) throw AssertionFailedError("View is not a ProgressBar")
+        Assert.assertTrue("Progress test failed for '${view.progress}'", test(view.progress))
+    }
 }
