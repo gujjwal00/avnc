@@ -11,7 +11,6 @@ package com.gaurav.avnc.ui.vnc
 import android.graphics.Rect
 import android.graphics.RectF
 import android.os.Build.VERSION.SDK_INT
-import android.util.Log
 import android.view.RoundedCorner
 import android.view.View
 import android.view.WindowManager
@@ -63,7 +62,6 @@ class LayoutManager(activity: VncActivity) {
     @RequiresApi(30)
     private fun hookInsetsListener() {
         ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
-            Log.d("hookInsetsListener: ", insets.toWindowInsets().toString())
             updateWindowInsets(insets)
             updateNavigationBarVisibility(insets)
             ViewCompat.onApplyWindowInsets(v, insets)
