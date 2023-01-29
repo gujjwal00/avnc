@@ -167,6 +167,11 @@ class ProfileEditorFragment : DialogFragment() {
                                getString(R.string.title_key_compat_mode),
                                getString(R.string.msg_key_compat_mode_help))
             }
+            buttonUpDelayHelpBtn.setOnClickListener {
+                MsgDialog.show(parentFragmentManager,
+                               getString(R.string.title_button_up_delay),
+                               getString(R.string.msg_button_up_delay_help))
+            }
 
             // Setup initial values of some CheckBox views.
             // We can't use Data Binding to initialize these because it breaks

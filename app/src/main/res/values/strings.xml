@@ -29,6 +29,7 @@
     <string name="title_view_only_mode">View-only</string>
     <string name="title_hide_remote_cursor">Hide remote pointer</string>
     <string name="title_key_compat_mode">Send legacy key events</string>
+    <string name="title_button_up_delay">Send delayed click events</string>
     <string name="title_image_quality">Image quality</string>
     <string name="title_image_quality_raw">Raw</string>
     <string name="title_vnc_security">Security</string>
@@ -76,6 +77,7 @@
     <string name="msg_invalid_vnc_uri">Invalid VNC URI</string>
     <string name="msg_copied_to_clipboard">Copied</string>
     <string name="msg_key_compat_mode_help">Some servers have limited Unicode support. Legacy key events can help input non-English text.</string>
+    <string name="msg_button_up_delay_help">Delaying click events can help in some rare cases if an app is not responding to clicks.</string>
     <string name="msg_drag_gesture_help">Assigning an action to this gesture will change Long press detection:\n\n<b>Press-hold-release</b> → Long press\n<b>Press-hold-swipe</b> → Long press and swipe</string>
     <string name="tip_empty_server_list">Server list is empty.\nClick \'<b>+</b>\' to add a server, or\nuse the top address bar to connect directly.</string>
     <string name="tip_urlbar">You can enter IP address, hostname, or \'vnc://\' URI.</string>
