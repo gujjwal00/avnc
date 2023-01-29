@@ -245,6 +245,27 @@
                     app:layout_constraintTop_toBottomOf="@id/image_quality"
                     tools:entries="@array/dummy_array" />
 
+                <!--Screen orientation-->
+                <TextView
+                    android:id="@+id/screen_orientation_label"
+                    style="@style/FormField.LabelWithIcon"
+                    android:labelFor="@id/screen_orientation"
+                    android:text="@string/title_orientation"
+                    app:drawableStartCompat="@drawable/ic_screen_rotation"
+                    app:layout_constraintBottom_toBottomOf="@id/screen_orientation"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/screen_orientation" />
+
+                <com.gaurav.avnc.util.SpinnerEx
+                    android:id="@+id/screen_orientation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/action_btn_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/gesture_style"
+                    app:layout_constraintTop_toBottomOf="@id/gesture_style"
+                    tools:entries="@array/dummy_array" />
+
 
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                 <!-- Security                                                   -->
@@ -265,8 +286,8 @@
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/action_btn_size"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/gesture_style"
-                    app:layout_constraintTop_toBottomOf="@id/gesture_style"
+                    app:layout_constraintStart_toStartOf="@id/screen_orientation"
+                    app:layout_constraintTop_toBottomOf="@id/screen_orientation"
                     tools:entries="@array/dummy_array" />
 
                 <!--Username-->

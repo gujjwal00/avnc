@@ -275,7 +275,11 @@ class VncActivity : AppCompatActivity() {
     }
 
     private fun setupOrientation() {
-        requestedOrientation = when (viewModel.pref.viewer.orientation) {
+        val choice = viewModel.profile.screenOrientation.let {
+            if (it != "auto") it else viewModel.pref.viewer.orientation
+        }
+
+        requestedOrientation = when (choice) {
             "portrait" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
             "landscape" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             else -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED

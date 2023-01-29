@@ -220,6 +220,14 @@ class ProfileEditorFragment : DialogFragment() {
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
+
+            // Screen orientation spinner
+            val orientations = mapOf(
+                    getString(R.string.pref_orientation_option_auto) to "auto",
+                    getString(R.string.pref_orientation_option_portrait) to "portrait",
+                    getString(R.string.pref_orientation_option_landscape) to "landscape"
+            )
+            screenOrientation.setEntries(orientations.keys.toTypedArray(), orientations.values.toTypedArray(), p.screenOrientation) { p.screenOrientation = it }
         }
 
         return binding.root

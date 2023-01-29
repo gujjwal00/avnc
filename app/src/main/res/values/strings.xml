@@ -31,6 +31,7 @@
     <string name="title_key_compat_mode">Send legacy key events</string>
     <string name="title_button_up_delay">Send delayed click events</string>
     <string name="title_image_quality">Image quality</string>
+    <string name="title_orientation">Orientation</string>
     <string name="title_image_quality_raw">Raw</string>
     <string name="title_vnc_security">Security</string>
     <string name="title_use_ssh_tunnel">Use SSH tunnel</string>
