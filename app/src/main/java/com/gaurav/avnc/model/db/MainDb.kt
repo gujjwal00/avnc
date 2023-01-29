@@ -9,21 +9,19 @@
 package com.gaurav.avnc.model.db
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
+import androidx.room.*
+import androidx.room.migration.AutoMigrationSpec
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.gaurav.avnc.model.ServerProfile
 
-@Database(entities = [ServerProfile::class], version = 2, exportSchema = true)
+@Database(entities = [ServerProfile::class], version = 3, exportSchema = true, autoMigrations = [
+    AutoMigration(from = 1, to = 2, spec = MainDb.MigrationSpec1to2::class),
+    AutoMigration(from = 2, to = 3, spec = MainDb.MigrationSpec2to3::class)
+])
 abstract class MainDb : RoomDatabase() {
     abstract val serverProfileDao: ServerProfileDao
 
     companion object {
-        /**
-         * Database singleton.
-         */
         private var instance: MainDb? = null
 
         /**
@@ -33,22 +31,21 @@ abstract class MainDb : RoomDatabase() {
         @Synchronized
         fun getInstance(context: Context): MainDb {
             if (instance == null) {
-                instance = Room.databaseBuilder(context, MainDb::class.java, "main")
-                        .addMigrations(Migration_1_2)
-                        .build()
+                instance = Room.databaseBuilder(context, MainDb::class.java, "main").build()
             }
             return instance!!
         }
+    }
 
-        // Added in v2.0.0
-        private val Migration_1_2 = object : Migration(1, 2) {
-            override fun migrate(db: SupportSQLiteDatabase) {
-                db.execSQL("ALTER TABLE profiles ADD COLUMN useRawEncoding INTEGER NOT NULL DEFAULT 0")
-                db.execSQL("ALTER TABLE profiles ADD COLUMN zoom1 REAL NOT NULL DEFAULT 1.0")
-                db.execSQL("ALTER TABLE profiles ADD COLUMN zoom2 REAL NOT NULL DEFAULT 1.0")
-                db.execSQL("ALTER TABLE profiles ADD COLUMN gestureStyle TEXT NOT NULL DEFAULT 'auto'")
-                db.execSQL("UPDATE profiles SET imageQuality = 5")
-            }
+    /******************************** Migrations ***********************************/
+    // Added in v2.0.0
+    class MigrationSpec1to2 : AutoMigrationSpec {
+        override fun onPostMigrate(db: SupportSQLiteDatabase) {
+            db.execSQL("UPDATE profiles SET imageQuality = 5")
         }
     }
+
+    // Added in v2.1.0
+    @RenameColumn(tableName = "profiles", fromColumnName = "keyCompatMode", toColumnName = "compatFlags")
+    class MigrationSpec2to3 : AutoMigrationSpec
 }

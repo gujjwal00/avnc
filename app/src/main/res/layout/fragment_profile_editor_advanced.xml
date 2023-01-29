@@ -149,7 +149,7 @@
                 <CheckBox
                     android:id="@+id/key_compat_mode"
                     style="@style/FormField.CheckBox"
-                    android:checked="@={profile.keyCompatMode}"
+                    android:checked="@={profile.cfLegacyKeySym}"
                     android:text="@string/title_key_compat_mode"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

@@ -113,10 +113,17 @@ data class ServerProfile(
         var useLocalCursor: Boolean = true,
 
         /**
-         * Compatibility mode for key events.
-         * If enabled, we will try to emit legacy X KeySym events.
+         * Server type hint received from user, e.g. tigervnc, tightvnc, vino
+         * Can be used in future to handle known server quirks.
          */
-        var keyCompatMode: Boolean = true,
+        @ColumnInfo(defaultValue = "")
+        var serverTypeHint: String = "",
+
+        /**
+         * Compatibility flags.
+         * These flags toggle various workarounds.
+         */
+        var compatFlags: Int = CF_LEGACY_KEYSYM,
 
         /**
          * Preferred style to use for gesture handling.
@@ -124,6 +131,20 @@ data class ServerProfile(
          */
         @ColumnInfo(defaultValue = "auto")
         var gestureStyle: String = "auto",
+
+        /**
+         * Preferred screen orientation.
+         * Possible values: auto, portrait, landscape
+         */
+        @ColumnInfo(defaultValue = "auto")
+        var screenOrientation: String = "auto",
+
+        /**
+         * Shortcut rank.
+         * Can be used to reorder or hide app shortcuts.
+         */
+        @ColumnInfo(defaultValue = "0")
+        var shortcutRank: Int = 0,
 
         /**
          * Whether UltraVNC Repeater is used for connections.
@@ -158,5 +179,18 @@ data class ServerProfile(
         // SSH auth types
         const val SSH_AUTH_KEY = 1
         const val SSH_AUTH_PASSWORD = 2
+
+        // Compatibility flags
+        const val CF_LEGACY_KEYSYM = 0x01   // Try to emit legacy X KeySym events.
+        const val CF_BUTTON_UP_DELAY = 0x02 // Insert artificial delay before UP event of a button.
     }
+
+    // Accessors for compat flags
+    private fun getCompatFlag(flag: Int) = (compatFlags and flag) != 0
+    private fun setCompatFlag(flag: Int, value: Boolean) {
+        compatFlags = if (value) compatFlags or flag else compatFlags and flag.inv()
+    }
+
+    var cfLegacyKeySym get() = getCompatFlag(CF_LEGACY_KEYSYM); set(v) = setCompatFlag(CF_LEGACY_KEYSYM, v)
+    var cfButtonUpDelay get() = getCompatFlag(CF_BUTTON_UP_DELAY); set(v) = setCompatFlag(CF_BUTTON_UP_DELAY, v)
 }
