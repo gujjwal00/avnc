@@ -149,14 +149,14 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun showWelcomeMsg() {
-        if (!viewModel.pref.runInfo.hasShownV2WelcomeMsg) {
+        /*if (!viewModel.pref.runInfo.hasShownV2WelcomeMsg) {
             viewModel.pref.runInfo.hasShownV2WelcomeMsg = true
             @Suppress("DEPRECATION")
             packageManager.getPackageInfo(packageName, 0).let {
                 if (it.lastUpdateTime > it.firstInstallTime)
                     WelcomeFragment().show(supportFragmentManager, "WelcomeV2")
             }
-        }
+        }*/
     }
 
     /**
