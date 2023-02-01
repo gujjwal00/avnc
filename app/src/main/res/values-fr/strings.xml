@@ -54,7 +54,7 @@
     <string name="desc_keyboard_btn">Ouvrir le clavier</string>
     <string name="desc_virtual_keys_btn">Afficher les touches virtuelles</string>
     <string name="desc_reset_zoom_btn">Réinitialiser le niveau de zoom</string>
-    <string name="desc_retry_connection_btn">Réessayer</string>
+    <string name="desc_retry_connection_btn">Reconnecter</string>
     <string name="title_edit">Modifier</string>
     <string name="title_duplicate">Dupliquer</string>
     <string name="msg_ptr_hiding_not_supported">Non pris en charge sur cet appareil</string>
@@ -155,10 +155,10 @@
     <string name="pref_mouse_back">Bouton retour</string>
     <string name="pref_mouse_back_action_default">Par défaut</string>
     <string name="pref_swipe_sensitivity">Sensibilité du défilement</string>
-    <string name="msg_drag_gesture_help">L\'affectation d\'une action à un geste de glissement modifiera la détection de l\'appui long :
+    <string name="msg_drag_gesture_help">L\'attribution d\'une action à ce geste modifiera la détection de la pression longue :
 \n
-\n<b>Appui maintenu</b> → Appui long.
-\n<b>Appui-maintien-glissement</b> → Glissement</string>
+\n<b>Appuyer-tenir-lâcher</b> → Appui long
+\n<b>Appui maintenu-glissement</b> → Appui long et glissement</string>
     <string name="pref_orientation">Orientation de l\'écran</string>
     <string name="pref_orientation_option_auto">Automatique</string>
     <string name="pref_orientation_option_portrait">Portrait</string>
@@ -183,4 +183,10 @@
     <string name="pref_touch_test">Test tactile</string>
     <string name="pref_key_test">Test des touches</string>
     <string name="pref_invert_vertical_scrolling">Inverser le défilement vertical</string>
+    <string name="title_orientation">Orientation</string>
+    <string name="pref_long_press_swipe">Appui long et balayage</string>
+    <string name="pref_auto_reconnect">Reconnecter automatiquement</string>
+    <string name="title_button_up_delay">Envoyer des évènements de clics retardés</string>
+    <string name="msg_button_up_delay_help">Retarder les évènements de clics peut aider dans certains cas rares si une application ne répond pas aux clics.</string>
+    <string name="pref_double_tap_swipe">Double tapotement et glissement</string>
 </resources>

@@ -19,8 +19,8 @@
     <string name="pref_debugging">Зневадження</string>
     <string name="pref_logs">Журнал</string>
     <string name="title_add_server_profile">Додати сервер</string>
-    <string name="title_edit">Змінити</string>
-    <string name="title_advanced">Розширено</string>
+    <string name="title_edit">Редагувати</string>
+    <string name="title_advanced">Розширені</string>
     <string name="title_use_ssh_tunnel">Викор. тунель SSH</string>
     <string name="hint_password">Пароль</string>
     <string name="title_delete_servers_before_import">Видалити поточні сервери перед імпортуванням</string>
@@ -77,7 +77,7 @@
     <string name="pref_import_export">Імпорт/експорт серверів</string>
     <string name="pref_keycode_map">Мапа кодів клавіш</string>
     <string name="title_delete">Видалити</string>
-    <string name="title_edit_server_profile">Змінити сервер</string>
+    <string name="title_edit_server_profile">Редагувати сервер</string>
     <string name="title_duplicate">Дублювати</string>
     <string name="title_clear">Очистити</string>
     <string name="title_copy_host">Копіювати хост</string>
@@ -163,4 +163,24 @@
     <string name="pref_orientation_option_auto">Автоматична</string>
     <string name="pref_orientation_option_portrait">Портретна</string>
     <string name="pref_orientation_option_landscape">Альбомна</string>
+    <string name="title_unlock_dialog">Розблокувати для продовження</string>
+    <string name="desc_zoom_options_btn">Параметри масштабування</string>
+    <string name="desc_save_zoom_btn">Зберегти масштабування як стандартне</string>
+    <string name="pref_invert_vertical_scrolling">Інвертувати вертикальне прокручування</string>
+    <string name="pref_display_cutout">Відображати під вирізом в екрані (експериментальне)</string>
+    <string name="pref_touch_test">Тест сенсору</string>
+    <string name="pref_key_test">Тест клавіш</string>
+    <string name="title_image_quality">Якість зображення</string>
+    <string name="title_image_quality_raw">Без стискання</string>
+    <string name="title_vnc_security">Безпека</string>
+    <string name="title_automatic">Автоматично</string>
+    <string name="msg_zoom_reset">Збільшення скинуто до 100%</string>
+    <string name="msg_zoom_saved">Поточне масштабування збережено як стандартне</string>
+    <string name="pref_gesture_style">Стиль жестів</string>
+    <string name="pref_gesture_style_auto_summary">На основі налаштувань застосунку</string>
+    <string name="pref_gesture_style_touchscreen">Тачскрін</string>
+    <string name="pref_gesture_style_touchpad">Тачпад</string>
+    <string name="pref_saved_server_lock_summary">Вимагати біометричне розблокування/пароль для підключення</string>
+    <string name="pref_saved_server_lock">Блокувати збережені сервери</string>
+    <string name="pref_per_orientation_zoom">Окремий масштаб для кожної орієнтації</string>
 </resources>
