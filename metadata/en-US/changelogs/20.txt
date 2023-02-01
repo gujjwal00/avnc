@@ -1,0 +1,6 @@
+* New 'Double tap and swipe' gesture
+* AVNC can now automatically try to reconnect after an error
+* Screen orientation can now be changed for individual servers
+* Added support for 'ConnectionName' parameter in 'vnc://' URIs.
+* Fixed clipboard sharing in multi-window mode
+* Changed 'Super' virtual key to a toggle
