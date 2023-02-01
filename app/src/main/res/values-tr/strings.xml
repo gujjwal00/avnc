@@ -113,7 +113,7 @@
     <string name="desc_settings_btn">Ayarlar</string>
     <string name="desc_add_new_server_btn">Sunucu ekle</string>
     <string name="desc_discovery_btn">Sunucu keşfet</string>
-    <string name="desc_retry_connection_btn">Yeniden dene</string>
+    <string name="desc_retry_connection_btn">Yeniden bağlan</string>
     <string name="desc_back_btn">Geri</string>
     <string name="pref_experimental">Deneysel</string>
     <string name="desc_saved_servers_tab">Kaydedilen sunucular</string>
@@ -155,10 +155,10 @@
     <string name="pref_mouse_back">Geri düğmesi</string>
     <string name="pref_mouse_back_action_default">Öntanımlı</string>
     <string name="pref_swipe_sensitivity">Kaydırma hassasiyeti</string>
-    <string name="msg_drag_gesture_help">Sürükleme hareketine bir eylem atamak, Uzun basma algılamasını değiştirecektir:
+    <string name="msg_drag_gesture_help">Bu harekete bir eylem atamak, Uzun basma algılamasını değiştirecektir:
 \n
 \n<b>Basılı tut ve bırak</b> → Uzun bas
-\n<b>Basılı tut ve kaydır</b> → Sürükle</string>
+\n<b>Basılı tut ve kaydır</b> → Uzun bas ve kaydır</string>
     <string name="pref_orientation_option_portrait">Dikey</string>
     <string name="pref_orientation_option_landscape">Yatay</string>
     <string name="pref_orientation">Ekran yönü</string>
@@ -183,4 +183,10 @@
     <string name="pref_touch_test">Dokunma testi</string>
     <string name="pref_key_test">Tuş testi</string>
     <string name="pref_invert_vertical_scrolling">Dikey kaydırmayı tersine çevir</string>
+    <string name="title_button_up_delay">Gecikmeli tıklama olayları gönder</string>
+    <string name="msg_button_up_delay_help">Bir uygulama tıklamalara yanıt vermiyorsa, tıklama olaylarını geciktirmek bazı ender durumlarda yardımcı olabilir.</string>
+    <string name="title_orientation">Yönlendirme</string>
+    <string name="pref_auto_reconnect">Otomatik yeniden bağlan</string>
+    <string name="pref_double_tap_swipe">Çift dokun ve kaydır</string>
+    <string name="pref_long_press_swipe">Uzun bas ve kaydır</string>
 </resources>
