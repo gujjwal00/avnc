@@ -107,7 +107,7 @@ class SshTunnel(private val viewModel: VncViewModel) {
         // So we create a temporary ServerSocket, close it immediately and try to use its port.
         // But between the close-reuse, that port can be assigned to someone else, so we try again.
         for (i in 1..50) {
-            val attemptedPort = ServerSocket(0).use { localPort }
+            val attemptedPort = ServerSocket(0).use { it.localPort }
             val address = InetSocketAddress(localHost, attemptedPort)
 
             try {
