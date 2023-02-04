@@ -50,7 +50,7 @@
     <string name="msg_ptr_hiding_not_supported">Brak wsparcia dla tego urządzenia</string>
     <string name="title_continue">Kontynuuj</string>
     <string name="desc_reset_zoom_btn">Zresetuj powiększenie</string>
-    <string name="desc_retry_connection_btn">Ponów próbę</string>
+    <string name="desc_retry_connection_btn">Podłącz ponownie</string>
     <string name="desc_clear_url_btn">Wyczyść</string>
     <string name="desc_help_btn">Pomoc</string>
     <string name="desc_discovered_list">Lista automatycznie wykrytych serwerów</string>
@@ -151,10 +151,10 @@
     <string name="title_hide_remote_cursor">Ukryj zdalny wskaźnik</string>
     <string name="pref_gesture_style_touchpad_summary">Wykonaj działania na wskaźniku</string>
     <string name="pref_km_language_switch_to_super">Zmiana języka → Super</string>
-    <string name="msg_drag_gesture_help">Przypisanie akcji do gestu przeciągania zmieni Wykrywanie długiego naciśnięcia:
+    <string name="msg_drag_gesture_help">Przypisanie akcji do tego gestu zmieni Wykrywanie długiego naciśnięcia:
 \n
-\n<b>Wciśnięcie i zwolnienie </b> → Długie naciśnięcie
-\n<b>Naciśnij-przytrzymaj-przeciągnij</b> → Przeciągnij</string>
+\n<b>Naciśnij-przytrzymaj-zwolnij </b> → Długie naciśnięcie
+\n<b>Naciśnij-przytrzymaj-przeciągnij</b> → Długie naciśnięcie i przeciągnięcie</string>
     <string name="pref_orientation">Orientacja ekranu</string>
     <string name="pref_orientation_option_auto">Automatycznie</string>
     <string name="pref_orientation_option_portrait">Portret</string>
@@ -178,4 +178,10 @@
     <string name="hint_repeater_host">Host przekaźnika</string>
     <string name="pref_gesture_style_auto_summary">W oparciu o ustawienia aplikacji</string>
     <string name="pref_saved_server_lock_summary">Wymagaj odblokowania biometrycznego/hasła do połączenia</string>
+    <string name="pref_double_tap_swipe">Dotknij dwukrotnie i przesuń palcem</string>
+    <string name="pref_display_cutout">Rysunek za wycięciem wyświetlacza (eksperymentalny)</string>
+    <string name="title_orientation">Orientacja</string>
+    <string name="msg_button_up_delay_help">Opóźnianie zdarzeń kliknięć może pomóc w rzadkich przypadkach, gdy aplikacja nie reaguje na kliknięcia.</string>
+    <string name="pref_long_press_swipe">Długie naciśnięcie i przesunięcie</string>
+    <string name="pref_auto_reconnect">Połącz ponownie automatycznie</string>
 </resources>
