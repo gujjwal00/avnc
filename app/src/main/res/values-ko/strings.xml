@@ -63,7 +63,7 @@
     <string name="desc_keyboard_btn">키보드 열기</string>
     <string name="desc_virtual_keys_btn">가상 키 표시</string>
     <string name="desc_reset_zoom_btn">확대/축소 재설정</string>
-    <string name="desc_retry_connection_btn">재시도</string>
+    <string name="desc_retry_connection_btn">다시 연결</string>
     <string name="desc_back_btn">뒤로가기</string>
     <string name="desc_clear_url_btn">지우기</string>
     <string name="desc_server_url">서버 주소</string>
@@ -138,10 +138,10 @@
     <string name="msg_pip_not_supported">이 장치에서 지원되지 않음</string>
     <string name="msg_export_auth_required">서버 내보내기 인증</string>
     <string name="msg_key_compat_mode_help">일부 서버는 유니코드 지원이 제한되어 있습니다. 레거시 키 이벤트는 영어가 아닌 텍스트를 입력하는 데 도움이 될 수 있습니다.</string>
-    <string name="msg_drag_gesture_help">드래그 제스처에 작업을 할당하면 길게 누르기 감지가 변경됩니다:
-\n 
-\n<b>누르고 있다가 떼기</b> → 길게 누르기 
-\n<b>누르고 있다가 밀기</b> → 드래그</string>
+    <string name="msg_drag_gesture_help">이 제스처에 동작을 할당하면 길게 누르기 감지가 변경됩니다:
+\n
+\n<b>누르고 있다가 떼기</b> → 길게 누르기
+\n<b>누르고 있다가 밀기</b> → 길게 누르고 밀기</string>
     <string name="msg_copied_to_clipboard">복사됨</string>
     <string name="pref_double_tap">두 번 탭</string>
     <string name="pref_gesture_action_move_pointer">포인터 이동</string>
@@ -183,4 +183,10 @@
     <string name="pref_invert_vertical_scrolling">세로 스크롤 반전</string>
     <string name="pref_touch_test">터치 테스트</string>
     <string name="pref_key_test">키 테스트</string>
+    <string name="title_button_up_delay">지연된 클릭 이벤트 보내기</string>
+    <string name="title_orientation">방향</string>
+    <string name="pref_auto_reconnect">자동으로 다시 연결</string>
+    <string name="pref_long_press_swipe">길게 누르고 밀기</string>
+    <string name="msg_button_up_delay_help">클릭 이벤트를 지연하면 앱이 클릭에 응답하지 않는 드문 경우에 도움이 될 수 있습니다.</string>
+    <string name="pref_double_tap_swipe">두 번 탭하고 밀기</string>
 </resources>
