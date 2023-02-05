@@ -217,9 +217,9 @@ class LayoutManager(activity: VncActivity) {
         val maxOpaqueInsets = opaqueInsets.fold(Insets.NONE) { a, i -> Insets.max(a, i) }
         applyOpaqueInsets(maxOpaqueInsets)
 
-        val cutoutInsets = windowInsets.getInsets(Type.displayCutout())
-        val cornerInsets = calculateCornerInsets(windowInsets)
-        val safeAreaInsets = listOf(maxOpaqueInsets, cutoutInsets, cornerInsets, virtualKeyInsets)
+        //val cutoutInsets = windowInsets.getInsets(Type.displayCutout())
+        //val cornerInsets = calculateCornerInsets(windowInsets)
+        val safeAreaInsets = listOf(maxOpaqueInsets, /*cutoutInsets, cornerInsets,*/ virtualKeyInsets)
         val maxSafeAreaInsets = safeAreaInsets.fold(Insets.NONE) { a, i -> Insets.max(a, i) }
         applySafeAreaInsets(maxSafeAreaInsets)
 
