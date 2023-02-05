@@ -1,0 +1,2 @@
+* Stop the frame from moving off screen at 100% zoom
+* New language: Chinese (Traditional) by babaric dev
