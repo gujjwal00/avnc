@@ -81,7 +81,7 @@ class Messenger(private val client: VncClient) {
     }
 
     fun insertButtonUpDelay() {
-        execute { Thread.sleep(200) }
+        execute { runCatching { Thread.sleep(200) } }
     }
 
     /**************************************************************************
