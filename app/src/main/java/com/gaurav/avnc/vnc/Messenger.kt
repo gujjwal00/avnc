@@ -33,7 +33,7 @@ class Messenger(private val client: VncClient) {
     }
 
     fun cleanup() {
-        synchronized(senderLock) { sender.shutdownNow() }
+        synchronized(senderLock) { sender.shutdown() }
         runCatching { sender.awaitTermination(60, TimeUnit.SECONDS) }
         if (!sender.isTerminated) Log.w(javaClass.simpleName, "Unable to fully stop Sender thread!")
     }
