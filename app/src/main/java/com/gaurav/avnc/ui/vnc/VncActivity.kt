@@ -113,6 +113,7 @@ class VncActivity : AppCompatActivity() {
         //Observers
         viewModel.credentialRequest.observe(this) { showCredentialDialog() }
         viewModel.sshHostKeyVerifyRequest.observe(this) { showHostKeyDialog() }
+        viewModel.clipTextReceivedEvent.observe(this) { viewModel.setClipboardText(it) }
         viewModel.state.observe(this) { onClientStateChanged(it) }
     }
 

@@ -160,6 +160,10 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
      */
     val sshHostKeyVerifyRequest = LiveRequest<HostKey, Boolean>(false, viewModelScope)
 
+    /**
+     * Fired when clip text is received from server and clipboard sharing is ON.
+     */
+    val clipTextReceivedEvent = LiveEvent<String>()
 
     /**************************************************************************
      * Connection management
@@ -298,10 +302,8 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
     }
 
     private fun receiveClipboardText(text: String) {
-        viewModelScope.launch(Dispatchers.Main) {
-            if (pref.server.clipboardSync)
-                setClipboardText(text)
-        }
+        if (pref.server.clipboardSync)
+            clipTextReceivedEvent.fireAsync(text)
     }
 
     /**************************************************************************
