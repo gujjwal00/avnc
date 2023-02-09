@@ -1,14 +1,13 @@
 /*
- * Copyright (c) 2020  Gaurav Ujjwal.
+ * Copyright (c) 2023  Gaurav Ujjwal.
  *
  * SPDX-License-Identifier:  GPL-3.0-or-later
  *
  * See COPYING.txt for more details.
  */
 
-package com.gaurav.avnc.ui
+package com.gaurav.avnc.ui.vnc
 
-import com.gaurav.avnc.ui.vnc.FrameState
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
