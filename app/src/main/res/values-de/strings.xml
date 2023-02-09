@@ -47,7 +47,7 @@
     <string name="desc_discovery_running">Suche Server in deinem Netzwerk</string>
     <string name="desc_keyboard_btn">Öffne die Bildschirmtastatur</string>
     <string name="desc_virtual_keys_btn">Zeige virtuelle Tasten</string>
-    <string name="desc_retry_connection_btn">Erneut versuchen</string>
+    <string name="desc_retry_connection_btn">Wiederverbinden</string>
     <string name="desc_clear_url_btn">Löschen</string>
     <string name="desc_help_btn">Hilfe</string>
     <string name="desc_saved_servers_list">Liste der abgespeicherten Server</string>
@@ -183,4 +183,9 @@
     <string name="pref_gesture_style_auto_summary">Basierend auf App-Einstellungen</string>
     <string name="pref_gesture_style_touchscreen">Tastbildschirm</string>
     <string name="pref_gesture_style_touchpad">Tastfeld</string>
+    <string name="title_button_up_delay">Verzögerte Klickereignisse senden</string>
+    <string name="title_orientation">Ausrichtung</string>
+    <string name="pref_double_tap_swipe">Doppeltes Tippen und Wischen</string>
+    <string name="pref_long_press_swipe">Langes Drücken und Wischen</string>
+    <string name="pref_auto_reconnect">Automatisch wiederverbinden</string>
 </resources>
