@@ -18,5 +18,4 @@
     <dimen name="server_card_elevation">2dp</dimen>
     <dimen name="server_card_min_height">68dp</dimen>
     <dimen name="server_card_stroke_width">0dp</dimen>
-    <dimen name="server_card_hint_icon_size">16dp</dimen>
 </resources>
