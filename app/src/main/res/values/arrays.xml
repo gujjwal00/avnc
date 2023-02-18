@@ -89,11 +89,13 @@
         <item>@string/pref_gesture_action_none</item>
         <item>@string/pref_gesture_action_pan</item>
         <item>@string/pref_gesture_action_remote_scroll</item>
+        <item>@string/pref_gesture_action_remote_drag</item>
     </string-array>
     <string-array name="swipe1_action_values">
         <item>none</item>
         <item>pan</item>
         <item>remote-scroll</item>
+        <item>remote-drag</item>
     </string-array>
 
     <string-array name="swipe2_action_entries">
