@@ -12,10 +12,16 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Window
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityHomeBinding
 import com.gaurav.avnc.model.ServerProfile
@@ -27,6 +33,8 @@ import com.gaurav.avnc.util.MsgDialog
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.gaurav.avnc.vnc.VncClient
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Primary activity of the app.
@@ -56,9 +64,10 @@ class HomeActivity : AppCompatActivity() {
         //Observers
         viewModel.editProfileEvent.observe(this) { showProfileEditor() }
         viewModel.profileInsertedEvent.observe(this) { onProfileInserted(it) }
-        viewModel.profileDeletedEvent.observe(this) { showProfileDeletedMsg(it) }
+        viewModel.profileDeletedEvent.observe(this) { onProfileDeleted(it) }
         viewModel.newConnectionEvent.observe(this) { startNewConnection(it) }
         viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }
+        viewModel.serverProfiles.observe(this) { updateShortcuts(it) }
 
         showWelcomeMsg()
     }
@@ -136,12 +145,24 @@ class HomeActivity : AppCompatActivity() {
     }
 
     /**
-     * Shows delete confirmation snackbar.
+     * Shows delete confirmation snackbar, allowing the user to Undo deletion.
      */
-    private fun showProfileDeletedMsg(profile: ServerProfile) {
+    private fun onProfileDeleted(profile: ServerProfile) {
+        val callback = object : Snackbar.Callback() {
+            override fun onDismissed(snackbar: Snackbar?, event: Int) {
+                if (event != DISMISS_EVENT_ACTION)
+                    onProfileDeleteConfirmed(profile)
+            }
+        }
+
         Snackbar.make(binding.root, R.string.msg_server_profile_deleted, Snackbar.LENGTH_LONG)
                 .setAction(getString(R.string.title_undo)) { viewModel.insertProfile(profile) }
+                .addCallback(callback)
                 .show()
+    }
+
+    private fun onProfileDeleteConfirmed(profile: ServerProfile) {
+        disableShortcut(profile)
     }
 
     private fun updateDiscoveryBadge(list: List<ServerProfile>) {
@@ -171,5 +192,37 @@ class HomeActivity : AppCompatActivity() {
                       "Please install correct version from F-Droid or Google Play."
             MsgDialog.show(supportFragmentManager, "Native library is missing!", msg)
         }.isSuccess
+    }
+
+    private fun createShortcutId(profile: ServerProfile) = "shortcut:pid:${profile.ID}"
+
+    private fun updateShortcuts(profiles: List<ServerProfile>) {
+        val context = this
+        lifecycleScope.launch(Dispatchers.IO) {
+            runCatching {
+                val maxShortcuts = ShortcutManagerCompat.getMaxShortcutCountPerActivity(context)
+                val shortcutProfiles = profiles.filter { it.name.isNotBlank() }.take(maxShortcuts)
+                val shortcuts = shortcutProfiles.map { p ->
+                    val intent = ShortcutActivity.createIntent(context, p.ID)
+                    ShortcutInfoCompat.Builder(context, createShortcutId(p))
+                            .setIcon(IconCompat.createWithResource(context, R.drawable.ic_computer_shortcut))
+                            .setShortLabel(p.name)
+                            .setLongLabel("${p.name} (${p.host})")
+                            .setIntent(intent)
+                            .build()
+                }
+                ShortcutManagerCompat.setDynamicShortcuts(context, shortcuts)
+
+            }.onFailure {
+                Log.e("Shortcuts", "Unable to update shortcuts", it)
+                Toast.makeText(context, "Unable to update shortcuts", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun disableShortcut(profile: ServerProfile) {
+        val shortcutId = createShortcutId(profile)
+        val msg = getString(R.string.msg_shortcut_server_deleted)
+        ShortcutManagerCompat.disableShortcuts(this, listOf(shortcutId), msg)
     }
 }

@@ -58,6 +58,8 @@
             android:parentActivityName=".ui.home.HomeActivity"
             android:windowSoftInputMode="stateVisible" />
 
+        <activity android:name=".ui.home.ShortcutActivity" />
+
         <activity
             android:name=".ui.vnc.VncActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"

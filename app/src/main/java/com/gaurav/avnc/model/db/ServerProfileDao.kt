@@ -26,6 +26,9 @@ interface ServerProfileDao {
     @Query("SELECT * FROM profiles")
     suspend fun getList(): List<ServerProfile>
 
+    @Query("SELECT * FROM profiles WHERE ID = :id")
+    suspend fun getByID(id: Long): ServerProfile?
+
     @Query("SELECT * FROM profiles WHERE name = :name")
     suspend fun getByName(name: String): List<ServerProfile>
 
