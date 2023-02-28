@@ -85,6 +85,10 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
         return InputConnection()
     }
 
+    override fun onCheckIsTextEditor(): Boolean {
+        return true
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         return touchHandler.onTouchEvent(event)
