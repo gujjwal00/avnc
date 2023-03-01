@@ -79,6 +79,21 @@ class VncActivityTest {
     }
 
     @Test
+    fun autoOpenVirtualKeys() {
+        testWrapper {
+            targetPrefs.edit { putBoolean("vk_open_with_keyboard", true) }
+            onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+            onView(withId(R.id.keyboard_btn)).doClick()
+            onIdle()
+
+            // Should be visible
+            onView(withText("Ctrl")).checkIsDisplayed()
+            onView(withText("Alt")).checkIsDisplayed()
+            onView(withText("Tab")).checkIsDisplayed()
+        }
+    }
+
+    @Test
     fun textInput() {
         val text = "abcxyzABCXYZ1234567890{}[]()`~@#$%^&*_+-=/*"
 
