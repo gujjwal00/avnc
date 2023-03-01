@@ -90,20 +90,19 @@ class LayoutManager(activity: VncActivity) {
      * [applyInsets] has a single implementation for all platforms.
      */
     private fun manuallyGenerateWindowInsets() {
+        val decorView = window.decorView
         val visibleFrame = Rect()
-        rootView.getWindowVisibleDisplayFrame(visibleFrame)
+        decorView.getWindowVisibleDisplayFrame(visibleFrame)
 
         // Transform from screen coordinates to window coordinates
         // Both can be different, e.g. when in PiP mode
         val locationOnScreen = intArrayOf(0, 0)
-        val locationInWindow = intArrayOf(0, 0)
-        rootView.getLocationOnScreen(locationOnScreen)
-        rootView.getLocationInWindow(locationInWindow)
-        visibleFrame.offset(locationInWindow[0] - locationOnScreen[0], locationInWindow[1] - locationOnScreen[1])
+        decorView.getLocationOnScreen(locationOnScreen)
+        visibleFrame.offset(-locationOnScreen[0], -locationOnScreen[1])
 
         // Generate insets (left & top are always 0)
-        val right = max(0, (locationInWindow[0] + rootView.right) - visibleFrame.right)
-        val bottom = max(0, (locationInWindow[1] + rootView.bottom) - visibleFrame.bottom)
+        val right = max(0, decorView.right - visibleFrame.right)
+        val bottom = max(0, decorView.bottom - visibleFrame.bottom)
         val insets = WindowInsetsCompat.Builder()
                 .setInsets(Type.ime(), Insets.of(0, 0, 0, bottom))
                 .setInsets(Type.navigationBars(), Insets.of(0, 0, right, 0))
