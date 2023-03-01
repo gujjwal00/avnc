@@ -81,7 +81,7 @@ set(WITH_LIBSSH2 OFF CACHE BOOL "Find LibSSH" FORCE)
 
 add_subdirectory(${AVNC_LIBVNC_SRC_DIR} ${AVNC_LIBVNC_BUILD_DIR})  # (source dir, build dir)
 
-include_directories(${AVNC_LIBVNC_SRC_DIR} ${AVNC_LIBVNC_BUILD_DIR})
+include_directories(${AVNC_LIBVNC_SRC_DIR}/include ${AVNC_LIBVNC_BUILD_DIR}/include)
 
 
 ###############################################################################
