@@ -91,6 +91,10 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
 
                 //This is where migrations would be applied (if required in future)
 
+                //Reset IDs so that they don't conflict with saved profiles
+                //It also ensures that IDs of deleted profiles are not reused
+                data.profiles.forEach { it.ID = 0 }
+
                 //Update database
                 if (deleteCurrentServers) {
                     db.withTransaction {
@@ -98,8 +102,6 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
                         serverProfileDao.insert(data.profiles)
                     }
                 } else {
-                    //Reset IDs so that they don't conflict with saved profiles
-                    data.profiles.forEach { it.ID = 0 }
                     serverProfileDao.insert(data.profiles)
                 }
 
