@@ -9,7 +9,6 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.graphics.PointF
-import com.gaurav.avnc.ui.vnc.Dispatcher.SwipeAction
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.PointerButton
@@ -61,83 +60,81 @@ class Dispatcher(private val activity: VncActivity) {
     /**************************************************************************
      * Action configuration
      **************************************************************************/
-    private val gestureStyle = if (profile.gestureStyle == "auto") gesturePref.style else profile.gestureStyle
-
     private val directMode = DirectMode()
     private val relativeMode = RelativeMode()
-    private val defaultMode = if (gestureStyle == "touchscreen") directMode else relativeMode
+    private var config = Config()
 
-    private val tap1Action = selectPointAction(gesturePref.tap1)
-    private val tap2Action = selectPointAction(gesturePref.tap2)
-    private val doubleTapAction = selectPointAction(gesturePref.doubleTap)
-    private val longPressAction = selectPointAction(gesturePref.longPress)
+    private inner class Config {
+        val gestureStyle = if (profile.gestureStyle == "auto") gesturePref.style else profile.gestureStyle
+        val defaultMode = if (gestureStyle == "touchscreen") directMode else relativeMode
 
-    private val swipe1Action = selectSwipeAction(if (gestureStyle == "touchpad") "move-pointer" else gesturePref.swipe1)
-    private val swipe2Action = selectSwipeAction(gesturePref.swipe2)
-    private val doubleTapSwipeAction = selectSwipeAction(gesturePref.doubleTapSwipe)
-    private val longPressSwipeAction = selectSwipeAction(gesturePref.longPressSwipe)
+        val tap1Action = selectPointAction(gesturePref.tap1)
+        val tap2Action = selectPointAction(gesturePref.tap2)
+        val doubleTapAction = selectPointAction(gesturePref.doubleTap)
+        val longPressAction = selectPointAction(gesturePref.longPress)
 
-    private val mouseBackAction = selectPointAction(viewModel.pref.input.mouseBack)
+        val swipe1Action = selectSwipeAction(if (gestureStyle == "touchpad") "move-pointer" else gesturePref.swipe1)
+        val swipe2Action = selectSwipeAction(gesturePref.swipe2)
+        val doubleTapSwipeAction = selectSwipeAction(gesturePref.doubleTapSwipe)
+        val longPressSwipeAction = selectSwipeAction(gesturePref.longPressSwipe)
 
-    private fun selectPointAction(actionName: String): (PointF) -> Unit {
-        return when (actionName) {
-            "left-click" -> { p -> defaultMode.doClick(PointerButton.Left, p) }
-            "double-click" -> { p -> defaultMode.doDoubleClick(PointerButton.Left, p) }
-            "middle-click" -> { p -> defaultMode.doClick(PointerButton.Middle, p) }
-            "right-click" -> { p -> defaultMode.doClick(PointerButton.Right, p) }
-            "open-keyboard" -> { _ -> doOpenKeyboard() }
-            else -> { _ -> } //Nothing
+        val mouseBackAction = selectPointAction(viewModel.pref.input.mouseBack)
+
+        private fun selectPointAction(actionName: String): (PointF) -> Unit {
+            return when (actionName) {
+                "left-click" -> { p -> defaultMode.doClick(PointerButton.Left, p) }
+                "double-click" -> { p -> defaultMode.doDoubleClick(PointerButton.Left, p) }
+                "middle-click" -> { p -> defaultMode.doClick(PointerButton.Middle, p) }
+                "right-click" -> { p -> defaultMode.doClick(PointerButton.Right, p) }
+                "open-keyboard" -> { _ -> doOpenKeyboard() }
+                else -> { _ -> } //Nothing
+            }
         }
-    }
 
-    private fun selectSwipeAction(actionName: String): SwipeAction {
-        return when (actionName) {
-            "pan" -> SwipeAction { _, _, dx, dy -> doPan(dx, dy) }
-            "move-pointer" -> SwipeAction { _, cp, dx, dy -> defaultMode.doMovePointer(cp, dx, dy) }
-            "remote-scroll" -> SwipeAction { sp, _, dx, dy -> defaultMode.doRemoteScroll(sp, dx, dy) }
-            "remote-drag" -> SwipeAction { _, cp, dx, dy -> defaultMode.doDrag(cp, dx, dy) }
-            else -> SwipeAction { _, _, _, _ -> } //Nothing
-        }
-    }
-
-    //Instead of using generic lambda, like point actions, we are using a functional
-    //interface with SAM conversion to avoid boxing/unboxing overhead for dx & dy.
-    private fun interface SwipeAction {
         /**
-         * [sp] Start point of the gesture
-         * [cp] Current point of the gesture
-         * [dx] Change along x-axis since last event
-         * [dy] Change along y-axis since last event
+         * Returns a lambda which accepts four arguments:
+         *
+         * sp: Start point of the gesture
+         * cp: Current point of the gesture
+         * dx: Change along x-axis since last event
+         * dy: Change along y-axis since last event
          */
-        operator fun invoke(sp: PointF, cp: PointF, dx: Float, dy: Float)
+        private fun selectSwipeAction(actionName: String): (PointF, PointF, Float, Float) -> Unit {
+            return when (actionName) {
+                "pan" -> { _, _, dx, dy -> doPan(dx, dy) }
+                "move-pointer" -> { _, cp, dx, dy -> defaultMode.doMovePointer(cp, dx, dy) }
+                "remote-scroll" -> { sp, _, dx, dy -> defaultMode.doRemoteScroll(sp, dx, dy) }
+                "remote-drag" -> { _, cp, dx, dy -> defaultMode.doDrag(cp, dx, dy) }
+                else -> { _, _, _, _ -> } //Nothing
+            }
+        }
     }
-
 
     /**************************************************************************
      * Event receivers
      **************************************************************************/
 
-    fun onGestureStart() = defaultMode.onGestureStart()
-    fun onGestureStop(p: PointF) = defaultMode.onGestureStop(p)
+    fun onGestureStart() = config.defaultMode.onGestureStart()
+    fun onGestureStop(p: PointF) = config.defaultMode.onGestureStop(p)
 
-    fun onTap1(p: PointF) = tap1Action(p)
-    fun onTap2(p: PointF) = tap2Action(p)
-    fun onDoubleTap(p: PointF) = doubleTapAction(p)
-    fun onLongPress(p: PointF) = longPressAction(p)
+    fun onTap1(p: PointF) = config.tap1Action(p)
+    fun onTap2(p: PointF) = config.tap2Action(p)
+    fun onDoubleTap(p: PointF) = config.doubleTapAction(p)
+    fun onLongPress(p: PointF) = config.longPressAction(p)
 
-    fun onSwipe1(sp: PointF, cp: PointF, dx: Float, dy: Float) = swipe1Action(sp, cp, dx, dy)
-    fun onSwipe2(sp: PointF, cp: PointF, dx: Float, dy: Float) = swipe2Action(sp, cp, dx, dy)
-    fun onDoubleTapSwipe(sp: PointF, cp: PointF, dx: Float, dy: Float) = doubleTapSwipeAction(sp, cp, dx, dy)
-    fun onLongPressSwipe(sp: PointF, cp: PointF, dx: Float, dy: Float) = longPressSwipeAction(sp, cp, dx, dy)
+    fun onSwipe1(sp: PointF, cp: PointF, dx: Float, dy: Float) = config.swipe1Action(sp, cp, dx, dy)
+    fun onSwipe2(sp: PointF, cp: PointF, dx: Float, dy: Float) = config.swipe2Action(sp, cp, dx, dy)
+    fun onDoubleTapSwipe(sp: PointF, cp: PointF, dx: Float, dy: Float) = config.doubleTapSwipeAction(sp, cp, dx, dy)
+    fun onLongPressSwipe(sp: PointF, cp: PointF, dx: Float, dy: Float) = config.longPressSwipeAction(sp, cp, dx, dy)
 
     fun onScale(scaleFactor: Float, fx: Float, fy: Float) = doScale(scaleFactor, fx, fy)
-    fun onFling(vx: Float, vy: Float) = defaultMode.doFling(vx, vy)
+    fun onFling(vx: Float, vy: Float) = config.defaultMode.doFling(vx, vy)
 
     fun onMouseButtonDown(button: PointerButton, p: PointF) = directMode.doButtonDown(button, p)
     fun onMouseButtonUp(button: PointerButton, p: PointF) = directMode.doButtonUp(button, p)
     fun onMouseMove(p: PointF) = directMode.doMovePointer(p, 0f, 0f)
     fun onMouseScroll(p: PointF, hs: Float, vs: Float) = directMode.doRemoteScrollFromMouse(p, hs, vs)
-    fun onMouseBack(p: PointF) = mouseBackAction(p)
+    fun onMouseBack(p: PointF) = config.mouseBackAction(p)
 
     fun onStylusTap(p: PointF) = directMode.doClick(PointerButton.Left, p)
     fun onStylusDoubleTap(p: PointF) = directMode.doDoubleClick(PointerButton.Left, p)
@@ -146,6 +143,9 @@ class Dispatcher(private val activity: VncActivity) {
 
     fun onXKeySym(keySym: Int, isDown: Boolean) = messenger.sendKey(keySym, isDown)
 
+    fun onGestureStyleChanged() {
+        config = Config()
+    }
 
     /**************************************************************************
      * Available actions

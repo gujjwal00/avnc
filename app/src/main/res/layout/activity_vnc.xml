@@ -79,6 +79,21 @@
                         android:src="@drawable/ic_keyboard_mini" />
 
                     <ToggleButton
+                        android:id="@+id/gesture_style_toggle"
+                        style="@style/ImageButton"
+                        android:background="@drawable/bg_toggle_button"
+                        android:contentDescription="@string/pref_gesture"
+                        android:drawableStart="@drawable/ic_gesture"
+                        android:foreground="?selectableItemBackground"
+                        android:gravity="center"
+                        android:onCheckedChanged="@{(v,checked) -> checked ? zoomOptions.setChecked(false) : void}"
+                        android:padding="12dp"
+                        android:textOff=""
+                        android:textOn=""
+                        app:isVisible="@{viewModel.pref.viewer.toolbarShowGestureStyleToggle}"
+                        tools:ignore="UnusedAttribute" />
+
+                    <ToggleButton
                         android:id="@+id/zoom_options"
                         style="@style/ImageButton"
                         android:background="@drawable/bg_toggle_button"
@@ -86,6 +101,7 @@
                         android:drawableStart="@drawable/ic_zoom_options"
                         android:foreground="?selectableItemBackground"
                         android:gravity="center"
+                        android:onCheckedChanged="@{(v,checked) -> checked ? gestureStyleToggle.setChecked(false) : void}"
                         android:padding="12dp"
                         android:textOff=""
                         android:textOn=""
@@ -115,6 +131,37 @@
                         android:src="@drawable/ic_save" />
 
                 </LinearLayout>
+
+                <RadioGroup
+                    android:id="@+id/gesture_style_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:background="@drawable/bg_round_rect"
+                    android:paddingStart="@dimen/padding_small"
+                    android:paddingEnd="@dimen/padding_normal"
+                    app:isVisible="@{gestureStyleToggle.checked}">
+
+                    <RadioButton
+                        android:id="@+id/gesture_style_auto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pref_gesture_style_auto" />
+
+                    <RadioButton
+                        android:id="@+id/gesture_style_touchscreen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pref_gesture_style_touchscreen" />
+
+                    <RadioButton
+                        android:id="@+id/gesture_style_touchpad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pref_gesture_style_touchpad" />
+                </RadioGroup>
+
             </LinearLayout>
 
         </androidx.drawerlayout.widget.DrawerLayout>

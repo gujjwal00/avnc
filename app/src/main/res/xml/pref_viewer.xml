@@ -70,5 +70,10 @@
             app:key="toolbar_alignment"
             app:title="@string/pref_toolbar_alignment"
             app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="toolbar_show_gesture_style_toggle"
+            app:title="Show gesture style toggle" />
     </PreferenceCategory>
 </PreferenceScreen>

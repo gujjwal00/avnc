@@ -101,6 +101,7 @@ class VncActivity : AppCompatActivity() {
         setupLayout()
         setupDrawerLayout()
         setupServerUnlock()
+        setupGestureStyle()
 
         //Buttons
         binding.keyboardBtn.setOnClickListener { showKeyboard(); closeDrawers() }
@@ -171,6 +172,25 @@ class VncActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupGestureStyle() {
+        val styleButtonMap = mapOf(
+                "auto" to R.id.gesture_style_auto,
+                "touchscreen" to R.id.gesture_style_touchscreen,
+                "touchpad" to R.id.gesture_style_touchpad
+        )
+
+        binding.gestureStyleGroup.let { group ->
+            group.check(styleButtonMap[viewModel.profile.gestureStyle] ?: -1)
+            group.setOnCheckedChangeListener { _, id ->
+                for ((k, v) in styleButtonMap)
+                    if (v == id) viewModel.profile.gestureStyle = k
+                viewModel.saveProfile()
+                dispatcher.onGestureStyleChanged()
+                closeDrawers()
+            }
+        }
+    }
+
     private fun showCredentialDialog() {
         CredentialFragment().show(supportFragmentManager, "CredentialDialog")
     }
@@ -200,6 +220,7 @@ class VncActivity : AppCompatActivity() {
 
     private fun closeDrawers() {
         binding.zoomOptions.isChecked = false
+        binding.gestureStyleToggle.isChecked = false
         binding.drawerLayout.closeDrawers()
     }
 
