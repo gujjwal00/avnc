@@ -73,10 +73,12 @@ class Dispatcher(private val activity: VncActivity) {
         val doubleTapAction = selectPointAction(gesturePref.doubleTap)
         val longPressAction = selectPointAction(gesturePref.longPress)
 
-        val swipe1Action = selectSwipeAction(if (gestureStyle == "touchpad") "move-pointer" else gesturePref.swipe1)
+        val swipe1Pref = if (gestureStyle == "touchpad") "move-pointer" else gesturePref.swipe1
+        val swipe1Action = selectSwipeAction(swipe1Pref)
         val swipe2Action = selectSwipeAction(gesturePref.swipe2)
         val doubleTapSwipeAction = selectSwipeAction(gesturePref.doubleTapSwipe)
         val longPressSwipeAction = selectSwipeAction(gesturePref.longPressSwipe)
+        val flingAction = selectFlingAction()
 
         val mouseBackAction = selectPointAction(viewModel.pref.input.mouseBack)
 
@@ -108,6 +110,15 @@ class Dispatcher(private val activity: VncActivity) {
                 else -> { _, _, _, _ -> } //Nothing
             }
         }
+
+        /**
+         * Fling is only used for smooth-scrolling the frame.
+         * So it only makes sense when 1-finger-swipe is set to "pan".
+         */
+        private fun selectFlingAction(): (Float, Float) -> Unit {
+            return if (swipe1Pref == "pan") { vx, vy -> startFrameFling(vx, vy) }
+            else { _, _ -> }
+        }
     }
 
     /**************************************************************************
@@ -128,7 +139,7 @@ class Dispatcher(private val activity: VncActivity) {
     fun onLongPressSwipe(sp: PointF, cp: PointF, dx: Float, dy: Float) = config.longPressSwipeAction(sp, cp, dx, dy)
 
     fun onScale(scaleFactor: Float, fx: Float, fy: Float) = doScale(scaleFactor, fx, fy)
-    fun onFling(vx: Float, vy: Float) = config.defaultMode.doFling(vx, vy)
+    fun onFling(vx: Float, vy: Float) = config.flingAction(vx, vy)
 
     fun onMouseButtonDown(button: PointerButton, p: PointF) = directMode.doButtonDown(button, p)
     fun onMouseButtonUp(button: PointerButton, p: PointF) = directMode.doButtonUp(button, p)
@@ -154,6 +165,8 @@ class Dispatcher(private val activity: VncActivity) {
     private fun doOpenKeyboard() = activity.showKeyboard()
     private fun doScale(scaleFactor: Float, fx: Float, fy: Float) = viewModel.updateZoom(scaleFactor, fx, fy)
     private fun doPan(dx: Float, dy: Float) = viewModel.panFrame(dx, dy)
+    private fun startFrameFling(vx: Float, vy: Float) = viewModel.frameScroller.fling(vx, vy)
+    private fun stopFrameFling() = viewModel.frameScroller.stop()
 
     /**
      * Most actions have the same implementation in both modes, only difference being
@@ -170,9 +183,8 @@ class Dispatcher(private val activity: VncActivity) {
         abstract fun transformPoint(p: PointF): PointF?
         abstract fun doMovePointer(p: PointF, dx: Float, dy: Float)
         abstract fun doDrag(p: PointF, dx: Float, dy: Float)
-        abstract fun doFling(vx: Float, vy: Float)
 
-        open fun onGestureStart() {}
+        open fun onGestureStart() = stopFrameFling()
         open fun onGestureStop(p: PointF) = doButtonRelease(p)
 
         fun doButtonDown(button: PointerButton, p: PointF) {
@@ -244,8 +256,6 @@ class Dispatcher(private val activity: VncActivity) {
         override fun transformPoint(p: PointF) = viewModel.frameState.toFb(p)
         override fun doMovePointer(p: PointF, dx: Float, dy: Float) = doButtonDown(PointerButton.None, p)
         override fun doDrag(p: PointF, dx: Float, dy: Float) = doButtonDown(PointerButton.Left, p)
-        override fun doFling(vx: Float, vy: Float) = viewModel.frameScroller.fling(vx, vy)
-        override fun onGestureStart() = viewModel.frameScroller.stop()
     }
 
     /**
@@ -290,7 +300,5 @@ class Dispatcher(private val activity: VncActivity) {
             doButtonDown(PointerButton.Left, p)
             doMovePointer(p, dx, dy)
         }
-
-        override fun doFling(vx: Float, vy: Float) {} //Disabled
     }
 }
