@@ -55,7 +55,7 @@ class TouchHandlerTest {
         // Internally, mocks seems to be lazily initialized, and the initialization can take some time.
         // This is problematic here because gesture detection is very sensitive to timing of events.
         // So we eagerly trigger the initialization, to avoid messing with timings in actual tests.
-        mockDispatcher.onXKeySym(0, false)
+        mockDispatcher.onXKey(0, 0, false)
     }
 
 

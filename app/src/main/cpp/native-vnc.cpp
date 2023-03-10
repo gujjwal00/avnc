@@ -358,8 +358,14 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeGetLastErrorStr(JNIEnv *env, jobject th
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeSendKeyEvent(JNIEnv *env, jobject thiz, jlong client_ptr,
-                                                      jlong key, jboolean is_down) {
-    return (jboolean) SendKeyEvent((rfbClient *) client_ptr, (uint32_t) key, is_down ? TRUE : FALSE);
+                                                      jint key_sym, jint xt_code, jboolean is_down) {
+    auto client = (rfbClient *) client_ptr;
+    rfbBool down = is_down ? TRUE : FALSE;
+
+    if (xt_code > 0 && SendExtendedKeyEvent(client, key_sym, xt_code, down))
+        return JNI_TRUE;
+    else
+        return SendKeyEvent(client, key_sym, down);
 }
 
 extern "C"

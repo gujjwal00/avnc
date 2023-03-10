@@ -141,7 +141,7 @@ class Dispatcher(private val activity: VncActivity) {
     fun onStylusLongPress(p: PointF) = directMode.doClick(PointerButton.Right, p)
     fun onStylusScroll(p: PointF) = directMode.doButtonDown(PointerButton.Left, p)
 
-    fun onXKeySym(keySym: Int, isDown: Boolean) = messenger.sendKey(keySym, isDown)
+    fun onXKey(keySym: Int, xtCode: Int, isDown: Boolean) = messenger.sendKey(keySym, xtCode, isDown)
 
     fun onGestureStyleChanged() {
         config = Config()

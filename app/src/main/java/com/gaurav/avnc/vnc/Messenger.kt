@@ -72,11 +72,11 @@ class Messenger(private val client: VncClient) {
         }
     }
 
-    fun sendKey(keySym: Int, isDown: Boolean): Boolean {
+    fun sendKey(keySym: Int, xtCode: Int, isDown: Boolean): Boolean {
         if (!client.connected)
             return false
 
-        execute { client.sendKeyEvent(keySym, isDown) }
+        execute { client.sendKeyEvent(keySym, xtCode, isDown) }
         return true
     }
 

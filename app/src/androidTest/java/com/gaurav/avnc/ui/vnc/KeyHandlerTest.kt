@@ -35,6 +35,8 @@ class KeyHandlerTest {
     private lateinit var mockDispatcher: Dispatcher
     private lateinit var dispatchedKeyDowns: ArrayList<Int>
     private lateinit var dispatchedKeyUps: ArrayList<Int>
+    private lateinit var dispatchedXTDowns: ArrayList<Int>
+    private lateinit var dispatchedXTUps: ArrayList<Int>
 
     @Before
     fun before() {
@@ -42,10 +44,19 @@ class KeyHandlerTest {
 
         dispatchedKeyDowns = arrayListOf()
         dispatchedKeyUps = arrayListOf()
+        dispatchedXTDowns = arrayListOf()
+        dispatchedXTUps = arrayListOf()
         mockDispatcher = mockk()
-        every { mockDispatcher.onXKeySym(any(), true) } answers { dispatchedKeyDowns.add(firstArg()); true }
-        every { mockDispatcher.onXKeySym(any(), false) } answers { dispatchedKeyUps.add(firstArg()); true }
-
+        every { mockDispatcher.onXKey(any(), any(), true) } answers {
+            dispatchedKeyDowns.add(firstArg())
+            dispatchedXTUps.add(secondArg())
+            true
+        }
+        every { mockDispatcher.onXKey(any(), any(), false) } answers {
+            dispatchedKeyUps.add(firstArg())
+            dispatchedXTUps.add(secondArg())
+            true
+        }
         keyHandler = KeyHandler(mockDispatcher, true, prefs)
     }
 
@@ -89,6 +100,11 @@ class KeyHandlerTest {
     private fun sendKeyWithMeta(keyCode: Int, metaState: Int) {
         keyHandler.onKeyEvent(KeyEvent(0, 0, KeyEvent.ACTION_DOWN, keyCode, 0, metaState))
         keyHandler.onKeyEvent(KeyEvent(0, 0, KeyEvent.ACTION_UP, keyCode, 0, metaState))
+    }
+
+    private fun sendKeyWithScancode(keyCode: Int, scancode: Int) {
+        keyHandler.onKeyEvent(KeyEvent(0, 0, KeyEvent.ACTION_DOWN, keyCode, 0, 0, 0, scancode))
+        keyHandler.onKeyEvent(KeyEvent(0, 0, KeyEvent.ACTION_UP, keyCode, 0, 0, 0, scancode))
     }
 
 
@@ -159,6 +175,13 @@ class KeyHandlerTest {
         assertTrue(dispatchedKeyDowns.isEmpty())
     }
 
+    fun rawKeys() {
+        val scLeft = 105
+        val xtLeft = 203
+        sendKeyWithScancode(KeyEvent.KEYCODE_DPAD_LEFT, scLeft)
+        assertEquals(xtLeft, dispatchedXTDowns.first())
+        assertEquals(xtLeft, dispatchedXTUps.first())
+    }
 
     /**************************************************************************/
     private val ACCENT_TILDE = 0x02DC

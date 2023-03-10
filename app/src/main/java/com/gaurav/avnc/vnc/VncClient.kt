@@ -140,10 +140,11 @@ class VncClient(private val observer: Observer) {
      * Sends Key event to remote server.
      *
      * @param keySym    Key symbol
+     * @param xtCode    Key code from [XTKeyCode]
      * @param isDown    true for key down, false for key up
      */
-    fun sendKeyEvent(keySym: Int, isDown: Boolean) = executeSend {
-        nativeSendKeyEvent(nativePtr, keySym.toLong(), isDown)
+    fun sendKeyEvent(keySym: Int, xtCode: Int, isDown: Boolean) = executeSend {
+        nativeSendKeyEvent(nativePtr, keySym, xtCode, isDown)
     }
 
     /**
@@ -224,7 +225,7 @@ class VncClient(private val observer: Observer) {
     private external fun nativeInit(clientPtr: Long, host: String, port: Int): Boolean
     private external fun nativeSetDest(clientPtr: Long, host: String, port: Int)
     private external fun nativeProcessServerMessage(clientPtr: Long, uSecTimeout: Int): Boolean
-    private external fun nativeSendKeyEvent(clientPtr: Long, key: Long, isDown: Boolean): Boolean
+    private external fun nativeSendKeyEvent(clientPtr: Long, keySym: Int, xtCode: Int, isDown: Boolean): Boolean
     private external fun nativeSendPointerEvent(clientPtr: Long, x: Int, y: Int, mask: Int): Boolean
     private external fun nativeSendCutText(clientPtr: Long, bytes: ByteArray): Boolean
     private external fun nativeRefreshFrameBuffer(clientPtr: Long): Boolean
