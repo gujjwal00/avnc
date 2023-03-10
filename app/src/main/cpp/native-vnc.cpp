@@ -126,15 +126,23 @@ static void onBell(rfbClient *client) {
     env->CallVoidMethod(obj, mid);
 }
 
-static void onGotXCutText(rfbClient *client, const char *text, int len) {
+static void onGotXCutText(rfbClient *client, const char *text, int len, bool is_utf8) {
     auto obj = getManagedClient(client);
     auto env = context.getEnv();
     auto cls = context.managedCls;
 
-    jmethodID mid = env->GetMethodID(cls, "cbGotXCutText", "([B)V");
+    jmethodID mid = env->GetMethodID(cls, "cbGotXCutText", "([BZ)V");
     jbyteArray bytes = env->NewByteArray(len);
     env->SetByteArrayRegion(bytes, 0, len, reinterpret_cast<const jbyte *>(text));
-    env->CallVoidMethod(obj, mid, bytes);
+    env->CallVoidMethod(obj, mid, bytes, is_utf8);
+}
+
+static void onGotXCutTextLatin1(rfbClient *client, const char *text, int len) {
+    onGotXCutText(client, text, len, false);
+}
+
+static void onGotXCutTextUTF8(rfbClient *client, const char *text, int len) {
+    onGotXCutText(client, text, len, true);
 }
 
 static rfbBool onHandleCursorPos(rfbClient *client, int x, int y) {
@@ -231,7 +239,8 @@ static void setCallbacks(rfbClient *client) {
     client->GetPassword = onGetPassword;
     client->GetCredential = onGetCredential;
     client->Bell = onBell;
-    client->GotXCutText = onGotXCutText;
+    client->GotXCutText = onGotXCutTextLatin1;
+    client->GotXCutTextUTF8 = onGotXCutTextUTF8;
     client->HandleCursorPos = onHandleCursorPos;
     client->FinishedFrameBufferUpdate = onFinishedFrameBufferUpdate;
     client->MallocFrameBuffer = onMallocFrameBuffer;
@@ -377,12 +386,16 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeSendPointerEvent(JNIEnv *env, jobject t
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_gaurav_avnc_vnc_VncClient_nativeSendCutText(JNIEnv *env, jobject thiz, jlong client_ptr, jbyteArray bytes) {
+Java_com_gaurav_avnc_vnc_VncClient_nativeSendCutText(JNIEnv *env, jobject thiz, jlong client_ptr, jbyteArray bytes,
+                                                     jboolean is_utf8) {
+    auto client = (rfbClient *) client_ptr;
     auto textBuffer = env->GetByteArrayElements(bytes, nullptr);
     auto textLen = env->GetArrayLength(bytes);
     auto textChars = reinterpret_cast<char *>(textBuffer);
 
-    rfbBool result = SendClientCutText((rfbClient *) client_ptr, textChars, textLen);
+    rfbBool result = is_utf8
+                     ? SendClientCutTextUTF8(client, textChars, textLen)
+                     : SendClientCutText(client, textChars, textLen);
 
     env->ReleaseByteArrayElements(bytes, textBuffer, JNI_ABORT);
     return (jboolean) result;

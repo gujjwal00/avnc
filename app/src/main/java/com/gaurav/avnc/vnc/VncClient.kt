@@ -183,7 +183,8 @@ class VncClient(private val observer: Observer) {
      * Sends text to remote desktop's clipboard.
      */
     fun sendCutText(text: String) = executeSend {
-        nativeSendCutText(nativePtr, text.toByteArray(StandardCharsets.ISO_8859_1))
+        if (!nativeSendCutText(nativePtr, text.toByteArray(StandardCharsets.UTF_8), true))
+            nativeSendCutText(nativePtr, text.toByteArray(StandardCharsets.ISO_8859_1), false)
     }
 
     /**
@@ -227,7 +228,7 @@ class VncClient(private val observer: Observer) {
     private external fun nativeProcessServerMessage(clientPtr: Long, uSecTimeout: Int): Boolean
     private external fun nativeSendKeyEvent(clientPtr: Long, keySym: Int, xtCode: Int, isDown: Boolean): Boolean
     private external fun nativeSendPointerEvent(clientPtr: Long, x: Int, y: Int, mask: Int): Boolean
-    private external fun nativeSendCutText(clientPtr: Long, bytes: ByteArray): Boolean
+    private external fun nativeSendCutText(clientPtr: Long, bytes: ByteArray, isUTF8: Boolean): Boolean
     private external fun nativeRefreshFrameBuffer(clientPtr: Long): Boolean
     private external fun nativeGetDesktopName(clientPtr: Long): String
     private external fun nativeGetWidth(clientPtr: Long): Int
@@ -245,8 +246,10 @@ class VncClient(private val observer: Observer) {
     private fun cbGetCredential() = observer.onCredentialRequired()
 
     @Keep
-    private fun cbGotXCutText(bytes: ByteArray) {
-        observer.onGotXCutText(StandardCharsets.ISO_8859_1.decode(ByteBuffer.wrap(bytes)).toString())
+    private fun cbGotXCutText(bytes: ByteArray, isUTF8: Boolean) {
+        (if (isUTF8) StandardCharsets.UTF_8 else StandardCharsets.ISO_8859_1).let {
+            observer.onGotXCutText(it.decode(ByteBuffer.wrap(bytes)).toString())
+        }
     }
 
     @Keep
