@@ -162,7 +162,7 @@
     <string name="msg_drag_gesture_help">Der Ziehgeste eine Aktion zuzuweisen, wird die Erkennung von langem Drücken ändern:
 \n
 \n<b>Drücken-Halten-Loslassen</b> → Lange drücken
-\n<b>Drücken-Halten-Wischen</b> → Drag and Drop</string>
+\n<b>Drücken-Halten-Wischen</b> → Drücken und ziehen (Drag and Drop)</string>
     <string name="pref_display_cutout">Hinter Bildschirmausschnitt zeichnen (experimentell)</string>
     <string name="pref_key_test">Tastentest</string>
     <string name="pref_gesture_style">Gestenstil</string>
