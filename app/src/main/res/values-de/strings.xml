@@ -188,4 +188,5 @@
     <string name="pref_double_tap_swipe">Doppeltes Tippen und Wischen</string>
     <string name="pref_long_press_swipe">Langes Drücken und Wischen</string>
     <string name="pref_auto_reconnect">Automatisch wiederverbinden</string>
+    <string name="msg_shortcut_server_deleted">Dieser Server wurde gelöscht</string>
 </resources>
