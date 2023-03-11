@@ -28,7 +28,7 @@ open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
 
     protected val serverProfileDao by lazy { db.serverProfileDao }
 
-    protected val clipboard by lazy { app.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager }
+    private val clipboard = app.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
     val pref by lazy { AppPreferences(app) }
 
@@ -49,15 +49,12 @@ open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
      * Returns current clipboard text.
      */
     fun getClipboardText(): String? {
-        val clip = clipboard.primaryClip
-        if (clip == null || clip.itemCount == 0)
-            return null
-
-        val text = clip.getItemAt(0).text
-        if (text == null || text.isBlank())
-            return null
-
-        return text.toString()
+        try {
+            clipboard.primaryClip?.getItemAt(0)?.text?.toString()
+        } catch (t: Throwable) {
+            Log.e(javaClass.simpleName, "Could not retrieve text from clipboard.", t)
+        }
+        return null
     }
 
     /**

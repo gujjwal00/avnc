@@ -8,11 +8,12 @@
 
 package com.gaurav.avnc
 
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.SystemClock
 import android.view.View
 import android.widget.ProgressBar
 import androidx.preference.PreferenceManager
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.ViewInteraction
@@ -20,7 +21,6 @@ import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.platform.app.InstrumentationRegistry
-import com.gaurav.avnc.viewmodel.BaseViewModel
 import junit.framework.AssertionFailedError
 import org.hamcrest.core.IsNot.not
 import org.junit.Assert
@@ -69,8 +69,9 @@ fun ViewInteraction.checkWithTimeout(assertion: ViewAssertion, timeout: Int = 50
 fun getClipboardText(): String? {
     var text: String? = null
     instrumentation.runOnMainSync {
-        // Reusing BaseViewModel to access clipboard
-        text = BaseViewModel(ApplicationProvider.getApplicationContext<App>()).getClipboardText()
+        (targetContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).let {
+            text = it.primaryClip?.getItemAt(0)?.text?.toString()
+        }
     }
     return text
 }

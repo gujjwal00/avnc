@@ -19,10 +19,7 @@ import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.awaitCancellation
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.IOException
 import java.lang.ref.WeakReference
 
@@ -226,7 +223,9 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
         }
 
         state.postValue(State.Connected)
-        sendClipboardText() //Initial sync
+
+        // Initial sync, slightly delayed to allow extended clipboard negotiations
+        asyncIO { delay(1000L); sendClipboardText() }
     }
 
     private fun processMessages() {
@@ -291,16 +290,14 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
      **************************************************************************/
 
     fun sendClipboardText() {
-        viewModelScope.launch(Dispatchers.Main) {
-            if (pref.server.clipboardSync)
-                getClipboardText()?.let { messenger.sendClipboardText(it) }
+        if (pref.server.clipboardSync) asyncIO {
+            getClipboardText()?.let { messenger.sendClipboardText(it) }
         }
     }
 
     private fun receiveClipboardText(text: String) {
-        viewModelScope.launch(Dispatchers.Main) {
-            if (pref.server.clipboardSync)
-                setClipboardText(text)
+        if (pref.server.clipboardSync) asyncIO {
+            setClipboardText(text)
         }
     }
 
