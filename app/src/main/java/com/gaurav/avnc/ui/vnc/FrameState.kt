@@ -158,7 +158,7 @@ class FrameState(
     }
 
     fun setSafeArea(rect: RectF) {
-        safeArea = rect
+        safeArea = RectF(rect)
         coerceValues()
     }
 

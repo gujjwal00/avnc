@@ -242,7 +242,7 @@ class LayoutManager(activity: VncActivity) {
                             frameView.width - insets.right,
                             frameView.height - insets.bottom)
 
-        viewModel.frameState.setSafeArea(RectF(safeArea))
+        viewModel.setSafeArea(RectF(safeArea))
     }
 
     /**

@@ -9,6 +9,7 @@
 package com.gaurav.avnc.viewmodel
 
 import android.app.Application
+import android.graphics.RectF
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -283,6 +284,11 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
         profile.zoom1 = frameState.zoomScale1
         profile.zoom2 = frameState.zoomScale2
         saveProfile()
+    }
+
+    fun setSafeArea(safeArea: RectF) {
+        frameState.setSafeArea(safeArea)
+        frameViewRef.get()?.requestRender()
     }
 
     /**************************************************************************
