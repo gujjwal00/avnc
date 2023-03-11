@@ -67,7 +67,7 @@ class HomeActivity : AppCompatActivity() {
         viewModel.profileDeletedEvent.observe(this) { onProfileDeleted(it) }
         viewModel.newConnectionEvent.observe(this) { startNewConnection(it) }
         viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }
-        viewModel.serverProfiles.observe(this) { updateShortcuts(it) }
+        //viewModel.serverProfiles.observe(this) { updateShortcuts(it) }
 
         showWelcomeMsg()
     }
@@ -162,7 +162,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun onProfileDeleteConfirmed(profile: ServerProfile) {
-        disableShortcut(profile)
+        //disableShortcut(profile)
     }
 
     private fun updateDiscoveryBadge(list: List<ServerProfile>) {
