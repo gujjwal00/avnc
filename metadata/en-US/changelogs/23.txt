@@ -1,0 +1,7 @@
+* Added support for Unicode clipboard sharing (requires server support)
+* Added support for raw key events (requires server support)
+* Allowed 'Remote drag' action for One-finger swipe gesture
+* You can now dynamically change gesture style when connected to a server
+  (enabled by "Settings => Viewer => Show gesture style toggle")
+* Fixed invisible virtual keys when fullscreen was disabled
+* Fixed possible crash when delayed-click was enabled
