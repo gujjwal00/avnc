@@ -189,4 +189,5 @@
     <string name="pref_long_press_swipe">Langes Drücken und Wischen</string>
     <string name="pref_auto_reconnect">Automatisch wiederverbinden</string>
     <string name="msg_shortcut_server_deleted">Dieser Server wurde gelöscht</string>
+    <string name="msg_button_up_delay_help">Klicks zu verzögern kann in seltenen Fällen helfen, wenn eine App nicht auf Klicks reagiert.</string>
 </resources>
