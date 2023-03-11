@@ -133,5 +133,14 @@ class VncActivityTest {
         }
     }
 
+    @Test
+    fun clientToServerClipboard() {
+        val sample = "Pivot! Pivot! Pivot! Pivot!!!"
+        setClipboardText(sample)
+        testWrapper {
+            Thread.sleep(2000) // Wait for clipboard sync
+        }
+        Assert.assertEquals(sample, testServer.receivedCutText)
+    }
 
 }

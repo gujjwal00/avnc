@@ -8,6 +8,7 @@
 
 package com.gaurav.avnc
 
+import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.SystemClock
@@ -74,6 +75,13 @@ fun getClipboardText(): String? {
         }
     }
     return text
+}
+
+fun setClipboardText(text: String) {
+    instrumentation.runOnMainSync {
+        (targetContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager)
+                .setPrimaryClip(ClipData.newPlainText(null, text))
+    }
 }
 
 /**

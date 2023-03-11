@@ -50,7 +50,7 @@ open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
      */
     fun getClipboardText(): String? {
         try {
-            clipboard.primaryClip?.getItemAt(0)?.text?.toString()
+            return clipboard.primaryClip?.getItemAt(0)?.text?.toString()
         } catch (t: Throwable) {
             Log.e(javaClass.simpleName, "Could not retrieve text from clipboard.", t)
         }
