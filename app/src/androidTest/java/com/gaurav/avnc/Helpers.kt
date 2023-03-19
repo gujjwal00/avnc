@@ -8,23 +8,31 @@
 
 package com.gaurav.avnc
 
+import android.app.Activity
+import android.app.Instrumentation
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.os.SystemClock
 import android.view.View
 import android.widget.ProgressBar
+import androidx.core.net.toUri
 import androidx.preference.PreferenceManager
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.platform.app.InstrumentationRegistry
 import junit.framework.AssertionFailedError
 import org.hamcrest.core.IsNot.not
 import org.junit.Assert
+import java.io.BufferedWriter
+import java.io.File
 
 /**
  * Global accessors
@@ -94,3 +102,20 @@ class ProgressAssertion(private val test: (Int) -> Boolean) : ViewAssertion {
         Assert.assertTrue("Progress test failed for '${view.progress}'", test(view.progress))
     }
 }
+
+/**
+ * Helper for testing file selection by user.
+ *
+ * It creates a temporary file, populated by invoking [fileWriter]
+ * Then Intent response is hooked up to return that file.
+ *
+ * Note: [Intents.init] must have been called before using this function
+ */
+fun setupFileOpenIntent(fileWriter: BufferedWriter.() -> Unit) {
+    val file = File.createTempFile("avnc", "test")
+    file.bufferedWriter().use { it.fileWriter() }
+    Intents.intending(IntentMatchers.hasAction(Intent.ACTION_OPEN_DOCUMENT))
+            .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, Intent().setData(file.toUri())))
+}
+
+fun setupFileOpenIntent(fileContent: String) = setupFileOpenIntent { write(fileContent) }

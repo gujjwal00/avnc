@@ -11,6 +11,7 @@ package com.gaurav.avnc.ui.home
 import android.app.Dialog
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -304,20 +305,28 @@ class ProfileEditorFragment : DialogFragment() {
             return
 
         lifecycleScope.launch(Dispatchers.IO) {
-
-            val text = requireContext().contentResolver.openInputStream(uri).use { it?.reader()?.readText() ?: "" }
-            val pem = runCatching { PEMDecoder.parsePEM(text.toCharArray()) }
-            val encrypted = runCatching { PEMDecoder.isPEMEncrypted(pem.getOrNull()) }.getOrNull() ?: false
+            var key = ""
+            var encrypted = false
+            val result = runCatching {
+                requireContext().contentResolver.openAssetFileDescriptor(uri, "r")!!.use {
+                    // Valid key files are only few KBs. So if selected file is too big,
+                    // user has accidentally selected something else.
+                    check(it.length < 200 * 1024) { "File is too big [${it.length}]" }
+                    key = it.createInputStream().use { s -> s.reader().use { r -> r.readText() } }
+                }
+                encrypted = PEMDecoder.isPEMEncrypted(PEMDecoder.parsePEM(key.toCharArray()))
+            }
 
             lifecycleScope.launchWhenCreated {
-                if (pem.isSuccess) {
-                    profile.sshPrivateKey = text
+                result.onSuccess {
+                    profile.sshPrivateKey = key
                     binding.keyImportBtn.setText(R.string.title_change)
                     binding.keyImportBtn.error = null
                     binding.isPrivateKeyEncrypted = encrypted
                     Snackbar.make(requireView(), R.string.msg_imported, Snackbar.LENGTH_SHORT).show()
-                } else {
+                }.onFailure {
                     Snackbar.make(requireView(), R.string.msg_invalid_key_file, Snackbar.LENGTH_LONG).show()
+                    Log.e("ProfileEditor", "Error importing Private Key", it)
                 }
             }
         }
