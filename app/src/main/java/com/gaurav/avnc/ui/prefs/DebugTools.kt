@@ -9,19 +9,23 @@
 package com.gaurav.avnc.ui.prefs
 
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.BaseInputConnection
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.annotation.Keep
-import androidx.core.text.PrecomputedTextCompat
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.FragmentKeyTestBinding
 import com.gaurav.avnc.databinding.FragmentLogsBinding
@@ -30,10 +34,8 @@ import com.gaurav.avnc.util.Debugging
 import com.gaurav.avnc.viewmodel.PrefsViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.ref.WeakReference
 
 abstract class DebugFragment : Fragment() {
     abstract fun title(): String
@@ -65,23 +67,18 @@ class LogsFragment : DebugFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentLogsBinding.inflate(inflater, container, false)
+        binding.logsRv.layoutManager = LinearLayoutManager(requireContext())
+        binding.logsRv.adapter = LogsAdapter(listOf("Loading ..."))
 
         lifecycleScope.launch {
-            val textViewRef = WeakReference(binding.text)
-            var precomputedText: PrecomputedTextCompat? = null
-
             withContext(Dispatchers.IO) {
-                logs = Debugging.logcat()
-                textViewRef.get()?.let {
-                    val params = PrecomputedTextCompat.Params.Builder(it.paint).build()
-                    precomputedText = PrecomputedTextCompat.create(logs, params)
+                logs = Debugging.logcat().ifBlank { "No logs yet!" }
+                val lines = logs.lines()
+                withContext(Dispatchers.Main) {
+                    binding.logsRv.adapter = LogsAdapter(lines)
+                    if (lines.isNotEmpty())
+                        binding.logsRv.scrollToPosition(lines.size - 1)
                 }
-            }
-
-            precomputedText?.let {
-                binding.text.text = it
-                delay(100)
-                binding.vScroll.fullScroll(View.FOCUS_DOWN)
             }
         }
 
@@ -94,6 +91,26 @@ class LogsFragment : DebugFragment() {
         binding.copyBtn.setOnClickListener { copyLogs(logs) }
         return binding.root
     }
+
+    class LogsAdapter(private val logList: List<String>) : RecyclerView.Adapter<LogsViewHolder>() {
+
+        override fun getItemCount() = logList.size
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LogsViewHolder {
+            val tv = TextView(parent.context)
+            tv.typeface = Typeface.MONOSPACE
+            tv.ellipsize = TextUtils.TruncateAt.END
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+            tv.setSingleLine()
+            return LogsViewHolder(tv)
+        }
+
+        override fun onBindViewHolder(holder: LogsViewHolder, position: Int) {
+            holder.tv.text = logList[position]
+        }
+    }
+
+    class LogsViewHolder(val tv: TextView) : RecyclerView.ViewHolder(tv)
 }
 
 

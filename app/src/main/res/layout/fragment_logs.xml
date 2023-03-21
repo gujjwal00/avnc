@@ -14,26 +14,18 @@
         android:orientation="vertical"
         android:padding="@dimen/padding_normal">
 
-        <ScrollView
-            android:id="@+id/v_scroll"
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_normal"
-                    android:text="@string/msg_loading"
-                    android:textSize="12sp"
-                    android:typeface="monospace" />
-            </HorizontalScrollView>
-        </ScrollView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/logs_rv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:minWidth="5000dp"
+                android:verticalScrollbarPosition="left" />
+        </HorizontalScrollView>
 
         <FrameLayout
             android:layout_width="match_parent"
