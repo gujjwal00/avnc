@@ -158,6 +158,14 @@ class KeyHandlerTest {
     }
 
     @Test
+    fun charWithSuper() {
+        sendKeyWithMeta(KeyEvent.KEYCODE_META_LEFT, KeyEvent.META_META_ON)
+        sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_META_ON)
+        assertEquals(XKeySym.XK_Super_L, dispatchedKeyDowns[0])
+        assertEquals('a'.code, dispatchedKeyDowns[1])
+    }
+
+    @Test
     fun numpadWithNumlock() {
         sendKeyWithMeta(KeyEvent.KEYCODE_NUMPAD_1, KeyEvent.META_NUM_LOCK_ON)
         assertEquals('1'.code, dispatchedKeyDowns.firstOrNull())
