@@ -67,6 +67,7 @@
     <string name="msg_server_profile_added">Server added</string>
     <string name="msg_server_profile_deleted">Server deleted</string>
     <string name="msg_zoom_reset">Zoom reset to 100%</string>
+    <string name="msg_zoom_reset_default">Zoom reset to default</string>
     <string name="msg_zoom_saved">Saved current zoom as default</string>
     <string name="msg_pip_not_supported">Not supported on this device</string>
     <string name="msg_ptr_hiding_not_supported">Not supported on this device</string>

@@ -270,6 +270,11 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
         frameViewRef.get()?.requestRender()
     }
 
+    fun resetZoomToDefault() {
+        frameState.setZoom(profile.zoom1, profile.zoom2)
+        frameViewRef.get()?.requestRender()
+    }
+
     fun panFrame(deltaX: Float, deltaY: Float) {
         frameState.pan(deltaX, deltaY)
         frameViewRef.get()?.requestRender()

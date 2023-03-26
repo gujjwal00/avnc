@@ -106,7 +106,7 @@ class VncActivity : AppCompatActivity() {
         //Buttons
         binding.keyboardBtn.setOnClickListener { showKeyboard(); closeDrawers() }
         binding.zoomOptions.setOnLongClickListener { resetZoom(); closeDrawers(); true }
-        binding.zoomResetBtn.setOnClickListener { resetZoom(); closeDrawers() }
+        binding.zoomResetBtn.setOnClickListener { resetZoomToDefault(); closeDrawers() }
         binding.zoomSaveBtn.setOnClickListener { saveZoom(); closeDrawers() }
         binding.virtualKeysBtn.setOnClickListener { virtualKeys.show(); closeDrawers() }
         binding.reconnectBtn.setOnClickListener { retryConnection() }
@@ -201,6 +201,11 @@ class VncActivity : AppCompatActivity() {
     private fun resetZoom() {
         viewModel.resetZoom()
         Toast.makeText(this, getString(R.string.msg_zoom_reset), Toast.LENGTH_SHORT).show()
+    }
+
+    private fun resetZoomToDefault() {
+        viewModel.resetZoomToDefault()
+        Toast.makeText(this, getString(R.string.msg_zoom_reset_default), Toast.LENGTH_SHORT).show()
     }
 
     private fun saveZoom() {
