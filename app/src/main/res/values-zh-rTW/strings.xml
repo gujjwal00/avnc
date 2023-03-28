@@ -85,7 +85,7 @@
     <string name="desc_save_zoom_btn">將當前縮放設為預設</string>
     <string name="desc_back_btn">返回</string>
     <string name="desc_discovered_list">自動發現的伺服器</string>
-    <string name="desc_saved_servers_list">已保存伺服器</string>
+    <string name="desc_saved_servers_list">已儲存的伺服器</string>
     <string name="pref_ui">界面</string>
     <string name="pref_input">輸入</string>
     <string name="pref_viewer_summary">畫中畫、縮放</string>
@@ -179,7 +179,7 @@
     <string name="pref_per_orientation_zoom">每個方向獨立縮放</string>
     <string name="pref_saved_server_lock_summary">連接前要求生物識別/密碼</string>
     <string name="pref_discovery">搜尋</string>
-    <string name="pref_saved_server_lock">鎖定已保存的伺服器</string>
+    <string name="pref_saved_server_lock">鎖定已儲存的伺服器</string>
     <string name="pref_debugging">除錯</string>
     <string name="pref_logs">日誌</string>
     <string name="pref_touch_test">觸控測試</string>
