@@ -105,8 +105,9 @@ class VncActivity : AppCompatActivity() {
 
         //Buttons
         binding.keyboardBtn.setOnClickListener { showKeyboard(); closeDrawers() }
-        binding.zoomOptions.setOnLongClickListener { resetZoom(); closeDrawers(); true }
+        binding.zoomOptions.setOnLongClickListener { resetZoomToDefault(); closeDrawers(); true }
         binding.zoomResetBtn.setOnClickListener { resetZoomToDefault(); closeDrawers() }
+        binding.zoomResetBtn.setOnLongClickListener { resetZoom(); closeDrawers(); true }
         binding.zoomSaveBtn.setOnClickListener { saveZoom(); closeDrawers() }
         binding.virtualKeysBtn.setOnClickListener { virtualKeys.show(); closeDrawers() }
         binding.reconnectBtn.setOnClickListener { retryConnection() }
