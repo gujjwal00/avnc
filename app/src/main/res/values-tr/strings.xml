@@ -190,4 +190,5 @@
     <string name="pref_double_tap_swipe">Çift dokun ve kaydır</string>
     <string name="pref_long_press_swipe">Uzun bas ve kaydır</string>
     <string name="msg_shortcut_server_deleted">Bu sunucu silindi</string>
+    <string name="msg_zoom_reset_default">Yakınlaştırma öntanımlı değere sıfırlandı</string>
 </resources>
