@@ -1,0 +1,6 @@
+* Reset Zoom button will now change zoom to saved default
+  (You can Long-press on the Reset button to set 100% zoom)
+* Fixed copy/paste with some TigerVNC servers
+* Fixed random black screens when connecting to TigerVNC
+* Fixed possible crash when importing invalid private key
+* New language: Portuguese (by ssantos)
