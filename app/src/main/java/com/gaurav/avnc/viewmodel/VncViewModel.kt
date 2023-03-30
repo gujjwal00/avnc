@@ -214,11 +214,10 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
             ServerProfile.CHANNEL_TCP ->
                 client.connect(profile.host, profile.port)
 
-            ServerProfile.CHANNEL_SSH_TUNNEL -> {
-                sshTunnel.open()
-                client.connect(sshTunnel.localHost, sshTunnel.localPort)
-                sshTunnel.stopAcceptingConnections()
-            }
+            ServerProfile.CHANNEL_SSH_TUNNEL ->
+                sshTunnel.open().use {
+                    client.connect(it.host, it.port)
+                }
 
             else -> throw IOException("Unknown Channel: ${profile.channelType}")
         }

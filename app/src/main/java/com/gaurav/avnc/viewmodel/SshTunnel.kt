@@ -15,6 +15,7 @@ import com.trilead.ssh2.KnownHosts
 import com.trilead.ssh2.LocalPortForwarder
 import com.trilead.ssh2.ServerHostKeyVerifier
 import com.trilead.ssh2.crypto.PEMDecoder
+import java.io.Closeable
 import java.io.File
 import java.io.IOException
 import java.net.InetAddress
@@ -85,20 +86,29 @@ class HostKeyVerifier(private val viewModel: VncViewModel) : ServerHostKeyVerifi
 }
 
 /**
+ * Small wrapper around [LocalPortForwarder].
+ *
+ * Once connection has been successfully established via [host] & [port],
+ * this gate should be closed to stop new connections.
+ */
+class TunnelGate(val host: String, val port: Int, private val forwarder: LocalPortForwarder) : Closeable {
+    override fun close() {
+        forwarder.close()
+    }
+}
+
+/**
  * Manager for SSH Tunnel
  */
 class SshTunnel(private val viewModel: VncViewModel) {
 
     private var connection: Connection? = null
-    private var forwarder: LocalPortForwarder? = null
-
-    val localHost = "127.0.0.1"
-    var localPort = 0
+    private val localHost = "127.0.0.1"
 
     /**
      * Opens the tunnel according to current profile in [viewModel].
      */
-    fun open() {
+    fun open(): TunnelGate {
         val profile = viewModel.profile
         val connection = connect(profile)
         this.connection = connection
@@ -122,16 +132,13 @@ class SshTunnel(private val viewModel: VncViewModel) {
             val address = InetSocketAddress(localHost, attemptedPort)
 
             try {
-                forwarder = connection.createLocalPortForwarder(address, profile.host, profile.port)
-                localPort = attemptedPort
-                break
+                val forwarder = connection.createLocalPortForwarder(address, profile.host, profile.port)
+                return TunnelGate(localHost, attemptedPort, forwarder)
             } catch (e: IOException) {
                 //Retry
             }
         }
-
-        if (localPort == 0)
-            throw IOException("Cannot find a local port for SSH Tunnel")
+        throw IOException("Cannot find a local port for SSH Tunnel")
     }
 
     /**
@@ -151,17 +158,7 @@ class SshTunnel(private val viewModel: VncViewModel) {
         throw NoRouteToHostException("Unreachable SSH host: ${profile.sshHost}")
     }
 
-    /**
-     * Stop accepting new connections.
-     * This has no effect on connections already established through the tunnel.
-     */
-    fun stopAcceptingConnections() {
-        forwarder?.close()
-        forwarder = null
-    }
-
     fun close() {
-        forwarder?.close()
         connection?.close()
     }
 }
