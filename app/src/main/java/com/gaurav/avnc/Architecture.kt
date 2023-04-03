@@ -95,7 +95,7 @@ import com.gaurav.avnc.vnc.VncClient
  * - Connection to VNC server is managed by [VncViewModel], using [VncClient].
  * - [VncClient] is a wrapper around native `rfbClient` from LibVNCClient.
  *
- * - [CredentialFragment] is used to ask username & password from user.
+ * - [LoginFragment] is used to ask username & password from user.
  * - [SshTunnel] is used to create a SSH tunnel, which can be used for connection.
  * - [HostKeyFragment] is used to verify unknown SSH hosts.
  * -

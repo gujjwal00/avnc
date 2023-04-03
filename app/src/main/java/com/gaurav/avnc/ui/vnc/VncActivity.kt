@@ -113,7 +113,7 @@ class VncActivity : AppCompatActivity() {
         binding.reconnectBtn.setOnClickListener { retryConnection() }
 
         //Observers
-        viewModel.credentialRequest.observe(this) { showCredentialDialog() }
+        viewModel.credentialRequest.observe(this) { showLoginDialog() }
         viewModel.sshHostKeyVerifyRequest.observe(this) { showHostKeyDialog() }
         viewModel.state.observe(this) { onClientStateChanged(it) }
     }
@@ -191,8 +191,8 @@ class VncActivity : AppCompatActivity() {
         }
     }
 
-    private fun showCredentialDialog() {
-        CredentialFragment().show(supportFragmentManager, "CredentialDialog")
+    private fun showLoginDialog() {
+        LoginFragment().show(supportFragmentManager, "LoginDialog")
     }
 
     private fun showHostKeyDialog() {

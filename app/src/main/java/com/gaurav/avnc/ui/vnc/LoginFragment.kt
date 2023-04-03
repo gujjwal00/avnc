@@ -25,7 +25,7 @@ import com.google.android.material.textfield.TextInputLayout
 /**
  * Allows user to enter credentials for remote server.
  */
-class CredentialFragment : DialogFragment() {
+class LoginFragment : DialogFragment() {
     val viewModel by activityViewModels<VncViewModel>()
     lateinit var binding: FragmentCredentialBinding
 
@@ -100,9 +100,10 @@ class CredentialFragment : DialogFragment() {
         if (viewModel.pref.server.lockSavedServer)
             return
 
-        viewModel.knownCredentials.observe(this) { list ->
-            val usernames = list.map { it.username }.filter { it.isNotEmpty() }.distinct()
-            val passwords = preparePasswordSuggestions(list)
+        viewModel.savedProfiles.observe(this) { profiles ->
+            val logins = profiles.map { LoginInfo(it.name, it.host, it.username, it.password) }
+            val usernames = logins.map { it.username }.filter { it.isNotEmpty() }.distinct()
+            val passwords = preparePasswordSuggestions(logins)
 
             if (usernames.isNotEmpty()) {
                 val usernameAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, usernames)

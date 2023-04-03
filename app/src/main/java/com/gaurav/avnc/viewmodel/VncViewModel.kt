@@ -116,10 +116,10 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
     val serverUnlockRequest = LiveRequest<Any?, Boolean>(false, viewModelScope)
 
     /**
-     * List of known credentials. Used for providing suggestion when
-     * new credentials are required.
+     * List of saved profiles.
+     * Used by login-autocompletion.
      */
-    val knownCredentials by lazy { serverProfileDao.getCredentials() }
+    val savedProfiles by lazy { serverProfileDao.getLiveList() }
 
     /**
      * Holds a weak reference to [FrameView] instance.

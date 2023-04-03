@@ -10,7 +10,6 @@ package com.gaurav.avnc.model.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.model.ServerProfile
 
 @Dao
@@ -31,9 +30,6 @@ interface ServerProfileDao {
 
     @Query("SELECT * FROM profiles WHERE name = :name")
     suspend fun getByName(name: String): List<ServerProfile>
-
-    @Query("SELECT name, host, username, password FROM profiles")
-    fun getCredentials(): LiveData<List<LoginInfo>>
 
     @Insert
     suspend fun insert(profile: ServerProfile): Long
