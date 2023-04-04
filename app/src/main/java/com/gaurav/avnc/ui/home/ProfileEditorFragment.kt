@@ -33,9 +33,9 @@ import com.gaurav.avnc.model.ServerProfile.Companion.SSH_AUTH_PASSWORD
 import com.gaurav.avnc.util.MsgDialog
 import com.gaurav.avnc.util.OpenableDocument
 import com.gaurav.avnc.viewmodel.HomeViewModel
+import com.gaurav.avnc.viewmodel.isPrivateKeyEncrypted
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.trilead.ssh2.crypto.PEMDecoder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -181,8 +181,8 @@ class ProfileEditorFragment : DialogFragment() {
             useSshTunnel.isChecked = (p.channelType == CHANNEL_SSH_TUNNEL)
             sshAuthTypePassword.isChecked = (p.sshAuthType == SSH_AUTH_PASSWORD)
             sshAuthTypeKey.isChecked = (p.sshAuthType == SSH_AUTH_KEY)
+            isPrivateKeyEncrypted = p.sshPrivateKey.isNotBlank() && isPrivateKeyEncrypted(p.sshPrivateKey)
 
-            isPrivateKeyEncrypted = isKeyEncrypted(p.sshPrivateKey)
 
             // TODO Move it to proper place
             val securityTypes = mapOf(
@@ -314,7 +314,7 @@ class ProfileEditorFragment : DialogFragment() {
                     check(it.length < 200 * 1024) { "File is too big [${it.length}]" }
                     key = it.createInputStream().use { s -> s.reader().use { r -> r.readText() } }
                 }
-                encrypted = PEMDecoder.isPEMEncrypted(PEMDecoder.parsePEM(key.toCharArray()))
+                encrypted = isPrivateKeyEncrypted(key)
             }
 
             lifecycleScope.launchWhenCreated {
@@ -330,11 +330,5 @@ class ProfileEditorFragment : DialogFragment() {
                 }
             }
         }
-    }
-
-    private fun isKeyEncrypted(key: String): Boolean {
-        return runCatching {
-            PEMDecoder.isPEMEncrypted(PEMDecoder.parsePEM(key.toCharArray()))
-        }.getOrNull() ?: false
     }
 }

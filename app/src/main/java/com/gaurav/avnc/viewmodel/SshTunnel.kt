@@ -14,6 +14,7 @@ import com.trilead.ssh2.Connection
 import com.trilead.ssh2.KnownHosts
 import com.trilead.ssh2.LocalPortForwarder
 import com.trilead.ssh2.ServerHostKeyVerifier
+import com.trilead.ssh2.crypto.PEMDecoder
 import java.io.File
 import java.io.IOException
 import java.net.InetAddress
@@ -21,6 +22,16 @@ import java.net.InetSocketAddress
 import java.net.NoRouteToHostException
 import java.net.ServerSocket
 import java.security.MessageDigest
+
+/**
+ * Checks if given private key is encrypted.
+ * [key] is in PEM format.
+ *
+ * Throws [IOException] if [key] is not a valid private key.
+ */
+fun isPrivateKeyEncrypted(key: String): Boolean {
+    return PEMDecoder.isPEMEncrypted(PEMDecoder.parsePEM(key.toCharArray()))
+}
 
 
 /**
