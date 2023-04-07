@@ -262,7 +262,6 @@ class ProfileEditorFragment : DialogFragment() {
             result = result and
                     validateNotEmpty(binding.sshHost) and
                     validateNotEmpty(binding.sshUsername) and
-                    validateNotEmpty(binding.sshPassword, binding.sshAuthTypePassword.isChecked) and
                     validatePrivateKey()
         }
 
@@ -284,11 +283,6 @@ class ProfileEditorFragment : DialogFragment() {
         if (binding.sshAuthTypeKey.isChecked) {
             if (profile.sshPrivateKey.isEmpty()) {
                 binding.keyImportBtn.error = "Required"
-                return false
-            }
-
-            if (binding.isPrivateKeyEncrypted && binding.sshKeyPassword.length() == 0) {
-                binding.sshKeyPassword.error = "Password is required for encrypted Private Key"
                 return false
             }
         }

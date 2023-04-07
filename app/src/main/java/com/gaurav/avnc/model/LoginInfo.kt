@@ -9,11 +9,19 @@
 package com.gaurav.avnc.model
 
 /**
- * Simple model used by login auto-completion.
+ * Generic wrapper for login information.
+ * This can be used to hold different [Type]s of credentials.
  */
 data class LoginInfo(
-        val name: String, //Profile name
-        val host: String,
-        val username: String,
-        val password: String,
-)
+        var name: String = "", // Profile name
+        var host: String = "",
+        var username: String = "",
+        var password: String = "",
+) {
+    enum class Type {
+        VNC_PASSWORD,
+        VNC_CREDENTIAL,  // Username & Password
+        SSH_PASSWORD,
+        SSH_KEY_PASSWORD
+    }
+}

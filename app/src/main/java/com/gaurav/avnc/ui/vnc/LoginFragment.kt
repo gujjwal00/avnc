@@ -12,81 +12,112 @@ import android.app.Dialog
 import android.os.Bundle
 import android.util.ArrayMap
 import android.widget.ArrayAdapter
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.FragmentCredentialBinding
 import com.gaurav.avnc.model.LoginInfo
+import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.viewmodel.VncViewModel
-import com.gaurav.avnc.vnc.UserCredential
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 
 /**
- * Allows user to enter credentials for remote server.
+ * Allows user to enter login information.
+ *
+ * There are different types of login information ([LoginInfo.Type]),
+ * but all of them basically boils down to a username/password combo.
+ *
+ * User can choose to "remember" the information, in which case it will be
+ * saved in the profile.
+ *
  */
 class LoginFragment : DialogFragment() {
-    val viewModel by activityViewModels<VncViewModel>()
-    lateinit var binding: FragmentCredentialBinding
+    private lateinit var binding: FragmentCredentialBinding
+    private val viewModel by activityViewModels<VncViewModel>()
+    private val loginType by lazy { viewModel.loginInfoRequest.value!! }
+    private val loginInfo by lazy { getLoginInfoFromProfile(viewModel.profile) }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = FragmentCredentialBinding.inflate(layoutInflater, null, false)
 
-        binding.usernameRequired = viewModel.credentialRequest.value
-        binding.canRemember = viewModel.profile.ID != 0L
+        binding.loginInfo = loginInfo
+        binding.usernameLayout.isVisible = loginInfo.username.isBlank() && loginType == LoginInfo.Type.VNC_CREDENTIAL
+        binding.passwordLayout.isVisible = loginInfo.password.isBlank()
+        binding.remember.isVisible = viewModel.profile.ID != 0L
+        if (loginType == LoginInfo.Type.SSH_KEY_PASSWORD)
+            binding.passwordLayout.setHint(R.string.hint_key_password)
 
         setupAutoComplete()
-
         isCancelable = false
-        return prepareDialog()
-    }
 
-
-    /**
-     * Prepare dialog instance
-     */
-    private fun prepareDialog(): Dialog {
         return MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.title_login)
+                .setTitle(getTitle())
                 .setView(binding.root)
-                .setPositiveButton(android.R.string.ok) { _, _ ->
-                    val username = binding.username.text.toString()
-                    val password = getRealPassword(binding.password.text.toString())
-
-                    val cred = UserCredential(username, password)
-                    viewModel.credentialRequest.offerResponse(cred)
-
-                    if (binding.remember.isChecked)
-                        scheduleCredentialSave(viewModel, cred)
-                }
-                .setNegativeButton(android.R.string.cancel) { _, _ ->
-                    viewModel.credentialRequest.cancelRequest()
-                    requireActivity().finish()
-                }
+                .setPositiveButton(android.R.string.ok) { _, _ -> onOk() }
+                .setNegativeButton(android.R.string.cancel) { _, _ -> onCancel() }
                 .create()
     }
 
-    companion object {
+    private fun getTitle() = when (loginType) {
+        LoginInfo.Type.VNC_PASSWORD,
+        LoginInfo.Type.VNC_CREDENTIAL -> R.string.title_login
+        LoginInfo.Type.SSH_PASSWORD -> R.string.title_ssh_login
+        LoginInfo.Type.SSH_KEY_PASSWORD -> R.string.title_unlock_private_key
+    }
 
-        /**
-         * If user has asked to remember credentials, we need to save them
-         * to database. But we don't want to save them immediately because
-         * user might have mistyped them. So, we wait until successful
-         * connection before saving them.
-         *
-         * This method is 'static' to avoid any accidental leak of fragment instance.
-         */
-        private fun scheduleCredentialSave(viewModel: VncViewModel, cred: UserCredential) {
-            with(viewModel) {
-                state.observeForever {
-                    if (it == VncViewModel.State.Connected) {
-                        profile.username = cred.username
-                        profile.password = cred.password
-                        saveProfile()
-                    }
+    private fun getLoginInfoFromProfile(p: ServerProfile): LoginInfo {
+        return when (loginType) {
+            LoginInfo.Type.VNC_PASSWORD -> LoginInfo(p.name, p.host, "", p.password)
+            LoginInfo.Type.VNC_CREDENTIAL -> LoginInfo(p.name, p.host, p.username, p.password)
+            LoginInfo.Type.SSH_PASSWORD -> LoginInfo(p.name, p.sshHost, "", p.sshPassword)
+            LoginInfo.Type.SSH_KEY_PASSWORD -> LoginInfo(p.name, p.sshHost, "", p.sshPrivateKeyPassword)
+        }
+    }
+
+    private fun setLoginInfoInProfile(p: ServerProfile, l: LoginInfo) {
+        when (loginType) {
+            LoginInfo.Type.VNC_PASSWORD -> p.password = l.password
+            LoginInfo.Type.VNC_CREDENTIAL -> {
+                p.username = l.username
+                p.password = l.password
+            }
+            LoginInfo.Type.SSH_PASSWORD -> p.sshPassword = l.password
+            LoginInfo.Type.SSH_KEY_PASSWORD -> p.sshPrivateKeyPassword = l.password
+        }
+    }
+
+    private fun onOk() {
+        loginInfo.password = getRealPassword(loginInfo.password)
+        viewModel.loginInfoRequest.offerResponse(loginInfo)
+        if (binding.remember.isChecked)
+            saveLoginInfo(loginInfo)
+    }
+
+    private fun onCancel() {
+        viewModel.loginInfoRequest.cancelRequest()
+        requireActivity().finish()
+    }
+
+    /**
+     * If user has asked to remember credentials, we need to save them
+     * to database. But we don't want to save them immediately because
+     * user might have mistyped them. So, we wait until successful
+     * connection before saving them.
+     */
+    private fun saveLoginInfo(loginInfo: LoginInfo) {
+        // Use activity as owner because this fragment will likely be destroyed before connecting
+        viewModel.state.observe(requireActivity(), object : Observer<VncViewModel.State> {
+            override fun onChanged(t: VncViewModel.State?) {
+                if (t == VncViewModel.State.Connected) {
+                    setLoginInfoInProfile(viewModel.profile, loginInfo)
+                    viewModel.saveProfile()
+                    viewModel.state.removeObserver(this)
                 }
             }
-        }
+        })
     }
 
     /**
@@ -101,7 +132,7 @@ class LoginFragment : DialogFragment() {
             return
 
         viewModel.savedProfiles.observe(this) { profiles ->
-            val logins = profiles.map { LoginInfo(it.name, it.host, it.username, it.password) }
+            val logins = profiles.map { getLoginInfoFromProfile(it) }
             val usernames = logins.map { it.username }.filter { it.isNotEmpty() }.distinct()
             val passwords = preparePasswordSuggestions(logins)
 

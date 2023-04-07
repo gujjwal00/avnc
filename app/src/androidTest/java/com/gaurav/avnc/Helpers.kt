@@ -19,6 +19,7 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.core.net.toUri
 import androidx.preference.PreferenceManager
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.ViewInteraction
@@ -26,6 +27,7 @@ import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.platform.app.InstrumentationRegistry
 import junit.framework.AssertionFailedError
@@ -49,7 +51,8 @@ fun ViewInteraction.checkWillBeDisplayed() = checkWithTimeout(matches(isDisplaye
 fun ViewInteraction.checkIsNotDisplayed() = check(matches(not(isDisplayed())))!!
 fun ViewInteraction.doClick() = perform(click())!!
 fun ViewInteraction.doLongClick() = perform(longClick())!!
-fun ViewInteraction.doTypeText(text: String) = perform(typeText(text))!!
+fun ViewInteraction.doTypeText(text: String) = perform(typeText(text)).perform(closeSoftKeyboard())!!
+fun ViewInteraction.inDialog() = inRoot(RootMatchers.isDialog())!!
 
 
 /**
@@ -73,6 +76,25 @@ fun ViewInteraction.checkWithTimeout(assertion: ViewAssertion, timeout: Int = 50
     }
 
     throw Exception("Assertion did not become valid within timeout", t)
+}
+
+/**
+ * Runs given [block] in context of scenario's activity.
+ * It simplifies the pattern of getting some value using activity.
+ */
+fun <A : Activity, R> ActivityScenario<A>.withActivity(block: A.() -> R): R {
+    var r: R? = null
+    onActivity { r = it.block() }
+    return r!!
+}
+
+/**
+ * Runs given block synchronously on main thread.
+ */
+fun <R> runOnMainSync(block: () -> R): R {
+    var r: R? = null
+    instrumentation.runOnMainSync { r = block() }
+    return r!!
 }
 
 fun getClipboardText(): String? {

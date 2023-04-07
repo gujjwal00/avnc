@@ -13,6 +13,7 @@ import android.graphics.RectF
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.vnc.FrameScroller
 import com.gaurav.avnc.ui.vnc.FrameState
@@ -101,14 +102,10 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
     val disconnectReason = MutableLiveData("")
 
     /**
-     * Fired when [VncClient] has asked for credential. It is used to
-     * show Credentials dialog to user and return the result to receiver
-     * thread.
-     *
-     * Value of this request is true if username & password are required
-     * and false if only password is required.
+     * Fired when we need some credentials from user.
+     * It will trigger the Login dialog.
      */
-    val credentialRequest = LiveRequest<Boolean, UserCredential>(UserCredential(), viewModelScope)
+    val loginInfoRequest = LiveRequest<LoginInfo.Type, LoginInfo>(LoginInfo(), viewModelScope)
 
     /**
      * Fired to unlock saved servers.
@@ -296,7 +293,7 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
     }
 
     /**************************************************************************
-     * Clipboard Sync
+     * Miscellaneous
      **************************************************************************/
 
     fun sendClipboardText() {
@@ -311,32 +308,38 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
         }
     }
 
+    fun getLoginInfo(type: LoginInfo.Type): LoginInfo {
+        val vu = profile.username
+        val vp = profile.password
+        val sp = profile.sshPassword
+        val kp = profile.sshPrivateKeyPassword
+
+        if (type == LoginInfo.Type.VNC_PASSWORD && vp.isNotBlank())
+            return LoginInfo(password = vp)
+
+        if (type == LoginInfo.Type.VNC_CREDENTIAL && vu.isNotBlank() && vp.isNotBlank())
+            return LoginInfo(username = vu, password = vp)
+
+        if (type == LoginInfo.Type.SSH_PASSWORD && sp.isNotBlank())
+            return LoginInfo(password = sp)
+
+        if (type == LoginInfo.Type.SSH_KEY_PASSWORD && kp.isNotBlank())
+            return LoginInfo(password = kp)
+
+        // Something is missing, so we have to ask the user
+        return loginInfoRequest.requestResponse(type)  // Blocking call
+    }
+
     /**************************************************************************
      * [VncClient.Observer] Implementation
      **************************************************************************/
 
-    /**
-     * Called when remote server has asked for password.
-     */
     override fun onPasswordRequired(): String {
-        if (profile.password.isNotBlank())
-            return profile.password
-
-        return obtainCredential(false).password
+        return getLoginInfo(LoginInfo.Type.VNC_PASSWORD).password
     }
 
-    /**
-     * Called when remote server has asked for both username & password.
-     */
     override fun onCredentialRequired(): UserCredential {
-        if (profile.username.isNotBlank() && profile.password.isNotBlank())
-            return UserCredential(profile.username, profile.password)
-
-        return obtainCredential(true)
-    }
-
-    private fun obtainCredential(usernameRequired: Boolean): UserCredential {
-        return credentialRequest.requestResponse(usernameRequired)   //Blocking call
+        return getLoginInfo(LoginInfo.Type.VNC_CREDENTIAL).let { UserCredential(it.username, it.password) }
     }
 
     override fun onFramebufferUpdated() {

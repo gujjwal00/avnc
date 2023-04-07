@@ -113,7 +113,7 @@ class VncActivity : AppCompatActivity() {
         binding.reconnectBtn.setOnClickListener { retryConnection() }
 
         //Observers
-        viewModel.credentialRequest.observe(this) { showLoginDialog() }
+        viewModel.loginInfoRequest.observe(this) { showLoginDialog() }
         viewModel.sshHostKeyVerifyRequest.observe(this) { showHostKeyDialog() }
         viewModel.state.observe(this) { onClientStateChanged(it) }
     }

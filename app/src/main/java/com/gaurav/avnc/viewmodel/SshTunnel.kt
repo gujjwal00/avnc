@@ -9,6 +9,7 @@
 package com.gaurav.avnc.viewmodel
 
 import android.util.Base64
+import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.model.ServerProfile
 import com.trilead.ssh2.Connection
 import com.trilead.ssh2.KnownHosts
@@ -113,10 +114,19 @@ class SshTunnel(private val viewModel: VncViewModel) {
         val connection = connect(profile)
         this.connection = connection
 
-        if (profile.sshAuthType == ServerProfile.SSH_AUTH_PASSWORD)
-            connection.authenticateWithPassword(profile.sshUsername, profile.sshPassword)
-        else
-            connection.authenticateWithPublicKey(profile.sshUsername, profile.sshPrivateKey.toCharArray(), profile.sshPrivateKeyPassword)
+        when (profile.sshAuthType) {
+            ServerProfile.SSH_AUTH_PASSWORD -> {
+                val password = viewModel.getLoginInfo(LoginInfo.Type.SSH_PASSWORD).password
+                connection.authenticateWithPassword(profile.sshUsername, password)
+            }
+            ServerProfile.SSH_AUTH_KEY -> {
+                var keyPassword = ""
+                if (isPrivateKeyEncrypted(profile.sshPrivateKey))
+                    keyPassword = viewModel.getLoginInfo(LoginInfo.Type.SSH_KEY_PASSWORD).password
+                connection.authenticateWithPublicKey(profile.sshUsername, profile.sshPrivateKey.toCharArray(), keyPassword)
+            }
+            else -> throw IOException("Unknown SSH auth type: ${profile.sshAuthType}")
+        }
 
         if (!connection.isAuthenticationComplete)
             throw IOException("SSH authentication failed")
