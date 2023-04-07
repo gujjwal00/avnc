@@ -49,7 +49,7 @@ class KeyHandlerTest {
         mockDispatcher = mockk()
         every { mockDispatcher.onXKey(any(), any(), true) } answers {
             dispatchedKeyDowns.add(firstArg())
-            dispatchedXTUps.add(secondArg())
+            dispatchedXTDowns.add(secondArg())
             true
         }
         every { mockDispatcher.onXKey(any(), any(), false) } answers {
@@ -183,10 +183,20 @@ class KeyHandlerTest {
         assertTrue(dispatchedKeyDowns.isEmpty())
     }
 
-    fun rawKeys() {
+    @Test
+    fun rawKeyLeft() {
         val scLeft = 105
         val xtLeft = 203
         sendKeyWithScancode(KeyEvent.KEYCODE_DPAD_LEFT, scLeft)
+        assertEquals(xtLeft, dispatchedXTDowns.first())
+        assertEquals(xtLeft, dispatchedXTUps.first())
+    }
+
+    @Test
+    fun rawKeySuper() {
+        val scLeft = 125
+        val xtLeft = 219
+        sendKeyWithScancode(KeyEvent.KEYCODE_META_LEFT, scLeft)
         assertEquals(xtLeft, dispatchedXTDowns.first())
         assertEquals(xtLeft, dispatchedXTUps.first())
     }
