@@ -35,7 +35,7 @@
         <activity-alias
             android:name=".UriReceiverActivity"
             android:exported="true"
-            android:targetActivity=".ui.vnc.UriReceiverActivity">
+            android:targetActivity=".ui.vnc.IntentReceiverActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -67,7 +67,9 @@
             android:supportsPictureInPicture="true"
             tools:ignore="UnusedAttribute" />
 
-        <activity android:name=".ui.vnc.UriReceiverActivity" />
+        <activity
+            android:name=".ui.vnc.IntentReceiverActivity"
+            android:theme="@style/SplashTheme" />
 
         <activity android:name=".ui.prefs.PrefsActivity" />
 
