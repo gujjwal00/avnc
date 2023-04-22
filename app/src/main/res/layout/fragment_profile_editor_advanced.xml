@@ -185,6 +185,16 @@
                     app:layout_constraintTop_toTopOf="@id/button_up_delay"
                     app:tint="?colorControlNormal" />
 
+                <!--Resize remote desktop-->
+                <CheckBox
+                    android:id="@+id/resize_remote_desktop"
+                    style="@style/FormField.CheckBox"
+                    android:checked="@={profile.resizeRemoteDesktop}"
+                    android:text="@string/title_resize_remote_desktop"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/button_up_delay" />
+
                 <!--Image Quality-->
                 <TextView
                     android:id="@+id/image_quality_label"
@@ -209,7 +219,7 @@
                     android:progress="@={profile.imageQuality}"
                     app:layout_constraintEnd_toStartOf="@id/raw_encoding"
                     app:layout_constraintStart_toEndOf="@id/image_quality_label"
-                    app:layout_constraintTop_toBottomOf="@id/button_up_delay" />
+                    app:layout_constraintTop_toBottomOf="@id/resize_remote_desktop" />
 
                 <CheckBox
                     android:id="@+id/raw_encoding"

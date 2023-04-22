@@ -188,6 +188,16 @@ class VncClient(private val observer: Observer) {
     }
 
     /**
+     * Set remote desktop size to given dimensions.
+     * This needs server support to actually work.
+     * Non-positive [width] & [height] are ignored.
+     */
+    fun setDesktopSize(width: Int, height: Int) = ifConnected {
+        if (width > 0 && height > 0)
+            nativeSetDesktopSize(nativePtr, width, height)
+    }
+
+    /**
      * Sends a request for full frame buffer update to remote server.
      */
     fun refreshFrameBuffer() = nativeRefreshFrameBuffer(nativePtr)
@@ -221,6 +231,11 @@ class VncClient(private val observer: Observer) {
             block()
     }
 
+    private inline fun ifConnected(block: () -> Unit) {
+        if (connected)
+            block()
+    }
+
     private external fun nativeClientCreate(): Long
     private external fun nativeConfigure(clientPtr: Long, securityType: Int, useLocalCursor: Boolean, imageQuality: Int, useRawEncoding: Boolean)
     private external fun nativeInit(clientPtr: Long, host: String, port: Int): Boolean
@@ -229,6 +244,7 @@ class VncClient(private val observer: Observer) {
     private external fun nativeSendKeyEvent(clientPtr: Long, keySym: Int, xtCode: Int, isDown: Boolean): Boolean
     private external fun nativeSendPointerEvent(clientPtr: Long, x: Int, y: Int, mask: Int): Boolean
     private external fun nativeSendCutText(clientPtr: Long, bytes: ByteArray, isUTF8: Boolean): Boolean
+    private external fun nativeSetDesktopSize(clientPtr: Long, width: Int, height: Int): Boolean
     private external fun nativeRefreshFrameBuffer(clientPtr: Long): Boolean
     private external fun nativeGetDesktopName(clientPtr: Long): String
     private external fun nativeGetWidth(clientPtr: Long): Int

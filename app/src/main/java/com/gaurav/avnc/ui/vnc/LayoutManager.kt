@@ -78,6 +78,7 @@ class LayoutManager(activity: VncActivity) {
                 manuallyGenerateWindowInsets()
 
             applyInsets()
+            viewModel.resizeRemoteDesktop()
         }
     }
 

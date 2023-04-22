@@ -403,6 +403,13 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeSendCutText(JNIEnv *env, jobject thiz, 
 
 extern "C"
 JNIEXPORT jboolean JNICALL
+Java_com_gaurav_avnc_vnc_VncClient_nativeSetDesktopSize(JNIEnv *env, jobject thiz, jlong client_ptr, jint width,
+                                                        jint height) {
+    return (jboolean) SendExtDesktopSize((rfbClient *) client_ptr, width, height);
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeRefreshFrameBuffer(JNIEnv *env, jobject thiz, jlong clientPtr) {
     auto client = (rfbClient *) clientPtr;
     return (jboolean) SendFramebufferUpdateRequest(client, 0, 0, client->width, client->height, FALSE);

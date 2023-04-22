@@ -159,6 +159,12 @@ data class ServerProfile(
         var idOnRepeater: Int = 0,
 
         /**
+         * Resize remote desktop to match with local window size.
+         */
+        @ColumnInfo(defaultValue = "0")
+        var resizeRemoteDesktop: Boolean = false,
+
+        /**
          * These values are used for SSH Tunnel
          */
         var sshHost: String = "",

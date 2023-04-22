@@ -14,9 +14,10 @@ import androidx.room.migration.AutoMigrationSpec
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.gaurav.avnc.model.ServerProfile
 
-@Database(entities = [ServerProfile::class], version = 3, exportSchema = true, autoMigrations = [
-    AutoMigration(from = 1, to = 2, spec = MainDb.MigrationSpec1to2::class),
-    AutoMigration(from = 2, to = 3, spec = MainDb.MigrationSpec2to3::class)
+@Database(entities = [ServerProfile::class], version = 4, exportSchema = true, autoMigrations = [
+    AutoMigration(from = 1, to = 2, spec = MainDb.MigrationSpec1to2::class),  // in v2.0.0
+    AutoMigration(from = 2, to = 3, spec = MainDb.MigrationSpec2to3::class),  // in v2.1.0
+    AutoMigration(from = 3, to = 4)                                           // in v2.3.0
 ])
 abstract class MainDb : RoomDatabase() {
     abstract val serverProfileDao: ServerProfileDao

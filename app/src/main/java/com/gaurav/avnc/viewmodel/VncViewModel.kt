@@ -330,6 +330,19 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
         return loginInfoRequest.requestResponse(type)  // Blocking call
     }
 
+    /**
+     * Resize remote desktop to match with local window size (if requested by user).
+     * In portrait mode, safe area is used instead of window to exclude the keyboard.
+     */
+    fun resizeRemoteDesktop() {
+        if (profile.resizeRemoteDesktop) frameState.let {
+            if (it.windowWidth > it.windowHeight)
+                messenger.setDesktopSize(it.windowWidth.toInt(), it.windowHeight.toInt())
+            else
+                messenger.setDesktopSize(it.safeArea.width().toInt(), it.safeArea.height().toInt())
+        }
+    }
+
     /**************************************************************************
      * [VncClient.Observer] Implementation
      **************************************************************************/

@@ -32,6 +32,7 @@
     <string name="title_hide_remote_cursor">Hide remote pointer</string>
     <string name="title_key_compat_mode">Send legacy key events</string>
     <string name="title_button_up_delay">Send delayed click events</string>
+    <string name="title_resize_remote_desktop">Resize remote session to local window</string>
     <string name="title_image_quality">Image quality</string>
     <string name="title_orientation">Orientation</string>
     <string name="title_image_quality_raw">Raw</string>
