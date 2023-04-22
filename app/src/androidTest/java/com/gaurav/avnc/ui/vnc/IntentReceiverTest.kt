@@ -13,6 +13,7 @@ import android.content.Intent
 import android.net.Uri
 import android.view.View
 import android.view.WindowManager.LayoutParams.TYPE_TOAST
+import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.Root
@@ -25,6 +26,7 @@ import kotlinx.coroutines.runBlocking
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
+import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 
@@ -66,8 +68,10 @@ class IntentReceiverTest {
     @Test
     fun simpleVncUri() {
         val server = TestServer().apply { start() }
-        ActivityScenario.launch<Activity>(newUriIntent("vnc://localhost:${server.port}"))
-        onView(withId(R.id.frame_view)).checkWillBeDisplayed()
+        ActivityScenario.launch<Activity>(newUriIntent("vnc://localhost:${server.port}")).use {
+            onView(withId(R.id.frame_view)).checkWillBeDisplayed()
+            assertEquals(Lifecycle.State.DESTROYED, it.state)
+        }
     }
 
     @Test
@@ -83,8 +87,10 @@ class IntentReceiverTest {
         runBlocking {
             dbRule.db.serverProfileDao.insert(ServerProfile(name = "Example", host = "localhost", port = server.port))
         }
-        ActivityScenario.launch<Activity>(newUriIntent("vnc://?ConnectionName=Example"))
-        onView(withId(R.id.frame_view)).checkWillBeDisplayed()
+        ActivityScenario.launch<Activity>(newUriIntent("vnc://?ConnectionName=Example")).use {
+            onView(withId(R.id.frame_view)).checkWillBeDisplayed()
+            assertEquals(Lifecycle.State.DESTROYED, it.state)
+        }
     }
 
     @Test
@@ -92,5 +98,29 @@ class IntentReceiverTest {
     fun uriWithUnknownConnectionName() {
         ActivityScenario.launch<Activity>(newUriIntent("vnc://?ConnectionName=NoSuchServer"))
         onToast(withSubstring("No server found with name")).checkWillBeDisplayed()
+    }
+
+
+    /******************************** Shortcuts **************************************/
+
+    private fun newShortcutIntent(profile: ServerProfile) = IntentReceiverActivity.createShortcutIntent(targetContext, profile.ID)
+
+    @Test
+    fun simpleShortcut() {
+        val server = TestServer().apply { start() }
+        val profile = ServerProfile(host = "localhost", port = server.port)
+        runBlocking { profile.ID = dbRule.db.serverProfileDao.insert(profile) }
+
+        ActivityScenario.launch<Activity>(newShortcutIntent(profile)).use {
+            onView(withId(R.id.frame_view)).checkWillBeDisplayed()
+            assertEquals(Lifecycle.State.DESTROYED, it.state)
+        }
+    }
+
+    @Test
+    @SdkSuppress(maxSdkVersion = 29)
+    fun invalidShortcut() {
+        ActivityScenario.launch<Activity>(newShortcutIntent(ServerProfile(ID = 123456)))
+        onToast(withText(R.string.msg_shortcut_server_deleted)).checkWillBeDisplayed()
     }
 }

@@ -14,7 +14,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Window
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.pm.ShortcutInfoCompat
@@ -27,6 +26,7 @@ import com.gaurav.avnc.databinding.ActivityHomeBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.about.AboutActivity
 import com.gaurav.avnc.ui.prefs.PrefsActivity
+import com.gaurav.avnc.ui.vnc.IntentReceiverActivity
 import com.gaurav.avnc.ui.vnc.startVncActivity
 import com.gaurav.avnc.util.Debugging
 import com.gaurav.avnc.util.MsgDialog
@@ -67,7 +67,7 @@ class HomeActivity : AppCompatActivity() {
         viewModel.profileDeletedEvent.observe(this) { onProfileDeleted(it) }
         viewModel.newConnectionEvent.observe(this) { startNewConnection(it) }
         viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }
-        //viewModel.serverProfiles.observe(this) { updateShortcuts(it) }
+        viewModel.serverProfiles.observe(this) { updateShortcuts(it) }
 
         showWelcomeMsg()
     }
@@ -148,21 +148,9 @@ class HomeActivity : AppCompatActivity() {
      * Shows delete confirmation snackbar, allowing the user to Undo deletion.
      */
     private fun onProfileDeleted(profile: ServerProfile) {
-        val callback = object : Snackbar.Callback() {
-            override fun onDismissed(snackbar: Snackbar?, event: Int) {
-                if (event != DISMISS_EVENT_ACTION)
-                    onProfileDeleteConfirmed(profile)
-            }
-        }
-
         Snackbar.make(binding.root, R.string.msg_server_profile_deleted, Snackbar.LENGTH_LONG)
                 .setAction(getString(R.string.title_undo)) { viewModel.insertProfile(profile) }
-                .addCallback(callback)
                 .show()
-    }
-
-    private fun onProfileDeleteConfirmed(profile: ServerProfile) {
-        //disableShortcut(profile)
     }
 
     private fun updateDiscoveryBadge(list: List<ServerProfile>) {
@@ -194,35 +182,53 @@ class HomeActivity : AppCompatActivity() {
         }.isSuccess
     }
 
+    /************************************************************************************
+     * Shortcuts
+     ************************************************************************************/
+
     private fun createShortcutId(profile: ServerProfile) = "shortcut:pid:${profile.ID}"
 
     private fun updateShortcuts(profiles: List<ServerProfile>) {
-        val context = this
         lifecycleScope.launch(Dispatchers.IO) {
             runCatching {
-                val maxShortcuts = ShortcutManagerCompat.getMaxShortcutCountPerActivity(context)
-                val shortcutProfiles = profiles.filter { it.name.isNotBlank() }.take(maxShortcuts)
-                val shortcuts = shortcutProfiles.map { p ->
-                    val intent = ShortcutActivity.createIntent(context, p.ID)
-                    ShortcutInfoCompat.Builder(context, createShortcutId(p))
-                            .setIcon(IconCompat.createWithResource(context, R.drawable.ic_computer_shortcut))
-                            .setShortLabel(p.name)
-                            .setLongLabel("${p.name} (${p.host})")
-                            .setIntent(intent)
-                            .build()
-                }
-                ShortcutManagerCompat.setDynamicShortcuts(context, shortcuts)
-
+                updateShortcutState(profiles)
+                updateDynamicShortcuts(profiles)
             }.onFailure {
                 Log.e("Shortcuts", "Unable to update shortcuts", it)
-                Toast.makeText(context, "Unable to update shortcuts", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun disableShortcut(profile: ServerProfile) {
-        val shortcutId = createShortcutId(profile)
-        val msg = getString(R.string.msg_shortcut_server_deleted)
-        ShortcutManagerCompat.disableShortcuts(this, listOf(shortcutId), msg)
+    /**
+     * Enable/Disable shortcuts based on availability in [profiles]
+     */
+    private fun updateShortcutState(profiles: List<ServerProfile>) {
+        val pinnedShortcuts = ShortcutManagerCompat.getShortcuts(this, ShortcutManagerCompat.FLAG_MATCH_PINNED)
+        val disabledMessage = getString(R.string.msg_shortcut_server_deleted)
+
+        val possibleIds = profiles.map { createShortcutId(it) }
+        val pinnedIds = pinnedShortcuts.map { it.id }
+        val enabledIds = pinnedIds.intersect(possibleIds).toList()
+        val enabledShortcuts = pinnedShortcuts.filter { it.id in enabledIds }
+        val disabledIds = pinnedIds.subtract(enabledIds).toList()
+
+        ShortcutManagerCompat.enableShortcuts(this, enabledShortcuts)
+        ShortcutManagerCompat.disableShortcuts(this, disabledIds, disabledMessage)
+    }
+
+    /**
+     * Updates dynamic shortcut list
+     */
+    private fun updateDynamicShortcuts(profiles: List<ServerProfile>) {
+        val maxShortcuts = ShortcutManagerCompat.getMaxShortcutCountPerActivity(this)
+        val shortcuts = profiles.take(maxShortcuts).map { p ->
+            ShortcutInfoCompat.Builder(this, createShortcutId(p))
+                    .setIcon(IconCompat.createWithResource(this, R.drawable.ic_computer_shortcut))
+                    .setShortLabel(p.name.ifBlank { p.host })
+                    .setLongLabel(p.name.ifBlank { p.host })
+                    .setIntent(IntentReceiverActivity.createShortcutIntent(this, p.ID))
+                    .build()
+        }
+        ShortcutManagerCompat.setDynamicShortcuts(this, shortcuts)
     }
 }

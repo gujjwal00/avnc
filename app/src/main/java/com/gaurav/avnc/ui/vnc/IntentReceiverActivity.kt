@@ -7,8 +7,9 @@
  */
 package com.gaurav.avnc.ui.vnc
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -20,47 +21,61 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Handles intents with 'vnc' URI.
+ * Handles "external" intents and launches [VncActivity] with appropriate profiles.
+ *
+ * Current intent types:
+ *  - vnc:// URIs
+ *  - App shortcuts
  */
 class IntentReceiverActivity : AppCompatActivity() {
+
+    companion object {
+        private const val SHORTCUT_PROFILE_ID_KEY = "com.gaurav.avnc.shortcut_profile_id"
+
+        fun createShortcutIntent(context: Context, profileId: Long): Intent {
+            check(profileId != 0L) { "Cannot create shortcut with profileId = 0." }
+            return Intent(context, IntentReceiverActivity::class.java).apply {
+                action = Intent.ACTION_VIEW
+                putExtra(SHORTCUT_PROFILE_ID_KEY, profileId)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val uri = getUri()
-
-        if (uri.connectionName.isNotBlank())
-            launchSavedProfile(uri.connectionName)
+        if (intent.data?.scheme == "vnc")
+            launchFromVncUri(VncUri(intent.data!!))
+        else if (intent.hasExtra(SHORTCUT_PROFILE_ID_KEY))
+            launchFromProfileId(intent.getLongExtra(SHORTCUT_PROFILE_ID_KEY, 0))
         else
-            launchUri(uri)
+            handleUnknownIntent()
     }
 
-    private fun getUri(): VncUri {
-        if (intent.data?.scheme != "vnc") {
-            Log.e(javaClass.simpleName, "Invalid intent!")
-            return VncUri("")
-        }
-
-        return VncUri(intent.data!!)
+    private fun launchFromVncUri(uri: VncUri) {
+        if (uri.connectionName.isNotBlank())
+            launchFromProfileName(uri.connectionName)
+        else
+            launchVncUri(uri)
     }
 
-    private fun launchUri(uri: VncUri) {
+    private fun launchVncUri(uri: VncUri) {
         if (uri.host.isEmpty())
-            Toast.makeText(this, R.string.msg_invalid_vnc_uri, Toast.LENGTH_LONG).show()
+            toast(getString(R.string.msg_invalid_vnc_uri))
         else
             startVncActivity(this, uri)
 
         finish()
     }
 
-    private fun launchSavedProfile(name: String) {
+    private fun launchFromProfileName(name: String) {
         val context = this
         lifecycleScope.launch(Dispatchers.IO) {
             val dao = MainDb.getInstance(context).serverProfileDao
             val profile = dao.getByName(name).firstOrNull()
             withContext(Dispatchers.Main) {
                 if (profile == null)
-                    Toast.makeText(context, "No server found with name '$name'", Toast.LENGTH_LONG).show()
+                    toast("No server found with name '$name'")
                 else
                     startVncActivity(context, profile)
 
@@ -68,4 +83,26 @@ class IntentReceiverActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun launchFromProfileId(profileId: Long) {
+        val context = this
+        lifecycleScope.launch(Dispatchers.IO) {
+            val dao = MainDb.getInstance(context).serverProfileDao
+            val profile = dao.getByID(profileId)
+            withContext(Dispatchers.Main) {
+                if (profile == null)
+                    toast(getString(R.string.msg_shortcut_server_deleted))
+                else
+                    startVncActivity(context, profile)
+                finish()
+            }
+        }
+    }
+
+    private fun handleUnknownIntent() {
+        toast("Invalid intent: Server info is missing!")
+        finish()
+    }
+
+    private fun toast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 }
