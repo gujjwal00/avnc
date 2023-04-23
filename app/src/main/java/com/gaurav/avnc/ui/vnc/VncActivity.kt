@@ -121,12 +121,14 @@ class VncActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         binding.frameView.onResume()
+        viewModel.resumeFrameBufferUpdates()
     }
 
     override fun onStop() {
         super.onStop()
         virtualKeys.releaseMetaKeys()
         binding.frameView.onPause()
+        viewModel.pauseFrameBufferUpdates()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

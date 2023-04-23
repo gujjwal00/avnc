@@ -412,7 +412,16 @@ extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeRefreshFrameBuffer(JNIEnv *env, jobject thiz, jlong clientPtr) {
     auto client = (rfbClient *) clientPtr;
-    return (jboolean) SendFramebufferUpdateRequest(client, 0, 0, client->width, client->height, FALSE);
+    return (jboolean) SendFramebufferUpdateRequest(client, 0, 0, client->width, client->height, TRUE);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_gaurav_avnc_vnc_VncClient_nativeSetAutomaticFramebufferUpdates(JNIEnv *env, jobject thiz, jlong client_ptr,
+                                                                        jboolean enabled) {
+    auto client = ((rfbClient *) client_ptr);
+    client->automaticUpdateRequests = enabled ? TRUE : FALSE;
+    if (enabled) SendIncrementalFramebufferUpdateRequest(client);
 }
 
 extern "C"

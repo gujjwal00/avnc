@@ -99,6 +99,11 @@ class VncClient(private val observer: Observer) {
     @Volatile
     var ignorePointerMovesByServer = false
 
+
+    @Volatile
+    private var autoFBRequestsQueued = true
+    private var autoFBRequests = autoFBRequestsQueued
+
     /**
      * Setup different properties for this client.
      *
@@ -133,6 +138,11 @@ class VncClient(private val observer: Observer) {
         if (!nativeProcessServerMessage(nativePtr, uSecTimeout)) {
             connected = false
             throw IOException(nativeGetLastErrorStr())
+        }
+
+        if (autoFBRequests != autoFBRequestsQueued) {
+            autoFBRequests = autoFBRequestsQueued
+            nativeSetAutomaticFramebufferUpdates(nativePtr, autoFBRequests)
         }
     }
 
@@ -198,9 +208,19 @@ class VncClient(private val observer: Observer) {
     }
 
     /**
-     * Sends a request for full frame buffer update to remote server.
+     * Sends frame buffer update request to remote server.
      */
-    fun refreshFrameBuffer() = nativeRefreshFrameBuffer(nativePtr)
+    fun refreshFrameBuffer() = ifConnected {
+        nativeRefreshFrameBuffer(nativePtr)
+    }
+
+    /**
+     * Controls whether framebuffer update requests are sent automatically.
+     * It takes effect after the next call to [processServerMessage].
+     */
+    fun setAutomaticFrameBufferUpdates(enabled: Boolean) = ifConnected {
+        autoFBRequestsQueued = enabled
+    }
 
     /**
      * Puts framebuffer contents in currently active OpenGL texture.
@@ -242,6 +262,7 @@ class VncClient(private val observer: Observer) {
     private external fun nativeSendCutText(clientPtr: Long, bytes: ByteArray, isUTF8: Boolean): Boolean
     private external fun nativeSetDesktopSize(clientPtr: Long, width: Int, height: Int): Boolean
     private external fun nativeRefreshFrameBuffer(clientPtr: Long): Boolean
+    private external fun nativeSetAutomaticFramebufferUpdates(clientPtr: Long, enabled: Boolean)
     private external fun nativeGetDesktopName(clientPtr: Long): String
     private external fun nativeGetWidth(clientPtr: Long): Int
     private external fun nativeGetHeight(clientPtr: Long): Int
