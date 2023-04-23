@@ -143,7 +143,7 @@ class VncClient(private val observer: Observer) {
      * @param xtCode    Key code from [XTKeyCode]
      * @param isDown    true for key down, false for key up
      */
-    fun sendKeyEvent(keySym: Int, xtCode: Int, isDown: Boolean) = executeSend {
+    fun sendKeyEvent(keySym: Int, xtCode: Int, isDown: Boolean) = ifConnectedAndInteractive {
         nativeSendKeyEvent(nativePtr, keySym, xtCode, isDown)
     }
 
@@ -154,7 +154,7 @@ class VncClient(private val observer: Observer) {
      * @param y    Vertical pointer coordinate
      * @param mask Button mask to identify which button was pressed.
      */
-    fun sendPointerEvent(x: Int, y: Int, mask: Int) = executeSend {
+    fun sendPointerEvent(x: Int, y: Int, mask: Int) = ifConnectedAndInteractive {
         nativeSendPointerEvent(nativePtr, x, y, mask)
     }
 
@@ -182,7 +182,7 @@ class VncClient(private val observer: Observer) {
     /**
      * Sends text to remote desktop's clipboard.
      */
-    fun sendCutText(text: String) = executeSend {
+    fun sendCutText(text: String) = ifConnectedAndInteractive {
         if (!nativeSendCutText(nativePtr, text.toByteArray(StandardCharsets.UTF_8), true))
             nativeSendCutText(nativePtr, text.toByteArray(StandardCharsets.ISO_8859_1), false)
     }
@@ -222,17 +222,13 @@ class VncClient(private val observer: Observer) {
         nativeCleanup(nativePtr)
     }
 
-    /**
-     * Small utility method to check for valid state before sending
-     * events to remote server.
-     */
-    private inline fun executeSend(block: () -> Unit) {
-        if (connected && !viewOnlyMode)
+    private inline fun ifConnected(block: () -> Unit) {
+        if (connected)
             block()
     }
 
-    private inline fun ifConnected(block: () -> Unit) {
-        if (connected)
+    private inline fun ifConnectedAndInteractive(block: () -> Unit) = ifConnected {
+        if (!viewOnlyMode)
             block()
     }
 
