@@ -190,4 +190,5 @@
     <string name="msg_button_up_delay_help">Retarder les évènements de clics peut aider dans certains cas rares si une application ne répond pas aux clics.</string>
     <string name="pref_double_tap_swipe">Double tapotement et glissement</string>
     <string name="msg_shortcut_server_deleted">Ce serveur a été supprimé</string>
+    <string name="msg_zoom_reset_default">Le niveau de zoom a été réinitialisé aux valeurs par défaut</string>
 </resources>
