@@ -115,7 +115,7 @@
     <string name="title_edit">Edytuj</string>
     <string name="title_duplicate">Duplikuj</string>
     <string name="title_copy_host">Kopiuj hosta</string>
-    <string name="title_login">Logowanie</string>
+    <string name="title_login">Logowanie VNC</string>
     <string name="title_remember">Zapamiętaj</string>
     <string name="title_export">Eksportuj</string>
     <string name="title_import">Importuj</string>
@@ -189,4 +189,7 @@
     <string name="title_button_up_delay">Wysyłaj opóźnione zdarzenia kliknięć</string>
     <string name="title_image_quality_raw">Surowe</string>
     <string name="msg_shortcut_server_deleted">Ten serwer został usunięty</string>
+    <string name="title_ssh_login">Logowanie SSH</string>
+    <string name="title_unlock_private_key">Odblokuj klucz prywatny</string>
+    <string name="msg_zoom_reset_default">Przywrócenie domyślnych ustawień widoku</string>
 </resources>
