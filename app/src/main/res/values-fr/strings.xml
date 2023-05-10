@@ -10,7 +10,7 @@
     <string name="title_save">Enregistrer</string>
     <string name="title_undo">Annuler</string>
     <string name="title_settings">Paramètres</string>
-    <string name="title_login">Se connecter</string>
+    <string name="title_login">Connexion VNC</string>
     <string name="title_export">Exporter</string>
     <string name="title_import">Importer</string>
     <string name="title_view_only_mode">Visualisation uniquement</string>
@@ -191,4 +191,6 @@
     <string name="pref_double_tap_swipe">Double tapotement et glissement</string>
     <string name="msg_shortcut_server_deleted">Ce serveur a été supprimé</string>
     <string name="msg_zoom_reset_default">Le niveau de zoom a été réinitialisé aux valeurs par défaut</string>
+    <string name="title_unlock_private_key">Déverrouiller la clé privée</string>
+    <string name="title_ssh_login">Connexion SSH</string>
 </resources>
