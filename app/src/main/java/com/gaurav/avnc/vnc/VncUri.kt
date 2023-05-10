@@ -37,7 +37,7 @@ class VncUri(private val uri: Uri) {
      *
      * It also serves as a validation step because [URI] verifies that address is well-formed.
      */
-    private val javaUri = runCatching { URI(uri.toString()) }.getOrDefault(URI(""))
+    private val javaUri = runCatching { URI(uri.toString()).also { check(!it.isOpaque) } }.getOrDefault(URI(""))
 
 
     val host = javaUri.host?.trim('[', ']') ?: ""

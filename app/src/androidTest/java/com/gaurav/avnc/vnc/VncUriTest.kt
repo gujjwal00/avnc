@@ -84,4 +84,10 @@ class VncUriTest {
         val uri = VncUri("[fe80:2a10:b62b]")
         assertEquals("", uri.host)
     }
+
+    @Test
+    fun opaqueUri() {
+        // Correct format is 'vnc://host'
+        assertEquals("", VncUri("vnc:host").host)
+    }
 }
