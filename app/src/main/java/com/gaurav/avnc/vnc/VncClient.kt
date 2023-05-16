@@ -219,7 +219,7 @@ class VncClient(private val observer: Observer) {
      * It takes effect after the next call to [processServerMessage].
      */
     fun setAutomaticFrameBufferUpdates(enabled: Boolean) = ifConnected {
-        autoFBRequestsQueued = enabled
+        //autoFBRequestsQueued = enabled
     }
 
     /**
