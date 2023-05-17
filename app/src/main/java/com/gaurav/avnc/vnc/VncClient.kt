@@ -1,5 +1,6 @@
 package com.gaurav.avnc.vnc
 
+import android.view.KeyEvent
 import androidx.annotation.Keep
 import java.io.IOException
 import java.nio.ByteBuffer
@@ -124,6 +125,7 @@ class VncClient(private val observer: Observer) {
     fun connect(host: String, port: Int) {
         connected = nativeInit(nativePtr, host, port)
         if (!connected) throw IOException(nativeGetLastErrorStr())
+        applyCompatQuirks()
     }
 
     /**
@@ -252,6 +254,13 @@ class VncClient(private val observer: Observer) {
             block()
     }
 
+    private fun applyCompatQuirks() {
+        if (nativeIsServerMacOS(nativePtr)) {
+            XKeySymAndroid.updateKeyMap(KeyEvent.KEYCODE_ALT_LEFT, XKeySym.XK_Meta_L)
+            XKeySymAndroid.updateKeyMap(KeyEvent.KEYCODE_ALT_RIGHT, XKeySym.XK_Meta_R)
+        }
+    }
+
     private external fun nativeClientCreate(): Long
     private external fun nativeConfigure(clientPtr: Long, securityType: Int, useLocalCursor: Boolean, imageQuality: Int, useRawEncoding: Boolean)
     private external fun nativeInit(clientPtr: Long, host: String, port: Int): Boolean
@@ -270,6 +279,7 @@ class VncClient(private val observer: Observer) {
     private external fun nativeUploadFrameTexture(clientPtr: Long)
     private external fun nativeUploadCursor(clientPtr: Long, px: Int, py: Int)
     private external fun nativeGetLastErrorStr(): String
+    private external fun nativeIsServerMacOS(clientPtr: Long): Boolean
     private external fun nativeCleanup(clientPtr: Long)
 
     @Keep

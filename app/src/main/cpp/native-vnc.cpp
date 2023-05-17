@@ -320,6 +320,12 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeInit(JNIEnv *env, jobject thiz, jlong c
     return JNI_FALSE;
 
 }
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_gaurav_avnc_vnc_VncClient_nativeIsServerMacOS(JNIEnv *env, jobject thiz, jlong client_ptr) {
+    auto client = (rfbClient *) client_ptr;
+    return client->serverMajor == 3 && client->serverMinor == 889;
+}
 
 extern "C"
 JNIEXPORT void JNICALL
