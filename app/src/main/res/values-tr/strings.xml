@@ -9,7 +9,7 @@
     <string name="title_cancel">İptal</string>
     <string name="title_undo">Geri al</string>
     <string name="title_settings">Ayarlar</string>
-    <string name="title_login">Oturum aç</string>
+    <string name="title_login">VNC ile oturum aç</string>
     <string name="title_remember">Hatırla</string>
     <string name="title_export">Dışa aktar</string>
     <string name="title_import">İçe aktar</string>
@@ -191,4 +191,6 @@
     <string name="pref_long_press_swipe">Uzun bas ve kaydır</string>
     <string name="msg_shortcut_server_deleted">Bu sunucu silindi</string>
     <string name="msg_zoom_reset_default">Yakınlaştırma öntanımlı değere sıfırlandı</string>
+    <string name="title_unlock_private_key">Özel anahtarın kilidini aç</string>
+    <string name="title_ssh_login">SSH ile oturum aç</string>
 </resources>
