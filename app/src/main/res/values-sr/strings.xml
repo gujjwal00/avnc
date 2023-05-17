@@ -92,7 +92,7 @@
     <string name="title_save">Сачувај</string>
     <string name="title_undo">Опозови</string>
     <string name="title_settings">Поставке</string>
-    <string name="title_login">Пријава</string>
+    <string name="title_vnc_login">Пријава</string>
     <string name="title_remember">Запамти</string>
     <string name="title_export">Извези</string>
     <string name="title_import">Увези</string>
@@ -112,7 +112,7 @@
     <string name="title_license">Дозвола</string>
     <string name="title_open_source_libraries">Књижнице отвореног извора</string>
     <string name="title_report_bug">Пријави проблем</string>
-    <string name="title_github_repo">Изворни код</string>
+    <string name="title_source_code">Изворни код</string>
     <string name="hint_urlbar">Повежи се са служитељем</string>
     <string name="hint_host">Домаћин</string>
     <string name="hint_port">Прикључник</string>

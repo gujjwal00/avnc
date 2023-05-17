@@ -2,7 +2,7 @@
 <resources>
     <string name="title_add_server_profile">添加服务器</string>
     <string name="title_hide_remote_cursor">隐藏远程指针</string>
-    <string name="title_login">登录</string>
+    <string name="title_vnc_login">登录</string>
     <string name="title_edit_server_profile">编辑服务器</string>
     <string name="title_duplicate">复本</string>
     <string name="title_edit">编辑</string>
@@ -118,7 +118,7 @@
     <string name="title_export">导出</string>
     <string name="title_key_compat_mode">发送旧式按键事件</string>
     <string name="title_unknown_ssh_host">未知 SSH 主机</string>
-    <string name="title_github_repo">源码</string>
+    <string name="title_source_code">源码</string>
     <string name="msg_loading">正在加载…</string>
     <string name="title_continue">继续</string>
     <string name="title_delete_servers_before_import">导入前删除当前服务器</string>

@@ -8,7 +8,7 @@
     <string name="title_cancel">Отменить</string>
     <string name="title_save">Сохранить</string>
     <string name="title_settings">Настройки</string>
-    <string name="title_login">Вход в VNC</string>
+    <string name="title_vnc_login">Вход в VNC</string>
     <string name="title_export">Экспорт</string>
     <string name="title_import">Импорт</string>
     <string name="title_view_only_mode">Только просмотр</string>
@@ -21,7 +21,7 @@
     <string name="title_about">О программе</string>
     <string name="title_license">Лицензия</string>
     <string name="title_open_source_libraries">Библиотеки с открытым исходным кодом</string>
-    <string name="title_github_repo">Исходный код</string>
+    <string name="title_source_code">Исходный код</string>
     <string name="hint_urlbar">Подключится к серверу</string>
     <string name="hint_server_name">Имя (например: Рабочий ПК)</string>
     <string name="hint_host">Хост</string>

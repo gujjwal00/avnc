@@ -63,7 +63,7 @@ class LoginFragment : DialogFragment() {
 
     private fun getTitle() = when (loginType) {
         LoginInfo.Type.VNC_PASSWORD,
-        LoginInfo.Type.VNC_CREDENTIAL -> R.string.title_login
+        LoginInfo.Type.VNC_CREDENTIAL -> R.string.title_vnc_login
         LoginInfo.Type.SSH_PASSWORD -> R.string.title_ssh_login
         LoginInfo.Type.SSH_KEY_PASSWORD -> R.string.title_unlock_private_key
     }

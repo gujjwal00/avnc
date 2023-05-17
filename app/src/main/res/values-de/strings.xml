@@ -8,7 +8,7 @@
     <string name="title_advanced">Erweitert</string>
     <string name="title_undo">Rückgängig machen</string>
     <string name="title_settings">Einstellungen</string>
-    <string name="title_login">VNC-Anmeldung</string>
+    <string name="title_vnc_login">VNC-Anmeldung</string>
     <string name="title_remember">Speichern</string>
     <string name="title_export">Exportieren</string>
     <string name="title_import">Importieren</string>
@@ -21,7 +21,7 @@
     <string name="title_change">Ändern</string>
     <string name="title_about">Über</string>
     <string name="title_report_bug">Melde einen Fehler</string>
-    <string name="title_github_repo">Quelltext</string>
+    <string name="title_source_code">Quelltext</string>
     <string name="hint_urlbar">Verbinde dich mit einem Server</string>
     <string name="hint_server_name">Bezeichnung (z.B. Arbeits-PC)</string>
     <string name="hint_repeater_host">Hostname/IP-Adresse des Repeaters</string>

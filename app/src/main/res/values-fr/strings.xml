@@ -10,7 +10,7 @@
     <string name="title_save">Enregistrer</string>
     <string name="title_undo">Annuler</string>
     <string name="title_settings">Paramètres</string>
-    <string name="title_login">Connexion VNC</string>
+    <string name="title_vnc_login">Connexion VNC</string>
     <string name="title_export">Exporter</string>
     <string name="title_import">Importer</string>
     <string name="title_view_only_mode">Visualisation uniquement</string>
@@ -23,7 +23,7 @@
     <string name="title_delete_servers_before_import">Supprimer les serveurs courants avant l\'importation</string>
     <string name="title_password">Mot de passe</string>
     <string name="title_use_repeater">Utiliser un répéteur</string>
-    <string name="title_github_repo">Code source</string>
+    <string name="title_source_code">Code source</string>
     <string name="hint_server_name">Nom (par ex. PC Travail)</string>
     <string name="hint_host">Hôte</string>
     <string name="hint_repeater_host">Hôte du répéteur</string>

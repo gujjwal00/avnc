@@ -33,7 +33,7 @@
     <string name="title_license">라이센스</string>
     <string name="title_open_source_libraries">오픈 소스 라이브러리</string>
     <string name="title_report_bug">문제 신고</string>
-    <string name="title_github_repo">소스 코드</string>
+    <string name="title_source_code">소스 코드</string>
     <string name="hint_urlbar">서버에 연결</string>
     <string name="hint_server_name">이름 (예: 업무용 PC)</string>
     <string name="hint_host">호스트</string>
@@ -168,7 +168,7 @@
     <string name="pref_gesture_style_touchscreen">터치스크린</string>
     <string name="pref_gesture_style_touchscreen_summary">접점에서 작업 수행</string>
     <string name="pref_saved_server_lock">저장된 서버 잠금</string>
-    <string name="title_login">VNC 로그인</string>
+    <string name="title_vnc_login">VNC 로그인</string>
     <string name="title_image_quality">이미지 품질</string>
     <string name="msg_zoom_reset">100%로 확대/축소 재설정</string>
     <string name="title_image_quality_raw">원시</string>

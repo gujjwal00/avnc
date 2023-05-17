@@ -18,7 +18,7 @@
     <string name="title_license">Licencja</string>
     <string name="title_open_source_libraries">Biblioteki open source</string>
     <string name="title_report_bug">Zgłoś problem</string>
-    <string name="title_github_repo">Kod źródłowy</string>
+    <string name="title_source_code">Kod źródłowy</string>
     <string name="hint_urlbar">Połącz się z serwerem</string>
     <string name="hint_server_name">Nazwa (np. Komputer służbowy)</string>
     <string name="hint_host">Host</string>
@@ -115,7 +115,7 @@
     <string name="title_edit">Edytuj</string>
     <string name="title_duplicate">Duplikuj</string>
     <string name="title_copy_host">Kopiuj hosta</string>
-    <string name="title_login">Logowanie VNC</string>
+    <string name="title_vnc_login">Logowanie VNC</string>
     <string name="title_remember">Zapamiętaj</string>
     <string name="title_export">Eksportuj</string>
     <string name="title_import">Importuj</string>

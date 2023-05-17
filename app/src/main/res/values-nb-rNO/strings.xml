@@ -10,7 +10,7 @@
     <string name="title_copy_host">Kopier vert</string>
     <string name="title_advanced">Avansert</string>
     <string name="title_cancel">Avbryt</string>
-    <string name="title_login">Innlogging</string>
+    <string name="title_vnc_login">Innlogging</string>
     <string name="title_remember">Husk</string>
     <string name="title_duplicate">Dupliser</string>
     <string name="title_view_only_mode">Skrivebeskyttet</string>
@@ -20,7 +20,7 @@
     <string name="title_private_key">Privat nøkkel</string>
     <string name="title_key_compat_mode">Kompabilitetsmodus for tastatur</string>
     <string name="title_delete_servers_before_import">Slett nåværende tjenere før import</string>
-    <string name="title_github_repo">Kildekode</string>
+    <string name="title_source_code">Kildekode</string>
     <string name="hint_urlbar">Koble til en tjener</string>
     <string name="hint_server_name">Navn (f.eks. arbeids-PC)</string>
     <string name="hint_host">Vert</string>

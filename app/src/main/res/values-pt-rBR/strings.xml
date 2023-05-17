@@ -18,7 +18,7 @@
     <string name="title_save">Salvar</string>
     <string name="title_undo">Desfazer</string>
     <string name="title_settings">Configurações</string>
-    <string name="title_login">Autenticação</string>
+    <string name="title_vnc_login">Autenticação</string>
     <string name="title_remember">Salvar</string>
     <string name="title_export">Exportar</string>
     <string name="title_import">Importar</string>
@@ -38,7 +38,7 @@
     <string name="title_license">Licença</string>
     <string name="title_open_source_libraries">Bibliotecas de código livre</string>
     <string name="title_report_bug">Relatar um problema</string>
-    <string name="title_github_repo">Código fonte</string>
+    <string name="title_source_code">Código fonte</string>
     <string name="hint_urlbar">Conectar ao servidor</string>
     <string name="hint_server_name">Nome (ex. PC do trabalho)</string>
     <string name="hint_host">Host</string>

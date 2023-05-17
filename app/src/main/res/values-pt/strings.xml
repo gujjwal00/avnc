@@ -57,7 +57,7 @@
     <string name="title_save">Gravar</string>
     <string name="title_undo">Desfazer</string>
     <string name="title_settings">Configurações</string>
-    <string name="title_login">Autenticação</string>
+    <string name="title_vnc_login">Autenticação</string>
     <string name="title_key_compat_mode">Enviar eventos de teclado compatíveis</string>
     <string name="title_image_quality">Qualidade de imagem</string>
     <string name="title_unknown_ssh_host">Host SSH desconhecido</string>
@@ -74,7 +74,7 @@
     <string name="title_license">Licença</string>
     <string name="title_open_source_libraries">Bibliotecas de código livre</string>
     <string name="title_report_bug">Relatar um problema</string>
-    <string name="title_github_repo">Código fonte</string>
+    <string name="title_source_code">Código fonte</string>
     <string name="title_unlock_dialog">Desbloqueie para continuar</string>
     <string name="title_automatic">Automático</string>
     <string name="title_none">Nenhum</string>

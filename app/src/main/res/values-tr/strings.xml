@@ -9,7 +9,7 @@
     <string name="title_cancel">İptal</string>
     <string name="title_undo">Geri al</string>
     <string name="title_settings">Ayarlar</string>
-    <string name="title_login">VNC ile oturum aç</string>
+    <string name="title_vnc_login">VNC ile oturum aç</string>
     <string name="title_remember">Hatırla</string>
     <string name="title_export">Dışa aktar</string>
     <string name="title_import">İçe aktar</string>
@@ -85,7 +85,7 @@
     <string name="title_delete_servers_before_import">İçe aktarmadan önce geçerli sunucuları sil</string>
     <string name="desc_clear_url_btn">Temizle</string>
     <string name="title_add_server_profile">Sunucu ekle</string>
-    <string name="title_github_repo">Kaynak kodu</string>
+    <string name="title_source_code">Kaynak kodu</string>
     <string name="title_edit_server_profile">Sunucuyu düzenle</string>
     <string name="title_ssh_host_key_changed">SSH ana makine anahtarı değişti</string>
     <string name="title_password">Parola</string>

@@ -18,7 +18,7 @@
     <string name="title_save">ذخیره</string>
     <string name="title_undo">برگردان</string>
     <string name="title_settings">تنظیمات</string>
-    <string name="title_login">ورود</string>
+    <string name="title_vnc_login">ورود</string>
     <string name="title_remember">به یاد داشتن</string>
     <string name="title_export">برون‌ریزی</string>
     <string name="title_import">درون‌ریزی</string>
@@ -38,7 +38,7 @@
     <string name="title_license">پروانه</string>
     <string name="title_open_source_libraries">کتابخانه‌های متن‌باز</string>
     <string name="title_report_bug">گزارش یک اشکال</string>
-    <string name="title_github_repo">کد منبع</string>
+    <string name="title_source_code">کد منبع</string>
     <string name="hint_urlbar">اتّصال به یک کارساز</string>
     <string name="hint_server_name">نام (مثلا: رایانهٔ کاری)</string>
     <string name="hint_host">میزبان</string>
