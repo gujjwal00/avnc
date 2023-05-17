@@ -1,0 +1,4 @@
+* Added a server option to automatically resize remote session to local window
+* Make SSH passwords optional when creating profile
+* Fixed Option key on macOS
+* Fixed crash caused by invalid VNC URIs
