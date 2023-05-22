@@ -106,7 +106,7 @@ class Dispatcher(private val activity: VncActivity) {
                 "pan" -> { _, _, dx, dy -> doPan(dx, dy) }
                 "move-pointer" -> { _, cp, dx, dy -> defaultMode.doMovePointer(cp, dx, dy) }
                 "remote-scroll" -> { sp, _, dx, dy -> defaultMode.doRemoteScroll(sp, dx, dy) }
-                "remote-drag" -> { _, cp, dx, dy -> defaultMode.doDrag(cp, dx, dy) }
+                "remote-drag" -> { _, cp, dx, dy -> defaultMode.doRemoteDrag(PointerButton.Left, cp, dx, dy) }
                 else -> { _, _, _, _ -> } //Nothing
             }
         }
@@ -182,7 +182,7 @@ class Dispatcher(private val activity: VncActivity) {
 
         abstract fun transformPoint(p: PointF): PointF?
         abstract fun doMovePointer(p: PointF, dx: Float, dy: Float)
-        abstract fun doDrag(p: PointF, dx: Float, dy: Float)
+        abstract fun doRemoteDrag(button: PointerButton, p: PointF, dx: Float, dy: Float)
 
         open fun onGestureStart() = stopFrameFling()
         open fun onGestureStop(p: PointF) = doButtonRelease(p)
@@ -255,7 +255,7 @@ class Dispatcher(private val activity: VncActivity) {
     private inner class DirectMode : AbstractMode() {
         override fun transformPoint(p: PointF) = viewModel.frameState.toFb(p)
         override fun doMovePointer(p: PointF, dx: Float, dy: Float) = doButtonDown(PointerButton.None, p)
-        override fun doDrag(p: PointF, dx: Float, dy: Float) = doButtonDown(PointerButton.Left, p)
+        override fun doRemoteDrag(button: PointerButton, p: PointF, dx: Float, dy: Float) = doButtonDown(button, p)
     }
 
     /**
@@ -296,8 +296,8 @@ class Dispatcher(private val activity: VncActivity) {
             viewModel.panFrame(centerDiffX, centerDiffY)
         }
 
-        override fun doDrag(p: PointF, dx: Float, dy: Float) {
-            doButtonDown(PointerButton.Left, p)
+        override fun doRemoteDrag(button: PointerButton, p: PointF, dx: Float, dy: Float) {
+            doButtonDown(button, p)
             doMovePointer(p, dx, dy)
         }
     }
