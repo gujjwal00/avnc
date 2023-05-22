@@ -283,10 +283,15 @@ class Dispatcher(private val activity: VncActivity) {
         override fun transformPoint(p: PointF) = pointerPosition
 
         override fun doMovePointer(p: PointF, dx: Float, dy: Float) {
+            val xLimit = viewModel.frameState.fbWidth - 1
+            val yLimit = viewModel.frameState.fbHeight - 1
+            if (xLimit < 0 || yLimit < 0)
+                return
+
             pointerPosition.apply {
                 offset(dx, dy)
-                x = x.coerceIn(0f, viewModel.frameState.fbWidth - 1)
-                y = y.coerceIn(0f, viewModel.frameState.fbHeight - 1)
+                x = x.coerceIn(0f, xLimit)
+                y = y.coerceIn(0f, yLimit)
             }
             doButtonDown(PointerButton.None, pointerPosition)
 
