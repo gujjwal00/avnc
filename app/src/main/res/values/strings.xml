@@ -135,6 +135,7 @@
     <string name="pref_gesture_action_pan">Pan local frame</string>
     <string name="pref_gesture_action_remote_scroll">Scroll remote content</string>
     <string name="pref_gesture_action_remote_drag">Drag remote content</string>
+    <string name="pref_gesture_action_remote_drag_middle">Drag with middle button</string>
     <string name="pref_gesture_action_open_keyboard">Open keyboard</string>
 
     <string name="pref_theme">Theme</string>
