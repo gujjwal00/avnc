@@ -1,0 +1,2 @@
+* Added gesture action to drag with middle button
+* Fixed entries for 'Long press and swipe' setting
