@@ -127,7 +127,7 @@
     <string name="pref_gesture_action_left_click">Linksklick</string>
     <string name="pref_gesture_action_middle_click">Mittelklick</string>
     <string name="pref_gesture_action_right_click">Rechtsklick</string>
-    <string name="pref_gesture_action_remote_scroll">entfernte Ansicht scrollen</string>
+    <string name="pref_gesture_action_remote_scroll">Entfernten Inhalt scrollen</string>
     <string name="pref_gesture_action_open_keyboard">Tastatur einblenden</string>
     <string name="pref_theme_option_dark">Dunkel</string>
     <string name="pref_theme_option_light">Hell</string>
@@ -152,7 +152,7 @@
     <string name="title_unknown_ssh_host">Unbekannter SSH-Zielpunkt</string>
     <string name="title_ssh_host_key_changed">Der öffentliche Schlüssel des SSH-Zielpunktes hat sich geändert</string>
     <string name="hint_server_id">Server-ID</string>
-    <string name="pref_gesture_action_remote_drag">Drag and Drop für entfernte Inhalte</string>
+    <string name="pref_gesture_action_remote_drag">Entfernten Inhalt ziehen</string>
     <string name="pref_gesture_style_touchscreen_summary">Aktionen am Berührungspunkt ausführen</string>
     <string name="pref_gesture_style_touchpad_summary">Aktionen am Zeiger ausführen</string>
     <string name="pref_orientation">Bildschirmausrichtung</string>
@@ -193,4 +193,5 @@
     <string name="title_ssh_login">SSH-Anmeldung</string>
     <string name="title_unlock_private_key">Privaten Schlüssel freischalten</string>
     <string name="msg_zoom_reset_default">Zoom auf Standardeinstellung zurücksetzen</string>
+    <string name="pref_gesture_action_remote_drag_middle">Mit mittlerer Taste ziehen</string>
 </resources>
