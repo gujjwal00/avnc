@@ -190,4 +190,5 @@
     <string name="pref_rediscovery_indicator">強調重新發現的伺服器</string>
     <string name="pref_km_right_alt_to_super">右 Alt → Super</string>
     <string name="msg_shortcut_server_deleted">此伺服器已被刪除</string>
+    <string name="title_ssh_login">SSH 登入</string>
 </resources>

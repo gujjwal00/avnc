@@ -193,4 +193,6 @@
     <string name="msg_zoom_reset_default">Yakınlaştırma öntanımlı değere sıfırlandı</string>
     <string name="title_unlock_private_key">Özel anahtarın kilidini aç</string>
     <string name="title_ssh_login">SSH ile oturum aç</string>
+    <string name="title_resize_remote_desktop">Uzak oturumu yerel pencereye göre yeniden boyutlandır</string>
+    <string name="pref_gesture_action_remote_drag_middle">Orta düğme ile sürükle</string>
 </resources>
