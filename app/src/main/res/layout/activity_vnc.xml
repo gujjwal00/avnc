@@ -82,7 +82,7 @@
                         android:id="@+id/gesture_style_toggle"
                         style="@style/ImageButton"
                         android:background="@drawable/bg_toggle_button"
-                        android:contentDescription="@string/pref_gesture"
+                        android:contentDescription="@string/pref_gesture_style"
                         android:drawableStart="@drawable/ic_gesture"
                         android:drawableEnd="@drawable/ic_toggle_more"
                         android:foreground="?selectableItemBackground"

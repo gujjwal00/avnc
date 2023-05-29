@@ -72,7 +72,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
-            app:defaultValue="false"
+            app:defaultValue="true"
             app:key="toolbar_show_gesture_style_toggle"
             app:title="Show gesture style toggle" />
     </PreferenceCategory>
