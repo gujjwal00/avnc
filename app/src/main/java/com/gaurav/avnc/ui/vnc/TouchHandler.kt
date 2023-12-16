@@ -339,7 +339,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
                 listener.onLongPress(e)
             }
 
-            override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+            override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
                 listener.onFling(velocityX, velocityY)
                 return true
             }

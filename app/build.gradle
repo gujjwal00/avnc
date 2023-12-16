@@ -1,18 +1,21 @@
 plugins {
-    id 'com.android.application' version '7.2.2'
-    id 'org.jetbrains.kotlin.android' version '1.8.0'
-    id 'org.jetbrains.kotlin.kapt' version '1.8.0'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.0'
-    id "org.jetbrains.kotlin.plugin.parcelize" version "1.8.0"
+    id 'com.android.application' version '8.2.0'
+    id 'org.jetbrains.kotlin.android' version '1.9.10'
+    id 'org.jetbrains.kotlin.kapt' version '1.9.10'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.10'
+    id "org.jetbrains.kotlin.plugin.parcelize" version "1.9.10"
 }
 
 android {
-    compileSdkVersion 33
+    namespace 'com.gaurav.avnc'
+
+    compileSdk 34
+    ndkVersion "26.1.10909125"
 
     defaultConfig {
         applicationId "com.gaurav.avnc"
-        minSdkVersion 21
-        targetSdkVersion 33
+        minSdk 21
+        targetSdk 34
         versionCode 26
         versionName "2.2.3"
 
@@ -58,6 +61,7 @@ android {
 
     buildFeatures {
         dataBinding true
+        buildConfig true
     }
 
     externalNativeBuild {
@@ -77,21 +81,28 @@ android {
     }
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 dependencies {
-    implementation "androidx.core:core-ktx:1.9.0"
-    implementation 'androidx.activity:activity-ktx:1.6.1'
-    implementation "androidx.fragment:fragment-ktx:1.5.5"
-    implementation "androidx.appcompat:appcompat:1.6.0"
+    implementation "androidx.core:core-ktx:1.12.0"
+    implementation 'androidx.activity:activity-ktx:1.8.2'
+    implementation "androidx.fragment:fragment-ktx:1.6.2"
+    implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "androidx.dynamicanimation:dynamicanimation:1.0.0"
     implementation "androidx.biometric:biometric-ktx:1.2.0-alpha05"
-    implementation "androidx.preference:preference-ktx:1.2.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation "androidx.preference:preference-ktx:1.2.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.2"
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
     implementation "androidx.drawerlayout:drawerlayout:1.1.1"
-    implementation "androidx.room:room-runtime:2.4.3"
-    implementation "androidx.room:room-ktx:2.4.3"
-    kapt "androidx.room:room-compiler:2.4.3"
+
+    def roomVersion = "2.6.1"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
 
     implementation "com.google.android.material:material:1.7.0"
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0'
@@ -104,6 +115,6 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-intents:3.5.1"
     androidTestImplementation "androidx.test:rules:1.5.0"
     androidTestImplementation "androidx.test.ext:junit-ktx:1.1.5"
-    androidTestImplementation "androidx.room:room-testing:2.4.3"
+    androidTestImplementation "androidx.room:room-testing:$roomVersion"
     androidTestImplementation "io.mockk:mockk-android:1.12.0"
 }

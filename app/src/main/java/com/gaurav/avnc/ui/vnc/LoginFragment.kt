@@ -110,8 +110,8 @@ class LoginFragment : DialogFragment() {
     private fun saveLoginInfo(loginInfo: LoginInfo) {
         // Use activity as owner because this fragment will likely be destroyed before connecting
         viewModel.state.observe(requireActivity(), object : Observer<VncViewModel.State> {
-            override fun onChanged(t: VncViewModel.State?) {
-                if (t == VncViewModel.State.Connected) {
+            override fun onChanged(value: VncViewModel.State) {
+                if (value == VncViewModel.State.Connected) {
                     setLoginInfoInProfile(viewModel.profile, loginInfo)
                     viewModel.saveProfile()
                     viewModel.state.removeObserver(this)

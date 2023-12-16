@@ -372,7 +372,7 @@ class VncActivity : AppCompatActivity() {
 
             val detector = GestureDetector(drawerLayout.context, object : GestureDetector.SimpleOnGestureListener() {
 
-                override fun onFling(e1: MotionEvent, e2: MotionEvent, vX: Float, vY: Float): Boolean {
+                override fun onFling(e1: MotionEvent?, e2: MotionEvent, vX: Float, vY: Float): Boolean {
                     val absGravity = Gravity.getAbsoluteGravity(drawerGravity, drawerLayout.layoutDirection)
                     if ((absGravity == Gravity.LEFT && vX < 0) || (absGravity == Gravity.RIGHT && vX > 0)) {
                         drawerLayout.closeDrawer(drawerGravity)

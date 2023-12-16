@@ -48,7 +48,7 @@ class IndicatorView(context: Context, attrs: AttributeSet? = null) : View(contex
 
     private var profile: ServerProfile? = null
     private var indicatedProfiles: LiveData<List<ServerProfile>>? = null
-    private val observer = Observer<List<ServerProfile>> { isVisible = it?.contains(profile) == true }
+    private val observer = Observer<List<ServerProfile>?> { isVisible = it?.contains(profile) == true }
 
     fun setup(profile: ServerProfile, indicatedProfiles: LiveData<List<ServerProfile>>) {
         this.profile = profile

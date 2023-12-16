@@ -11,7 +11,7 @@ package com.gaurav.avnc.viewmodel
 import android.app.Application
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.vnc.Discovery
@@ -23,7 +23,7 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
      * Depending on the user pref, this list may be sorted by server name.
      */
     val serverProfiles by lazy {
-        Transformations.switchMap(pref.ui.sortServerList) {
+        pref.ui.sortServerList.switchMap {
             if (it) serverProfileDao.getSortedLiveList()
             else serverProfileDao.getLiveList()
         }
@@ -142,7 +142,7 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
      * them, but that has its own issues.
      **************************************************************************/
     val rediscoveredProfiles by lazy {
-        Transformations.switchMap(pref.server.rediscoveryIndicator) {
+        pref.server.rediscoveryIndicator.switchMap {
             if (it) prepareRediscoveredProfiles()
             else MutableLiveData(null)
         }

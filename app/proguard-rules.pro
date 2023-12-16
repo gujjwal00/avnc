@@ -1,2 +1,3 @@
 -dontobfuscate
 -keepattributes SourceFile,LineNumberTable
+-dontwarn com.google.errorprone.annotations.Immutable

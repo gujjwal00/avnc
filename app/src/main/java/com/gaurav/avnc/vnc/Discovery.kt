@@ -137,6 +137,7 @@ class Discovery(private val context: Context) {
      */
     private inner class DiscoveryListener : NsdManager.DiscoveryListener {
         override fun onServiceFound(serviceInfo: NsdServiceInfo?) {
+            @Suppress("DEPRECATION")
             nsdManager?.resolveService(serviceInfo, ResolveListener())
         }
 
@@ -170,6 +171,7 @@ class Discovery(private val context: Context) {
      */
     private inner class ResolveListener : NsdManager.ResolveListener {
         override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
+            @Suppress("DEPRECATION")
             addProfile(serviceInfo.serviceName, serviceInfo.host.hostAddress!!, serviceInfo.port)
         }
 
