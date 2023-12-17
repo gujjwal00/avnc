@@ -11,8 +11,13 @@ package com.gaurav.avnc.ui.vnc
 import android.content.Context
 import android.graphics.PointF
 import android.os.Build
-import android.view.*
-import com.gaurav.avnc.util.SimpleOnGestureListener
+import android.view.GestureDetector
+import android.view.GestureDetector.SimpleOnGestureListener
+import android.view.HapticFeedbackConstants
+import android.view.InputDevice
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
+import android.view.ViewConfiguration
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.PointerButton
 import kotlin.math.PI
@@ -148,9 +153,9 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
             dispatcher.onStylusLongPress(e.point())
         }
 
-        override fun checkedOnScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
+        override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
             // Scrolling with stylus button pressed is currently used for scale gesture
-            if (e2.buttonState and MotionEvent.BUTTON_STYLUS_PRIMARY == 0) {
+            if (e1 != null && e2.buttonState and MotionEvent.BUTTON_STYLUS_PRIMARY == 0) {
 
                 // When scrolling starts, we need to send the first event at initial touch-point.
                 // Otherwise, we will loose the small distance (touch-slope) required by onScroll().
@@ -353,14 +358,15 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
 
             override fun onDoubleTapEvent(e: MotionEvent) = innerDetector3.onTouchEvent(e)
 
-            override fun checkedOnScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
+            override fun onScroll(e1: MotionEvent?, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
         }
 
         private inner class InnerListener3 : SimpleOnGestureListener() {
-            override fun checkedOnScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
+            override fun onScroll(e1: MotionEvent?, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
         }
 
-        private fun handleScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float): Boolean {
+        private fun handleScroll(e1: MotionEvent?, e2: MotionEvent, dx: Float, dy: Float): Boolean {
+            e1 ?: return false
             if (!scrolling) {
                 scrolling = true
                 // Send first scroll event on initial touch-down point, because GestureDetector
