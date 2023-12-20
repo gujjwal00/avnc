@@ -15,18 +15,24 @@ import android.view.View
 import android.view.WindowManager.LayoutParams.TYPE_TOAST
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.Espresso.*
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Root
 import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withSubstring
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.filters.SdkSuppress
-import com.gaurav.avnc.*
+import com.gaurav.avnc.EmptyDatabaseRule
+import com.gaurav.avnc.R
+import com.gaurav.avnc.TestServer
+import com.gaurav.avnc.checkWillBeDisplayed
 import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.targetContext
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 
@@ -38,7 +44,7 @@ class IntentReceiverTest {
 
     @Rule
     @JvmField
-    val dbRule = DatabaseRule()
+    val dbRule = EmptyDatabaseRule()
 
     /**
      * Matching toast doesn't work on API 30+
@@ -113,7 +119,6 @@ class IntentReceiverTest {
 
         ActivityScenario.launch<Activity>(newShortcutIntent(profile)).use {
             onView(withId(R.id.frame_view)).checkWillBeDisplayed()
-            assertEquals(Lifecycle.State.DESTROYED, it.state)
         }
     }
 

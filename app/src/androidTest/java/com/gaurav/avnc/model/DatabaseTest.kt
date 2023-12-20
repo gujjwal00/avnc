@@ -17,7 +17,7 @@ import org.junit.Test
 class DatabaseTest {
     private val dbName = "Bond. James Bond."
     private val minVersion = 1
-    private val maxVersion = 4
+    private val maxVersion = MainDb.VERSION
 
     @get:Rule
     val helper = MigrationTestHelper(instrumentation, MainDb::class.java)

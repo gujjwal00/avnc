@@ -37,7 +37,7 @@ class BasicEditorTest {
 
     @Rule
     @JvmField
-    val dbRule = DatabaseRule()
+    val dbRule = EmptyDatabaseRule()
 
     @Test
     fun createSimpleProfile() {
@@ -106,9 +106,9 @@ class PrivateKeyTest {
         Intents.init()
         targetPrefs.edit { putBoolean("prefer_advanced_editor", true) }
         onView(withContentDescription(R.string.desc_add_new_server_btn)).doClick()
-        onView(withId(R.id.use_ssh_tunnel)).perform(ScrollToAction())
+        onView(withId(R.id.use_ssh_tunnel)).performWithTimeout(ScrollToAction())
         onView(withId(R.id.use_ssh_tunnel)).doClick()
-        onView(withId(R.id.key_import_btn)).perform(ScrollToAction())
+        onView(withId(R.id.key_import_btn)).performWithTimeout(ScrollToAction())
     }
 
     @After

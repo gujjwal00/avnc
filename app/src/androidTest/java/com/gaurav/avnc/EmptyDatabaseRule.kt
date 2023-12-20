@@ -13,11 +13,10 @@ import kotlinx.coroutines.runBlocking
 import org.junit.rules.ExternalResource
 
 /**
- * JUnit rule preparing database for tests.
- * Database is cleared before each test.
+ * JUnit rule to clear database before running tests.
  * It also provides access to database instance through [db]
  */
-class DatabaseRule : ExternalResource() {
+class EmptyDatabaseRule : ExternalResource() {
     val db by lazy { MainDb.getInstance(targetContext) }
 
     override fun before() {

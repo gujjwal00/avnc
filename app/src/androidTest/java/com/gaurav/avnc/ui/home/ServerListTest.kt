@@ -53,11 +53,12 @@ class ServerListTest {
 
     @Rule
     @JvmField
-    val dbRule = DatabaseRule()
+    val dbRule = EmptyDatabaseRule()
 
     @Before
     fun before() {
         runBlocking { dbRule.db.serverProfileDao.insert(testProfile) }
+        onView(testProfileMatcher()).checkWillBeDisplayed()
     }
 
     @Test
@@ -78,7 +79,7 @@ class ServerListTest {
     @Test
     fun launchEditor() {
         onView(testProfileMatcher()).doLongClick()
-        onView(withText(R.string.title_edit)).doClick()
+        onView(withText(R.string.title_edit)).checkWithTimeout(matches(isCompletelyDisplayed())).doClick()
 
         onView(withText(R.string.title_edit_server_profile)).inRoot(isDialog()).checkIsDisplayed()
         onView(withText(testProfile.name)).inRoot(isDialog()).checkIsDisplayed()
@@ -88,7 +89,7 @@ class ServerListTest {
     @Test
     fun deleteProfile() {
         onView(testProfileMatcher()).doLongClick()
-        onView(withText(R.string.title_delete)).doClick()
+        onView(withText(R.string.title_delete)).checkWithTimeout(matches(isCompletelyDisplayed())).doClick()
 
         onView(withText(R.string.msg_server_profile_deleted)).checkWillBeDisplayed()
         onView(withText(R.string.tip_empty_server_list)).checkIsDisplayed()
@@ -103,7 +104,7 @@ class ServerListTest {
     @Test
     fun copyHost() {
         onView(testProfileMatcher()).doLongClick()
-        onView(withText(R.string.title_copy_host)).doClick()
+        onView(withText(R.string.title_copy_host)).checkWithTimeout(matches(isCompletelyDisplayed())).doClick()
 
         assertEquals(testProfile.host, getClipboardText())
         onView(withText(R.string.msg_copied_to_clipboard)).checkIsDisplayed()
