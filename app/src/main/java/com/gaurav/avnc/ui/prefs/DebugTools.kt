@@ -14,7 +14,11 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.*
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.BaseInputConnection
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager

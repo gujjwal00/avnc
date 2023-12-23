@@ -8,7 +8,11 @@
 
 package com.gaurav.avnc.ui.home
 
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.forEach
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,8 +39,8 @@ import com.google.android.material.tabs.TabLayoutMediator
  */
 class ServerTabs(val activity: HomeActivity) {
 
-    lateinit var savedServersTab: TabLayout.Tab
-    lateinit var discoveredServersTab: TabLayout.Tab
+    private lateinit var savedServersTab: TabLayout.Tab
+    private lateinit var discoveredServersTab: TabLayout.Tab
 
     /**
      * Creates and initializes tabs

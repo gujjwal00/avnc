@@ -8,7 +8,10 @@
 
 package com.gaurav.avnc.ui.vnc.gl
 
-import android.opengl.GLES20.*
+import android.opengl.GLES20.GL_COLOR_BUFFER_BIT
+import android.opengl.GLES20.glClear
+import android.opengl.GLES20.glClearColor
+import android.opengl.GLES20.glViewport
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import com.gaurav.avnc.viewmodel.VncViewModel

@@ -8,7 +8,23 @@
 
 package com.gaurav.avnc.ui.vnc.gl
 
-import android.opengl.GLES20.*
+import android.opengl.GLES20.GL_CLAMP_TO_EDGE
+import android.opengl.GLES20.GL_LINEAR
+import android.opengl.GLES20.GL_TEXTURE0
+import android.opengl.GLES20.GL_TEXTURE_2D
+import android.opengl.GLES20.GL_TEXTURE_MAG_FILTER
+import android.opengl.GLES20.GL_TEXTURE_MIN_FILTER
+import android.opengl.GLES20.GL_TEXTURE_WRAP_S
+import android.opengl.GLES20.GL_TEXTURE_WRAP_T
+import android.opengl.GLES20.glActiveTexture
+import android.opengl.GLES20.glBindTexture
+import android.opengl.GLES20.glGenTextures
+import android.opengl.GLES20.glGetAttribLocation
+import android.opengl.GLES20.glGetUniformLocation
+import android.opengl.GLES20.glTexParameteri
+import android.opengl.GLES20.glUniform1i
+import android.opengl.GLES20.glUniformMatrix4fv
+import android.opengl.GLES20.glUseProgram
 import android.util.Log
 import com.gaurav.avnc.BuildConfig
 

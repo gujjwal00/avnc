@@ -4,6 +4,9 @@
     <JavaCodeStyleSettings>
       <option name="JD_P_AT_EMPTY_LINES" value="false" />
     </JavaCodeStyleSettings>
+    <JetCodeStyleSettings>
+      <option name="LINE_BREAK_AFTER_MULTILINE_WHEN_ENTRY" value="false" />
+    </JetCodeStyleSettings>
     <codeStyleSettings language="ObjectiveC">
       <option name="RIGHT_MARGIN" value="120" />
       <option name="SOFT_MARGINS" value="80,100" />

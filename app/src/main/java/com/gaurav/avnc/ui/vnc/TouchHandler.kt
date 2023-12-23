@@ -29,7 +29,7 @@ import kotlin.math.max
  * Handler for touch events. It detects various gestures and notifies [dispatcher].
  */
 class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: Dispatcher)
-    : ScaleGestureDetector.OnScaleGestureListener, GestureDetector.SimpleOnGestureListener() {
+    : ScaleGestureDetector.OnScaleGestureListener, SimpleOnGestureListener() {
 
     //Extension to easily access touch position
     private fun MotionEvent.point() = PointF(x, y)
@@ -99,10 +99,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         }
 
         // Allow touchpad gestures to be passed on to GestureDetector
-        if (e.buttonState == 0 && e.getToolType(0) != MotionEvent.TOOL_TYPE_MOUSE)
-            return false
-
-        return true
+        return !(e.buttonState == 0 && e.getToolType(0) != MotionEvent.TOOL_TYPE_MOUSE)
     }
 
     /**

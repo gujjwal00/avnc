@@ -8,7 +8,11 @@
 
 package com.gaurav.avnc.ui.vnc.gl
 
-import android.opengl.GLES20.*
+import android.opengl.GLES20.GL_FLOAT
+import android.opengl.GLES20.GL_TRIANGLES
+import android.opengl.GLES20.glDrawArrays
+import android.opengl.GLES20.glEnableVertexAttribArray
+import android.opengl.GLES20.glVertexAttribPointer
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer

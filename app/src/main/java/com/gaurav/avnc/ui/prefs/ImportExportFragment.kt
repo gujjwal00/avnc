@@ -25,7 +25,7 @@ import com.gaurav.avnc.util.OpenableDocument
 import com.gaurav.avnc.viewmodel.PrefsViewModel
 import com.google.android.material.snackbar.Snackbar
 import java.text.DateFormat
-import java.util.*
+import java.util.Date
 
 @Keep
 class ImportExportFragment : Fragment() {
@@ -49,8 +49,8 @@ class ImportExportFragment : Fragment() {
         binding.importBtn.setOnClickListener { startImport() }
         binding.exportBtn.setOnClickListener { startExport() }
 
-        viewModel.importFinishedEvent.observe(viewLifecycleOwner) { if (it == true) showMsg(R.string.msg_imported) }
-        viewModel.exportFinishedEvent.observe(viewLifecycleOwner) { if (it == true) showMsg(R.string.msg_exported) }
+        viewModel.importFinishedEvent.observe(viewLifecycleOwner) { if (it) showMsg(R.string.msg_imported) }
+        viewModel.exportFinishedEvent.observe(viewLifecycleOwner) { if (it) showMsg(R.string.msg_exported) }
 
         exportAuthPrompt.init(
                 onSuccess = { exportFilePicker.launch(generateFilename()) },

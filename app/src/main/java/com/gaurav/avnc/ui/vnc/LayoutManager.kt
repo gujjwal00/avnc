@@ -16,8 +16,13 @@ import android.view.View
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.core.graphics.Insets
-import androidx.core.view.*
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsCompat.Type
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import kotlin.math.max
 
 /**

@@ -21,7 +21,11 @@ import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.lang.ref.WeakReference
 

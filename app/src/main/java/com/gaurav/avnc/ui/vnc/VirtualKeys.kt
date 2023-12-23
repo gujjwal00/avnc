@@ -8,6 +8,7 @@
 
 package com.gaurav.avnc.ui.vnc
 
+import android.annotation.SuppressLint
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
@@ -97,6 +98,7 @@ fun repeatableKeyBinding(keyView: View, repeatable: Boolean) {
             }
         }
 
+        @SuppressLint("ClickableViewAccessibility")
         override fun onTouch(v: View, event: MotionEvent): Boolean {
             when (event.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
