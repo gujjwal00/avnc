@@ -11,6 +11,7 @@ package com.gaurav.avnc.ui.home
 import android.app.ActivityOptions
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Window
@@ -47,6 +48,7 @@ class HomeActivity : AppCompatActivity() {
     private val tabs = ServerTabs(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.App_Theme)
         super.onCreate(savedInstanceState)
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
 
@@ -69,6 +71,7 @@ class HomeActivity : AppCompatActivity() {
         viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }
         viewModel.serverProfiles.observe(this) { updateShortcuts(it) }
 
+        setupSplashTheme()
         showWelcomeMsg()
     }
 
@@ -180,6 +183,22 @@ class HomeActivity : AppCompatActivity() {
                       "Please install correct version from F-Droid or Google Play."
             MsgDialog.show(supportFragmentManager, "Native library is missing!", msg)
         }.isSuccess
+    }
+
+    /**
+     * Updates splash theme to match with app theme
+     */
+    private fun setupSplashTheme() {
+        if (Build.VERSION.SDK_INT < 31)
+            return
+
+        viewModel.pref.ui.theme.observe(this) {
+            when (it) {
+                "light" -> splashScreen.setSplashScreenTheme(R.style.App_SplashTheme_Light)
+                "dark" -> splashScreen.setSplashScreenTheme(R.style.App_SplashTheme_Dark)
+                else -> splashScreen.setSplashScreenTheme(R.style.App_SplashTheme)
+            }
+        }
     }
 
     /************************************************************************************

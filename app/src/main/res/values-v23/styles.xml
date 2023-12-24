@@ -8,7 +8,7 @@
 
 <resources>
 
-    <style name="AppThemeBase" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="App.BaseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowLightStatusBar">true</item>
         <!-- Surface color is White-->
         <item name="android:statusBarColor">?colorSurface</item>

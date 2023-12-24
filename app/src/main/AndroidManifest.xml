@@ -19,12 +19,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/App.Theme">
 
         <activity-alias
             android:name=".StartupActivity"
             android:exported="true"
-            android:targetActivity=".ui.home.SplashActivity">
+            android:targetActivity=".ui.home.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -47,10 +47,8 @@
         </activity-alias>
 
         <activity
-            android:name=".ui.home.SplashActivity"
-            android:theme="@style/SplashTheme" />
-
-        <activity android:name=".ui.home.HomeActivity" />
+            android:name=".ui.home.HomeActivity"
+            android:theme="@style/App.SplashTheme.Dark" />
 
         <activity
             android:name=".ui.home.UrlBarActivity"
@@ -66,7 +64,7 @@
 
         <activity
             android:name=".ui.vnc.IntentReceiverActivity"
-            android:theme="@style/SplashTheme" />
+            android:theme="@style/App.SplashTheme.Dark" />
 
         <activity android:name=".ui.prefs.PrefsActivity" />
 

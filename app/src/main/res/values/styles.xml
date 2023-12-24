@@ -9,20 +9,35 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!--
-      This is used by startup activities and is intentionally a dark theme.
-      This way we get a dark window on app start irrespective of the theme chosen by user.
+      When app is launched, Android shows a temporary window until the app is ready.
+      The background color for this temporary window is selected from the theme specified
+      for the activity in app manifest. E.g. it will be white for a Light theme.
+
+      If we specify DayNight theme in manifest for startup activity, but user has selected
+      dark theme in AVNC, they may see a white flash before activity starts drawing. To
+      workaround this, we use App.SplashTheme.Dark in the manifest to get a dark window,
+      but switch to main theme in Activity's onCreate().
+
+      Since API 31, Android provides SplashScreen API to change splash theme at runtime,
+      which we use to match the splash theme with user's prefs (see HomeActivity).
+      Note: Some custom ROMs don't respect/support the splash theme introduced in API 31.
+      On such devices, we still rely on the above mentioned workaround.
     -->
-    <style name="SplashTheme" parent="Theme.MaterialComponents.NoActionBar" />
+    <style name="App.SplashTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+
+    <style name="App.SplashTheme.Light" parent="Theme.MaterialComponents.Light.NoActionBar" />
+
+    <style name="App.SplashTheme.Dark" parent="Theme.MaterialComponents.NoActionBar" />
 
     <!--
       This base theme is used for configuration-specific styling (e.g. night mode, API 23)
     -->
-    <style name="AppThemeBase" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+    <style name="App.BaseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
 
     <!--
       This is the main theme.
     -->
-    <style name="AppTheme" parent="AppThemeBase">
+    <style name="App.Theme" parent="App.BaseTheme">
         <item name="appBarLayoutStyle">@style/Widget.MaterialComponents.AppBarLayout.Surface</item>
     </style>
 
