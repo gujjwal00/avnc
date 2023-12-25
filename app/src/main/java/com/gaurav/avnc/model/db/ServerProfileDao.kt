@@ -35,6 +35,9 @@ interface ServerProfileDao {
     @Query("SELECT * FROM profiles WHERE name = :name")
     suspend fun getByName(name: String): List<ServerProfile>
 
+    @Query("SELECT * FROM profiles WHERE name LIKE :query OR host LIKE :query OR sshHost LIKE :query")
+    fun search(query: String): LiveData<List<ServerProfile>>
+
     @Insert
     suspend fun insert(profile: ServerProfile): Long
 

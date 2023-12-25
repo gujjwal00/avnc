@@ -7,16 +7,27 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.gaurav.avnc.viewmodel.UrlBarViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:touchscreenBlocksFocus="false">
+            android:touchscreenBlocksFocus="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 style="@style/UrlBar"
@@ -44,6 +55,7 @@
                     android:imeOptions="actionGo|flagNoExtractUi"
                     android:importantForAutofill="no"
                     android:inputType="textUri"
+                    android:text="@={viewModel.query}"
                     android:textColorHint="@android:color/transparent"
                     tools:ignore="LabelFor" />
 
@@ -57,8 +69,27 @@
             </LinearLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/servers_rv"
+            style="@style/ServerList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:contentDescription="@string/desc_saved_servers_list"
+            android:paddingBottom="@dimen/padding_small"
+            app:isVisible="@{!viewModel.filteredServers.empty}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appbar"
+            tools:listitem="@layout/server_saved_item" />
+
         <TextView
             style="@style/TipView"
-            android:text="@string/tip_urlbar" />
-    </FrameLayout>
+            android:text="@string/tip_urlbar"
+            app:isVisible="@{viewModel.filteredServers.empty}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appbar"
+            app:layout_constraintVertical_bias=".2" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

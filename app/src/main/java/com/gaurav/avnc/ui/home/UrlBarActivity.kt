@@ -11,11 +11,15 @@ package com.gaurav.avnc.ui.home
 import android.os.Bundle
 import android.view.Window
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityUrlBinding
 import com.gaurav.avnc.ui.vnc.startVncActivity
+import com.gaurav.avnc.viewmodel.HomeViewModel
+import com.gaurav.avnc.viewmodel.UrlBarViewModel
 import com.gaurav.avnc.vnc.VncUri
 
 /**
@@ -23,16 +27,20 @@ import com.gaurav.avnc.vnc.VncUri
  *
  * Possible future improvements:
  * - Keep history of recent entries
- * - Show suggestions from saved profiles
  * - Show suggestions from discovered servers.
  */
 class UrlBarActivity : AppCompatActivity() {
+
+    private val viewModel by viewModels<UrlBarViewModel>()
+    private val homeViewModel by viewModels<HomeViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
 
         val binding = DataBindingUtil.setContentView<ActivityUrlBinding>(this, R.layout.activity_url)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
 
         binding.url.setOnEditorActionListener { _, _, _ -> go(binding.url.text.toString()) }
         binding.backBtn.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
@@ -41,6 +49,18 @@ class UrlBarActivity : AppCompatActivity() {
                 finish()
             else
                 binding.url.setText("")
+        }
+
+        // TODO: Refactor server lists and remove dependency on HomeViewModel
+        val adapter = ServerTabs.SavedServerAdapter(homeViewModel, false)
+        binding.serversRv.layoutManager = LinearLayoutManager(this)
+        binding.serversRv.adapter = adapter
+        binding.serversRv.setHasFixedSize(true)
+        binding.serversRv.itemAnimator?.addDuration = 0 // Disable "flashing" of added items
+        viewModel.filteredServers.observe(this) { adapter.submitList(it) }
+        homeViewModel.newConnectionEvent.observe(this) {
+            startVncActivity(this, it)
+            finish()
         }
 
         binding.url.requestFocus()

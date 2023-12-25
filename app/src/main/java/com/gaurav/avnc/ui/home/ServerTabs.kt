@@ -130,7 +130,7 @@ class ServerTabs(val activity: HomeActivity) {
     /**
      * Adapter for saved servers
      */
-    class SavedServerAdapter(val viewModel: HomeViewModel)
+    class SavedServerAdapter(val viewModel: HomeViewModel, val canEditServers: Boolean = true)
         : ListAdapter<ServerProfile, SavedServerAdapter.ViewHolder>(Differ) {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -147,7 +147,7 @@ class ServerTabs(val activity: HomeActivity) {
         }
 
         inner class ViewHolder(val binding: ServerSavedItemBinding)
-            : ProfileViewHolder(viewModel, binding.root, R.menu.saved_server)
+            : ProfileViewHolder(viewModel, binding.root, if (canEditServers) R.menu.saved_server_editable else R.menu.saved_server)
 
         object Differ : DiffUtil.ItemCallback<ServerProfile>() {
             override fun areItemsTheSame(old: ServerProfile, new: ServerProfile) = (old.ID == new.ID)
