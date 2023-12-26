@@ -8,9 +8,10 @@
 
 package com.gaurav.avnc.viewmodel
 
-import androidx.test.espresso.Espresso.onIdle
+import androidx.lifecycle.Observer
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.gaurav.avnc.instrumentation
+import com.gaurav.avnc.pollingAssert
+import com.gaurav.avnc.runOnMainSync
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,21 +24,21 @@ class LiveEventTest {
      * This is the main difference between [LiveEvent] & [androidx.lifecycle.LiveData].
      */
     @Test
-    fun futureObserversShouldNotBeNotified() {
-        val testEvent = LiveEvent<Boolean>()
+    fun exactlyOneObserverShouldBeNotified() {
+        val testEvent = LiveEvent<Any>()
         var observer1Notified = false
         var observer2Notified = false
         var futureObserverNotified = false
 
-        instrumentation.runOnMainSync {
-            testEvent.observeForever { observer1Notified = true }       // Observer 1
-            testEvent.observeForever { observer2Notified = true }       // Observer 2
-            testEvent.fire(true)
-            testEvent.observeForever { futureObserverNotified = true }  // Observer installed after event was fired
+        runOnMainSync {
+            testEvent.observeForever { observer1Notified = true }
+            testEvent.observeForever { observer2Notified = true }
+            testEvent.fire(Any())
+            testEvent.observeForever { futureObserverNotified = true }
         }
 
         Assert.assertTrue(observer1Notified)
-        Assert.assertTrue(observer2Notified)
+        Assert.assertFalse(observer2Notified)
         Assert.assertFalse(futureObserverNotified)
     }
 
@@ -48,39 +49,45 @@ class LiveEventTest {
      */
     @Test
     fun eventShouldNotBeLost() {
-        val testEvent = LiveEvent<Boolean>()
+        val testEvent = LiveEvent<Any>()
         var observerNotified = false
 
-        instrumentation.runOnMainSync {
-            testEvent.fire(true)
+        runOnMainSync {
+            testEvent.fire(Any())
             testEvent.observeForever { observerNotified = true }
         }
 
         Assert.assertTrue(observerNotified)
     }
 
-    /**
-     * Working of [LiveEvent] relies on setValue() being called in response to fireAsync().
-     * This test verifies that assumption.
-     */
     @Test
-    fun checkSetValueIsCalledAfterFireAsync() {
-        val testValue = Any()
-        var setValueCalled = false
-        var setValueCalledWith: Any? = Any()
+    fun testObserverRemoval() {
+        val testEvent = LiveEvent<Any>()
+        var notified = false
 
-        val testEvent = object : LiveEvent<Any>() {
-            override fun setValue(value: Any?) {
-                super.setValue(value)
-                setValueCalled = true
-                setValueCalledWith = value
-            }
+        runOnMainSync {
+            val observer = Observer<Any> { notified = true }
+            testEvent.observeForever(observer)
+            testEvent.removeObserver(observer)
+            testEvent.fire(Any())
         }
 
-        testEvent.fireAsync(testValue)
-        onIdle()
+        Assert.assertFalse(notified)
+    }
 
-        Assert.assertTrue(setValueCalled)
-        Assert.assertSame(testValue, setValueCalledWith)
+    @Test
+    fun testAsyncFiring() {
+        val testEvent = LiveEvent<Int>()
+        var observedValue = 0
+
+        runOnMainSync {
+            testEvent.observeForever { observedValue = it }
+        }
+
+        testEvent.fireAsync(1)
+        pollingAssert {
+            Assert.assertEquals(1, observedValue)
+            Assert.assertEquals(1, testEvent.value)
+        }
     }
 }

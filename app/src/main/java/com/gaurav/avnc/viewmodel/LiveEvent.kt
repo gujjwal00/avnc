@@ -8,8 +8,10 @@
 
 package com.gaurav.avnc.viewmodel
 
+import androidx.annotation.MainThread
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 
 /**
@@ -18,91 +20,70 @@ import androidx.lifecycle.Observer
  *
  * Single-shot
  * ===========
- * When this event is fired, it will notify all active observers.
- * If there is no active observer, it will wait for active observers,
- * so that the event is not "lost". After notifying observers, it will
- * be marked as 'handled' and any future observers will NOT be notified.
+ * When this event is fired, it will notify exactly one active observer.
+ * If there is no active observer, it will wait for one so that the event
+ * is not "lost".
  *
  * This is the main difference between this class & [LiveData]. [LiveData] will
  * notify the future observers to bring them up-to date. This can happen during
  * Activity restarts where old observers are detached and new ones are attached.
  *
  * This class is used for events which should be handled only once.
- * e.g starting a fragment.
- *
- * Calling [removeObserver] on [LiveEvent] is NOT supported because we wrap
- * the observer given to us in a custom observer, which is currently not
- * exposed to callers (see [wrapObserver]).
+ * E.g. starting a fragment.
  */
-open class LiveEvent<T> : LiveData<T>() {
+open class LiveEvent<T> {
 
-    /**
-     * Whether we are currently firing the event. Observers will be notified
-     * only when this is true.
-     */
-    private var firing = false
-
-    /**
-     * Whether someone has handled the last event fired.
-     * This is used to implement the "queuing"  behaviour:
-     *
-     * 1. When event is fired, set this to false
-     * 2. If observers are invoked, set this to true
-     * 3. In [onActive], if this is still false, re-fire
-     */
-    private var handled = true
-
-
-    /**
-     * Fire this event with given value.
-     * MUST be called from Main thread.
-     */
-    open fun fire(value: T?) = setValue(value)
-
-    /**
-     * Same as [fire], but can be called from any thread.
-     */
-    fun fireAsync(value: T?) = postValue(value)
-
-    /**
-     * Overridden to manage event state.
-     */
-    override fun setValue(value: T?) {
-        firing = true
-        handled = false
-        super.setValue(value)
-        firing = false
-    }
-
-    /**
-     * Overridden to check for queued event.
-     */
-    override fun onActive() {
-        super.onActive()
-
-        if (!handled)
-            fire(value)
-    }
-
-
-    override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
-        super.observe(owner, wrapObserver(observer))
-    }
-
-    override fun observeForever(observer: Observer<in T>) {
-        super.observeForever(wrapObserver(observer))
-    }
-
-    /**
-     * Observer given to us is wrapped in another Observer
-     * which checks current state before invoking real observer.
-     */
-    private fun <T> wrapObserver(real: Observer<in T>): Observer<T> {
-        return Observer {
-            if (firing) {
-                real.onChanged(it)
-                handled = true
+    private class WrappedData<T>(val data: T, var consumed: Boolean = false)
+    private class WrappedObserver<T>(private val observer: Observer<T>) : Observer<WrappedData<T>> {
+        override fun onChanged(value: WrappedData<T>) {
+            if (!value.consumed) {
+                value.consumed = true
+                observer.onChanged(value.data)
             }
         }
+    }
+
+    private val liveData = MutableLiveData<WrappedData<T>>()
+    private val wrappedObservers = mutableMapOf<Observer<T>, WrappedObserver<T>>()
+
+    /**
+     * Peek current value of this event, irrespective of whether any observer has been notified.
+     */
+    val value get() = liveData.value?.data
+
+    /**
+     * Fire this event with given data.
+     * Must be called from main thread.
+     */
+    @MainThread
+    fun fire(data: T) {
+        liveData.value = WrappedData(data)
+    }
+
+    /**
+     * Asynchronous version of [fire].
+     * Can be called from any thread.
+     */
+    fun fireAsync(data: T) {
+        liveData.postValue(WrappedData(data))
+    }
+
+    @MainThread
+    fun observe(owner: LifecycleOwner, observer: Observer<T>) {
+        val wrapped = WrappedObserver(observer)
+        wrappedObservers[observer] = wrapped
+        liveData.observe(owner, wrapped)
+    }
+
+    @MainThread
+    fun observeForever(observer: Observer<T>) {
+        val wrapped = WrappedObserver(observer)
+        wrappedObservers[observer] = wrapped
+        liveData.observeForever(wrapped)
+    }
+
+    @MainThread
+    fun removeObserver(observer: Observer<T>) {
+        wrappedObservers.remove(observer)?.let { liveData.removeObserver(it) }
     }
 }
