@@ -258,7 +258,7 @@ class VncActivity : AppCompatActivity() {
         if (isConnected && !viewModel.pref.runInfo.hasConnectedSuccessfully) {
             viewModel.pref.runInfo.hasConnectedSuccessfully = true
             binding.drawerLayout.openDrawer(binding.primaryToolbar)
-            lifecycleScope.launchWhenCreated {
+            lifecycleScope.launch {
                 delay(1500)
                 binding.drawerLayout.closeDrawer(binding.primaryToolbar)
             }

@@ -38,6 +38,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Server Profile Editor. It can be opened in two modes:
@@ -311,7 +312,7 @@ class ProfileEditorFragment : DialogFragment() {
                 encrypted = isPrivateKeyEncrypted(key)
             }
 
-            lifecycleScope.launchWhenCreated {
+            withContext(Dispatchers.Main) {
                 result.onSuccess {
                     profile.sshPrivateKey = key
                     binding.keyImportBtn.setText(R.string.title_change)
