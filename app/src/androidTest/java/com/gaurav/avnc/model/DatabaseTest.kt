@@ -27,8 +27,8 @@ class DatabaseTest {
         for (i in minVersion until maxVersion)
             for (j in i + 1..maxVersion)
                 runCatching {
-                    helper.createDatabase(dbName, i)
-                    helper.runMigrationsAndValidate(dbName, j, false)
+                    helper.createDatabase(dbName, i).close()
+                    helper.runMigrationsAndValidate(dbName, j, false).close()
                 }.onFailure {
                     throw Exception("Failed to migrate MainDb from [$i] to [$j]", it)
                 }

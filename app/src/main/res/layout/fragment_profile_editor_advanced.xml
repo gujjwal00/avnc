@@ -149,7 +149,7 @@
                 <CheckBox
                     android:id="@+id/key_compat_mode"
                     style="@style/FormField.CheckBox"
-                    android:checked="@={profile.cfLegacyKeySym}"
+                    android:checked="@={profile.fLegacyKeySym}"
                     android:text="@string/title_key_compat_mode"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -169,7 +169,7 @@
                 <CheckBox
                     android:id="@+id/button_up_delay"
                     style="@style/FormField.CheckBox"
-                    android:checked="@={profile.cfButtonUpDelay}"
+                    android:checked="@={profile.fButtonUpDelay}"
                     android:text="@string/title_button_up_delay"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

@@ -12,8 +12,10 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
+import kotlin.reflect.KProperty
 
 /**
  * This class holds connection configuration of a remote VNC server.
@@ -120,10 +122,10 @@ data class ServerProfile(
         var serverTypeHint: String = "",
 
         /**
-         * Compatibility flags.
-         * These flags toggle various workarounds.
+         * Composite field for various flags.
+         * This is accessed via individual members like [fLegacyKeySym].
          */
-        var compatFlags: Int = CF_LEGACY_KEYSYM,
+        var flags: Long = FLAG_LEGACY_KEYSYM,
 
         /**
          * Preferred style to use for gesture handling.
@@ -140,11 +142,10 @@ data class ServerProfile(
         var screenOrientation: String = "auto",
 
         /**
-         * Shortcut rank.
-         * Can be used to reorder or hide app shortcuts.
+         * Usage count tracks how many times user has connected to a server.
+         * Can be used to put frequent servers on top.
          */
-        @ColumnInfo(defaultValue = "0")
-        var shortcutRank: Int = 0,
+        var useCount: Int = 0,
 
         /**
          * Whether UltraVNC Repeater is used for connections.
@@ -186,17 +187,30 @@ data class ServerProfile(
         const val SSH_AUTH_KEY = 1
         const val SSH_AUTH_PASSWORD = 2
 
-        // Compatibility flags
-        const val CF_LEGACY_KEYSYM = 0x01   // Try to emit legacy X KeySym events.
-        const val CF_BUTTON_UP_DELAY = 0x02 // Insert artificial delay before UP event of a button.
+        // Flag masks
+        private const val FLAG_LEGACY_KEYSYM = 0x01L
+        private const val FLAG_BUTTON_UP_DELAY = 0x02L
     }
 
-    // Accessors for compat flags
-    private fun getCompatFlag(flag: Int) = (compatFlags and flag) != 0
-    private fun setCompatFlag(flag: Int, value: Boolean) {
-        compatFlags = if (value) compatFlags or flag else compatFlags and flag.inv()
+    /**
+     * Delegated property builder for [flags] field.
+     */
+    private class Flag(val flag: Long) {
+        operator fun getValue(p: ServerProfile, kp: KProperty<*>) = (p.flags and flag) != 0L
+        operator fun setValue(p: ServerProfile, kp: KProperty<*>, value: Boolean) {
+            p.flags = if (value) p.flags or flag else p.flags and flag.inv()
+        }
     }
 
-    var cfLegacyKeySym get() = getCompatFlag(CF_LEGACY_KEYSYM); set(v) = setCompatFlag(CF_LEGACY_KEYSYM, v)
-    var cfButtonUpDelay get() = getCompatFlag(CF_BUTTON_UP_DELAY); set(v) = setCompatFlag(CF_BUTTON_UP_DELAY, v)
+    /**
+     * Flag to emit legacy X KeySym events in certain cases.
+     */
+    @IgnoredOnParcel
+    var fLegacyKeySym by Flag(FLAG_LEGACY_KEYSYM)
+
+    /**
+     * Flag to insert artificial delay before UP event of left-click.
+     */
+    @IgnoredOnParcel
+    var fButtonUpDelay by Flag(FLAG_BUTTON_UP_DELAY)
 }
