@@ -442,19 +442,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/ssh_auth_type" />
 
-                    <!--Key Password-->
-                    <EditText
-                        android:id="@+id/ssh_key_password"
-                        style="@style/FormField.EditText"
-                        android:autofillHints="password"
-                        android:drawableStart="@drawable/ic_password"
-                        android:hint="@string/hint_key_password"
-                        android:inputType="textPassword"
-                        android:text="@={viewModel.profile.sshPrivateKeyPassword}"
-                        app:isVisible="@{viewModel.sshUsePrivateKey &amp;&amp; viewModel.isPrivateKeyEncrypted}"
-                        app:layout_constraintBaseline_toBaselineOf="@id/key_import_btn"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/key_import_btn" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

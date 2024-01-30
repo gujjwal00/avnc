@@ -46,9 +46,12 @@ class LoginFragment : DialogFragment() {
         binding.loginInfo = loginInfo
         binding.usernameLayout.isVisible = loginInfo.username.isBlank() && loginType == LoginInfo.Type.VNC_CREDENTIAL
         binding.passwordLayout.isVisible = loginInfo.password.isBlank()
-        binding.remember.isVisible = viewModel.profile.ID != 0L
-        if (loginType == LoginInfo.Type.SSH_KEY_PASSWORD)
+        binding.remember.isVisible = viewModel.profile.ID != 0L && loginType != LoginInfo.Type.SSH_KEY_PASSWORD
+
+        if (loginType == LoginInfo.Type.SSH_KEY_PASSWORD) {
             binding.passwordLayout.setHint(R.string.hint_key_password)
+            binding.pkPasswordMsg.isVisible = viewModel.profile.sshPrivateKeyPassword.isNotBlank()
+        }
 
         setupAutoComplete()
         isCancelable = false
@@ -73,7 +76,7 @@ class LoginFragment : DialogFragment() {
             LoginInfo.Type.VNC_PASSWORD -> LoginInfo(p.name, p.host, "", p.password)
             LoginInfo.Type.VNC_CREDENTIAL -> LoginInfo(p.name, p.host, p.username, p.password)
             LoginInfo.Type.SSH_PASSWORD -> LoginInfo(p.name, p.sshHost, "", p.sshPassword)
-            LoginInfo.Type.SSH_KEY_PASSWORD -> LoginInfo(p.name, p.sshHost, "", p.sshPrivateKeyPassword)
+            LoginInfo.Type.SSH_KEY_PASSWORD -> LoginInfo(p.name, p.sshHost, "", "" /*p.sshPrivateKeyPassword*/)
         }
     }
 
@@ -85,14 +88,14 @@ class LoginFragment : DialogFragment() {
                 p.password = l.password
             }
             LoginInfo.Type.SSH_PASSWORD -> p.sshPassword = l.password
-            LoginInfo.Type.SSH_KEY_PASSWORD -> p.sshPrivateKeyPassword = l.password
+            LoginInfo.Type.SSH_KEY_PASSWORD -> p.sshPrivateKeyPassword = "" /* key password is not saved anymore */
         }
     }
 
     private fun onOk() {
         loginInfo.password = getRealPassword(loginInfo.password)
         viewModel.loginInfoRequest.offerResponse(loginInfo)
-        if (binding.remember.isChecked)
+        if (binding.remember.isChecked || binding.pkPasswordMsg.isVisible /* to forget saved password */)
             saveLoginInfo(loginInfo)
     }
 

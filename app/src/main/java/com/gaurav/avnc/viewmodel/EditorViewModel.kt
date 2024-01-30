@@ -37,7 +37,6 @@ class EditorViewModel(app: Application, state: SavedStateHandle, initialProfile:
     val sshUsePassword = state.getLiveData("sshUsePassword", profile.sshAuthType == ServerProfile.SSH_AUTH_PASSWORD)
     val sshUsePrivateKey = state.getLiveData("sshUsePrivateKey", profile.sshAuthType == ServerProfile.SSH_AUTH_KEY)
     val hasSshPrivateKey = state.getLiveData("hasSshPrivateKey", profile.sshPrivateKey.isNotBlank())
-    val isPrivateKeyEncrypted = state.getLiveData("isPrivateKeyEncrypted", profile.sshPrivateKey.isNotBlank() && isPrivateKeyEncrypted(profile.sshPrivateKey))
 
 
     fun prepareProfileForSave(): ServerProfile {

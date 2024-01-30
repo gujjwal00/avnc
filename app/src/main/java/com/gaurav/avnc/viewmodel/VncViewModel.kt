@@ -316,7 +316,6 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
         val vu = profile.username
         val vp = profile.password
         val sp = profile.sshPassword
-        val kp = profile.sshPrivateKeyPassword
 
         if (type == LoginInfo.Type.VNC_PASSWORD && vp.isNotBlank())
             return LoginInfo(password = vp)
@@ -326,9 +325,6 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
 
         if (type == LoginInfo.Type.SSH_PASSWORD && sp.isNotBlank())
             return LoginInfo(password = sp)
-
-        if (type == LoginInfo.Type.SSH_KEY_PASSWORD && kp.isNotBlank())
-            return LoginInfo(password = kp)
 
         // Something is missing, so we have to ask the user
         return loginInfoRequest.requestResponse(type)  // Blocking call

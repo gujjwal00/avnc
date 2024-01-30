@@ -154,7 +154,6 @@ class PrivateKeyTest {
         setupFileOpenIntent(SAMPLE_KEY)
         onView(withId(R.id.key_import_btn)).doClick()
         onView(withText(R.string.msg_imported)).checkWillBeDisplayed()
-        onView(withId(R.id.ssh_key_password)).checkIsNotDisplayed()
     }
 
     @Test
@@ -162,7 +161,6 @@ class PrivateKeyTest {
         setupFileOpenIntent(SAMPLE_ENCRYPTED_KEY)
         onView(withId(R.id.key_import_btn)).doClick()
         onView(withText(R.string.msg_imported)).checkWillBeDisplayed()
-        onView(withId(R.id.ssh_key_password)).checkWillBeDisplayed()
     }
 
     @Test

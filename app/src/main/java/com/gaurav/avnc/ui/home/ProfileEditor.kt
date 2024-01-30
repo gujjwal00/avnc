@@ -36,9 +36,9 @@ import com.gaurav.avnc.util.MsgDialog
 import com.gaurav.avnc.util.OpenableDocument
 import com.gaurav.avnc.viewmodel.EditorViewModel
 import com.gaurav.avnc.viewmodel.HomeViewModel
-import com.gaurav.avnc.viewmodel.isPrivateKeyEncrypted
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.trilead.ssh2.crypto.PEMDecoder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -272,7 +272,6 @@ class AdvancedProfileEditor : Fragment() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             var key = ""
-            var encrypted = false
             val result = runCatching {
                 requireContext().contentResolver.openAssetFileDescriptor(uri, "r")!!.use {
                     // Valid key files are only few KBs. So if selected file is too big,
@@ -280,13 +279,12 @@ class AdvancedProfileEditor : Fragment() {
                     check(it.length < 2 * 1024 * 1024) { "File is too big [${it.length}]" }
                     key = it.createInputStream().use { s -> s.reader().use { r -> r.readText() } }
                 }
-                encrypted = isPrivateKeyEncrypted(key)
+                PEMDecoder.parsePEM(key.toCharArray()) //Try to parse key
             }
 
             withContext(Dispatchers.Main) {
                 result.onSuccess {
                     viewModel.profile.sshPrivateKey = key
-                    viewModel.isPrivateKeyEncrypted.value = encrypted
                     viewModel.hasSshPrivateKey.value = true
                     binding.keyImportBtn.error = null
                     Snackbar.make(binding.root, R.string.msg_imported, Snackbar.LENGTH_SHORT).show()

@@ -22,11 +22,20 @@ import androidx.test.espresso.Espresso.onIdle
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.gaurav.avnc.*
+import com.gaurav.avnc.R
+import com.gaurav.avnc.checkIsDisplayed
+import com.gaurav.avnc.checkIsNotDisplayed
+import com.gaurav.avnc.checkWillBeDisplayed
+import com.gaurav.avnc.doClick
+import com.gaurav.avnc.doTypeText
+import com.gaurav.avnc.inDialog
 import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.model.db.MainDb
+import com.gaurav.avnc.runOnMainSync
+import com.gaurav.avnc.targetContext
 import com.gaurav.avnc.viewmodel.VncViewModel
+import com.gaurav.avnc.withActivity
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -129,17 +138,20 @@ class LoginFragmentTest {
         assertEquals(SAMPLE_PASSWORD, p.sshPassword)
     }
 
+    // We no longer save Private Key password. It is always asked from user and a message is shown to users
+    // who have previously saved key password.
     @Test
-    fun sshKeyPasswordLoginWithRememberChecked() = Scenario().use { scenario ->
+    fun sshKeyPasswordMigrationMessage() = Scenario(ServerProfile(sshPrivateKeyPassword = "foo")).use { scenario ->
         scenario.triggerLoginInfoRequest(LoginInfo.Type.SSH_KEY_PASSWORD)
         onView(withId(R.id.password)).inDialog().checkWillBeDisplayed().doTypeText(SAMPLE_PASSWORD)
-        onView(withId(R.id.remember)).inDialog().checkIsDisplayed().doClick()
+        onView(withId(R.id.remember)).inDialog().checkIsNotDisplayed()
+        onView(withId(R.id.pk_password_msg)).inDialog().checkIsDisplayed()
         onView(withText(android.R.string.ok)).inDialog().checkIsDisplayed().doClick()
 
         val l = scenario.waitForLoginInfo()
         val p = scenario.triggerLoginSave()
         assertEquals(SAMPLE_PASSWORD, l.password)
-        assertEquals(SAMPLE_PASSWORD, p.sshPrivateKeyPassword)
+        assertEquals("", p.sshPrivateKeyPassword) // Saved password should have been cleared
     }
 
     /**
@@ -148,14 +160,12 @@ class LoginFragmentTest {
      */
     @Test(timeout = 5000)
     fun savedLoginTest() {
-        val profile = ServerProfile(username = "AB", password = "BC", sshPassword = "CD", sshPrivateKeyPassword = "DE")
+        val profile = ServerProfile(username = "AB", password = "BC", sshPassword = "CD")
         val viewModel = runOnMainSync { VncViewModel(profile, ApplicationProvider.getApplicationContext()) }
 
         assertEquals("AB", viewModel.getLoginInfo(LoginInfo.Type.VNC_CREDENTIAL).username)
         assertEquals("BC", viewModel.getLoginInfo(LoginInfo.Type.VNC_CREDENTIAL).password)
         assertEquals("BC", viewModel.getLoginInfo(LoginInfo.Type.VNC_PASSWORD).password)
-
         assertEquals("CD", viewModel.getLoginInfo(LoginInfo.Type.SSH_PASSWORD).password)
-        assertEquals("DE", viewModel.getLoginInfo(LoginInfo.Type.SSH_KEY_PASSWORD).password)
     }
 }

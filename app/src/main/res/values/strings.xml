@@ -81,6 +81,7 @@
     <string name="msg_invalid_key_file">Invalid private key file</string>
     <string name="msg_invalid_vnc_uri">Invalid VNC URI</string>
     <string name="msg_copied_to_clipboard">Copied</string>
+    <string name="msg_pk_password_not_saved">AVNC no longer saves private key passwords to improve security.</string>
     <string name="msg_key_compat_mode_help">Some servers have limited Unicode support. Legacy key events can help input non-English text.</string>
     <string name="msg_button_up_delay_help">Delaying click events can help in some rare cases if an app is not responding to clicks.</string>
     <string name="msg_drag_gesture_help">Assigning an action to this gesture will change Long press detection:\n\n<b>Press-hold-release</b> → Long press\n<b>Press-hold-swipe</b> → Long press and swipe</string>
