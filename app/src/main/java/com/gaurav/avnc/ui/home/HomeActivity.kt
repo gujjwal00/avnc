@@ -64,7 +64,7 @@ class HomeActivity : AppCompatActivity() {
         binding.urlbar.setOnClickListener { showUrlActivity() }
 
         //Observers
-        viewModel.editProfileEvent.observe(this) { showProfileEditor() }
+        viewModel.editProfileEvent.observe(this) { showProfileEditor(it) }
         viewModel.profileInsertedEvent.observe(this) { onProfileInserted(it) }
         viewModel.profileDeletedEvent.observe(this) { onProfileDeleted(it) }
         viewModel.newConnectionEvent.observe(this) { startNewConnection(it) }
@@ -129,14 +129,8 @@ class HomeActivity : AppCompatActivity() {
         startActivity(Intent(this, UrlBarActivity::class.java), anim.toBundle())
     }
 
-    /**
-     * Starts profile editor fragment.
-     */
-    private fun showProfileEditor() {
-        if (viewModel.pref.ui.preferAdvancedEditor)
-            ProfileEditorFragment().showAdvanced(supportFragmentManager)
-        else
-            ProfileEditorFragment().show(supportFragmentManager)
+    private fun showProfileEditor(profile: ServerProfile) {
+        startProfileEditor(this, profile, viewModel.pref.ui.preferAdvancedEditor)
     }
 
     private fun onProfileInserted(profile: ServerProfile) {

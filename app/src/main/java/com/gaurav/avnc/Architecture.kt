@@ -12,7 +12,6 @@ import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.model.db.MainDb
 import com.gaurav.avnc.ui.about.AboutActivity
 import com.gaurav.avnc.ui.home.HomeActivity
-import com.gaurav.avnc.ui.home.ProfileEditorFragment
 import com.gaurav.avnc.ui.home.ServerTabs
 import com.gaurav.avnc.ui.home.UrlBarActivity
 import com.gaurav.avnc.ui.prefs.PrefsActivity
@@ -79,7 +78,7 @@ import com.gaurav.avnc.vnc.VncClient
  *
  * - Lists of saved & discovered servers, in [ServerTabs].
  *
- * - [ProfileEditorFragment], used for creating/editing [ServerProfile].
+ * - Profile editors used for creating/editing [ServerProfile].
  *
  *
  * VNC UI

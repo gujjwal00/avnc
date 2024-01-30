@@ -56,11 +56,16 @@ class BasicEditorTest {
         ).checkWillBeDisplayed()
     }
 
+    private fun checkAdvancedModeIsOpen() {
+        //This checkbox is only shown in advanced mode
+        onView(withText(R.string.title_view_only_mode)).checkWillBeDisplayed()
+    }
+
     @Test
     fun createAdvancedProfile() {
         onView(withContentDescription(R.string.desc_add_new_server_btn)).doClick()
         onView(withText(R.string.title_advanced)).doClick()
-        onView(withText(R.string.title_add_server_profile)).checkIsDisplayed()
+        checkAdvancedModeIsOpen()
         onView(withHint(R.string.hint_server_name)).doTypeText(testProfile.name)
         onView(withHint(R.string.hint_host)).doTypeText(testProfile.host)
         closeSoftKeyboard()
@@ -72,6 +77,33 @@ class BasicEditorTest {
                 hasDescendant(withText(testProfile.name)),
                 hasDescendant(withText(testProfile.host)))
         ).checkWillBeDisplayed()
+    }
+
+    @Test
+    fun dataSharingBetweenSimpleAndAdvanceMode() {
+        // If user switches to advanced mode after making some changes in simple mode,
+        // those changes should not be lost.
+        onView(withContentDescription(R.string.desc_add_new_server_btn)).doClick()
+        onView(withHint(R.string.hint_server_name)).doTypeText(testProfile.name)
+        onView(withHint(R.string.hint_host)).doTypeText(testProfile.host)
+
+        closeSoftKeyboard()
+        onView(withText(R.string.title_advanced)).doClick()
+
+        checkAdvancedModeIsOpen()
+        onView(allOf(withHint(R.string.hint_host), withText(testProfile.host))).checkIsDisplayed()
+        onView(allOf(withHint(R.string.hint_server_name), withText(testProfile.name))).checkIsDisplayed()
+    }
+
+    @Test
+    fun directlyOpenAdvancedMode() {
+        try {
+            targetPrefs.edit { putBoolean("prefer_advanced_editor", true) }
+            onView(withContentDescription(R.string.desc_add_new_server_btn)).doClick()
+            checkAdvancedModeIsOpen()
+        } finally {
+            targetPrefs.edit { putBoolean("prefer_advanced_editor", false) }
+        }
     }
 }
 

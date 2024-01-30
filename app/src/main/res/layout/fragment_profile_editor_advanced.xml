@@ -13,12 +13,8 @@
     <data>
 
         <variable
-            name="profile"
-            type="com.gaurav.avnc.model.ServerProfile" />
-
-        <variable
-            name="isPrivateKeyEncrypted"
-            type="boolean" />
+            name="viewModel"
+            type="com.gaurav.avnc.viewmodel.EditorViewModel" />
     </data>
 
     <LinearLayout
@@ -79,7 +75,7 @@
                     android:hint="@string/hint_server_name"
                     android:importantForAutofill="no"
                     android:inputType="text"
-                    android:text="@={profile.name}"
+                    android:text="@={viewModel.profile.name}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -88,11 +84,11 @@
                 <EditText
                     android:id="@+id/host"
                     style="@style/FormField.EditText"
-                    android:drawableStart="@{useRepeater.checked ? @drawable/ic_swap :  @drawable/ic_computer}"
-                    android:hint="@{useRepeater.checked ? @string/hint_repeater_host : @string/hint_host}"
+                    android:drawableStart="@{viewModel.useRepeater ? @drawable/ic_swap :  @drawable/ic_computer}"
+                    android:hint="@{viewModel.useRepeater ? @string/hint_repeater_host : @string/hint_host}"
                     android:importantForAutofill="no"
                     android:inputType="textUri"
-                    android:text="@={profile.host}"
+                    android:text="@={viewModel.profile.host}"
                     app:layout_constraintEnd_toStartOf="@id/port"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/name" />
@@ -106,7 +102,7 @@
                     android:hint="@string/hint_port"
                     android:importantForAutofill="no"
                     android:inputType="number"
-                    android:text='@={"" +  profile.port}'
+                    android:text='@={"" +  viewModel.profile.port}'
                     app:layout_constraintBottom_toBottomOf="@id/host"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/host"
@@ -117,6 +113,7 @@
                 <CheckBox
                     android:id="@+id/use_repeater"
                     style="@style/FormField.CheckBox"
+                    android:checked="@={viewModel.useRepeater}"
                     android:text="@string/title_use_repeater"
                     app:layout_constraintEnd_toStartOf="@id/id_on_repeater"
                     app:layout_constraintStart_toStartOf="parent"
@@ -129,7 +126,8 @@
                     android:importantForAutofill="no"
                     android:inputType="number"
                     android:minWidth="100dp"
-                    app:isVisible="@{useRepeater.checked}"
+                    android:text='@={"" + viewModel.profile.idOnRepeater}'
+                    app:isVisible="@{viewModel.useRepeater}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/use_repeater"
                     app:layout_constraintTop_toBottomOf="@id/host" />
@@ -139,7 +137,7 @@
                 <CheckBox
                     android:id="@+id/view_only"
                     style="@style/FormField.CheckBox"
-                    android:checked="@={profile.viewOnly}"
+                    android:checked="@={viewModel.profile.viewOnly}"
                     android:text="@string/title_view_only_mode"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -149,7 +147,7 @@
                 <CheckBox
                     android:id="@+id/key_compat_mode"
                     style="@style/FormField.CheckBox"
-                    android:checked="@={profile.fLegacyKeySym}"
+                    android:checked="@={viewModel.profile.fLegacyKeySym}"
                     android:text="@string/title_key_compat_mode"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -169,7 +167,7 @@
                 <CheckBox
                     android:id="@+id/button_up_delay"
                     style="@style/FormField.CheckBox"
-                    android:checked="@={profile.fButtonUpDelay}"
+                    android:checked="@={viewModel.profile.fButtonUpDelay}"
                     android:text="@string/title_button_up_delay"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -189,7 +187,7 @@
                 <CheckBox
                     android:id="@+id/resize_remote_desktop"
                     style="@style/FormField.CheckBox"
-                    android:checked="@={profile.resizeRemoteDesktop}"
+                    android:checked="@={viewModel.profile.resizeRemoteDesktop}"
                     android:text="@string/title_resize_remote_desktop"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -213,10 +211,10 @@
                     android:layout_height="@dimen/action_btn_size"
                     android:layout_marginVertical="@dimen/margin_small"
                     android:layout_marginStart="@dimen/margin_large"
-                    android:enabled="@{!profile.useRawEncoding}"
+                    android:enabled="@{!viewModel.useRawEncoding}"
                     android:max="9"
                     android:minHeight="@dimen/action_btn_size"
-                    android:progress="@={profile.imageQuality}"
+                    android:progress="@={viewModel.profile.imageQuality}"
                     app:layout_constraintEnd_toStartOf="@id/raw_encoding"
                     app:layout_constraintStart_toEndOf="@id/image_quality_label"
                     app:layout_constraintTop_toBottomOf="@id/resize_remote_desktop" />
@@ -226,8 +224,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/action_btn_size"
                     android:layout_marginEnd="@dimen/margin_small"
-                    android:checked="@={profile.useRawEncoding}"
-                    android:onCheckedChanged="@{(_, checked) -> imageQuality.setEnabled(!checked)}"
+                    android:checked="@={viewModel.useRawEncoding}"
                     android:text="@string/title_image_quality_raw"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/image_quality"
@@ -308,7 +305,7 @@
                     android:drawableStart="@drawable/ic_person"
                     android:hint="@string/hint_username"
                     android:inputType="text"
-                    android:text="@={profile.username}"
+                    android:text="@={viewModel.profile.username}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/security" />
@@ -322,7 +319,7 @@
                     android:drawableStart="@drawable/ic_password"
                     android:hint="@string/hint_password"
                     android:inputType="textPassword"
-                    android:text="@={profile.password}"
+                    android:text="@={viewModel.profile.password}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/username" />
@@ -335,6 +332,7 @@
                 <CheckBox
                     android:id="@+id/use_ssh_tunnel"
                     style="@style/FormField.CheckBox"
+                    android:checked="@={viewModel.useSshTunnel}"
                     android:text="@string/title_use_ssh_tunnel"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -345,7 +343,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:animateLayoutChanges="true"
-                    app:isVisible="@{useSshTunnel.checked}"
+                    app:isVisible="@{viewModel.useSshTunnel}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/use_ssh_tunnel">
@@ -358,7 +356,7 @@
                         android:hint='@{"SSH " + @string/hint_host}'
                         android:importantForAutofill="no"
                         android:inputType="textUri"
-                        android:text="@={profile.sshHost}"
+                        android:text="@={viewModel.profile.sshHost}"
                         app:layout_constraintEnd_toStartOf="@id/ssh_port"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -370,7 +368,7 @@
                         android:hint='@{"SSH " + @string/hint_port}'
                         android:importantForAutofill="no"
                         android:inputType="number"
-                        android:text='@={"" + profile.sshPort}'
+                        android:text='@={"" + viewModel.profile.sshPort}'
                         app:layout_constraintBottom_toBottomOf="@id/ssh_host"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/ssh_host"
@@ -385,7 +383,7 @@
                         android:drawableStart="@drawable/ic_person"
                         android:hint="@string/hint_username"
                         android:inputType="text"
-                        android:text="@={profile.sshUsername}"
+                        android:text="@={viewModel.profile.sshUsername}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/ssh_host" />
@@ -405,6 +403,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:checked="@={viewModel.sshUsePrivateKey}"
                             android:text="@string/title_private_key" />
 
                         <RadioButton
@@ -412,6 +411,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:checked="@={viewModel.sshUsePassword}"
                             android:text="@string/title_password" />
                     </RadioGroup>
 
@@ -423,8 +423,8 @@
                         android:drawableStart="@drawable/ic_password"
                         android:hint="@string/hint_password"
                         android:inputType="textPassword"
-                        android:text="@={profile.sshPassword}"
-                        app:isVisible="@{sshAuthTypePassword.checked}"
+                        android:text="@={viewModel.profile.sshPassword}"
+                        app:isVisible="@{viewModel.sshUsePassword}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/ssh_auth_type" />
@@ -436,9 +436,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_normal"
-                        android:text="@{profile.sshPrivateKey.empty ? @string/title_import : @string/title_change}"
+                        android:text="@{viewModel.hasSshPrivateKey ? @string/title_change : @string/title_import}"
                         app:icon="@drawable/ic_file"
-                        app:isVisible="@{sshAuthTypeKey.checked}"
+                        app:isVisible="@{viewModel.sshUsePrivateKey}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/ssh_auth_type" />
 
@@ -450,13 +450,12 @@
                         android:drawableStart="@drawable/ic_password"
                         android:hint="@string/hint_key_password"
                         android:inputType="textPassword"
-                        android:text="@={profile.sshPrivateKeyPassword}"
-                        app:isVisible="@{sshAuthTypeKey.checked &amp;&amp; isPrivateKeyEncrypted}"
+                        android:text="@={viewModel.profile.sshPrivateKeyPassword}"
+                        app:isVisible="@{viewModel.sshUsePrivateKey &amp;&amp; viewModel.isPrivateKeyEncrypted}"
                         app:layout_constraintBaseline_toBaselineOf="@id/key_import_btn"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/key_import_btn" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </LinearLayout>

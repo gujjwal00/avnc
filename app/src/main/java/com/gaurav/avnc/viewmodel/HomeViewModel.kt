@@ -132,6 +132,10 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
         profileDeletedEvent.fire(profile)
     }
 
+    fun saveProfile(profile: ServerProfile) {
+        if (profile.ID == 0L) insertProfile(profile)
+        else updateProfile(profile)
+    }
 
     /**************************************************************************
      * Rediscovery Indicator
