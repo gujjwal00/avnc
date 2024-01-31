@@ -247,6 +247,7 @@ class AdvancedProfileEditor : Fragment() {
         if (binding.useSshTunnel.isChecked) {
             result = result and
                     validateNotEmpty(binding.sshHost) and
+                    validateNotEmpty(binding.sshPort) and
                     validateNotEmpty(binding.sshUsername) and
                     validatePrivateKey()
         }
