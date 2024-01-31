@@ -147,16 +147,8 @@ data class ServerProfile(
          */
         var useCount: Int = 0,
 
-        /**
-         * Whether UltraVNC Repeater is used for connections.
-         * When repeater is used, [host] & [port] identifies the repeater.
-         */
+        // These fields are not used, as repeater support has been removed
         var useRepeater: Boolean = false,
-
-        /**
-         * When using a repeater, this value identifies the VNC server.
-         * Valid IDs: [0, 999999999].
-         */
         var idOnRepeater: Int = 0,
 
         /**

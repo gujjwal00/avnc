@@ -84,8 +84,8 @@
                 <EditText
                     android:id="@+id/host"
                     style="@style/FormField.EditText"
-                    android:drawableStart="@{viewModel.useRepeater ? @drawable/ic_swap :  @drawable/ic_computer}"
-                    android:hint="@{viewModel.useRepeater ? @string/hint_repeater_host : @string/hint_host}"
+                    android:drawableStart="@drawable/ic_computer"
+                    android:hint="@string/hint_host"
                     android:importantForAutofill="no"
                     android:inputType="textUri"
                     android:text="@={viewModel.profile.host}"
@@ -109,29 +109,6 @@
                     app:layout_constraintTop_toTopOf="@id/host"
                     app:layout_constraintWidth_percent=".2" />
 
-                <!--Repeater-->
-                <CheckBox
-                    android:id="@+id/use_repeater"
-                    style="@style/FormField.CheckBox"
-                    android:checked="@={viewModel.useRepeater}"
-                    android:text="@string/title_use_repeater"
-                    app:layout_constraintEnd_toStartOf="@id/id_on_repeater"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/host" />
-
-                <EditText
-                    android:id="@+id/id_on_repeater"
-                    style="@style/FormField.EditText"
-                    android:hint="@string/hint_server_id"
-                    android:importantForAutofill="no"
-                    android:inputType="number"
-                    android:minWidth="100dp"
-                    android:text='@={"" + viewModel.profile.idOnRepeater}'
-                    app:isVisible="@{viewModel.useRepeater}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/use_repeater"
-                    app:layout_constraintTop_toBottomOf="@id/host" />
-
 
                 <!--View-only mode-->
                 <CheckBox
@@ -141,7 +118,7 @@
                     android:text="@string/title_view_only_mode"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/use_repeater" />
+                    app:layout_constraintTop_toBottomOf="@id/host" />
 
                 <!--Key Compatibility mode-->
                 <CheckBox

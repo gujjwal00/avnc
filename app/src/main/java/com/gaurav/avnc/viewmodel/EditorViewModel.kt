@@ -31,7 +31,6 @@ class EditorViewModel(app: Application, state: SavedStateHandle, initialProfile:
      * more complex handling, and live feedback in UI.
      * For these, we have to use dedicated LiveData fields.
      */
-    val useRepeater = state.getLiveData("useRepeater", profile.useRepeater)
     val useRawEncoding = state.getLiveData("useRawEncoding", profile.useRawEncoding)
     val useSshTunnel = state.getLiveData("useSshTunnel", profile.channelType == ServerProfile.CHANNEL_SSH_TUNNEL)
     val sshUsePassword = state.getLiveData("sshUsePassword", profile.sshAuthType == ServerProfile.SSH_AUTH_PASSWORD)
@@ -40,7 +39,6 @@ class EditorViewModel(app: Application, state: SavedStateHandle, initialProfile:
 
 
     fun prepareProfileForSave(): ServerProfile {
-        profile.useRepeater = useRepeater.value ?: false
         profile.useRawEncoding = useRawEncoding.value ?: false
         profile.channelType = if (useSshTunnel.value == true) ServerProfile.CHANNEL_SSH_TUNNEL else ServerProfile.CHANNEL_TCP
         profile.sshAuthType = if (sshUsePassword.value == true) ServerProfile.SSH_AUTH_PASSWORD else ServerProfile.SSH_AUTH_KEY

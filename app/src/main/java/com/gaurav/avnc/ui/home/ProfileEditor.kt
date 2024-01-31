@@ -242,9 +242,7 @@ class AdvancedProfileEditor : Fragment() {
     }
 
     private fun validate(): Boolean {
-        var result = validateNotEmpty(binding.host) and
-                validateNotEmpty(binding.port) and
-                validateNotEmpty(binding.idOnRepeater, binding.useRepeater.isChecked)
+        var result = validateNotEmpty(binding.host) and validateNotEmpty(binding.port)
 
         if (binding.useSshTunnel.isChecked) {
             result = result and

@@ -205,9 +205,6 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
 
         client.configure(profile.viewOnly, profile.securityType, true  /* Hardcoded to true */,
                          profile.imageQuality, profile.useRawEncoding)
-
-        if (profile.useRepeater)
-            client.setupRepeater(profile.idOnRepeater)
     }
 
     private fun connect() {
