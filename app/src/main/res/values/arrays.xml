@@ -150,6 +150,42 @@
         <item>right-click</item>
     </string-array>
 
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~ Arrays for profile editor ~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--Values for gesture style-->
+    <string-array name="profile_editor_gesture_style_labels">
+        <item>@string/pref_gesture_style_auto</item>
+        <item>@string/pref_gesture_style_touchscreen</item>
+        <item>@string/pref_gesture_style_touchpad</item>
+    </string-array>
+    <string-array name="profile_editor_gesture_style_descriptions">
+        <item>@string/pref_gesture_style_auto_summary</item>
+        <item>@string/pref_gesture_style_touchscreen_summary</item>
+        <item>@string/pref_gesture_style_touchpad_summary</item>
+    </string-array>
+    <string-array name="profile_editor_gesture_style_values">
+        <item>auto</item>
+        <item>touchscreen</item>
+        <item>touchpad</item>
+    </string-array>
+
+    <!--Values for security types-->
+    <string-array name="profile_editor_security_labels">
+        <item>@string/title_automatic</item>
+        <item>@string/title_none</item>
+        <item>VncAuth</item>
+        <item>AnonTLS</item>
+        <item>VeNCrypt</item>
+    </string-array>
+    <string-array name="profile_editor_security_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>18</item>
+        <item>19</item>
+    </string-array>
+
+
     <!--Dummy string array used for testing-->
     <string-array name="dummy_array">
         <item>Item 1</item>

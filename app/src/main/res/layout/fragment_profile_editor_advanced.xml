@@ -227,6 +227,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/image_quality"
                     app:layout_constraintTop_toBottomOf="@id/image_quality"
+                    app:value="@={viewModel.profile.gestureStyle}"
+                    app:valueDescriptions="@{ @stringArray/profile_editor_gesture_style_descriptions }"
+                    app:valueLabels="@{ @stringArray/profile_editor_gesture_style_labels }"
+                    app:values="@{ @stringArray/profile_editor_gesture_style_values }"
                     tools:entries="@array/dummy_array" />
 
                 <!--Screen orientation-->
@@ -248,6 +252,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/gesture_style"
                     app:layout_constraintTop_toBottomOf="@id/gesture_style"
+                    app:value="@={viewModel.profile.screenOrientation}"
+                    app:valueLabels="@{ @stringArray/orientation_entries }"
+                    app:values="@{ @stringArray/orientation_values }"
                     tools:entries="@array/dummy_array" />
 
 
@@ -272,6 +279,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/screen_orientation"
                     app:layout_constraintTop_toBottomOf="@id/screen_orientation"
+                    app:value="@={viewModel.profile.securityType}"
+                    app:valueLabels="@{ @stringArray/profile_editor_security_labels }"
+                    app:values="@{ @stringArray/profile_editor_security_values }"
                     tools:entries="@array/dummy_array" />
 
                 <!--Username-->

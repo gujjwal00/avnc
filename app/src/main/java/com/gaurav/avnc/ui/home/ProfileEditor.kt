@@ -15,9 +15,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.EditText
-import android.widget.SimpleAdapter
 import androidx.core.os.BundleCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -163,66 +161,16 @@ class AdvancedProfileEditor : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentProfileEditorAdvancedBinding.inflate(inflater, container, false)
-        binding.apply {
-            lifecycleOwner = viewLifecycleOwner
-            viewModel = this@AdvancedProfileEditor.viewModel
-            toolbar.title = getString(getTitle(this@AdvancedProfileEditor))
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
-            saveBtn.setOnClickListener { save() }
-            toolbar.setNavigationOnClickListener { dismiss() }
-            keyImportBtn.setOnClickListener { keyFilePicker.launch(arrayOf("*/*")) }
+        binding.toolbar.title = getString(getTitle(this))
+        binding.saveBtn.setOnClickListener { save() }
+        binding.toolbar.setNavigationOnClickListener { dismiss() }
+        binding.keyImportBtn.setOnClickListener { keyFilePicker.launch(arrayOf("*/*")) }
 
-
-            // TODO Move it to proper place
-            val securityTypes = mapOf(
-                    getString(R.string.title_automatic) to 0,
-                    getString(R.string.title_none) to 1,
-                    "VncAuth" to 2,
-                    "AnonTLS" to 18,
-                    "VeNCrypt" to 19
-            )
-
-            val p = this@AdvancedProfileEditor.viewModel.profile
-            security.setEntries(securityTypes, p.securityType) { p.securityType = it }
-
-            //Setup Gesture Style
-            val gestureStyleItems = listOf(
-                    mapOf("name" to getString(R.string.pref_gesture_style_auto),
-                          "description" to getString(R.string.pref_gesture_style_auto_summary),
-                          "value" to "auto"),
-                    mapOf("name" to getString(R.string.pref_gesture_style_touchscreen),
-                          "description" to getString(R.string.pref_gesture_style_touchscreen_summary),
-                          "value" to "touchscreen"),
-                    mapOf("name" to getString(R.string.pref_gesture_style_touchpad),
-                          "description" to getString(R.string.pref_gesture_style_touchpad_summary),
-                          "value" to "touchpad"),
-            )
-
-            val adapter = SimpleAdapter(requireContext(), gestureStyleItems, android.R.layout.simple_list_item_1,
-                                        arrayOf("name", "description"), intArrayOf(android.R.id.text1, android.R.id.text2))
-
-            adapter.setDropDownViewResource(android.R.layout.simple_list_item_2)
-            gestureStyle.adapter = adapter
-            gestureStyle.setSelection(gestureStyleItems.indexOfFirst { it["value"] == p.gestureStyle })
-            gestureStyle.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                    p.gestureStyle = gestureStyleItems[position]["value"]!!
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
-            }
-
-            // Screen orientation spinner
-            val orientations = mapOf(
-                    getString(R.string.pref_orientation_option_auto) to "auto",
-                    getString(R.string.pref_orientation_option_portrait) to "portrait",
-                    getString(R.string.pref_orientation_option_landscape) to "landscape"
-            )
-            screenOrientation.setEntries(orientations.keys.toTypedArray(), orientations.values.toTypedArray(), p.screenOrientation) { p.screenOrientation = it }
-
-            setupHelpButton(keyCompatModeHelpBtn, R.string.title_key_compat_mode, R.string.msg_key_compat_mode_help)
-            setupHelpButton(buttonUpDelayHelpBtn, R.string.title_button_up_delay, R.string.msg_button_up_delay_help)
-        }
+        setupHelpButton(binding.keyCompatModeHelpBtn, R.string.title_key_compat_mode, R.string.msg_key_compat_mode_help)
+        setupHelpButton(binding.buttonUpDelayHelpBtn, R.string.title_button_up_delay, R.string.msg_button_up_delay_help)
 
         return binding.root
     }

@@ -12,9 +12,6 @@ import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.appcompat.widget.AppCompatSpinner
 import com.google.android.material.elevation.ElevationOverlayProvider
 
@@ -48,37 +45,5 @@ class SpinnerEx(context: Context, attrs: AttributeSet? = null) : AppCompatSpinne
             background.setColor(overlay)
         else
             background.setTint(overlay)
-    }
-
-    /**
-     * This method allows setting a Key-Value map as data source for this spinner.
-     * Items in the Spinner are populated using [keys] and whenever an item is selected,
-     * [selectionListener] will be called with corresponding value from [values].
-     *
-     * Using this method will replace the old Adapter & OnItemSelectionListener.
-     *
-     * [keys] & [values] must have the same size.
-     */
-    fun <T> setEntries(keys: Array<String>, values: Array<T>, initialValue: T, selectionListener: (T) -> Unit) {
-        check(keys.size == values.size)
-
-        adapter = ArrayAdapter(context, android.R.layout.simple_list_item_1, keys)
-
-        setSelection(values.indexOf(initialValue))
-
-        onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                selectionListener(values[position])
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-    }
-
-    /**
-     * Helper for Integer maps
-     */
-    fun setEntries(entries: Map<String, Int>, initialValue: Int, selectionListener: (Int) -> Unit) {
-        setEntries(entries.keys.toTypedArray(), entries.values.toTypedArray(), initialValue, selectionListener)
     }
 }
