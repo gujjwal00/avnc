@@ -80,35 +80,25 @@
 
                     <ToggleButton
                         android:id="@+id/gesture_style_toggle"
-                        style="@style/ImageButton"
-                        android:background="@drawable/bg_toggle_button"
+                        style="@style/ImageButton.Toggle"
                         android:contentDescription="@string/pref_gesture_style"
                         android:drawableStart="@drawable/ic_gesture"
                         android:drawableEnd="@drawable/ic_toggle_more"
-                        android:foreground="?selectableItemBackground"
-                        android:gravity="center"
                         android:onCheckedChanged="@{(v,checked) -> checked ? zoomOptions.setChecked(false) : void}"
                         android:paddingStart="12dp"
                         android:paddingEnd="0dp"
-                        android:textOff=""
-                        android:textOn=""
                         app:isVisible="@{viewModel.pref.viewer.toolbarShowGestureStyleToggle}"
                         tools:ignore="UnusedAttribute" />
 
                     <ToggleButton
                         android:id="@+id/zoom_options"
-                        style="@style/ImageButton"
-                        android:background="@drawable/bg_toggle_button"
+                        style="@style/ImageButton.Toggle"
                         android:contentDescription="@string/desc_zoom_options_btn"
                         android:drawableStart="@drawable/ic_zoom_options"
                         android:drawableEnd="@drawable/ic_toggle_more"
-                        android:foreground="?selectableItemBackground"
-                        android:gravity="center"
                         android:onCheckedChanged="@{(v,checked) -> checked ? gestureStyleToggle.setChecked(false) : void}"
                         android:paddingStart="12dp"
                         android:paddingEnd="0dp"
-                        android:textOff=""
-                        android:textOn=""
                         tools:ignore="UnusedAttribute" />
                 </LinearLayout>
 

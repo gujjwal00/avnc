@@ -91,6 +91,14 @@
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     </style>
 
+    <style name="ImageButton.Toggle">
+        <item name="android:background">@drawable/bg_toggle_button</item>
+        <item name="android:foreground">?selectableItemBackground</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textOff" />
+        <item name="android:textOn" />
+    </style>
+
     <style name="ServerList">
         <item name="android:paddingBottom">@dimen/server_card_min_height</item>
         <item name="android:clipToPadding">false</item>
