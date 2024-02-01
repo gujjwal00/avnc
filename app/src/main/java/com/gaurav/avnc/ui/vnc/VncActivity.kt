@@ -233,8 +233,6 @@ class VncActivity : AppCompatActivity() {
     }
 
     private fun closeDrawers() {
-        binding.zoomOptions.isChecked = false
-        binding.gestureStyleToggle.isChecked = false
         binding.drawerLayout.closeDrawers()
     }
 
@@ -353,6 +351,17 @@ class VncActivity : AppCompatActivity() {
                 root.systemGestureExclusionRects = listOf(rect)
             }
         }
+
+        // Close flyouts after drawer is closed
+        // We can't do this when calling closeDrawers() because that will change drawer
+        // size *while* drawer is closing. This can mess with internal calculations of DrawerLayout,
+        // and close operation can fail.
+        binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+            override fun onDrawerClosed(drawerView: View) {
+                binding.zoomOptions.isChecked = false
+                binding.gestureStyleToggle.isChecked = false
+            }
+        })
     }
 
     /**
