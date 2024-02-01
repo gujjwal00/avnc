@@ -340,7 +340,7 @@
                         android:id="@+id/ssh_host"
                         style="@style/FormField.EditText"
                         android:drawableStart="@drawable/ic_computer"
-                        android:hint='@{"SSH " + @string/hint_host}'
+                        android:hint="@{@string/hint_ssh_host}"
                         android:importantForAutofill="no"
                         android:inputType="textUri"
                         android:text="@={viewModel.profile.sshHost}"
@@ -352,7 +352,7 @@
                     <EditText
                         android:id="@+id/ssh_port"
                         style="@style/FormField.EditText"
-                        android:hint='@{"SSH " + @string/hint_port}'
+                        android:hint="@{@string/hint_ssh_port}"
                         android:importantForAutofill="no"
                         android:inputType="number"
                         android:text='@={"" + viewModel.profile.sshPort}'
