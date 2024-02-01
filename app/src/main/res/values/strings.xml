@@ -69,6 +69,8 @@
     <string name="msg_about_app">A fast and secure VNC client. Remotely view and control any device running a VNC server.\n\n\nAVNC is an open source and copyleft software — made with help from many contributors.</string>
     <string name="msg_server_profile_added">Server added</string>
     <string name="msg_server_profile_deleted">Server deleted</string>
+    <string name="msg_zoom_locked">Zoom locked</string>
+    <string name="msg_zoom_unlocked">Zoom unlocked</string>
     <string name="msg_zoom_reset">Zoom reset to 100%</string>
     <string name="msg_zoom_reset_default">Zoom reset to default</string>
     <string name="msg_zoom_saved">Saved current zoom as default</string>
@@ -104,6 +106,7 @@
     <string name="desc_virtual_keys_btn">Show virtual keys</string>
     <string name="desc_zoom_options_btn">Zoom options</string>
     <string name="desc_reset_zoom_btn">Reset zoom</string>
+    <string name="desc_lock_zoom_btn">Lock zoom</string>
     <string name="desc_save_zoom_btn">Save current zoom as default</string>
     <string name="desc_retry_connection_btn">Reconnect</string>
     <string name="desc_back_btn">Back</string>

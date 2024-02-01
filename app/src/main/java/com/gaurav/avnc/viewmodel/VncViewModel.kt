@@ -250,6 +250,8 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
      **************************************************************************/
 
     fun updateZoom(scaleFactor: Float, fx: Float, fy: Float) {
+        if (profile.fZoomLocked) return
+
         val appliedScaleFactor = frameState.updateZoom(scaleFactor)
 
         //Calculate how much the focus would shift after scaling
@@ -280,6 +282,11 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
     fun moveFrameTo(x: Float, y: Float) {
         frameState.moveTo(x, y)
         frameViewRef.get()?.requestRender()
+    }
+
+    fun toggleZoomLock(enabled: Boolean) {
+        profile.fZoomLocked = enabled
+        saveProfile()
     }
 
     fun saveZoom() {

@@ -182,6 +182,7 @@ data class ServerProfile(
         // Flag masks
         private const val FLAG_LEGACY_KEYSYM = 0x01L
         private const val FLAG_BUTTON_UP_DELAY = 0x02L
+        private const val FLAG_ZOOM_LOCKED = 0x04L
     }
 
     /**
@@ -205,4 +206,11 @@ data class ServerProfile(
      */
     @IgnoredOnParcel
     var fButtonUpDelay by Flag(FLAG_BUTTON_UP_DELAY)
+
+    /**
+     * If zoom is locked, user requests to change [zoom1] & [zoom2]
+     * should be ignored.
+     */
+    @IgnoredOnParcel
+    var fZoomLocked by Flag(FLAG_ZOOM_LOCKED)
 }

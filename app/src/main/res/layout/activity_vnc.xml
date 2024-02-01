@@ -116,6 +116,13 @@
                         android:contentDescription="@string/desc_reset_zoom_btn"
                         android:src="@drawable/ic_zoom_reset" />
 
+                    <ToggleButton
+                        android:id="@+id/zoom_lock_btn"
+                        style="@style/ImageButton.Toggle"
+                        android:contentDescription="@string/desc_lock_zoom_btn"
+                        android:drawableStart="@drawable/ic_lock"
+                        android:padding="12dp" />
+
                     <ImageButton
                         android:id="@+id/zoom_save_btn"
                         style="@style/ImageButton"

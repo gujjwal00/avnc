@@ -108,6 +108,8 @@ class VncActivity : AppCompatActivity() {
         binding.zoomOptions.setOnLongClickListener { resetZoomToDefault(); closeDrawers(); true }
         binding.zoomResetBtn.setOnClickListener { resetZoomToDefault(); closeDrawers() }
         binding.zoomResetBtn.setOnLongClickListener { resetZoom(); closeDrawers(); true }
+        binding.zoomLockBtn.isChecked = viewModel.profile.fZoomLocked
+        binding.zoomLockBtn.setOnCheckedChangeListener { _, checked -> toggleZoomLock(checked); closeDrawers() }
         binding.zoomSaveBtn.setOnClickListener { saveZoom(); closeDrawers() }
         binding.virtualKeysBtn.setOnClickListener { virtualKeys.show(); closeDrawers() }
         binding.reconnectBtn.setOnClickListener { retryConnection() }
@@ -209,6 +211,11 @@ class VncActivity : AppCompatActivity() {
     private fun resetZoomToDefault() {
         viewModel.resetZoomToDefault()
         Toast.makeText(this, getString(R.string.msg_zoom_reset_default), Toast.LENGTH_SHORT).show()
+    }
+
+    private fun toggleZoomLock(enabled: Boolean) {
+        viewModel.toggleZoomLock(enabled)
+        Toast.makeText(this, getString(if (enabled) R.string.msg_zoom_locked else R.string.msg_zoom_unlocked), Toast.LENGTH_SHORT).show()
     }
 
     private fun saveZoom() {
