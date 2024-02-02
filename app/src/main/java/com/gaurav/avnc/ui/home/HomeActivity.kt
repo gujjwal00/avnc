@@ -204,8 +204,9 @@ class HomeActivity : AppCompatActivity() {
     private fun updateShortcuts(profiles: List<ServerProfile>) {
         lifecycleScope.launch(Dispatchers.IO) {
             runCatching {
-                updateShortcutState(profiles)
-                updateDynamicShortcuts(profiles)
+                val sortedProfiles = profiles.sortedByDescending { it.useCount }
+                updateShortcutState(sortedProfiles)
+                updateDynamicShortcuts(sortedProfiles)
             }.onFailure {
                 Log.e("Shortcuts", "Unable to update shortcuts", it)
             }

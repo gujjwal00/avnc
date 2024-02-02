@@ -79,9 +79,11 @@ class VncActivity : AppCompatActivity() {
     val virtualKeys by lazy { VirtualKeys(this) }
     private val serverUnlockPrompt = DeviceAuthPrompt(this)
     private val layoutManager by lazy { LayoutManager(this) }
+    private var restoredFromBundle = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         DeviceAuthPrompt.applyFingerprintDialogFix(supportFragmentManager)
+        restoredFromBundle = savedInstanceState != null
 
         super.onCreate(savedInstanceState)
         if (!loadViewModel(savedInstanceState)) {
@@ -248,6 +250,14 @@ class VncActivity : AppCompatActivity() {
         updateStatusContainerVisibility(isConnected)
         highlightDrawer(isConnected)
         autoReconnect(newState)
+
+        if (isConnected && !restoredFromBundle)
+            incrementUseCount()
+    }
+
+    private fun incrementUseCount() {
+        viewModel.profile.useCount += 1
+        viewModel.saveProfile()
     }
 
     private fun updateStatusContainerVisibility(isConnected: Boolean) {
