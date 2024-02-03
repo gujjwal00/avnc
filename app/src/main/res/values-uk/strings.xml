@@ -138,7 +138,7 @@
     <string name="pref_two_finger_tap">Торкання двома пальцями</string>
     <string name="title_remember">Памʼятати</string>
     <string name="msg_key_compat_mode_help">Деякі сервери мають обмежену підтримку Unicode. Успадковані події клавіш допоможуть вводити не-англійський текст.</string>
-    <string name="desc_retry_connection_btn">Повторити</string>
+    <string name="desc_retry_connection_btn">Перепідключитися</string>
     <string name="tip_discovery">Виявлення може автоматично знаходити підтримувані сервери,
 \nщо працюють у Вашій мережі.</string>
     <string name="pref_gesture_style_touchscreen_summary">Робити дії в точці доторкання</string>
@@ -155,10 +155,10 @@
     <string name="pref_mouse_back">Кнопка назад</string>
     <string name="pref_mouse_back_action_default">Типово</string>
     <string name="pref_swipe_sensitivity">Чутливість ковзання</string>
-    <string name="msg_drag_gesture_help">Присвоєння дії жесту Перетягування змінить виявлення довгого натискання:
+    <string name="msg_drag_gesture_help">Присвоєння дії цьому жесту змінить виявлення довгого натискання:
 \n
 \n<b>Натиснути-утримувати-відпустити</b> → Довге натискання
-\n<b>Натиснути-утримувати-потягнути</b> → Перетягування</string>
+\n<b>Натиснути-утримувати-потягнути</b> → Довге натискання і ковзання</string>
     <string name="pref_orientation">Орієнтація екрана</string>
     <string name="pref_orientation_option_auto">Автоматична</string>
     <string name="pref_orientation_option_portrait">Портретна</string>
@@ -186,4 +186,13 @@
     <string name="title_ssh_login">SSH логін</string>
     <string name="title_unlock_private_key">Розблокувати приватний ключ</string>
     <string name="title_orientation">Орієнтація</string>
+    <string name="title_resize_remote_desktop">Зміна розміру віддаленого сеансу до розміру локального вікна</string>
+    <string name="msg_zoom_reset_default">Скидання масштабу до стандартного</string>
+    <string name="msg_button_up_delay_help">Затримка подій клацання може допомогти в деяких рідкісних випадках, коли застосунок не реагує на клацання.</string>
+    <string name="msg_shortcut_server_deleted">Цей сервер було видалено</string>
+    <string name="title_button_up_delay">Надсилати відкладені події клацань</string>
+    <string name="pref_double_tap_swipe">Подвійне натискання та ковзання</string>
+    <string name="pref_long_press_swipe">Довге натискання та ковзання</string>
+    <string name="pref_gesture_action_remote_drag_middle">Перетягувати середньою кнопкою</string>
+    <string name="pref_auto_reconnect">Автоматичне перепідключення</string>
 </resources>
