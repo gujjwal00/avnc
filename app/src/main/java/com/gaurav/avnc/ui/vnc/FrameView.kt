@@ -54,6 +54,10 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
      * Input connection used for intercepting key events
      */
     inner class InputConnection : BaseInputConnection(this, false) {
+        override fun commitText(text: CharSequence?, newCursorPosition: Int): Boolean {
+            return keyHandler.onCommitText(text) || super.commitText(text, newCursorPosition)
+        }
+
         override fun sendKeyEvent(event: KeyEvent): Boolean {
             return keyHandler.onKeyEvent(event) || super.sendKeyEvent(event)
         }

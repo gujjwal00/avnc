@@ -86,6 +86,14 @@ import com.gaurav.avnc.vnc.XTKeyCode
 class KeyHandler(private val dispatcher: Dispatcher, private val cfLegacyKeysym: Boolean, prefs: AppPreferences) {
 
     /**
+     * Pre-KeyEvent hook.
+     * This is NOT triggered for all characters.
+     */
+    fun onCommitText(text: CharSequence?): Boolean {
+        return handleCCedilla(text)
+    }
+
+    /**
      * Shortcut to send both up & down events. Useful for Virtual Keys.
      */
     fun onKey(keyCode: Int) {
@@ -311,6 +319,29 @@ class KeyHandler(private val dispatcher: Dispatcher, private val cfLegacyKeysym:
             accentSequence.clear()
 
         return true
+    }
+
+    /**
+     * 'Ç' & 'ç' requires special handling because Android generates them with extra ALT key press,
+     * and gives no indication in KeyEvents that accents are involved. So we have to handle these
+     * before events are synthesized by InputConnection in FrameView.
+     */
+    private fun handleCCedilla(text: CharSequence?): Boolean {
+        if (text == "ç") {
+            emitForUnicodeChar('ç'.code, true)
+            emitForUnicodeChar('ç'.code, false)
+            return true
+        }
+
+        if (text == "Ç") {
+            emitForAndroidKeyCode(KeyEvent.KEYCODE_SHIFT_LEFT, true)
+            emitForUnicodeChar('Ç'.code, true)
+            emitForUnicodeChar('Ç'.code, false)
+            emitForAndroidKeyCode(KeyEvent.KEYCODE_SHIFT_LEFT, false)
+            return true
+        }
+
+        return false
     }
 
     /************************************************************************************
