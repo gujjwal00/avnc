@@ -2,9 +2,9 @@
 <resources>
     <string name="title_add_server_profile">添加服务器</string>
     <string name="title_hide_remote_cursor">隐藏远程指针</string>
-    <string name="title_vnc_login">登录</string>
+    <string name="title_vnc_login">VNC登录</string>
     <string name="title_edit_server_profile">编辑服务器</string>
-    <string name="title_duplicate">复本</string>
+    <string name="title_duplicate">生成副本</string>
     <string name="title_edit">编辑</string>
     <string name="title_delete">删除</string>
     <string name="title_copy_host">复制主机</string>
@@ -12,7 +12,7 @@
     <string name="title_cancel">取消</string>
     <string name="title_save">保存</string>
     <string name="title_undo">撤消</string>
-    <string name="title_remember">记忆</string>
+    <string name="title_remember">记住</string>
     <string name="title_import">导入</string>
     <string name="title_view_only_mode">仅查看</string>
     <string name="title_use_ssh_tunnel">使用 SSH 隧道</string>
@@ -22,7 +22,7 @@
     <string name="title_about">关于</string>
     <string name="title_license">许可证</string>
     <string name="hint_urlbar">连接到服务器</string>
-    <string name="hint_server_name">名称（例如：Work PC）</string>
+    <string name="hint_server_name">名称（例如：工作电脑）</string>
     <string name="hint_host">主机</string>
     <string name="hint_repeater_host">中继器主机</string>
     <string name="hint_port">端口</string>
@@ -52,12 +52,12 @@
     <string name="desc_keyboard_btn">打开键盘</string>
     <string name="desc_virtual_keys_btn">显示虚拟按键</string>
     <string name="desc_reset_zoom_btn">重置缩放</string>
-    <string name="desc_retry_connection_btn">重试</string>
+    <string name="desc_retry_connection_btn">重新连接</string>
     <string name="desc_back_btn">返回</string>
     <string name="desc_clear_url_btn">清除</string>
     <string name="desc_server_url">服务器地址</string>
     <string name="desc_help_btn">帮助</string>
-    <string name="tip_discovery">发现 可以自动查找在网络上运行的
+    <string name="tip_discovery">“发现”能自动查找在你的网络上运行的
 \n受支持服务器。</string>
     <string name="pref_ui">界面</string>
     <string name="pref_ui_summary">界面外观</string>
@@ -106,7 +106,7 @@
     <string name="pref_clipboard_sync">剪贴板同步</string>
     <string name="pref_discovery">发现</string>
     <string name="pref_discovery_autorun">自动运行</string>
-    <string name="pref_rediscovery_indicator">突出显示重新发现的服务器</string>
+    <string name="pref_rediscovery_indicator">高亮显示被重新发现的服务器</string>
     <string name="pref_import_export">导入/导出 服务器</string>
     <string name="title_clear">清除</string>
     <string name="title_use_repeater">使用中继器</string>
@@ -118,23 +118,23 @@
     <string name="title_export">导出</string>
     <string name="title_key_compat_mode">发送旧式按键事件</string>
     <string name="title_unknown_ssh_host">未知 SSH 主机</string>
-    <string name="title_source_code">源码</string>
+    <string name="title_source_code">源代码</string>
     <string name="msg_loading">正在加载…</string>
     <string name="title_continue">继续</string>
     <string name="title_delete_servers_before_import">导入前删除当前服务器</string>
     <string name="title_change">更改</string>
     <string name="title_open_source_libraries">开源库</string>
     <string name="title_report_bug">报告问题</string>
-    <string name="msg_about_app">快速安全的 VNC 客户端。远程查看和控制运行 VNC 服务器的任何设备。
+    <string name="msg_about_app">一个快速且安全的 VNC 客户端。远程查看和控制任何运行着 VNC 服务器的设备。
 \n
 \n
-\nAVNC 是一个开源和非盈利版权（copyleft）软件 — 在许多贡献者的帮助下制作的。</string>
+\nAVNC 是一个开源和非盈利版权软件 — 在众多贡献者的帮助下制作的。</string>
     <string name="msg_pip_not_supported">此设备不支持</string>
     <string name="msg_key_compat_mode_help">一些服务器对 Unicode 的支持有限。旧式按键事件可以帮助输入非英语文本。</string>
     <string name="tip_empty_server_list">服务器列表为空。
 \n单击“<b>+</b>”添加服务器，或
 \n使用顶部的地址栏直接连接。</string>
-    <string name="desc_discovered_list">自动发现的服务器列表</string>
+    <string name="desc_discovered_list">已被自动发现的服务器列表</string>
     <string name="desc_saved_servers_list">已保存的服务器列表</string>
     <string name="pref_viewer_summary">画中画，缩放</string>
     <string name="pref_input">输入</string>
@@ -144,7 +144,7 @@
     <string name="pref_prefer_advanced_editor">直接打开高级服务器选项</string>
     <string name="pref_gesture_action_pan">平移本地帧</string>
     <string name="pref_gesture_action_open_keyboard">打开键盘</string>
-    <string name="pref_sort_server_list">按名称对已保存的服务器进行排序</string>
+    <string name="pref_sort_server_list">对已保存的服务器按名称排序</string>
     <string name="pref_single_tap">单次敲击</string>
     <string name="pref_vk_open_with_keyboard">同时打开键盘</string>
     <string name="pref_mouse_passthrough_summary_off">将鼠标事件用于本地手势</string>
@@ -152,24 +152,24 @@
     <string name="pref_zoom_max">最大</string>
     <string name="pref_discovery_autorun_summary">在主页上时发现服务器</string>
     <string name="pref_swipe_sensitivity">调节灵敏度</string>
-    <string name="pref_km_language_switch_to_super">语言切换 → Super 键</string>
+    <string name="pref_km_language_switch_to_super">语言切换 → Super （开始菜单）键</string>
     <string name="pref_km_back_to_escape">退格键 → Esc 键</string>
     <string name="pref_km_right_alt_to_super">右 Alt 键 → Super （开始菜单）键</string>
-    <string name="msg_drag_gesture_help">为拖动手势分配一个动作将改变长按检测：
+    <string name="msg_drag_gesture_help">分配一个动作给这个手势将改变长按检测：
 \n
 \n<b>按住释放</b> → 长按
-\n<b>按住滑动</b> → 拖动</string>
+\n<b>按住滑动</b> → 长按轻扫</string>
     <string name="pref_orientation">屏幕方向</string>
     <string name="pref_orientation_option_auto">自动</string>
     <string name="pref_orientation_option_portrait">竖屏</string>
     <string name="pref_orientation_option_landscape">横屏</string>
-    <string name="pref_invert_vertical_scrolling">倒转垂直滚动</string>
+    <string name="pref_invert_vertical_scrolling">垂直滚动反转</string>
     <string name="pref_touch_test">触控测试</string>
     <string name="pref_key_test">密钥测试</string>
-    <string name="title_image_quality">图片质量</string>
+    <string name="title_image_quality">图像质量</string>
     <string name="title_image_quality_raw">原始</string>
     <string name="title_vnc_security">安全性</string>
-    <string name="title_unlock_dialog">解锁继续</string>
+    <string name="title_unlock_dialog">解锁以继续</string>
     <string name="title_automatic">自动</string>
     <string name="msg_zoom_saved">保存当前缩放比为默认</string>
     <string name="desc_save_zoom_btn">保存当前缩放比为默认</string>
@@ -177,9 +177,22 @@
     <string name="pref_gesture_style_touchscreen">触摸屏</string>
     <string name="pref_gesture_style_touchpad">触摸板</string>
     <string name="pref_saved_server_lock">锁定保存的服务器</string>
-    <string name="msg_zoom_reset">重置缩放比到 100%</string>
+    <string name="msg_zoom_reset">重置缩放到 100%</string>
     <string name="desc_zoom_options_btn">缩放选项</string>
     <string name="pref_gesture_style_auto_summary">基于应用设置</string>
-    <string name="pref_per_orientation_zoom">不同方向设置不同缩放比</string>
+    <string name="pref_per_orientation_zoom">为每个方向分开缩放</string>
     <string name="pref_saved_server_lock_summary">要求生物特征/密码解锁才能连接</string>
+    <string name="title_resize_remote_desktop">缩放远程会话到本地窗口</string>
+    <string name="msg_zoom_reset_default">重置缩放到默认值</string>
+    <string name="msg_shortcut_server_deleted">该服务器已被删除</string>
+    <string name="pref_display_cutout">在异形屏区域显示（试验性）</string>
+    <string name="title_ssh_login">SSH登录</string>
+    <string name="title_unlock_private_key">解锁私钥</string>
+    <string name="pref_double_tap_swipe">双击轻扫</string>
+    <string name="pref_gesture_action_remote_drag_middle">中键拖动</string>
+    <string name="title_orientation">方向</string>
+    <string name="title_button_up_delay">发送延迟点击事件</string>
+    <string name="msg_button_up_delay_help">在某些罕见的情况下，如果应用程序无法响应点击，延迟点击事件会有所帮助。</string>
+    <string name="pref_long_press_swipe">长按轻扫</string>
+    <string name="pref_auto_reconnect">自动重连</string>
 </resources>
