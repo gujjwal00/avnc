@@ -192,4 +192,6 @@
     <string name="title_ssh_login">Logowanie SSH</string>
     <string name="title_unlock_private_key">Odblokuj klucz prywatny</string>
     <string name="msg_zoom_reset_default">Przywrócenie domyślnych ustawień widoku</string>
+    <string name="title_resize_remote_desktop">Zmiana rozmiaru sesji zdalnej do okna lokalnego</string>
+    <string name="pref_gesture_action_remote_drag_middle">Przeciągnij środkowym przyciskiem</string>
 </resources>
