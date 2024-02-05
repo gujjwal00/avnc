@@ -33,6 +33,11 @@
         app:key="viewer_draw_behind_cutout"
         app:title="@string/pref_display_cutout" />
 
+    <SwitchPreference
+        app:defaultValue="true"
+        app:key="keep_screen_on"
+        app:title="@string/pref_keep_screen_on" />
+
     <PreferenceCategory
         app:icon="@drawable/ic_zoom_in"
         app:title="@string/pref_zoom">

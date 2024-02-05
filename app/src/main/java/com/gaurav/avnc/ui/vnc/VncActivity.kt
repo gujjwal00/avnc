@@ -244,7 +244,7 @@ class VncActivity : AppCompatActivity() {
 
         binding.drawerLayout.setDrawerLockMode(drawerLockMode)
         binding.frameView.isVisible = isConnected
-        binding.frameView.keepScreenOn = isConnected
+        binding.frameView.keepScreenOn = isConnected && viewModel.pref.viewer.keepScreenOn
         SamsungDex.setMetaKeyCapture(this, isConnected)
         layoutManager.onConnectionStateChanged()
         updateStatusContainerVisibility(isConnected)
