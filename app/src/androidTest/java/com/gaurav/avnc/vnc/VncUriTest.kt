@@ -8,7 +8,6 @@
 
 package com.gaurav.avnc.vnc
 
-import android.net.Uri
 import com.gaurav.avnc.model.ServerProfile
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -16,14 +15,8 @@ import org.junit.Test
 class VncUriTest {
 
     @Test
-    fun blankStringTest() {
+    fun blankTest() {
         val uri = VncUri("")
-        assertEquals("", uri.host)
-    }
-
-    @Test
-    fun blankUriTest() {
-        val uri = VncUri(Uri.parse(""))
         assertEquals("", uri.host)
     }
 
@@ -37,19 +30,7 @@ class VncUriTest {
     }
 
     @Test
-    fun simpleUriTest1() {
-        val uri = VncUri(Uri.parse("vnc://10.0.0.1:5901/?VncPassword=foo&SecurityType=2&ViewOnly=true"))
-        assertEquals("10.0.0.1", uri.host)
-        assertEquals(5901, uri.port)
-        assertEquals("", uri.username)
-        assertEquals("foo", uri.password)
-        assertEquals(2, uri.securityType)
-        assertEquals(true, uri.viewOnly)
-        assertEquals(ServerProfile.CHANNEL_TCP, uri.channelType)
-    }
-
-    @Test
-    fun simpleUriTest2() { //Same as above but with String argument to constructor
+    fun simpleUriTest() {
         val uri = VncUri("vnc://10.0.0.1:5901/?VncPassword=foo&SecurityType=2&ViewOnly=true")
         assertEquals("10.0.0.1", uri.host)
         assertEquals(5901, uri.port)
@@ -86,8 +67,14 @@ class VncUriTest {
     }
 
     @Test
-    fun opaqueUri() {
-        // Correct format is 'vnc://host'
-        assertEquals("", VncUri("vnc:host").host)
+    fun schemaVariationTest() {
+        // We should gracefully handle these "invalid" schema types
+        assertEquals("vnc://host", VncUri("host").toString())       // Completely missing
+        assertEquals("vnc://host", VncUri("vnc:host").toString())   // Slashes missing
+        assertEquals("vnc://host", VncUri("vnc:/host").toString())  // Slash missing
+        assertEquals("vnc://host", VncUri("VNC://host").toString()) // Uppercase
+
+        // Make sure only start of URI is checked for variations
+        assertEquals("vnc://avnc://host", VncUri("avnc://host").toString())
     }
 }

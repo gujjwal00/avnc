@@ -16,32 +16,31 @@ import java.net.URI
  * This class implements the `vnc` URI scheme.
  * Reference: https://tools.ietf.org/html/rfc7869
  *
- * If `host` in URI is an IPv6 address, it MUST be wrapped in square brackets.
+ * If host in given URI string is an IPv6 address, it MUST be wrapped in square brackets.
  * (This requirement come from using Java [URI] internally.)
+ *
+ * If given URI doesn't start with 'vnc://' schema, it will be automatically added.
  */
-class VncUri(private val uri: Uri) {
+class VncUri(str: String) {
 
     /**
-     * Create new instance from URI string.
-     * VNC schema will be added if missing.
+     * Add schema if missing.
+     * It is also common for users to accidentally type 'vnc:host' instead of 'vnc://host',
+     * so we gracefully handle that case too.
      */
-    constructor(uriString: String) : this(
-            if (uriString.startsWith("vnc://"))
-                Uri.parse(uriString)
-            else
-                Uri.parse("vnc://$uriString")
-    )
+    private val uriString = str.replaceFirst(Regex("^(vnc:/?/?)?", RegexOption.IGNORE_CASE), "vnc://")
+
+    private val uri = Uri.parse(uriString)
 
     /**
      * Older versions of Android [Uri] does not support IPv6, so we need to use Java [URI] for host & port.
-     *
      * It also serves as a validation step because [URI] verifies that address is well-formed.
      */
-    private val javaUri = runCatching { URI(uri.toString()).also { check(!it.isOpaque) } }.getOrDefault(URI(""))
+    private val javaUri = runCatching { URI(uriString) }.getOrNull()
 
 
-    val host = javaUri.host?.trim('[', ']') ?: ""
-    val port = if (javaUri.port == -1) 5900 else javaUri.port
+    val host = javaUri?.host?.trim('[', ']') ?: ""
+    val port = if (javaUri?.port == -1) 5900 else javaUri?.port ?: 5900
     val connectionName = uri.getQueryParameter("ConnectionName") ?: ""
     val username = uri.getQueryParameter("VncUsername") ?: ""
     val password = uri.getQueryParameter("VncPassword") ?: ""
@@ -74,4 +73,6 @@ class VncUri(private val uri: Uri) {
             sshAuthType = ServerProfile.SSH_AUTH_PASSWORD,
             sshPassword = sshPassword
     )
+
+    override fun toString() = uriString
 }

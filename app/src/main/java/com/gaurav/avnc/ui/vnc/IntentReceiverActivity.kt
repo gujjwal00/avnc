@@ -45,7 +45,7 @@ class IntentReceiverActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         if (intent.data?.scheme == "vnc")
-            launchFromVncUri(VncUri(intent.data!!))
+            launchFromVncUri(VncUri(intent.data!!.toString()))
         else if (intent.hasExtra(SHORTCUT_PROFILE_ID_KEY))
             launchFromProfileId(intent.getLongExtra(SHORTCUT_PROFILE_ID_KEY, 0))
         else
