@@ -193,4 +193,6 @@
     <string name="title_ssh_login">SSH 로그인</string>
     <string name="msg_zoom_reset_default">확대/축소를 기본값으로 재설정</string>
     <string name="title_unlock_private_key">개인 키 잠금 해제</string>
+    <string name="title_resize_remote_desktop">원격 세션 크기를 로컬 창으로 조정</string>
+    <string name="pref_gesture_action_remote_drag_middle">가운데 버튼으로 드래그</string>
 </resources>

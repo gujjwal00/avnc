@@ -70,7 +70,7 @@
     <string name="title_use_ssh_tunnel">Utiliser un tunnel SSH</string>
     <string name="title_about">À propos</string>
     <string name="title_private_key">Clé privée</string>
-    <string name="title_change">Modifier</string>
+    <string name="title_change">Changer</string>
     <string name="title_license">Licence</string>
     <string name="title_report_bug">Signaler un problème</string>
     <string name="desc_back_btn">Retour</string>
@@ -193,4 +193,6 @@
     <string name="msg_zoom_reset_default">Le niveau de zoom a été réinitialisé aux valeurs par défaut</string>
     <string name="title_unlock_private_key">Déverrouiller la clé privée</string>
     <string name="title_ssh_login">Connexion SSH</string>
+    <string name="pref_gesture_action_remote_drag_middle">Faire glisser avec le bouton central</string>
+    <string name="title_resize_remote_desktop">Redimensionner la session distante en fonction de la fenêtre locale</string>
 </resources>

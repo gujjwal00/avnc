@@ -168,7 +168,7 @@
     <string name="title_automatic">Automatycznie</string>
     <string name="msg_zoom_reset">Zoom został zresetowany do 100%</string>
     <string name="msg_zoom_saved">Zapisano bieżące powiększenie jako domyślne</string>
-    <string name="desc_save_zoom_btn">Zapisano bieżące powiększenie jako domyślne</string>
+    <string name="desc_save_zoom_btn">Zapisz bieżące powiększenie jako domyślne</string>
     <string name="pref_gesture_style">Styl gestów</string>
     <string name="pref_gesture_style_touchscreen">Ekran dotykowy</string>
     <string name="pref_saved_server_lock">Zablokuj zapisane serwery</string>
@@ -192,4 +192,7 @@
     <string name="title_ssh_login">Logowanie SSH</string>
     <string name="title_unlock_private_key">Odblokuj klucz prywatny</string>
     <string name="msg_zoom_reset_default">Przywrócenie domyślnych ustawień widoku</string>
+    <string name="title_resize_remote_desktop">Zmiana rozmiaru sesji zdalnej do okna lokalnego</string>
+    <string name="pref_gesture_action_remote_drag_middle">Przeciągnij środkowym przyciskiem</string>
+    <string name="title_key_compat_mode">Prześlij kluczowe zdażenia w starszym formacie</string>
 </resources>

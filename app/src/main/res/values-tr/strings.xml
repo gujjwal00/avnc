@@ -195,4 +195,10 @@
     <string name="title_ssh_login">SSH ile oturum aç</string>
     <string name="title_resize_remote_desktop">Uzak oturumu yerel pencereye göre yeniden boyutlandır</string>
     <string name="pref_gesture_action_remote_drag_middle">Orta düğme ile sürükle</string>
+    <string name="desc_lock_zoom_btn">Yakınlaştırmayı kilitle</string>
+    <string name="hint_ssh_host">SSH ana makinesi</string>
+    <string name="hint_ssh_port">SSH bağlantı noktası</string>
+    <string name="msg_zoom_locked">Yakınlaştırma kilitlendi</string>
+    <string name="msg_zoom_unlocked">Yakınlaştırma kilidi açıldı</string>
+    <string name="msg_pk_password_not_saved">AVNC güvenliği artırmak için artık özel anahtar parolalarını kaydetmiyor.</string>
 </resources>

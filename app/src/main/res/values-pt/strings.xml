@@ -186,4 +186,9 @@
     <string name="pref_import_export">Importar/Exportar servidores</string>
     <string name="pref_debugging">Depuração</string>
     <string name="pref_logs">Registos</string>
+    <string name="title_ssh_login">Login SSH</string>
+    <string name="title_resize_remote_desktop">Redimensionar sessão remota à janela local</string>
+    <string name="pref_gesture_action_remote_drag_middle">Arraste com botão do meio</string>
+    <string name="title_unlock_private_key">Desbloquear chave privada</string>
+    <string name="msg_zoom_reset_default">Redefinir ampliação para o padrão</string>
 </resources>
