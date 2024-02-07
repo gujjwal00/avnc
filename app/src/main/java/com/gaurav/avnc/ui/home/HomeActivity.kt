@@ -235,11 +235,12 @@ class HomeActivity : AppCompatActivity() {
      */
     private fun updateDynamicShortcuts(profiles: List<ServerProfile>) {
         val maxShortcuts = ShortcutManagerCompat.getMaxShortcutCountPerActivity(this)
-        val shortcuts = profiles.take(maxShortcuts).map { p ->
+        val shortcuts = profiles.take(maxShortcuts).mapIndexed { i, p ->
             ShortcutInfoCompat.Builder(this, createShortcutId(p))
                     .setIcon(IconCompat.createWithResource(this, R.drawable.ic_computer_shortcut))
                     .setShortLabel(p.name.ifBlank { p.host })
                     .setLongLabel(p.name.ifBlank { p.host })
+                    .setRank(i)
                     .setIntent(IntentReceiverActivity.createShortcutIntent(this, p.ID))
                     .build()
         }
