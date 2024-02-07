@@ -19,12 +19,12 @@ import java.net.URI
  * If host in given URI string is an IPv6 address, it MUST be wrapped in square brackets.
  * (This requirement come from using Java [URI] internally.)
  *
- * If given URI doesn't start with 'vnc://' schema, it will be automatically added.
+ * If given URI doesn't start with 'vnc://' scheme, it will be automatically added.
  */
 class VncUri(str: String) {
 
     /**
-     * Add schema if missing.
+     * Add scheme if missing.
      * It is also common for users to accidentally type 'vnc:host' instead of 'vnc://host',
      * so we gracefully handle that case too.
      */
