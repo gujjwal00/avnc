@@ -201,4 +201,5 @@
     <string name="msg_zoom_locked">Yakınlaştırma kilitlendi</string>
     <string name="msg_zoom_unlocked">Yakınlaştırma kilidi açıldı</string>
     <string name="msg_pk_password_not_saved">AVNC güvenliği artırmak için artık özel anahtar parolalarını kaydetmiyor.</string>
+    <string name="pref_keep_screen_on">Ekranı açık tut</string>
 </resources>
