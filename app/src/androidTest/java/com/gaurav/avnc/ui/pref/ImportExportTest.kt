@@ -68,7 +68,7 @@ class ImportExportTest {
 
         // Verify exported data
         instrumentation.waitForIdleSync()
-        val data = file.bufferedReader().readText()
+        val data = file.bufferedReader().use { it.readText() }
         Assert.assertTrue("Exported data: `$data` contains `$sampleName`", data.contains(sampleName))
     }
 
