@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2021  Gaurav Ujjwal.
+ * Copyright (c) 2024  Gaurav Ujjwal.
  *
  * SPDX-License-Identifier:  GPL-3.0-or-later
  *
  * See COPYING.txt for more details.
  */
 
-package com.gaurav.avnc.viewmodel
+package com.gaurav.avnc.util
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.awaitCancellation
