@@ -39,64 +39,44 @@ class IntentReceiverActivity : AppCompatActivity() {
         }
     }
 
+    private val profileDao by lazy { MainDb.getInstance(this).serverProfileDao }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        handleIntent()
+    }
 
+    private fun handleIntent() = lifecycleScope.launch {
         if (intent.data?.scheme == "vnc")
             launchFromVncUri(VncUri(intent.data!!.toString()))
         else if (intent.hasExtra(SHORTCUT_PROFILE_ID_KEY))
             launchFromProfileId(intent.getLongExtra(SHORTCUT_PROFILE_ID_KEY, 0))
         else
-            handleUnknownIntent()
+            toast("Invalid intent: Server info is missing!")
+
+        finish()
     }
 
-    private fun launchFromVncUri(uri: VncUri) {
-        if (uri.connectionName.isNotBlank())
-            launchFromProfileName(uri.connectionName)
-        else
-            launchVncUri(uri)
+    private suspend fun launchFromVncUri(uri: VncUri) {
+        if (uri.connectionName.isNotBlank()) launchFromProfileName(uri.connectionName)
+        else launchVncUri(uri)
     }
 
     private fun launchVncUri(uri: VncUri) {
-        if (uri.host.isEmpty())
-            toast(getString(R.string.msg_invalid_vnc_uri))
-        else
-            startVncActivity(this, uri)
-
-        finish()
+        if (uri.host.isEmpty()) toast(getString(R.string.msg_invalid_vnc_uri))
+        else startVncActivity(this, uri)
     }
 
-    private fun launchFromProfileName(name: String) {
-        val context = this
-        lifecycleScope.launch {
-            val dao = MainDb.getInstance(context).serverProfileDao
-            val profile = dao.getByName(name).firstOrNull()
-
-            if (profile == null)
-                toast("No server found with name '$name'")
-            else
-                startVncActivity(context, profile)
-            finish()
-        }
+    private suspend fun launchFromProfileName(name: String) {
+        val profile = profileDao.getByName(name).firstOrNull()
+        if (profile == null) toast("No server found with name '$name'")
+        else startVncActivity(this, profile)
     }
 
-    private fun launchFromProfileId(profileId: Long) {
-        val context = this
-        lifecycleScope.launch {
-            val dao = MainDb.getInstance(context).serverProfileDao
-            val profile = dao.getByID(profileId)
-
-            if (profile == null)
-                toast(getString(R.string.msg_shortcut_server_deleted))
-            else
-                startVncActivity(context, profile)
-            finish()
-        }
-    }
-
-    private fun handleUnknownIntent() {
-        toast("Invalid intent: Server info is missing!")
-        finish()
+    private suspend fun launchFromProfileId(profileId: Long) {
+        val profile = profileDao.getByID(profileId)
+        if (profile == null) toast(getString(R.string.msg_shortcut_server_deleted))
+        else startVncActivity(this, profile)
     }
 
     private fun toast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
