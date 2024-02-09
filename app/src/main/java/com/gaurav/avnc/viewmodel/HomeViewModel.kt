@@ -119,16 +119,16 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
      * These operations are asynchronous.
      **************************************************************************/
 
-    fun insertProfile(profile: ServerProfile) = asyncMain {
+    fun insertProfile(profile: ServerProfile) = launch {
         serverProfileDao.insert(profile)
         profileInsertedEvent.fire(profile)
     }
 
-    fun updateProfile(profile: ServerProfile) = asyncMain {
+    fun updateProfile(profile: ServerProfile) = launch {
         serverProfileDao.update(profile)
     }
 
-    fun deleteProfile(profile: ServerProfile) = asyncMain {
+    fun deleteProfile(profile: ServerProfile) = launch {
         serverProfileDao.delete(profile)
         profileDeletedEvent.fire(profile)
     }

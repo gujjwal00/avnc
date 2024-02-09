@@ -56,7 +56,7 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
      * Exports data to given [uri].
      */
     fun export(uri: Uri) {
-        asyncIO {
+        launchIO {
             runCatching {
                 // Serialize
                 val profiles = serverProfileDao.getList()
@@ -80,7 +80,7 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
      * Imports data from given [uri].
      */
     fun import(uri: Uri, deleteCurrentServers: Boolean) {
-        asyncIO {
+        launchIO {
             runCatching {
 
                 val json = app.contentResolver.openInputStream(uri)?.use { stream ->

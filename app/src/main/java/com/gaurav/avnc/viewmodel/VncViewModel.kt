@@ -227,7 +227,7 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
         state.postValue(State.Connected)
 
         // Initial sync, slightly delayed to allow extended clipboard negotiations
-        asyncIO { delay(1000L); sendClipboardText() }
+        launchIO { delay(1000L); sendClipboardText() }
     }
 
     private fun processMessages() {
@@ -246,7 +246,7 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
      */
     fun saveProfile() {
         if (profile.ID != 0L)
-            asyncMain { serverProfileDao.update(profile) }
+            launch { serverProfileDao.update(profile) }
     }
 
     /**************************************************************************
@@ -309,13 +309,13 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
      **************************************************************************/
 
     fun sendClipboardText() {
-        if (pref.server.clipboardSync) asyncIO {
+        if (pref.server.clipboardSync) launchIO {
             getClipboardText()?.let { messenger.sendClipboardText(it) }
         }
     }
 
     private fun receiveClipboardText(text: String) {
-        if (pref.server.clipboardSync) asyncIO {
+        if (pref.server.clipboardSync) launchIO {
             setClipboardText(text)
         }
     }
@@ -380,7 +380,7 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
     }
 
     override fun onFramebufferSizeChanged(width: Int, height: Int) {
-        viewModelScope.launch(Dispatchers.Main) {
+        launchMain {
             frameState.setFramebufferSize(width.toFloat(), height.toFloat())
         }
     }

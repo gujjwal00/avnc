@@ -17,11 +17,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.db.MainDb
 import com.gaurav.avnc.util.AppPreferences
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 /**
  * Base view model.
@@ -64,10 +65,10 @@ open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
     /**
      * Launches a new coroutine using [viewModelScope], and executes [block] in that coroutine.
      */
-    protected fun async(dispatcher: CoroutineDispatcher, block: suspend CoroutineScope.() -> Unit): Job {
-        return viewModelScope.launch(dispatcher) { this.block() }
+    protected fun launch(context: CoroutineContext = EmptyCoroutineContext, block: suspend CoroutineScope.() -> Unit): Job {
+        return viewModelScope.launch(context) { this.block() }
     }
 
-    protected fun asyncMain(block: suspend CoroutineScope.() -> Unit) = async(Dispatchers.Main, block)
-    protected fun asyncIO(block: suspend CoroutineScope.() -> Unit) = async(Dispatchers.IO, block)
+    protected fun launchMain(block: suspend CoroutineScope.() -> Unit) = launch(Dispatchers.Main, block)
+    protected fun launchIO(block: suspend CoroutineScope.() -> Unit) = launch(Dispatchers.IO, block)
 }

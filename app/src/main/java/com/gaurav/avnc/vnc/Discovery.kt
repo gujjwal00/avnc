@@ -79,7 +79,7 @@ class Discovery(private val context: Context) {
         if (servers.value?.size != 0) servers.value = ArrayList() //Forget known servers
 
         // Construction of NSD manager is done on a background thread because it appears to be quite heavy.
-        scope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.IO) {
             if (nsdManager == null)
                 nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
 

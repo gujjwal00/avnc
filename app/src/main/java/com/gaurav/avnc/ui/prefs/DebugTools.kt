@@ -74,15 +74,13 @@ class LogsFragment : DebugFragment() {
         binding.logsRv.layoutManager = LinearLayoutManager(requireContext())
         binding.logsRv.adapter = LogsAdapter(listOf("Loading ..."))
 
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                logs = Debugging.logcat().ifBlank { "No logs yet!" }
-                val lines = logs.lines()
-                withContext(Dispatchers.Main) {
-                    binding.logsRv.adapter = LogsAdapter(lines)
-                    if (lines.isNotEmpty())
-                        binding.logsRv.scrollToPosition(lines.size - 1)
-                }
+        lifecycleScope.launch(Dispatchers.IO) {
+            logs = Debugging.logcat().ifBlank { "No logs yet!" }
+            val lines = logs.lines()
+            withContext(Dispatchers.Main) {
+                binding.logsRv.adapter = LogsAdapter(lines)
+                if (lines.isNotEmpty())
+                    binding.logsRv.scrollToPosition(lines.size - 1)
             }
         }
 

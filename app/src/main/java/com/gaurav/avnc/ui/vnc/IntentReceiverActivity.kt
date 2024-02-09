@@ -16,9 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import com.gaurav.avnc.R
 import com.gaurav.avnc.model.db.MainDb
 import com.gaurav.avnc.vnc.VncUri
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * Handles "external" intents and launches [VncActivity] with appropriate profiles.
@@ -70,32 +68,29 @@ class IntentReceiverActivity : AppCompatActivity() {
 
     private fun launchFromProfileName(name: String) {
         val context = this
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch {
             val dao = MainDb.getInstance(context).serverProfileDao
             val profile = dao.getByName(name).firstOrNull()
-            withContext(Dispatchers.Main) {
-                if (profile == null)
-                    toast("No server found with name '$name'")
-                else
-                    startVncActivity(context, profile)
 
-                finish()
-            }
+            if (profile == null)
+                toast("No server found with name '$name'")
+            else
+                startVncActivity(context, profile)
+            finish()
         }
     }
 
     private fun launchFromProfileId(profileId: Long) {
         val context = this
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch {
             val dao = MainDb.getInstance(context).serverProfileDao
             val profile = dao.getByID(profileId)
-            withContext(Dispatchers.Main) {
-                if (profile == null)
-                    toast(getString(R.string.msg_shortcut_server_deleted))
-                else
-                    startVncActivity(context, profile)
-                finish()
-            }
+
+            if (profile == null)
+                toast(getString(R.string.msg_shortcut_server_deleted))
+            else
+                startVncActivity(context, profile)
+            finish()
         }
     }
 
