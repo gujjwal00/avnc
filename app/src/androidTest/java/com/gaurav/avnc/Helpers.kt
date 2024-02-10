@@ -13,11 +13,11 @@ import android.app.Application
 import android.app.Instrumentation
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
 import android.view.View
 import android.widget.ProgressBar
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.preference.PreferenceManager
 import androidx.test.core.app.ActivityScenario
@@ -124,21 +124,14 @@ fun <R> runOnMainSync(block: () -> R): R {
     return r!!
 }
 
-fun getClipboardText(): String? {
-    var text: String? = null
-    instrumentation.runOnMainSync {
-        (targetContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).let {
-            text = it.primaryClip?.getItemAt(0)?.text?.toString()
-        }
-    }
-    return text
+fun getClipboardText() = runOnMainSync {
+    ContextCompat.getSystemService(targetContext, ClipboardManager::class.java)
+            ?.primaryClip?.getItemAt(0)?.text?.toString()
 }
 
-fun setClipboardText(text: String) {
-    instrumentation.runOnMainSync {
-        (targetContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager)
-                .setPrimaryClip(ClipData.newPlainText(null, text))
-    }
+fun setClipboardText(text: String) = runOnMainSync {
+    ContextCompat.getSystemService(targetContext, ClipboardManager::class.java)!!
+            .setPrimaryClip(ClipData.newPlainText(null, text))
 }
 
 /**

@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.forEach
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -26,10 +27,12 @@ import com.gaurav.avnc.databinding.ServerSavedBinding
 import com.gaurav.avnc.databinding.ServerSavedItemBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.home.ServerTabs.PagerAdapter.ViewHolder
+import com.gaurav.avnc.util.setClipboardText
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.launch
 
 /**
  * This class creates and manages tabs in [HomeActivity].
@@ -246,8 +249,12 @@ class ServerTabs(val activity: HomeActivity) {
         }
 
         private fun copyToClipboard(text: String) {
-            homeViewModel.setClipboardText(text)
-            Snackbar.make(rootView, R.string.msg_copied_to_clipboard, Snackbar.LENGTH_SHORT).show()
+            homeViewModel.viewModelScope.launch {
+                if (setClipboardText(rootView.context, text))
+                    Snackbar.make(rootView, R.string.msg_copied_to_clipboard, Snackbar.LENGTH_SHORT).show()
+                else
+                    Snackbar.make(rootView, "Unable to copy text", Snackbar.LENGTH_SHORT).show()
+            }
         }
     }
 }

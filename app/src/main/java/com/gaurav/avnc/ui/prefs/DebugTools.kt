@@ -26,7 +26,6 @@ import android.widget.TextView
 import androidx.annotation.Keep
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,7 +34,7 @@ import com.gaurav.avnc.databinding.FragmentKeyTestBinding
 import com.gaurav.avnc.databinding.FragmentLogsBinding
 import com.gaurav.avnc.databinding.FragmentTouchTestBinding
 import com.gaurav.avnc.util.Debugging
-import com.gaurav.avnc.viewmodel.PrefsViewModel
+import com.gaurav.avnc.util.setClipboardText
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -51,8 +50,10 @@ abstract class DebugFragment : Fragment() {
 
     fun copyLogs(logs: String) {
         val wrapped = Debugging.wrapLogs(title(), logs)
-        activityViewModels<PrefsViewModel>().value.setClipboardText(wrapped)
-        snackbar(getString(R.string.msg_copied_to_clipboard))
+        lifecycleScope.launch {
+            if (setClipboardText(requireContext(), wrapped)) snackbar(getString(R.string.msg_copied_to_clipboard))
+            else snackbar("Error copying text")
+        }
     }
 
     fun snackbar(text: String) = Snackbar.make(requireView(), text, Snackbar.LENGTH_SHORT).show()

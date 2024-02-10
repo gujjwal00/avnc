@@ -9,10 +9,6 @@
 package com.gaurav.avnc.viewmodel
 
 import android.app.Application
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.db.MainDb
@@ -33,34 +29,7 @@ open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
 
     protected val serverProfileDao by lazy { db.serverProfileDao }
 
-    private val clipboard = app.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-
     val pref by lazy { AppPreferences(app) }
-
-
-    /**
-     * Puts given text on the clipboard.
-     */
-    fun setClipboardText(text: String) {
-        try {
-            clipboard.setPrimaryClip(ClipData.newPlainText(null, text))
-        } catch (t: Throwable) {
-            Log.e(javaClass.simpleName, "Could not copy text to clipboard.", t)
-        }
-    }
-
-
-    /**
-     * Returns current clipboard text.
-     */
-    fun getClipboardText(): String? {
-        try {
-            return clipboard.primaryClip?.getItemAt(0)?.text?.toString()
-        } catch (t: Throwable) {
-            Log.e(javaClass.simpleName, "Could not retrieve text from clipboard.", t)
-        }
-        return null
-    }
 
     /**
      * Launches a new coroutine using [viewModelScope], and executes [block] in that coroutine.

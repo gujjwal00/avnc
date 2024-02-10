@@ -19,6 +19,8 @@ import com.gaurav.avnc.ui.vnc.FrameScroller
 import com.gaurav.avnc.ui.vnc.FrameState
 import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.util.LiveRequest
+import com.gaurav.avnc.util.getClipboardText
+import com.gaurav.avnc.util.setClipboardText
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
@@ -310,13 +312,13 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
 
     fun sendClipboardText() {
         if (pref.server.clipboardSync) launchIO {
-            getClipboardText()?.let { messenger.sendClipboardText(it) }
+            getClipboardText(app)?.let { messenger.sendClipboardText(it) }
         }
     }
 
     private fun receiveClipboardText(text: String) {
         if (pref.server.clipboardSync) launchIO {
-            setClipboardText(text)
+            setClipboardText(app, text)
         }
     }
 
