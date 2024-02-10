@@ -15,7 +15,7 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.util.LiveEvent
-import com.gaurav.avnc.vnc.Discovery
+import com.gaurav.avnc.viewmodel.service.Discovery
 
 class HomeViewModel(app: Application) : BaseViewModel(app) {
 

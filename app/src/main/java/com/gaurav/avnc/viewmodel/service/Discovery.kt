@@ -6,7 +6,7 @@
  * See COPYING.txt for more details.
  */
 
-package com.gaurav.avnc.vnc
+package com.gaurav.avnc.viewmodel.service
 
 import android.content.Context
 import android.net.nsd.NsdManager

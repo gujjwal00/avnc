@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2021  Gaurav Ujjwal.
+ * Copyright (c) 2024  Gaurav Ujjwal.
  *
  * SPDX-License-Identifier:  GPL-3.0-or-later
  *
  * See COPYING.txt for more details.
  */
 
-package com.gaurav.avnc.viewmodel
+package com.gaurav.avnc.viewmodel.service
 
 import android.util.Base64
 import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.viewmodel.VncViewModel
 import com.trilead.ssh2.Connection
 import com.trilead.ssh2.KnownHosts
 import com.trilead.ssh2.LocalPortForwarder

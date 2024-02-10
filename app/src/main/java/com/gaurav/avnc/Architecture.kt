@@ -24,9 +24,9 @@ import com.gaurav.avnc.ui.vnc.VirtualKeys
 import com.gaurav.avnc.ui.vnc.VncActivity
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.gaurav.avnc.viewmodel.PrefsViewModel
-import com.gaurav.avnc.viewmodel.SshTunnel
+import com.gaurav.avnc.viewmodel.service.SshTunnel
 import com.gaurav.avnc.viewmodel.VncViewModel
-import com.gaurav.avnc.vnc.Discovery
+import com.gaurav.avnc.viewmodel.service.Discovery
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.VncClient
 
@@ -122,9 +122,6 @@ import com.gaurav.avnc.vnc.VncClient
  * - Server discovery ([Discovery])
  * - SSH Tunnel ([SshTunnel])
  * - Import/Export (in [PrefsViewModel])
- *
- * Right now these are scattered around, but eventually should be moved to a
- * separate package in ViewModel layer.
  *
  * Note: These are NOT Android Services (these are called services for lack of a better word).
  */

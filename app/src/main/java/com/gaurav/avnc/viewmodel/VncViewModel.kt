@@ -21,6 +21,8 @@ import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.util.LiveRequest
 import com.gaurav.avnc.util.getClipboardText
 import com.gaurav.avnc.util.setClipboardText
+import com.gaurav.avnc.viewmodel.service.HostKey
+import com.gaurav.avnc.viewmodel.service.SshTunnel
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
