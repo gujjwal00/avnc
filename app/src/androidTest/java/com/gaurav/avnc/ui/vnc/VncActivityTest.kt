@@ -138,9 +138,8 @@ class VncActivityTest {
         val sample = "Pivot! Pivot! Pivot! Pivot!!!"
         setClipboardText(sample)
         testWrapper {
-            Thread.sleep(2000) // Wait for clipboard sync
+            pollingAssert { Assert.assertEquals(sample, testServer.receivedCutText) }
         }
-        Assert.assertEquals(sample, testServer.receivedCutText)
     }
 
 }
