@@ -1,0 +1,7 @@
+* Added a toggle to lock/unlock zoom
+* Added an option to control screen wakelock
+* You can now search through saved servers via the top address-bar
+* New monochrome icon by Biswapriyo Nath
+* Improved splash theme and app startup time.
+* Fixed users not able to type C-Cedilla
+* Fixed toolbar not closing in certain cases
