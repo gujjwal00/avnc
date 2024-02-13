@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020  Gaurav Ujjwal.
+ * Copyright (c) 2024  Gaurav Ujjwal.
  *
  * SPDX-License-Identifier:  GPL-3.0-or-later
  *
@@ -11,172 +11,181 @@ package com.gaurav.avnc.viewmodel.service
 import android.content.Context
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
+import android.net.wifi.WifiManager
+import android.net.wifi.WifiManager.MulticastLock
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import com.gaurav.avnc.model.ServerProfile
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import java.util.concurrent.Executors
 
 /**
  * Discovers VNC servers advertising themselves on the network.
  */
-class Discovery(private val context: Context) {
+object Discovery {
+    private const val TAG = "VncServiceDiscovery"
 
     /**
      * List of servers found by Discovery.
      */
-    val servers = MutableLiveData(ArrayList<ServerProfile>())
+    val servers = MutableLiveData<List<ServerProfile>>()
 
     /**
      * Status of discovery.
      */
     val isRunning = MutableLiveData(false)
 
-
-    private val service = "_rfb._tcp"
-    private var nsdManager: NsdManager? = null
-    private val listener = DiscoveryListener()
+    private val impl by lazy { Impl() }
 
     /**
      * Starts discovery.
-     * Must be called on main thread.
-     *
-     * [NsdManager] starts/stops service discovery asynchronously, and notifies
-     * us through callbacks in [listener]. Also, it does not allow us to request
-     * start/stop if a previous start/stop request is yet to complete.
-     *
-     * So, we set [isRunning] to true 'optimistically' in [start] without waiting
-     * for the confirmation in [listener], and revert it if starting fails.
-     * This way we don't have to track previously issued start/stop requests.
-     *
-     * Status change:
-     *-
-     *-        [start]   :isRunning = true
-     *-           |
-     *-           +-----------------------------> start failed   :isRunning = false
-     *-           |
-     *-           V
-     *-        started
-     *-           |
-     *-           |
-     *-           V
-     *-        [stop]
-     *-           |
-     *-           +-----------------------------> stop failed
-     *-           |
-     *-           V
-     *-        stopped   :isRunning = false
-     *-
      */
-    fun start(scope: CoroutineScope) {
-        if (isRunning.value == true) {
-            return
-        }
-
-        isRunning.value = true
-        if (servers.value?.size != 0) servers.value = ArrayList() //Forget known servers
-
-        // Construction of NSD manager is done on a background thread because it appears to be quite heavy.
-        scope.launch(Dispatchers.IO) {
-            if (nsdManager == null)
-                nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
-
-            runCatching { nsdManager?.discoverServices(service, NsdManager.PROTOCOL_DNS_SD, listener) }
-                    .onFailure { Log.e(javaClass.simpleName, "Unable to start Discovery", it) }
-        }
-    }
+    fun start(context: Context) = impl.start(context)
 
     /**
      * Stops discovery.
-     * Must be called on main thread.
      */
-    fun stop() {
-        if (isRunning.value == true) {
-            runCatching { nsdManager?.stopServiceDiscovery(listener) }
-                    .onFailure { Log.e(javaClass.simpleName, "Unable to stop Discovery", it) }
-        }
-    }
+    fun stop() = impl.stop()
+
 
     /**
-     * Adds a new profile with given details to list.
+     * Due to Android API limitations,  service discovery is more complicated than necessary:
+     *
+     * - [NsdManager] is asynchronous, which means every command's result is communicated later
+     *   on a separate thread. Also, [NsdManager] throws up if more than one request is made by same
+     *   listener. You can't call [NsdManager.discoverServices] even if discovery is already started
+     *   So to avoid race conditions (and keep my sanity, because its one of those APIs in Android
+     *   where I wish some day the API designers are forced to use this crap themselves), all callbacks
+     *   of [Impl] are run on a dedicated [executor], and [startRequested] is used to track pending start.
+     *
+     * - Only one service can resolved at a time via [NsdManager.resolveService]. To handle this,
+     *   newly found service is first added to [pendingResolves]. When resolution finishes for a
+     *   service, we remove that service form [pendingResolves], and start resolution for the next.
+     *
+     * - Android can filter/drop multicast WiFi packets to save power. Devices, like Pixel phone, enable
+     *   this feature. This can be turned off by acquiring a multicast lock, but [NsdManager] doesn't
+     *   doesn't do this automatically. So we have to acquire it manually.
      */
-    private fun addProfile(name: String, host: String, port: Int) {
-        val profile = ServerProfile(
-                name = name,
-                host = host,
-                port = port
-        )
+    @Suppress("DEPRECATION")  // Yeah, f**k you too Google
+    private class Impl {
+        private val serviceType = "_rfb._tcp"
+        private var wifiManager: WifiManager? = null
+        private var multicastLock: MulticastLock? = null
+        private var nsdManager: NsdManager? = null
+        private val listener = DiscoveryListener()
+        private val executor = Executors.newSingleThreadExecutor()
 
-        runBlocking(Dispatchers.Main) {
-            val currentList = servers.value!!
+        private var started = false
+        private var startRequested = false
+        private val pendingResolves = mutableMapOf<ResolveListener, NsdServiceInfo>()
+        private val resolvedProfiles = mutableSetOf<ServerProfile>()
 
-            if (!currentList.contains(profile)) {
-                val newList = ArrayList(currentList)
-                newList.add(profile)
-                servers.value = newList
-            }
+        private fun execute(action: Runnable) {
+            runCatching { executor.execute(action) }.onFailure { Log.e(TAG, "Cannot execute action", it) }
         }
-    }
 
-    /**
-     * Remove given profile from list.
-     */
-    private fun removeProfile(name: String) {
-        runBlocking(Dispatchers.Main) {
-            val newList = ArrayList(servers.value!!)
-            val profiles = newList.filter { it.name == name }
-            newList.removeAll(profiles)
-            servers.value = newList
+        private fun postResolvedProfiles() {
+            servers.postValue(resolvedProfiles.toList())
+        }
+
+        fun start(context: Context) = execute {
+            if (startRequested || started)
+                return@execute
+
+            val appContext = context.applicationContext // Need app context to avoid possibility of WiFiManager leaks
+            wifiManager = wifiManager ?: ContextCompat.getSystemService(appContext, WifiManager::class.java)
+            nsdManager = nsdManager ?: ContextCompat.getSystemService(appContext, NsdManager::class.java)
+            nsdManager!!.discoverServices(serviceType, NsdManager.PROTOCOL_DNS_SD, listener)
+            startRequested = true
+
+            // Forget old profiles
+            resolvedProfiles.clear()
+            postResolvedProfiles()
+        }
+
+        fun stop() = execute {
+            if (started)
+                nsdManager?.stopServiceDiscovery(listener)
+        }
+
+        fun onStarted() = execute {
+            started = true
+            startRequested = false
+            isRunning.postValue(true)
+
+            multicastLock = wifiManager?.createMulticastLock(TAG)
+            multicastLock?.acquire()
+        }
+
+        fun onStopped() = execute {
+            started = false
+            isRunning.postValue(false)
+            multicastLock?.release()
+            multicastLock = null
+        }
+
+        fun onStartFailed() = execute {
+            startRequested = false
+        }
+
+        fun onServiceFound(serviceInfo: NsdServiceInfo) = execute {
+            val listener = ResolveListener()
+            pendingResolves[listener] = serviceInfo
+            if (pendingResolves.size == 1) // Kick-start the resolution chain
+                nsdManager?.resolveService(serviceInfo, listener)
+        }
+
+        fun onServiceLost(serviceInfo: NsdServiceInfo) = execute {
+            resolvedProfiles.removeAll { it.name == serviceInfo.serviceName }
+            postResolvedProfiles()
+        }
+
+        fun onResolved(si: NsdServiceInfo) = execute {
+            resolvedProfiles.add(ServerProfile(name = si.serviceName, host = si.host.hostAddress!!, port = si.port))
+            postResolvedProfiles()
+        }
+
+        fun onResolveFinished(finishedResolve: ResolveListener) = execute {
+            pendingResolves.remove(finishedResolve)
+            pendingResolves.keys.firstOrNull()?.let { nsdManager?.resolveService(pendingResolves[it], it) }
         }
     }
 
     /**
      * Listener for discovery process.
      */
-    private inner class DiscoveryListener : NsdManager.DiscoveryListener {
-        override fun onServiceFound(serviceInfo: NsdServiceInfo?) {
-            @Suppress("DEPRECATION")
-            nsdManager?.resolveService(serviceInfo, ResolveListener())
-        }
+    private class DiscoveryListener : NsdManager.DiscoveryListener {
+        override fun onDiscoveryStarted(serviceType: String?) = impl.onStarted()
+        override fun onDiscoveryStopped(serviceType: String?) = impl.onStopped()
+        override fun onServiceFound(serviceInfo: NsdServiceInfo) = impl.onServiceFound(serviceInfo)
+        override fun onServiceLost(serviceInfo: NsdServiceInfo) = impl.onServiceLost(serviceInfo)
 
-        override fun onServiceLost(serviceInfo: NsdServiceInfo) {
-            removeProfile(serviceInfo.serviceName)
+        override fun onStartDiscoveryFailed(serviceType: String?, errorCode: Int) {
+            Log.e(TAG, "Service discovery failed to start [E: $errorCode ]")
+            impl.onStartFailed()
         }
 
         override fun onStopDiscoveryFailed(serviceType: String?, errorCode: Int) {
-            Log.w(javaClass.simpleName, "Service discovery failed to stop [E: $errorCode ]")
-        }
-
-        override fun onStartDiscoveryFailed(serviceType: String?, errorCode: Int) {
-            Log.e(javaClass.simpleName, "Service discovery failed to start [E: $errorCode ]")
-
-            runBlocking(Dispatchers.Main) {
-                isRunning.value = false //Go Back
-            }
-        }
-
-        override fun onDiscoveryStarted(serviceType: String?) {}
-
-        override fun onDiscoveryStopped(serviceType: String?) {
-            runBlocking(Dispatchers.Main) {
-                isRunning.value = false
-            }
+            Log.w(TAG, "Service discovery failed to stop [E: $errorCode ]")
+            // From our perspective, this is same as onDiscoveryStopped().
+            // We can't retry stopping it because NsdManager will clear the listener
+            // before invoking this callback.
+            impl.onStopped()
         }
     }
 
     /**
      * Listener for service resolution result.
      */
-    private inner class ResolveListener : NsdManager.ResolveListener {
+    private class ResolveListener : NsdManager.ResolveListener {
         override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
-            @Suppress("DEPRECATION")
-            addProfile(serviceInfo.serviceName, serviceInfo.host.hostAddress!!, serviceInfo.port)
+            impl.onResolved(serviceInfo)
+            impl.onResolveFinished(this)
         }
 
-        override fun onResolveFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
-            Log.w(javaClass.simpleName, "Service resolution failed for '${serviceInfo}' [E: $errorCode]")
+        override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
+            Log.e(TAG, "Service resolution failed for '${serviceInfo}' [E: $errorCode]")
+            impl.onResolveFinished(this)
         }
     }
 }

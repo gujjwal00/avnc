@@ -12,7 +12,6 @@ import android.app.Application
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
-import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.util.LiveEvent
 import com.gaurav.avnc.viewmodel.service.Discovery
@@ -33,7 +32,7 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     /**
      * Used to find new servers.
      */
-    val discovery by lazy { Discovery(app) }
+    val discovery = Discovery
 
     /**
      * Used for starting new VNC connections.
@@ -72,7 +71,7 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
 
     fun startDiscovery() {
         autoStopped = false
-        discovery.start(viewModelScope)
+        discovery.start(app)
     }
 
     fun stopDiscovery() {
