@@ -8,27 +8,26 @@
 
 package com.gaurav.avnc.ui.vnc
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.util.Rational
-import android.view.*
+import android.view.InputDevice
+import android.view.KeyEvent
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.*
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -79,6 +78,7 @@ class VncActivity : AppCompatActivity() {
     val virtualKeys by lazy { VirtualKeys(this) }
     private val serverUnlockPrompt = DeviceAuthPrompt(this)
     private val layoutManager by lazy { LayoutManager(this) }
+    private val toolbar by lazy { Toolbar(this, dispatcher) }
     private var restoredFromBundle = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,24 +99,13 @@ class VncActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.frameView.initialize(this)
         viewModel.frameViewRef = WeakReference(binding.frameView)
+        toolbar.initialize()
 
         setupLayout()
-        setupDrawerLayout()
         setupServerUnlock()
-        setupGestureStyle()
-
-        //Buttons
-        binding.keyboardBtn.setOnClickListener { showKeyboard(); closeDrawers() }
-        binding.zoomOptions.setOnLongClickListener { resetZoomToDefault(); closeDrawers(); true }
-        binding.zoomResetBtn.setOnClickListener { resetZoomToDefault(); closeDrawers() }
-        binding.zoomResetBtn.setOnLongClickListener { resetZoom(); closeDrawers(); true }
-        binding.zoomLockBtn.isChecked = viewModel.profile.fZoomLocked
-        binding.zoomLockBtn.setOnCheckedChangeListener { _, checked -> toggleZoomLock(checked); closeDrawers() }
-        binding.zoomSaveBtn.setOnClickListener { saveZoom(); closeDrawers() }
-        binding.virtualKeysBtn.setOnClickListener { virtualKeys.show(); closeDrawers() }
-        binding.reconnectBtn.setOnClickListener { retryConnection() }
 
         //Observers
+        binding.reconnectBtn.setOnClickListener { retryConnection() }
         viewModel.loginInfoRequest.observe(this) { showLoginDialog() }
         viewModel.sshHostKeyVerifyRequest.observe(this) { showHostKeyDialog() }
         viewModel.state.observe(this) { onClientStateChanged(it) }
@@ -178,51 +167,12 @@ class VncActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupGestureStyle() {
-        val styleButtonMap = mapOf(
-                "auto" to R.id.gesture_style_auto,
-                "touchscreen" to R.id.gesture_style_touchscreen,
-                "touchpad" to R.id.gesture_style_touchpad
-        )
-
-        binding.gestureStyleGroup.let { group ->
-            group.check(styleButtonMap[viewModel.profile.gestureStyle] ?: -1)
-            group.setOnCheckedChangeListener { _, id ->
-                for ((k, v) in styleButtonMap)
-                    if (v == id) viewModel.profile.gestureStyle = k
-                viewModel.saveProfile()
-                dispatcher.onGestureStyleChanged()
-                closeDrawers()
-            }
-        }
-    }
-
     private fun showLoginDialog() {
         LoginFragment().show(supportFragmentManager, "LoginDialog")
     }
 
     private fun showHostKeyDialog() {
         HostKeyFragment().show(supportFragmentManager, "HostKeyFragment")
-    }
-
-    private fun resetZoom() {
-        viewModel.resetZoom()
-        Toast.makeText(this, getString(R.string.msg_zoom_reset), Toast.LENGTH_SHORT).show()
-    }
-
-    private fun resetZoomToDefault() {
-        viewModel.resetZoomToDefault()
-        Toast.makeText(this, getString(R.string.msg_zoom_reset_default), Toast.LENGTH_SHORT).show()
-    }
-
-    private fun toggleZoomLock(enabled: Boolean) {
-        viewModel.toggleZoomLock(enabled)
-        Toast.makeText(this, getString(if (enabled) R.string.msg_zoom_locked else R.string.msg_zoom_unlocked), Toast.LENGTH_SHORT).show()
-    }
-
-    private fun saveZoom() {
-        viewModel.saveZoom()
-        Toast.makeText(this, getString(R.string.msg_zoom_saved), Toast.LENGTH_SHORT).show()
     }
 
     fun showKeyboard() {
@@ -234,17 +184,12 @@ class VncActivity : AppCompatActivity() {
         virtualKeys.onKeyboardOpen()
     }
 
-    private fun closeDrawers() {
-        binding.drawerLayout.closeDrawers()
-    }
-
     private fun onClientStateChanged(newState: VncViewModel.State) {
         val isConnected = (newState == VncViewModel.State.Connected)
-        val drawerLockMode = if (isConnected) DrawerLayout.LOCK_MODE_UNDEFINED else DrawerLayout.LOCK_MODE_LOCKED_CLOSED
 
-        binding.drawerLayout.setDrawerLockMode(drawerLockMode)
         binding.frameView.isVisible = isConnected
         binding.frameView.keepScreenOn = isConnected && viewModel.pref.viewer.keepScreenOn
+        toolbar.updateLockMode(isConnected)
         SamsungDex.setMetaKeyCapture(this, isConnected)
         layoutManager.onConnectionStateChanged()
         updateStatusContainerVisibility(isConnected)
@@ -272,10 +217,10 @@ class VncActivity : AppCompatActivity() {
     private fun highlightDrawer(isConnected: Boolean) {
         if (isConnected && !viewModel.pref.runInfo.hasConnectedSuccessfully) {
             viewModel.pref.runInfo.hasConnectedSuccessfully = true
-            binding.drawerLayout.openDrawer(binding.primaryToolbar)
+            toolbar.open()
             lifecycleScope.launch {
-                delay(1500)
-                binding.drawerLayout.closeDrawer(binding.primaryToolbar)
+                delay(2000)
+                toolbar.close()
             }
         }
     }
@@ -302,14 +247,9 @@ class VncActivity : AppCompatActivity() {
     /************************************************************************************
      * Layout handling.
      ************************************************************************************/
-
-    private val fullscreenMode by lazy { viewModel.pref.viewer.fullscreen }
-
     private fun setupLayout() {
-
         setupOrientation()
         layoutManager.initialize()
-
 
         if (Build.VERSION.SDK_INT >= 28 && viewModel.pref.viewer.drawBehindCutout) {
             window.attributes = window.attributes.apply {
@@ -328,96 +268,6 @@ class VncActivity : AppCompatActivity() {
             "landscape" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             else -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
-    }
-
-    private fun setupDrawerLayout() {
-        binding.drawerLayout.setScrimColor(0)
-
-        // Update Toolbar gravity
-        val gravityH = if (viewModel.pref.viewer.toolbarAlignment == "start") Gravity.START else Gravity.END
-        val lp = binding.primaryToolbar.layoutParams as DrawerLayout.LayoutParams
-
-        @SuppressLint("WrongConstant")
-        lp.gravity = gravityH or Gravity.CENTER_VERTICAL
-        binding.primaryToolbar.layoutParams = lp
-
-        setupDrawerCloseOnScrimSwipe(binding.drawerLayout, gravityH)
-
-        //Add System Gesture exclusion rects to allow opening toolbar drawer by swiping from edge
-        if (Build.VERSION.SDK_INT >= 29) {
-            binding.primaryToolbar.addOnLayoutChangeListener { _, left, top, right, bottom, _, _, _, _ ->
-                val root = binding.drawerLayout
-                val rect = Rect(left, top, right, bottom)
-
-                if (left < 0) rect.offset(-left, 0)
-                if (right > root.width) rect.offset(-(right - root.width), 0)
-
-                if (fullscreenMode) {
-                    rect.top = 0
-                    rect.bottom = root.height
-                }
-
-                //Set exclusion rects on root because toolbar may not be visible
-                root.systemGestureExclusionRects = listOf(rect)
-            }
-        }
-
-        // Close flyouts after drawer is closed
-        // We can't do this when calling closeDrawers() because that will change drawer
-        // size *while* drawer is closing. This can mess with internal calculations of DrawerLayout,
-        // and close operation can fail.
-        binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
-            override fun onDrawerClosed(drawerView: View) {
-                binding.zoomOptions.isChecked = false
-                binding.gestureStyleToggle.isChecked = false
-            }
-        })
-    }
-
-    /**
-     * Normally, drawers in [DrawerLayout] are closed by two gestures:
-     * 1. Swipe 'on' the drawer
-     * 2. Tap inside Scrim (dimmed region outside of drawer)
-     *
-     * Notably, swiping inside scrim area does NOT hide the drawer. This can be jarring
-     * to users if drawer is relatively small & most of the layout area acts as scrim.
-     * The toolbar drawer is affected by this issue.
-     *
-     * This function attempts to detect these swipe gestures and close the drawer
-     * when they happen.
-     *
-     * [drawerGravity] can be [Gravity.START] or [Gravity.END]
-     *
-     * Note: It will set a custom TouchListener on [drawerLayout].
-     */
-    @SuppressLint("ClickableViewAccessibility", "RtlHardcoded")
-    private fun setupDrawerCloseOnScrimSwipe(drawerLayout: DrawerLayout, drawerGravity: Int) {
-
-        drawerLayout.setOnTouchListener(object : View.OnTouchListener {
-            var drawerOpen = false
-
-            val detector = GestureDetector(drawerLayout.context, object : GestureDetector.SimpleOnGestureListener() {
-
-                override fun onFling(e1: MotionEvent?, e2: MotionEvent, vX: Float, vY: Float): Boolean {
-                    val absGravity = Gravity.getAbsoluteGravity(drawerGravity, drawerLayout.layoutDirection)
-                    if ((absGravity == Gravity.LEFT && vX < 0) || (absGravity == Gravity.RIGHT && vX > 0)) {
-                        drawerLayout.closeDrawer(drawerGravity)
-                        drawerOpen = false
-                    }
-                    return true
-                }
-            })
-
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                if (event.actionMasked == MotionEvent.ACTION_DOWN)
-                    drawerOpen = drawerLayout.isDrawerOpen(drawerGravity)
-
-                if (drawerOpen)
-                    detector.onTouchEvent(event)
-
-                return false
-            }
-        })
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -440,7 +290,7 @@ class VncActivity : AppCompatActivity() {
     override fun onPictureInPictureModeChanged(inPiP: Boolean, newConfig: Configuration) {
         super.onPictureInPictureModeChanged(inPiP, newConfig)
         if (inPiP) {
-            closeDrawers()
+            toolbar.close()
             viewModel.resetZoom()
             virtualKeys.hide()
         }
