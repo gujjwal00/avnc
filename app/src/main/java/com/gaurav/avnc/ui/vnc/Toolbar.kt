@@ -16,11 +16,13 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.view.GravityCompat
 import androidx.core.view.doOnLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import com.gaurav.avnc.R
+import com.gaurav.avnc.viewmodel.VncViewModel.State
 
 /**
  *
@@ -53,6 +55,7 @@ class Toolbar(private val activity: VncActivity, private val dispatcher: Dispatc
     private val binding = activity.binding.toolbar
     private val drawerLayout = activity.binding.drawerLayout
     private val drawerView = binding.root
+    private val openWithSwipe = viewModel.pref.viewer.toolbarOpenWithSwipe
 
     fun initialize() {
         binding.keyboardBtn.setOnClickListener { activity.showKeyboard(); close() }
@@ -83,7 +86,7 @@ class Toolbar(private val activity: VncActivity, private val dispatcher: Dispatc
     }
 
     fun updateLockMode(isConnected: Boolean) {
-        if (isConnected && viewModel.pref.viewer.toolbarOpenWithSwipe)
+        if (isConnected && openWithSwipe)
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED)
         else
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
@@ -155,30 +158,46 @@ class Toolbar(private val activity: VncActivity, private val dispatcher: Dispatc
     }
 
     /**
-     *  Add System Gesture exclusion rects to allow toolbar opening when gesture navigation is active.
-     *  Note: Some ROMs, e.g. MIUI, completely ignore whatever is set here.
+     * Setup gesture exclusion updates
      */
     private fun setupGestureExclusionRect() {
-        if (Build.VERSION.SDK_INT >= 29 && viewModel.pref.viewer.toolbarOpenWithSwipe) {
-            binding.primaryButtons.addOnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
-                val rect = Rect(drawerView.left, top, drawerView.right, bottom)
-
-                if (rect.left < 0) rect.offset(-rect.left, 0)
-                if (rect.right > drawerLayout.width) rect.offset(-(rect.right - drawerLayout.width), 0)
-
-                if (viewModel.pref.viewer.fullscreen) {
-                    // For fullscreen activities, Android does not enforce the height limit of exclusion area.
-                    // We could use the entire height for opening toolbar, but that will completely disable gestures.
-                    // So we pad by one-third of available space in each direction
-                    val padding = (drawerLayout.height - rect.height()) / 6
-                    if (padding > 0) {
-                        rect.top -= padding
-                        rect.bottom += padding
-                    }
-                }
-
-                drawerLayout.systemGestureExclusionRects = listOf(rect)
+        if (Build.VERSION.SDK_INT >= 29) {
+            viewModel.state.observe(activity) {
+                updateGestureExclusionRect()
             }
+            binding.primaryButtons.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+                updateGestureExclusionRect()
+            }
+        }
+    }
+
+    /**
+     * Add System Gesture exclusion rects to allow toolbar opening when gesture navigation is active.
+     * Note: Some ROMs, e.g. MIUI, completely ignore whatever is set here.
+     */
+    @RequiresApi(29)
+    private fun updateGestureExclusionRect() {
+        if (!openWithSwipe || viewModel.state.value != State.Connected) {
+            drawerLayout.systemGestureExclusionRects = listOf()
+        } else {
+            // Area covered by primaryButtons, in drawerLayout's coordinate space
+            val rect = Rect(drawerView.left, binding.primaryButtons.top, drawerView.right, binding.primaryButtons.bottom)
+
+            if (rect.left < 0) rect.offset(-rect.left, 0)
+            if (rect.right > drawerLayout.width) rect.offset(-(rect.right - drawerLayout.width), 0)
+
+            if (viewModel.pref.viewer.fullscreen) {
+                // For fullscreen activities, Android does not enforce the height limit of exclusion area.
+                // We could use the entire height for opening toolbar, but that will completely disable gestures.
+                // So we pad by one-third of available space in each direction
+                val padding = (drawerLayout.height - rect.height()) / 6
+                if (padding > 0) {
+                    rect.top -= padding
+                    rect.bottom += padding
+                }
+            }
+
+            drawerLayout.systemGestureExclusionRects = listOf(rect)
         }
     }
 
