@@ -83,8 +83,10 @@ class Toolbar(private val activity: VncActivity, private val dispatcher: Dispatc
     }
 
     fun updateLockMode(isConnected: Boolean) {
-        val mode = if (isConnected) DrawerLayout.LOCK_MODE_UNDEFINED else DrawerLayout.LOCK_MODE_LOCKED_CLOSED
-        drawerLayout.setDrawerLockMode(mode)
+        if (isConnected && viewModel.pref.viewer.toolbarOpenWithSwipe)
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED)
+        else
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 
     private fun toast(@StringRes msgRes: Int) = Toast.makeText(activity, msgRes, Toast.LENGTH_SHORT).show()
@@ -157,7 +159,7 @@ class Toolbar(private val activity: VncActivity, private val dispatcher: Dispatc
      *  Note: Some ROMs, e.g. MIUI, completely ignore whatever is set here.
      */
     private fun setupGestureExclusionRect() {
-        if (Build.VERSION.SDK_INT >= 29) {
+        if (Build.VERSION.SDK_INT >= 29 && viewModel.pref.viewer.toolbarOpenWithSwipe) {
             binding.primaryButtons.addOnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
                 val rect = Rect(drawerView.left, top, drawerView.right, bottom)
 

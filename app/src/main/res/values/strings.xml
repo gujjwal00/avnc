@@ -195,6 +195,8 @@
     <string name="pref_toolbar_alignment">Alignment</string>
     <string name="pref_toolbar_alignment_option_start">Start</string>
     <string name="pref_toolbar_alignment_option_end">End</string>
+    <string name="pref_toolbar_open_with_swipe">Swipe-in from edge to open</string>
+    <string name="pref_show_gesture_style_toggle">Show gesture style toggle</string>
     <string name="pref_zoom">Zoom</string>
     <string name="pref_zoom_min">Minimum</string>
     <string name="pref_zoom_max">Maximum</string>
