@@ -313,7 +313,7 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
      **************************************************************************/
 
     fun sendClipboardText() {
-        if (pref.server.clipboardSync) launchIO {
+        if (pref.server.clipboardSync && client.connected) launchIO {
             getClipboardText(app)?.let { messenger.sendClipboardText(it) }
         }
     }
