@@ -123,7 +123,7 @@
     <string name="desc_discovery_running">Виявлення серверів у Вашій мережі</string>
     <string name="desc_virtual_keys_btn">Показати віртуальні клавіші</string>
     <string name="desc_back_btn">Назад</string>
-    <string name="desc_reset_zoom_btn">Скинути збільшення</string>
+    <string name="desc_reset_zoom_btn">Скинути масштаб</string>
     <string name="desc_discovered_list">Перелік автоматично виявлених серверів</string>
     <string name="desc_saved_servers_list">Перелік збережених серверів</string>
     <string name="pref_ui_summary">Смак і дотик</string>
@@ -174,7 +174,7 @@
     <string name="title_image_quality_raw">Без стискання</string>
     <string name="title_vnc_security">Безпека</string>
     <string name="title_automatic">Автоматично</string>
-    <string name="msg_zoom_reset">Збільшення скинуто до 100%</string>
+    <string name="msg_zoom_reset">Масштаб скинуто до 100%</string>
     <string name="msg_zoom_saved">Поточне масштабування збережено як стандартне</string>
     <string name="pref_gesture_style">Стиль жестів</string>
     <string name="pref_gesture_style_auto_summary">На основі налаштувань застосунку</string>
@@ -187,7 +187,7 @@
     <string name="title_unlock_private_key">Розблокувати приватний ключ</string>
     <string name="title_orientation">Орієнтація</string>
     <string name="title_resize_remote_desktop">Зміна розміру віддаленого сеансу до розміру локального вікна</string>
-    <string name="msg_zoom_reset_default">Скидання масштабу до стандартного</string>
+    <string name="msg_zoom_reset_default">Масштаб скинуто до стандартного</string>
     <string name="msg_button_up_delay_help">Затримка подій клацання може допомогти в деяких рідкісних випадках, коли застосунок не реагує на клацання.</string>
     <string name="msg_shortcut_server_deleted">Цей сервер було видалено</string>
     <string name="title_button_up_delay">Надсилати відкладені події клацань</string>
@@ -195,4 +195,11 @@
     <string name="pref_long_press_swipe">Довге натискання та ковзання</string>
     <string name="pref_gesture_action_remote_drag_middle">Перетягувати середньою кнопкою</string>
     <string name="pref_auto_reconnect">Автоматичне перепідключення</string>
+    <string name="hint_ssh_host">SSH хост</string>
+    <string name="hint_ssh_port">SSH порт</string>
+    <string name="msg_zoom_locked">Масштаб заблоковано</string>
+    <string name="msg_zoom_unlocked">Масштаб розблоковано</string>
+    <string name="msg_pk_password_not_saved">AVNC більше не зберігає паролі приватних ключів для поліпшення безпеки.</string>
+    <string name="pref_keep_screen_on">Залишати екран увімкненим</string>
+    <string name="desc_lock_zoom_btn">Заблокувати масштаб</string>
 </resources>

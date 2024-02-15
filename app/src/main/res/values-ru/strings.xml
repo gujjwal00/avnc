@@ -195,4 +195,11 @@
     <string name="pref_touch_test">Сенсорный тест</string>
     <string name="title_resize_remote_desktop">Изменение размера удаленного сеанса в соответствии с локальным окном</string>
     <string name="pref_gesture_action_remote_drag_middle">Перетаскивать средней кнопкой</string>
+    <string name="hint_ssh_host">SSH хост</string>
+    <string name="hint_ssh_port">SSH порт</string>
+    <string name="msg_zoom_locked">Масштаб заблокирован</string>
+    <string name="msg_zoom_unlocked">Масштаб разблокирован</string>
+    <string name="msg_pk_password_not_saved">AVNC больше не сохраняет частные ключевые пароли для улучшения безопасности.</string>
+    <string name="desc_lock_zoom_btn">Заблокировать масштаб</string>
+    <string name="pref_keep_screen_on">Держать экран включенным</string>
 </resources>
