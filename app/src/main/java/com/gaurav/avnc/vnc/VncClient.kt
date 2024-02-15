@@ -195,7 +195,9 @@ class VncClient(private val observer: Observer) {
      * Sends text to remote desktop's clipboard.
      */
     fun sendCutText(text: String) = ifConnectedAndInteractive {
-        if (!nativeSendCutText(nativePtr, text.toByteArray(StandardCharsets.UTF_8), true))
+        if (nativeIsUTF8CutTextSupported(nativePtr))
+            nativeSendCutText(nativePtr, text.toByteArray(StandardCharsets.UTF_8), true)
+        else
             nativeSendCutText(nativePtr, text.toByteArray(StandardCharsets.ISO_8859_1), false)
     }
 
@@ -269,6 +271,7 @@ class VncClient(private val observer: Observer) {
     private external fun nativeSendKeyEvent(clientPtr: Long, keySym: Int, xtCode: Int, isDown: Boolean): Boolean
     private external fun nativeSendPointerEvent(clientPtr: Long, x: Int, y: Int, mask: Int): Boolean
     private external fun nativeSendCutText(clientPtr: Long, bytes: ByteArray, isUTF8: Boolean): Boolean
+    private external fun nativeIsUTF8CutTextSupported(clientPtr: Long): Boolean
     private external fun nativeSetDesktopSize(clientPtr: Long, width: Int, height: Int): Boolean
     private external fun nativeRefreshFrameBuffer(clientPtr: Long): Boolean
     private external fun nativeSetAutomaticFramebufferUpdates(clientPtr: Long, enabled: Boolean)

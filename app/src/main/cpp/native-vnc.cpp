@@ -409,6 +409,12 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeSendCutText(JNIEnv *env, jobject thiz, 
 
 extern "C"
 JNIEXPORT jboolean JNICALL
+Java_com_gaurav_avnc_vnc_VncClient_nativeIsUTF8CutTextSupported(JNIEnv *env, jobject thiz, jlong client_ptr) {
+    return (jboolean) (((rfbClient *) client_ptr)->extendedClipboardServerCapabilities != 0);
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeSetDesktopSize(JNIEnv *env, jobject thiz, jlong client_ptr, jint width,
                                                         jint height) {
     return (jboolean) SendExtDesktopSize((rfbClient *) client_ptr, width, height);
