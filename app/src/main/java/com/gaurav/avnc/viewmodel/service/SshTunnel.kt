@@ -9,6 +9,10 @@
 package com.gaurav.avnc.viewmodel.service
 
 import android.util.Base64
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.viewmodel.VncViewModel
@@ -17,6 +21,9 @@ import com.trilead.ssh2.KnownHosts
 import com.trilead.ssh2.LocalPortForwarder
 import com.trilead.ssh2.ServerHostKeyVerifier
 import com.trilead.ssh2.crypto.PEMDecoder
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.Closeable
 import java.io.File
 import java.io.IOException
@@ -24,18 +31,8 @@ import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.NoRouteToHostException
 import java.net.ServerSocket
+import java.security.KeyPair
 import java.security.MessageDigest
-
-/**
- * Checks if given private key is encrypted.
- * [key] is in PEM format.
- *
- * Throws [IOException] if [key] is not a valid private key.
- */
-fun isPrivateKeyEncrypted(key: String): Boolean {
-    return PEMDecoder.isPEMEncrypted(PEMDecoder.parsePEM(key.toCharArray()))
-}
-
 
 /**
  * Container for SSH Host Key
@@ -115,19 +112,7 @@ class SshTunnel(private val viewModel: VncViewModel) {
         val connection = connect(profile)
         this.connection = connection
 
-        when (profile.sshAuthType) {
-            ServerProfile.SSH_AUTH_PASSWORD -> {
-                val password = viewModel.getLoginInfo(LoginInfo.Type.SSH_PASSWORD).password
-                connection.authenticateWithPassword(profile.sshUsername, password)
-            }
-            ServerProfile.SSH_AUTH_KEY -> {
-                var keyPassword = ""
-                if (isPrivateKeyEncrypted(profile.sshPrivateKey))
-                    keyPassword = viewModel.getLoginInfo(LoginInfo.Type.SSH_KEY_PASSWORD).password
-                connection.authenticateWithPublicKey(profile.sshUsername, profile.sshPrivateKey.toCharArray(), keyPassword)
-            }
-            else -> throw IOException("Unknown SSH auth type: ${profile.sshAuthType}")
-        }
+        authenticate(connection, profile)
 
         if (!connection.isAuthenticationComplete)
             throw IOException("SSH authentication failed")
@@ -169,7 +154,89 @@ class SshTunnel(private val viewModel: VncViewModel) {
         throw NoRouteToHostException("Unreachable SSH host: ${profile.sshHost}")
     }
 
+    private fun authenticate(connection: Connection, profile: ServerProfile) {
+        when (profile.sshAuthType) {
+            ServerProfile.SSH_AUTH_PASSWORD -> {
+                val password = viewModel.getLoginInfo(LoginInfo.Type.SSH_PASSWORD).password  //Possibly blocking call
+                connection.authenticateWithPassword(profile.sshUsername, password)
+            }
+            ServerProfile.SSH_AUTH_KEY -> {
+                val pk = profile.sshPrivateKey
+                val cached = KeyCache.get(pk)
+                if (cached != null) {
+                    connection.authenticateWithPublicKey(profile.sshUsername, cached)
+                } else {
+                    val pem = PEMDecoder.parsePEM(pk.toCharArray())
+                    var password = ""
+                    if (PEMDecoder.isPEMEncrypted(pem)) {
+                        password = viewModel.getLoginInfo(LoginInfo.Type.SSH_KEY_PASSWORD).password  //Blocking call
+                    }
+                    val keyPair = PEMDecoder.decode(pem, password)
+                    connection.authenticateWithPublicKey(profile.sshUsername, keyPair)
+                    KeyCache.put(pk, keyPair)
+                }
+            }
+            else -> throw IOException("Unknown SSH auth type: ${profile.sshAuthType}")
+        }
+    }
+
     fun close() {
         connection?.close()
+    }
+
+    /**
+     * A very simple key cache to keep unlocked/decoded keys in memory
+     * Strategy:
+     * 1. Keep keys in memory as long as app is in foreground
+     * 2. Clear cache if app goes in background for more than 15 minutes
+     */
+    private object KeyCache {
+        private val cache = mutableMapOf<String, KeyPair>()
+        private var lifecycleObserver: DefaultLifecycleObserver? = null
+
+        fun get(pk: String): KeyPair? {
+            synchronized(cache) {
+                return cache[pk]
+            }
+        }
+
+        fun put(pk: String, keyPair: KeyPair) {
+            synchronized(cache) {
+                cache[pk] = keyPair
+                addLifecycleObserver()
+            }
+        }
+
+        private fun addLifecycleObserver() {
+            if (lifecycleObserver != null)
+                return // Already added
+
+            lifecycleObserver = object : DefaultLifecycleObserver {
+                var cleanupJob: Job? = null
+
+                override fun onStart(owner: LifecycleOwner) {
+                    cleanupJob?.let { if (it.isActive) it.cancel() }
+                    cleanupJob = null
+                }
+
+                override fun onStop(owner: LifecycleOwner) {
+                    cleanupJob = owner.lifecycleScope.launch {
+                        delay(15 * 60 * 1000)
+                        synchronized(cache) {
+                            cache.values.forEach { it.private.destroy() }
+                            cache.clear()
+                        }
+                    }
+                }
+            }
+
+            ProcessLifecycleOwner.get().let {
+                // Observer needs to be set on main thread,
+                // and lifecycleScope is already bound to main thread
+                it.lifecycleScope.launch {
+                    it.lifecycle.addObserver(lifecycleObserver!!)
+                }
+            }
+        }
     }
 }
