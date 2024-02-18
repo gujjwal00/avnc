@@ -222,9 +222,9 @@ class VncClient(private val observer: Observer) {
      * Controls whether framebuffer update requests are sent automatically.
      * It takes effect after the next call to [processServerMessage].
      */
-    fun setAutomaticFrameBufferUpdates(enabled: Boolean) = ifConnected {
+    /*fun setAutomaticFrameBufferUpdates(enabled: Boolean) = ifConnected {
         //autoFBRequestsQueued = enabled
-    }
+    }*/
 
     /**
      * Puts framebuffer contents in currently active OpenGL texture.

@@ -356,11 +356,11 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
     }
 
     fun pauseFrameBufferUpdates() {
-        client.setAutomaticFrameBufferUpdates(false)
+        //client.setAutomaticFrameBufferUpdates(false)
     }
 
     fun resumeFrameBufferUpdates() {
-        client.setAutomaticFrameBufferUpdates(true)
+        //client.setAutomaticFrameBufferUpdates(true)
     }
 
     /**************************************************************************
