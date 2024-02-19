@@ -27,6 +27,7 @@ import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -318,8 +319,19 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
         }
     }
 
+    private var clipReceiverJob: Job? = null
     private fun receiveClipboardText(text: String) {
-        if (pref.server.clipboardSync) launchIO {
+        if (!pref.server.clipboardSync)
+            return
+
+        // This is a protective measure against servers which send every 'selection' made on the server.
+        // Setting clip text involves IPC, so these events can exhaust Binder resources, leading to ANRs.
+        if (clipReceiverJob?.isActive == true) {
+            Log.w(javaClass.simpleName, "Dropping clip text received from server, previous text is still pending")
+            return
+        }
+
+        clipReceiverJob = launchIO {
             setClipboardText(app, text)
         }
     }

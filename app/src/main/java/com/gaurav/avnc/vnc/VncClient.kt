@@ -106,6 +106,12 @@ class VncClient(private val observer: Observer) {
     private var autoFBRequests = autoFBRequestsQueued
 
     /**
+     * Value of the most recent cut text sent/received from server
+     */
+    @Volatile
+    private var lastCutText: String? = null
+
+    /**
      * Setup different properties for this client.
      *
      * @param securityType RFB security type to use.
@@ -195,10 +201,14 @@ class VncClient(private val observer: Observer) {
      * Sends text to remote desktop's clipboard.
      */
     fun sendCutText(text: String) = ifConnectedAndInteractive {
-        if (nativeIsUTF8CutTextSupported(nativePtr))
-            nativeSendCutText(nativePtr, text.toByteArray(StandardCharsets.UTF_8), true)
-        else
-            nativeSendCutText(nativePtr, text.toByteArray(StandardCharsets.ISO_8859_1), false)
+        if (text != lastCutText) {
+            val sent = if (nativeIsUTF8CutTextSupported(nativePtr))
+                nativeSendCutText(nativePtr, text.toByteArray(StandardCharsets.UTF_8), true)
+            else
+                nativeSendCutText(nativePtr, text.toByteArray(StandardCharsets.ISO_8859_1), false)
+            if (sent)
+                lastCutText = text
+        }
     }
 
     /**
@@ -294,7 +304,11 @@ class VncClient(private val observer: Observer) {
     @Keep
     private fun cbGotXCutText(bytes: ByteArray, isUTF8: Boolean) {
         (if (isUTF8) StandardCharsets.UTF_8 else StandardCharsets.ISO_8859_1).let {
-            observer.onGotXCutText(it.decode(ByteBuffer.wrap(bytes)).toString())
+            val cutText = it.decode(ByteBuffer.wrap(bytes)).toString()
+            if (cutText != lastCutText) {
+                lastCutText = cutText
+                observer.onGotXCutText(cutText)
+            }
         }
     }
 
