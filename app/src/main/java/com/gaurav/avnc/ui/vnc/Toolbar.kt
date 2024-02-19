@@ -19,7 +19,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.view.GravityCompat
-import androidx.core.view.doOnLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import com.gaurav.avnc.R
 import com.gaurav.avnc.viewmodel.VncViewModel.State
@@ -144,17 +143,16 @@ class Toolbar(private val activity: VncActivity, private val dispatcher: Dispatc
         lp.gravity = gravity
         drawerView.layoutParams = lp
 
-        drawerLayout.doOnLayout {
-            // Effective layoutDirection will only be available after layout pass
-            val isLeftAligned = Gravity.getAbsoluteGravity(gravity, it.layoutDirection) == Gravity.LEFT
+        // Before layout pass, layoutDirection should be retrieved from Activity config
+        val layoutDirection = activity.resources.configuration.layoutDirection
+        val isLeftAligned = Gravity.getAbsoluteGravity(gravity, layoutDirection) == Gravity.LEFT
 
-            // We need the layout direction based on alignment rather than language/locale
-            // so that flyouts and button icons are properly ordered.
-            drawerView.layoutDirection = if (isLeftAligned) View.LAYOUT_DIRECTION_LTR else View.LAYOUT_DIRECTION_RTL
+        // We need the layout direction based on alignment rather than language/locale
+        // so that flyouts and button icons are properly ordered.
+        drawerView.layoutDirection = if (isLeftAligned) View.LAYOUT_DIRECTION_LTR else View.LAYOUT_DIRECTION_RTL
 
-            // Let the gesture group have natural layout as it contains text elements
-            binding.gestureStyleGroup.layoutDirection = it.layoutDirection
-        }
+        // Let the gesture group have natural layout as it contains text elements
+        binding.gestureStyleGroup.layoutDirection = layoutDirection
     }
 
     /**
