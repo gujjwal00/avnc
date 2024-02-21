@@ -46,7 +46,6 @@ import com.gaurav.avnc.vnc.VncClient
  */
 class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(context, attrs) {
 
-    private lateinit var frameState: FrameState
     private lateinit var touchHandler: TouchHandler
     private lateinit var keyHandler: KeyHandler
 
@@ -69,7 +68,6 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
     fun initialize(activity: VncActivity) {
         val viewModel = activity.viewModel
 
-        frameState = viewModel.frameState
         touchHandler = activity.touchHandler
         keyHandler = activity.keyHandler
 
