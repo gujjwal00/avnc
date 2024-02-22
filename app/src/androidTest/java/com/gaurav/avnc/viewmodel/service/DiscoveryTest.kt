@@ -32,16 +32,16 @@ class DiscoveryTest {
      * (e.g. in Airplane mode on newer Android versions).
      */
     private fun advertiseService(advertisedName: String, advertisedPort: Int) {
-        var registeredService = false
+        var registeredService: String? = null
         val listener = object : NsdManager.RegistrationListener {
             override fun onRegistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
                 Log.e(TAG, "Registration failed: si: $serviceInfo, error:$errorCode")
             }
 
             override fun onUnregistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {}
-            override fun onServiceRegistered(serviceInfo: NsdServiceInfo?) {
+            override fun onServiceRegistered(serviceInfo: NsdServiceInfo) {
                 Log.d(TAG, "Registered si: $serviceInfo")
-                registeredService = true
+                registeredService = serviceInfo.serviceName
             }
 
             override fun onServiceUnregistered(serviceInfo: NsdServiceInfo?) {}
@@ -54,7 +54,7 @@ class DiscoveryTest {
         nsdManager?.registerService(si, NsdManager.PROTOCOL_DNS_SD, listener)
         listeners.add(listener)
 
-        Assume.assumeTrue(runCatching { pollingAssert { assertTrue(registeredService) } }.isSuccess)
+        Assume.assumeTrue(runCatching { pollingAssert { assertTrue(registeredService == advertisedName) } }.isSuccess)
     }
 
     private fun assertDiscoveryState(test: Discovery.() -> Boolean) {
