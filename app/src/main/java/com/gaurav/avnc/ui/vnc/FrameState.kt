@@ -10,6 +10,7 @@ package com.gaurav.avnc.ui.vnc
 
 import android.graphics.PointF
 import android.graphics.RectF
+import com.gaurav.avnc.ui.vnc.FrameState.Snapshot
 import kotlin.math.max
 import kotlin.math.min
 
@@ -95,10 +96,13 @@ import kotlin.math.min
  * Thread safety
  * =============
  *
- * Frame state is accessed from two threads: Its properties are updated in
- * UI thread and consumed by the renderer thread. There is a "slight" chance that
- * Renderer thread may see half-updated state. But it should "eventually" settle down
- * because any change in frame state is usually followed by a new render request.
+ * Frame state is accessed from two threads: Its properties are updated in UI thread
+ * and consumed by the renderer thread. There is a chance that Renderer thread may see
+ * half-updated state (e.g. [frameX] is changed inside [pan] but [coerceValues] is not yet called).
+ * This half-updated state can cause flickering issues.
+ *
+ * To avoid this we use [Snapshot]. All updates to frame state are guarded by [lock].
+ * Render thread uses [getSnapshot] to retrieve a consistent state to render the frame.
  */
 class FrameState(
         private val minZoomScale: Float = 0.5F,
@@ -136,28 +140,43 @@ class FrameState(
 
     val scale get() = baseScale * zoomScale
 
+    /**
+     * Immutable wrapper for frame state
+     */
+    data class Snapshot(
+            val frameX: Float,
+            val frameY: Float,
+            val fbWidth: Float,
+            val fbHeight: Float,
+            val vpWidth: Float,
+            val vpHeight: Float,
+            val scale: Float
+    )
 
-    fun setFramebufferSize(w: Float, h: Float) {
+    private val lock = Any()
+    private inline fun <T> withLock(block: () -> T) = synchronized(lock) { block() }
+
+    fun setFramebufferSize(w: Float, h: Float) = withLock {
         fbWidth = w
         fbHeight = h
         calculateBaseScale()
         coerceValues()
     }
 
-    fun setViewportSize(w: Float, h: Float) {
+    fun setViewportSize(w: Float, h: Float) = withLock {
         vpWidth = w
         vpHeight = h
         coerceValues()
     }
 
-    fun setWindowSize(w: Float, h: Float) {
+    fun setWindowSize(w: Float, h: Float) = withLock {
         windowWidth = w
         windowHeight = h
         calculateBaseScale()
         coerceValues()
     }
 
-    fun setSafeArea(rect: RectF) {
+    fun setSafeArea(rect: RectF) = withLock {
         safeArea = RectF(rect)
         coerceValues()
     }
@@ -167,7 +186,7 @@ class FrameState(
      *
      * Returns 'how much' scale factor is actually applied (after coercing).
      */
-    fun updateZoom(scaleFactor: Float): Float {
+    fun updateZoom(scaleFactor: Float): Float = withLock {
         val oldScale = zoomScale
 
         zoomScale *= scaleFactor
@@ -176,7 +195,7 @@ class FrameState(
         return zoomScale / oldScale //Applied scale factor
     }
 
-    fun setZoom(zoom1: Float, zoom2: Float) {
+    fun setZoom(zoom1: Float, zoom2: Float) = withLock {
         zoomScale1 = zoom1
         zoomScale2 = zoom2
         coerceValues()
@@ -185,7 +204,7 @@ class FrameState(
     /**
      * Shift frame by given delta.
      */
-    fun pan(deltaX: Float, deltaY: Float) {
+    fun pan(deltaX: Float, deltaY: Float) = withLock {
         frameX += deltaX
         frameY += deltaY
         coerceValues()
@@ -194,7 +213,7 @@ class FrameState(
     /**
      * Move frame to given position.
      */
-    fun moveTo(x: Float, y: Float) {
+    fun moveTo(x: Float, y: Float) = withLock {
         frameX = x
         frameY = y
         coerceValues()
@@ -226,6 +245,14 @@ class FrameState(
         return PointF(fbPoint.x * scale + frameX, fbPoint.y * scale + frameY)
     }
 
+    /**
+     * Returns immutable & consistent snapshot of frame state.
+     */
+    fun getSnapshot(): Snapshot = withLock {
+        return Snapshot(frameX = frameX, frameY = frameY,
+                        fbWidth = fbWidth, fbHeight = fbHeight,
+                        vpWidth = vpWidth, vpHeight = vpHeight, scale = scale)
+    }
 
     private fun calculateBaseScale() {
         if (fbHeight == 0F || fbWidth == 0F || windowHeight == 0F)

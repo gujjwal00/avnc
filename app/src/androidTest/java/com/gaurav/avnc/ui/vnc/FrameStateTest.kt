@@ -188,4 +188,24 @@ class FrameStateTest {
         assertEquals(-100f, state.frameX) //Right side of frame and Viewport are aligned
         assertEquals(-100f, state.frameY) //Bottom side of frame and Viewport are aligned
     }
+
+    //Sanity check for snapshot
+    @Test
+    fun snapshotTest() {
+        val state = FrameState()
+        state.setWindowSize(10f, 20f)
+        state.setViewportSize(10f, 20f)
+        state.setFramebufferSize(40f, 80f)
+        state.updateZoom(2f)
+        state.pan(-2f, -3f)
+
+        val snapshot = state.getSnapshot()
+        assertEquals(10f, snapshot.vpWidth)
+        assertEquals(20f, snapshot.vpHeight)
+        assertEquals(40f, snapshot.fbWidth)
+        assertEquals(80f, snapshot.fbHeight)
+        assertEquals(.5f, snapshot.scale)    // (10/40) * 2
+        assertEquals(-2f, snapshot.frameX)
+        assertEquals(-3f, snapshot.frameY)
+    }
 }

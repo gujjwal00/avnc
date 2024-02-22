@@ -24,7 +24,6 @@ import javax.microedition.khronos.opengles.GL10
 class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
 
     private val projectionMatrix = FloatArray(16)
-    private val state = viewModel.frameState
     private val hideCursor = viewModel.pref.input.hideRemoteCursor
     private lateinit var program: FrameProgram
     private lateinit var frame: Frame
@@ -78,6 +77,7 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
         if (!viewModel.client.connected)
             return
 
+        val state = viewModel.frameState.getSnapshot()
         if (state.vpWidth == 0f || state.vpHeight == 0f)
             return
 
