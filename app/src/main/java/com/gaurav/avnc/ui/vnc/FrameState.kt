@@ -272,7 +272,7 @@ class FrameState(
         zoomScale2 = zoomScale2.coerceIn(minZoomScale, maxZoomScale)
 
         if (safeArea.isEmpty || !safeArea.intersect(0f, 0f, vpWidth, vpHeight))
-            safeArea = RectF(0f, 0f, vpWidth, vpHeight)
+            safeArea.set(0f, 0f, vpWidth, vpHeight)
 
         frameX = coercePosition(frameX, safeArea.left, safeArea.right, fbWidth)
         frameY = coercePosition(frameY, safeArea.top, safeArea.bottom, fbHeight)
