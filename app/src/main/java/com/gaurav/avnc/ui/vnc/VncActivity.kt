@@ -189,11 +189,9 @@ class VncActivity : AppCompatActivity() {
 
         binding.frameView.isVisible = isConnected
         binding.frameView.keepScreenOn = isConnected && viewModel.pref.viewer.keepScreenOn
-        toolbar.updateLockMode(isConnected)
         SamsungDex.setMetaKeyCapture(this, isConnected)
         layoutManager.onConnectionStateChanged()
         updateStatusContainerVisibility(isConnected)
-        highlightDrawer(isConnected)
         autoReconnect(newState)
 
         if (isConnected && !restoredFromBundle)
@@ -211,18 +209,6 @@ class VncActivity : AppCompatActivity() {
                 .animate()
                 .alpha(if (isConnected) 0f else 1f)
                 .withEndAction { binding.statusContainer.isVisible = !isConnected }
-    }
-
-    // Highlight drawer for first time users
-    private fun highlightDrawer(isConnected: Boolean) {
-        if (isConnected && !viewModel.pref.runInfo.hasConnectedSuccessfully) {
-            viewModel.pref.runInfo.hasConnectedSuccessfully = true
-            toolbar.open()
-            lifecycleScope.launch {
-                delay(2000)
-                toolbar.close()
-            }
-        }
     }
 
     private var autoReconnecting = false

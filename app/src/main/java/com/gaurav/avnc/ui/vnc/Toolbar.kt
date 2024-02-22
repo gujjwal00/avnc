@@ -20,8 +20,11 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
 import com.gaurav.avnc.R
 import com.gaurav.avnc.viewmodel.VncViewModel.State
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  *
@@ -69,6 +72,8 @@ class Toolbar(private val activity: VncActivity, private val dispatcher: Dispatc
         // Root view is transparent. Click on it should work just like a click in scrim area
         drawerView.setOnClickListener { close() }
 
+        viewModel.state.observe(activity) { onStateChange(it) }
+
         setupAlignment()
         setupFlyoutClose()
         setupGestureStyleSelection()
@@ -82,13 +87,6 @@ class Toolbar(private val activity: VncActivity, private val dispatcher: Dispatc
 
     fun close() {
         drawerLayout.closeDrawer(drawerView)
-    }
-
-    fun updateLockMode(isConnected: Boolean) {
-        if (isConnected && openWithSwipe)
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED)
-        else
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 
     private fun toast(@StringRes msgRes: Int) = Toast.makeText(activity, msgRes, Toast.LENGTH_SHORT).show()
@@ -132,6 +130,40 @@ class Toolbar(private val activity: VncActivity, private val dispatcher: Dispatc
         }
     }
 
+    private fun onStateChange(state: State) {
+        val isConnected = (state == State.Connected)
+
+        if (isConnected)
+            highlightForFirstTimeUser()
+
+        if (Build.VERSION.SDK_INT >= 29)
+            updateGestureExclusionRect()
+
+        updateLockMode(isConnected)
+    }
+
+    /**
+     * Open the drawer for couple of seconds and then close it.
+     */
+    private fun highlightForFirstTimeUser() {
+        if (!viewModel.pref.runInfo.hasConnectedSuccessfully) {
+            viewModel.pref.runInfo.hasConnectedSuccessfully = true
+            activity.lifecycleScope.launch {
+                open()
+                delay(2000)
+                close()
+            }
+        }
+    }
+
+    private fun updateLockMode(isConnected: Boolean) {
+        if (isConnected && openWithSwipe)
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED)
+        else
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+    }
+
+
     /**
      * Setup gravity & layout direction
      */
@@ -160,9 +192,6 @@ class Toolbar(private val activity: VncActivity, private val dispatcher: Dispatc
      */
     private fun setupGestureExclusionRect() {
         if (Build.VERSION.SDK_INT >= 29) {
-            viewModel.state.observe(activity) {
-                updateGestureExclusionRect()
-            }
             binding.primaryButtons.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
                 updateGestureExclusionRect()
             }
