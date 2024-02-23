@@ -23,6 +23,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import com.gaurav.avnc.R
 import com.gaurav.avnc.viewmodel.VncViewModel.State
+import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -131,15 +132,13 @@ class Toolbar(private val activity: VncActivity, private val dispatcher: Dispatc
     }
 
     private fun onStateChange(state: State) {
-        val isConnected = (state == State.Connected)
-
-        if (isConnected)
+        if (state.isConnected)
             highlightForFirstTimeUser()
 
         if (Build.VERSION.SDK_INT >= 29)
             updateGestureExclusionRect()
 
-        updateLockMode(isConnected)
+        updateLockMode(state.isConnected)
     }
 
     /**
@@ -204,7 +203,7 @@ class Toolbar(private val activity: VncActivity, private val dispatcher: Dispatc
      */
     @RequiresApi(29)
     private fun updateGestureExclusionRect() {
-        if (!openWithSwipe || viewModel.state.value != State.Connected) {
+        if (!openWithSwipe || !viewModel.state.value.isConnected) {
             drawerLayout.systemGestureExclusionRects = listOf()
         } else {
             // Area covered by primaryButtons, in drawerLayout's coordinate space

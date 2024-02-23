@@ -21,6 +21,7 @@ import com.gaurav.avnc.databinding.FragmentCredentialBinding
 import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.viewmodel.VncViewModel
+import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputLayout
 
@@ -114,7 +115,7 @@ class LoginFragment : DialogFragment() {
         // Use activity as owner because this fragment will likely be destroyed before connecting
         viewModel.state.observe(requireActivity(), object : Observer<VncViewModel.State> {
             override fun onChanged(value: VncViewModel.State) {
-                if (value == VncViewModel.State.Connected) {
+                if (value.isConnected) {
                     setLoginInfoInProfile(viewModel.profile, loginInfo)
                     viewModel.saveProfile()
                     viewModel.state.removeObserver(this)

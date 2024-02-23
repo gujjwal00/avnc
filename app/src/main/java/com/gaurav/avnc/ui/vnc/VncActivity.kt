@@ -39,6 +39,7 @@ import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.SamsungDex
 import com.gaurav.avnc.viewmodel.VncViewModel
+import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
 import com.gaurav.avnc.vnc.VncUri
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -185,7 +186,7 @@ class VncActivity : AppCompatActivity() {
     }
 
     private fun onClientStateChanged(newState: VncViewModel.State) {
-        val isConnected = (newState == VncViewModel.State.Connected)
+        val isConnected = newState.isConnected
 
         binding.frameView.isVisible = isConnected
         binding.frameView.keepScreenOn = isConnected && viewModel.pref.viewer.keepScreenOn

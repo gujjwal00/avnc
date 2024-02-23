@@ -93,7 +93,12 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
         Created,
         Connecting,
         Connected,
-        Disconnected,
+        Disconnected;
+
+        companion object {
+            val State?.isConnected get() = (this == Connected)
+            val State?.isDisconnected get() = (this == Disconnected)
+        }
     }
 
     val client = VncClient(this)
