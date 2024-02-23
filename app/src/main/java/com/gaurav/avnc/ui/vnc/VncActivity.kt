@@ -16,6 +16,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.util.Rational
 import android.view.InputDevice
@@ -40,6 +41,7 @@ import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.SamsungDex
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
+import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isDisconnected
 import com.gaurav.avnc.vnc.VncUri
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -81,10 +83,11 @@ class VncActivity : AppCompatActivity() {
     private val layoutManager by lazy { LayoutManager(this) }
     private val toolbar by lazy { Toolbar(this, dispatcher) }
     private var restoredFromBundle = false
+    private var wasConnectedWhenStopped = false
+    private var onStartTime = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         DeviceAuthPrompt.applyFingerprintDialogFix(supportFragmentManager)
-        restoredFromBundle = savedInstanceState != null
 
         super.onCreate(savedInstanceState)
         if (!loadViewModel(savedInstanceState)) {
@@ -110,12 +113,18 @@ class VncActivity : AppCompatActivity() {
         viewModel.loginInfoRequest.observe(this) { showLoginDialog() }
         viewModel.sshHostKeyVerifyRequest.observe(this) { showHostKeyDialog() }
         viewModel.state.observe(this) { onClientStateChanged(it) }
+
+        savedInstanceState?.let {
+            restoredFromBundle = true
+            wasConnectedWhenStopped = it.getBoolean("wasConnectedWhenStopped")
+        }
     }
 
     override fun onStart() {
         super.onStart()
         binding.frameView.onResume()
         viewModel.resumeFrameBufferUpdates()
+        onStartTime = SystemClock.uptimeMillis()
     }
 
     override fun onStop() {
@@ -123,11 +132,13 @@ class VncActivity : AppCompatActivity() {
         virtualKeys.releaseMetaKeys()
         binding.frameView.onPause()
         viewModel.pauseFrameBufferUpdates()
+        wasConnectedWhenStopped = viewModel.state.value.isConnected
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelable(PROFILE_KEY, viewModel.profile)
+        outState.putBoolean("wasConnectedWhenStopped", wasConnectedWhenStopped || viewModel.state.value.isConnected)
     }
 
     private fun loadViewModel(savedState: Bundle?): Boolean {
@@ -214,7 +225,18 @@ class VncActivity : AppCompatActivity() {
 
     private var autoReconnecting = false
     private fun autoReconnect(state: VncViewModel.State) {
-        if (autoReconnecting || state != VncViewModel.State.Disconnected || !viewModel.pref.server.autoReconnect)
+        if (!state.isDisconnected)
+            return
+
+        // If disconnected when coming back from background, try to reconnect immediately
+        if (wasConnectedWhenStopped && (SystemClock.uptimeMillis() - onStartTime) in 0..2000) {
+            Log.d(javaClass.simpleName, "Disconnected while in background, reconnecting ...")
+            retryConnection()
+            @Suppress("DEPRECATION")
+            overridePendingTransition(0, 0)
+        }
+
+        if (autoReconnecting || !viewModel.pref.server.autoReconnect)
             return
 
         autoReconnecting = true
