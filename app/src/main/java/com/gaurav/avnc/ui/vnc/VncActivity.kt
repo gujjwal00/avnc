@@ -125,6 +125,13 @@ class VncActivity : AppCompatActivity() {
         binding.frameView.onResume()
         viewModel.resumeFrameBufferUpdates()
         onStartTime = SystemClock.uptimeMillis()
+
+        // Refresh framebuffer on activity restart:
+        // - It forces read/write on the socket. This allows us to verify the socket, which might have
+        //   been closed by the server while app process was frozen in background
+        // - It also attempts to fix some unusual cases of old updates requests being lost while AVNC
+        //   was frozen by the system
+        if (wasConnectedWhenStopped) viewModel.refreshFrameBuffer()
     }
 
     override fun onStop() {

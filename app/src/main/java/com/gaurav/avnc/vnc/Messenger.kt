@@ -95,4 +95,8 @@ class Messenger(private val client: VncClient) {
     fun setDesktopSize(width: Int, height: Int) {
         execute { client.setDesktopSize(width, height) }
     }
+
+    fun refreshFrameBuffer() {
+        execute { client.refreshFrameBuffer() }
+    }
 }

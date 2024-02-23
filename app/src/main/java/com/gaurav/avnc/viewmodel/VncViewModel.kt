@@ -380,6 +380,10 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
         //client.setAutomaticFrameBufferUpdates(true)
     }
 
+    fun refreshFrameBuffer() {
+        messenger.refreshFrameBuffer()
+    }
+
     /**************************************************************************
      * [VncClient.Observer] Implementation
      **************************************************************************/
