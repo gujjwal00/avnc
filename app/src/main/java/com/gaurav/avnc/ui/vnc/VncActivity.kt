@@ -16,6 +16,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.os.SystemClock
 import android.util.Log
 import android.util.Rational
@@ -27,6 +28,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.BundleCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
@@ -45,11 +47,13 @@ import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isDisconnected
 import com.gaurav.avnc.vnc.VncUri
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import java.lang.ref.WeakReference
 
 /********** [VncActivity] startup helpers *********************************/
 
 private const val PROFILE_KEY = "com.gaurav.avnc.server_profile"
+private const val FRAME_STATE_KEY = "com.gaurav.avnc.frame_state"
 
 fun createVncIntent(context: Context, profile: ServerProfile): Intent {
     return Intent(context, VncActivity::class.java).apply {
@@ -65,6 +69,12 @@ fun startVncActivity(source: Activity, uri: VncUri) {
     startVncActivity(source, uri.toServerProfile())
 }
 
+@Parcelize
+private data class SavedFrameState(val frameX: Float, val frameY: Float, val zoom1: Float, val zoom2: Float) : Parcelable
+
+private fun startVncActivity(source: Activity, profile: ServerProfile, frameState: SavedFrameState) {
+    source.startActivity(createVncIntent(source, profile).also { it.putExtra(FRAME_STATE_KEY, frameState) })
+}
 /**************************************************************************/
 
 
@@ -163,11 +173,20 @@ class VncActivity : AppCompatActivity() {
         return true
     }
 
-    private fun retryConnection() {
+    private fun retryConnection(seamless: Boolean = false) {
         //We simply create a new activity to force creation of new ViewModel
         //which effectively restarts the connection.
         if (!isFinishing) {
-            startVncActivity(this, viewModel.profile)
+            val savedFrameState = viewModel.frameState.let {
+                SavedFrameState(frameX = it.frameX, frameY = it.frameY, zoom1 = it.zoomScale1, zoom2 = it.zoomScale2)
+            }
+
+            startVncActivity(this, viewModel.profile, savedFrameState)
+
+            if (seamless) {
+                @Suppress("DEPRECATION")
+                overridePendingTransition(0, 0)
+            }
             finish()
         }
     }
@@ -213,8 +232,10 @@ class VncActivity : AppCompatActivity() {
         updateStatusContainerVisibility(isConnected)
         autoReconnect(newState)
 
-        if (isConnected && !restoredFromBundle)
+        if (isConnected && !restoredFromBundle) {
             incrementUseCount()
+            restoreFrameState()
+        }
     }
 
     private fun incrementUseCount() {
@@ -230,6 +251,15 @@ class VncActivity : AppCompatActivity() {
                 .withEndAction { binding.statusContainer.isVisible = !isConnected }
     }
 
+    private fun restoreFrameState() {
+        intent.extras?.let { extras ->
+            BundleCompat.getParcelable(extras, FRAME_STATE_KEY, SavedFrameState::class.java)?.let {
+                viewModel.setZoom(it.zoom1, it.zoom2)
+                viewModel.panFrame(it.frameX, it.frameY)
+            }
+        }
+    }
+
     private var autoReconnecting = false
     private fun autoReconnect(state: VncViewModel.State) {
         if (!state.isDisconnected)
@@ -238,9 +268,7 @@ class VncActivity : AppCompatActivity() {
         // If disconnected when coming back from background, try to reconnect immediately
         if (wasConnectedWhenStopped && (SystemClock.uptimeMillis() - onStartTime) in 0..2000) {
             Log.d(javaClass.simpleName, "Disconnected while in background, reconnecting ...")
-            retryConnection()
-            @Suppress("DEPRECATION")
-            overridePendingTransition(0, 0)
+            retryConnection(true)
         }
 
         if (autoReconnecting || !viewModel.pref.server.autoReconnect)

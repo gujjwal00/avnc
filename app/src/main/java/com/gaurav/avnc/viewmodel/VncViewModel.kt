@@ -288,6 +288,11 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
         frameViewRef.get()?.requestRender()
     }
 
+    fun setZoom(zoom1: Float, zoom2: Float) {
+        frameState.setZoom(zoom1, zoom2)
+        frameViewRef.get()?.requestRender()
+    }
+
     fun panFrame(deltaX: Float, deltaY: Float) {
         frameState.pan(deltaX, deltaY)
         frameViewRef.get()?.requestRender()
