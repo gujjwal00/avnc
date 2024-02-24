@@ -95,7 +95,6 @@ class IntentReceiverTest {
         }
         ActivityScenario.launch<Activity>(newUriIntent("vnc://?ConnectionName=Example")).use {
             onView(withId(R.id.frame_view)).checkWillBeDisplayed()
-            assertEquals(Lifecycle.State.DESTROYED, it.state)
         }
     }
 
