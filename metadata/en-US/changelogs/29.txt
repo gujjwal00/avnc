@@ -1,0 +1,7 @@
+* Added option to control toolbar opening with swipe-in gesture
+* Restored Repeater support
+* Cache unlocked SSH keys in memory
+* Fixed occasional flickering in viewer
+* Reconnect automatically if disconnected in background
+* Improved clipboard sync handling, fixing few ANRs
+* Improved reliability of server discovery
