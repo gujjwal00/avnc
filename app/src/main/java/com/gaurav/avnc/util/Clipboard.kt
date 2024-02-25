@@ -13,6 +13,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.util.Log
 import androidx.core.content.ContextCompat
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -35,6 +36,8 @@ suspend fun setClipboardText(context: Context, text: String): Boolean {
                 success = true
             }
         }
+    } catch (e: CancellationException) {
+        throw e
     } catch (t: Throwable) {
         Log.e("ClipboardUtil", "Could not copy text to clipboard.", t)
     }
@@ -53,6 +56,8 @@ suspend fun getClipboardText(context: Context): String? {
                 result = it.primaryClip?.getItemAt(0)?.text?.toString()
             }
         }
+    } catch (e: CancellationException) {
+        throw e
     } catch (t: Throwable) {
         Log.e("ClipboardUtil", "Could not retrieve text from clipboard.", t)
     }
