@@ -12,21 +12,21 @@ import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
 import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers.*
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasDataString
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.gaurav.avnc.EmptyDatabaseRule
 import com.gaurav.avnc.R
-import com.gaurav.avnc.TestServer
-import com.gaurav.avnc.checkWillBeDisplayed
+import com.gaurav.avnc.VncSessionScenario
 import com.gaurav.avnc.doClick
-import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.about.AboutActivity
 import com.gaurav.avnc.ui.prefs.PrefsActivity
-import kotlinx.coroutines.runBlocking
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.core.AllOf.allOf
 import org.junit.After
@@ -105,12 +105,16 @@ class AutoConnectTest {
 
     @Test
     fun autoConnectOnStartup() {
-        val server = TestServer().apply { start() }
-        val profile = ServerProfile(host = server.host, port = server.port).apply { fConnectOnAppStart = true }
-        runBlocking { dbRule.db.serverProfileDao.save(profile) }
+        val vncSession = VncSessionScenario()
+        vncSession.profile.fConnectOnAppStart = true
+        vncSession.saveProfileToDB(dbRule.db)
+                .suppressViewerHelp()
+                .startServer()
         ActivityScenario.launch(HomeActivity::class.java).use {
             // Starting HomeActivity should automatically launch the connection
-            onView(withId(R.id.frame_view)).checkWillBeDisplayed()
+            vncSession.assertConnected()
+            Espresso.pressBack()
         }
+        vncSession.stop()
     }
 }

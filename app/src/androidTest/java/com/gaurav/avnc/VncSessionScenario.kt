@@ -74,7 +74,7 @@ class VncSessionScenario {
         activityScenario!!.onActivity(action)
     }
 
-    private fun suppressViewerHelp() {
+    fun suppressViewerHelp() = apply {
         targetPrefs.edit { putBoolean("run_info_has_shown_viewer_help", true) }
     }
 }
