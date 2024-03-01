@@ -1,0 +1,2 @@
+* Snap zoom to 100%
+* Fix possible crash when using SSH tunnel
