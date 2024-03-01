@@ -208,4 +208,58 @@ class FrameStateTest {
         assertEquals(-2f, snapshot.frameX)
         assertEquals(-3f, snapshot.frameY)
     }
+
+
+    /*********************** Snapping ****************************************/
+    @Test
+    fun noSnappingInInitialState() {
+        val state = FrameState()
+
+        state.updateZoom(1.02f)
+        assertEquals(1.02f, state.zoomScale)
+
+        state.setZoom(1f, 1f)
+        state.updateZoom(.98f)
+        assertEquals(.98f, state.zoomScale)
+    }
+
+    @Test
+    fun snapUpWhenGoingBelow100Percent() {
+        val state = FrameState()
+
+        state.setZoom(2f, 2f)
+        assertEquals(2f, state.zoomScale)
+
+        state.updateZoom(1.5f / 2f)
+        assertEquals(1.5f, state.zoomScale)
+
+        state.updateZoom(1f / 1.5f)
+        assertEquals(1f, state.zoomScale)
+
+        state.updateZoom(.9f / 1f)
+        assertEquals(1f, state.zoomScale) // 90% should be snapped-up to 100%
+
+        state.updateZoom(.5f)  // Decreased too much,
+        assertTrue(state.zoomScale < 1)  // should no longer be snapped
+    }
+
+    @Test
+    fun snapDownWhenGoingAbove100Percent() {
+        val state = FrameState()
+
+        state.setZoom(.5f, .5f)
+        assertEquals(.5f, state.zoomScale)
+
+        state.updateZoom(.8f / .5f)
+        assertEquals(.8f, state.zoomScale)
+
+        state.updateZoom(1f / .8f)
+        assertEquals(1f, state.zoomScale)
+
+        state.updateZoom(1.1f / 1f)
+        assertEquals(1f, state.zoomScale) // 110% should be snapped-down to 100%
+
+        state.updateZoom(2f)   // Increased too much,
+        assertTrue(state.zoomScale > 1)  // should no longer be snapped
+    }
 }

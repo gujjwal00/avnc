@@ -11,6 +11,7 @@ package com.gaurav.avnc.ui.vnc
 import android.graphics.PointF
 import android.graphics.RectF
 import com.gaurav.avnc.ui.vnc.FrameState.Snapshot
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -188,8 +189,9 @@ class FrameState(
      */
     fun updateZoom(scaleFactor: Float): Float = withLock {
         val oldScale = zoomScale
+        val newScale = zoomScale * scaleFactor
 
-        zoomScale *= scaleFactor
+        zoomScale = snapZoom(oldScale, newScale)
         coerceValues()
 
         return zoomScale / oldScale //Applied scale factor
@@ -254,6 +256,13 @@ class FrameState(
                         vpWidth = vpWidth, vpHeight = vpHeight, scale = scale)
     }
 
+    /**
+     * Signaled when gesture ends
+     */
+    fun onGestureStop() {
+        resetSnapState()
+    }
+
     private fun calculateBaseScale() {
         if (fbHeight == 0F || fbWidth == 0F || windowHeight == 0F)
             return  //Not enough info yet
@@ -287,5 +296,51 @@ class FrameState(
 
         return if (diff >= 0) diff / 2 + safeMin       //Frame will be smaller than safe area, so center it
         else current.coerceIn(diff + safeMin, safeMin) //otherwise, make sure safe area is completely filled.
+    }
+
+
+    /**
+     * Zoom scale snapping: It temporarily stops the scale at 100% when user is zooming.
+     * This way user don't have to reset zoom via "Reset zoom" button in toolbar.
+     */
+    private enum class Snap { None, Up, Down }
+
+    private var snapMode = Snap.None
+    private val snapLimit = 0.3f  // ±30% zoom
+    private var snapDelta = 0f
+
+    private fun snapZoom(oldZoom: Float, newZoom: Float): Float {
+        val deltaToOne = abs(newZoom - 1)
+        var result = newZoom
+
+        if (snapMode == Snap.Up) {
+            if (newZoom < 1) {                // Until snap limit is reached, snap up zoom to 1.0
+                snapDelta += deltaToOne
+                if (snapDelta < snapLimit)
+                    result = 1f
+            } else                            // Not crossed below 1.0 yet
+                snapDelta = 0f
+        }
+
+        if (snapMode == Snap.Down) {
+            if (newZoom > 1) {                // Until snap limit is reached, snap down zoom to 1.0
+                snapDelta += deltaToOne
+                if (snapDelta < snapLimit)
+                    result = 1f
+            } else                            // Not crossed above 1.0 yet
+                snapDelta = 0f
+        }
+
+        if (oldZoom > 1 && newZoom < oldZoom) // Greater than 1 but decreasing, so snap when going below 1
+            snapMode = Snap.Up
+        if (oldZoom < 1 && newZoom > oldZoom) // Lower than 1 but increasing, so snap when going above 1
+            snapMode = Snap.Down
+
+        return result
+    }
+
+    private fun resetSnapState() {
+        snapMode = Snap.None
+        snapDelta = 0f
     }
 }

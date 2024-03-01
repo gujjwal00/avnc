@@ -127,7 +127,10 @@ class Dispatcher(private val activity: VncActivity) {
      **************************************************************************/
 
     fun onGestureStart() = config.defaultMode.onGestureStart()
-    fun onGestureStop(p: PointF) = config.defaultMode.onGestureStop(p)
+    fun onGestureStop(p: PointF) {
+        config.defaultMode.onGestureStop(p)
+        viewModel.frameState.onGestureStop()
+    }
 
     fun onTap1(p: PointF) = config.tap1Action(p)
     fun onTap2(p: PointF) = config.tap2Action(p)
