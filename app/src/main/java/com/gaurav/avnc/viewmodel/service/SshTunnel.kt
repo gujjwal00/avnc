@@ -223,7 +223,6 @@ class SshTunnel(private val viewModel: VncViewModel) {
                     cleanupJob = owner.lifecycleScope.launch {
                         delay(15 * 60 * 1000)
                         synchronized(cache) {
-                            cache.values.forEach { it.private.destroy() }
                             cache.clear()
                         }
                     }
