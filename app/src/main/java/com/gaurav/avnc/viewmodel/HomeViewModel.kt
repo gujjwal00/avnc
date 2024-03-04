@@ -62,6 +62,10 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
      */
     fun startConnection(profile: ServerProfile) = newConnectionEvent.fire(profile)
 
+    fun maybeConnectOnAppStart() = launch {
+        serverProfileDao.getConnectableOnAppStart().firstOrNull()?.let { startConnection(it) }
+    }
+
     /**************************************************************************
      * Server Discovery
      *

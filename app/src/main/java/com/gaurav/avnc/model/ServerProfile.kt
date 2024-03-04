@@ -191,6 +191,7 @@ data class ServerProfile(
         private const val FLAG_LEGACY_KEYSYM = 0x01L
         private const val FLAG_BUTTON_UP_DELAY = 0x02L
         private const val FLAG_ZOOM_LOCKED = 0x04L
+        const val FLAG_CONNECT_ON_APP_START = 0x08L
     }
 
     /**
@@ -221,4 +222,10 @@ data class ServerProfile(
      */
     @IgnoredOnParcel
     var fZoomLocked by Flag(FLAG_ZOOM_LOCKED)
+
+    /**
+     * Try to automatically connect to this server when app starts.
+     */
+    @IgnoredOnParcel
+    var fConnectOnAppStart by Flag(FLAG_CONNECT_ON_APP_START)
 }

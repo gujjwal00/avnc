@@ -93,6 +93,12 @@
                 android:src="@drawable/ic_visibility"
                 app:isVisible="@{profile.viewOnly}" />
 
+            <ImageView
+                style="@style/ServerCardHintIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_auto_connect"
+                app:isVisible="@{profile.fConnectOnAppStart}" />
+
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

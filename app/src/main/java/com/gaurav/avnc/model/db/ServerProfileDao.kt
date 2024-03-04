@@ -35,6 +35,9 @@ interface ServerProfileDao {
     @Query("SELECT * FROM profiles WHERE name = :name")
     suspend fun getByName(name: String): List<ServerProfile>
 
+    @Query("SELECT * FROM profiles WHERE flags & ${ServerProfile.FLAG_CONNECT_ON_APP_START} != 0")
+    suspend fun getConnectableOnAppStart(): List<ServerProfile>
+
     @Query("SELECT * FROM profiles WHERE name LIKE :query OR host LIKE :query OR sshHost LIKE :query ORDER BY useCount DESC")
     fun search(query: String): LiveData<List<ServerProfile>>
 

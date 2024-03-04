@@ -143,6 +143,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/use_repeater" />
 
+                <!--Auto Connect-->
+                <CheckBox
+                    android:id="@+id/auto_connect"
+                    style="@style/FormField.CheckBox"
+                    android:checked="@={viewModel.profile.fConnectOnAppStart}"
+                    android:text="@string/title_connect_on_app_start"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view_only" />
+
                 <!--Key Compatibility mode-->
                 <CheckBox
                     android:id="@+id/key_compat_mode"
@@ -151,7 +161,7 @@
                     android:text="@string/title_key_compat_mode"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view_only" />
+                    app:layout_constraintTop_toBottomOf="@id/auto_connect" />
 
                 <ImageButton
                     android:id="@+id/key_compat_mode_help_btn"

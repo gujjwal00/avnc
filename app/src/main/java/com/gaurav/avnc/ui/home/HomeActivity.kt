@@ -73,6 +73,7 @@ class HomeActivity : AppCompatActivity() {
 
         setupSplashTheme()
         showWelcomeMsg()
+        maybeAutoConnect(savedInstanceState == null)
     }
 
     override fun onStart() {
@@ -193,6 +194,11 @@ class HomeActivity : AppCompatActivity() {
                 else -> splashScreen.setSplashScreenTheme(R.style.App_SplashTheme)
             }
         }
+    }
+
+    private fun maybeAutoConnect(isNewStart: Boolean) {
+        if (isNewStart)
+            viewModel.maybeConnectOnAppStart()
     }
 
     /************************************************************************************
