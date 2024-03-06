@@ -11,6 +11,7 @@ package com.gaurav.avnc.ui.vnc
 import android.app.Dialog
 import android.os.Bundle
 import android.util.ArrayMap
+import android.util.Log
 import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
@@ -42,6 +43,14 @@ class LoginFragment : DialogFragment() {
     private val loginInfo by lazy { getLoginInfoFromProfile(viewModel.profile) }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        if (savedInstanceState != null && viewModel.loginInfoRequest.value == null) {
+            Log.i(javaClass.simpleName, "Activity is being recreated and old ViewModel is gone, removing stale login dialog")
+            showsDialog = false
+            dismiss()
+            return Dialog(requireContext()) // Can't return null
+        }
+
+        check(viewModel.loginInfoRequest.value != null) { "Login fragment invoked without a login type" }
         binding = FragmentCredentialBinding.inflate(layoutInflater, null, false)
 
         binding.loginInfo = loginInfo
