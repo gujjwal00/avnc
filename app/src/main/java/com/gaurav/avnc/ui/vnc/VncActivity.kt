@@ -232,6 +232,9 @@ class VncActivity : AppCompatActivity() {
         updateStatusContainerVisibility(isConnected)
         autoReconnect(newState)
 
+        if (isConnected)
+            ViewerHelp().onConnected(this)
+
         if (isConnected && !restoredFromBundle) {
             incrementUseCount()
             restoreFrameState()

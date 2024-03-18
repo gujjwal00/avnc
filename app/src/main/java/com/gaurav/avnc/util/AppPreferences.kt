@@ -86,9 +86,9 @@ class AppPreferences(context: Context) {
      * These are not exposed to user.
      */
     inner class RunInfo {
-        var hasConnectedSuccessfully: Boolean
-            get() = prefs.getBoolean("run_info_has_connected_successfully", false)
-            set(value) = prefs.edit { putBoolean("run_info_has_connected_successfully", value) }
+        var hasShownViewerHelp: Boolean
+            get() = prefs.getBoolean("run_info_has_shown_viewer_help", false)
+            set(value) = prefs.edit { putBoolean("run_info_has_shown_viewer_help", value) }
 
         var hasShownV2WelcomeMsg
             get() = prefs.getBoolean("run_info_has_shown_v2_welcome_msg", false)
@@ -156,6 +156,11 @@ class AppPreferences(context: Context) {
                 remove("gesture_drag")
                 putString("gesture_long_press_swipe", it)
             }
+        }
+
+        if (prefs.getBoolean("run_info_has_connected_successfully", false)) prefs.edit {
+            remove("run_info_has_connected_successfully")
+            putBoolean("run_info_has_shown_viewer_help", true)
         }
     }
 }

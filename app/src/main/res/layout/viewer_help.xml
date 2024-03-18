@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#bb121212"
+        android:orientation="vertical"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark">
+
+        <TextView
+            style="@style/TipView"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/msg_viewer_tips_label" />
+
+
+        <LinearLayout
+            android:id="@+id/page_host"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:animateLayoutChanges="true"
+            android:orientation="horizontal">
+
+            <!--Page 1-->
+            <LinearLayout
+                android:id="@+id/page1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="30dp">
+
+                <ImageView
+                    android:id="@+id/toolbar_animation"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:importantForAccessibility="no"
+                    app:srcCompat="@drawable/viewer_help_toolbar_animation" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="@dimen/margin_normal"
+                    android:gravity="center"
+                    android:text="@string/tip_toolbar_usage" />
+
+                <Button
+                    android:id="@+id/next_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/margin_large"
+                    android:text="@string/title_next" />
+            </LinearLayout>
+
+            <!--Page 2-->
+            <LinearLayout
+                android:id="@+id/page2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="30dp">
+
+                <ImageView
+                    android:id="@+id/navbar_animation"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:importantForAccessibility="no"
+                    app:srcCompat="@drawable/viewer_help_navbar_animation" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="@dimen/margin_normal"
+                    android:gravity="center"
+                    android:text="@string/tip_session_end" />
+
+
+                <Button
+                    android:id="@+id/end_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/margin_large"
+                    android:text="@string/title_got_it" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

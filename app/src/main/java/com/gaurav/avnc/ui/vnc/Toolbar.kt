@@ -132,27 +132,10 @@ class Toolbar(private val activity: VncActivity, private val dispatcher: Dispatc
     }
 
     private fun onStateChange(state: State) {
-        if (state.isConnected)
-            highlightForFirstTimeUser()
-
         if (Build.VERSION.SDK_INT >= 29)
             updateGestureExclusionRect()
 
         updateLockMode(state.isConnected)
-    }
-
-    /**
-     * Open the drawer for couple of seconds and then close it.
-     */
-    private fun highlightForFirstTimeUser() {
-        if (!viewModel.pref.runInfo.hasConnectedSuccessfully) {
-            viewModel.pref.runInfo.hasConnectedSuccessfully = true
-            activity.lifecycleScope.launch {
-                open()
-                delay(2000)
-                close()
-            }
-        }
     }
 
     private fun updateLockMode(isConnected: Boolean) {

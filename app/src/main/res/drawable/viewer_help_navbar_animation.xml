@@ -1,0 +1,185 @@
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+
+        <vector
+            android:width="200dp"
+            android:height="200dp"
+            android:viewportWidth="200"
+            android:viewportHeight="200">
+            <path
+                android:fillColor="#a0a0a0"
+                android:pathData="M0,0h200v50h-200z"
+                android:strokeWidth="0.127498" />
+            <path
+                android:fillColor="#3e3e3e"
+                android:pathData="M0,50h200v150h-200z"
+                android:strokeWidth="0.220834" />
+            <path
+                android:fillColor="#00000000"
+                android:pathData="M19.33,25H180.67"
+                android:strokeWidth="19.3225"
+                android:strokeColor="#d6d6d6"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="miter" />
+            <path
+                android:fillColor="#a1a1a1"
+                android:pathData="M10.02,58.81L189.98,58.81A2.97,3.5 0,0 1,192.95 62.31L192.95,79.04A2.97,3.5 0,0 1,189.98 82.54L10.02,82.54A2.97,3.5 0,0 1,7.05 79.04L7.05,62.31A2.97,3.5 0,0 1,10.02 58.81z" />
+            <path
+                android:fillColor="#a1a1a1"
+                android:pathData="M10.02,89.98L189.98,89.98A2.97,3.5 0,0 1,192.95 93.48L192.95,110.22A2.97,3.5 0,0 1,189.98 113.72L10.02,113.72A2.97,3.5 0,0 1,7.05 110.22L7.05,93.48A2.97,3.5 0,0 1,10.02 89.98z" />
+            <path
+                android:fillColor="#b2b2b2"
+                android:pathData="M184.3,158.38m-9.76,0a9.76,9.76 0,1 1,19.51 0a9.76,9.76 0,1 1,-19.51 0" />
+
+            <group android:name="viewer">
+
+                <path
+                    android:fillColor="#a8a8a8"
+                    android:pathData="M0,0h200v200h-200z"
+                    android:strokeWidth="0.254994" />
+                <path
+                    android:fillColor="#d7d7d7"
+                    android:pathData="M18.45,29.96L31.67,29.96A3.56,3.5 0,0 1,35.23 33.46L35.23,44.59A3.56,3.5 0,0 1,31.67 48.09L18.45,48.09A3.56,3.5 0,0 1,14.89 44.59L14.89,33.46A3.56,3.5 0,0 1,18.45 29.96z" />
+                <path
+                    android:fillColor="#d7d7d7"
+                    android:pathData="M18.45,54.35L31.67,54.35A3.56,3.5 0,0 1,35.23 57.85L35.23,68.97A3.56,3.5 0,0 1,31.67 72.47L18.45,72.47A3.56,3.5 0,0 1,14.89 68.97L14.89,57.85A3.56,3.5 0,0 1,18.45 54.35z" />
+                <path
+                    android:fillColor="#d7d7d7"
+                    android:pathData="M25.06,88.36m-9.76,0a9.76,9.76 0,1 1,19.51 0a9.76,9.76 0,1 1,-19.51 0" />
+                <path
+                    android:fillColor="#d7d7d7"
+                    android:pathData="M25.06,112.75m-9.76,0a9.76,9.76 0,1 1,19.51 0a9.76,9.76 0,1 1,-19.51 0" />
+                <path
+                    android:fillColor="#d7d7d7"
+                    android:pathData="M43.12,29.96L56.34,29.96A3.56,3.5 0,0 1,59.9 33.46L59.9,44.59A3.56,3.5 0,0 1,56.34 48.09L43.12,48.09A3.56,3.5 0,0 1,39.56 44.59L39.56,33.46A3.56,3.5 0,0 1,43.12 29.96z" />
+                <path
+                    android:fillColor="#d7d7d7"
+                    android:pathData="M49.73,63.41m-9.76,0a9.76,9.76 0,1 1,19.51 0a9.76,9.76 0,1 1,-19.51 0" />
+                <path
+                    android:fillColor="#d7d7d7"
+                    android:pathData="M9.22,175.76L192.1,175.76A3.56,3.5 0,0 1,195.66 179.26L195.66,192.26A3.56,3.5 0,0 1,192.1 195.76L9.22,195.76A3.56,3.5 0,0 1,5.66 192.26L5.66,179.26A3.56,3.5 0,0 1,9.22 175.76z" />
+                <path
+                    android:fillColor="#f2f2f2"
+                    android:pathData="M14.33,179.76L19.22,179.76A3.56,3.5 0,0 1,22.78 183.26L22.78,188.26A3.56,3.5 0,0 1,19.22 191.76L14.33,191.76A3.56,3.5 0,0 1,10.78 188.26L10.78,183.26A3.56,3.5 0,0 1,14.33 179.76z" />
+                <path
+                    android:fillColor="#f2f2f2"
+                    android:pathData="M33.29,185.76m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0" />
+                <path
+                    android:fillColor="#f2f2f2"
+                    android:pathData="M169.39,179.76L187.27,179.76A3.56,3.5 0,0 1,190.83 183.26L190.83,188.26A3.56,3.5 0,0 1,187.27 191.76L169.39,191.76A3.56,3.5 0,0 1,165.83 188.26L165.83,183.26A3.56,3.5 0,0 1,169.39 179.76z" />
+            </group>
+
+            <group android:name="navbar">
+                <path
+                    android:name="nav_opener"
+                    android:fillAlpha="0"
+                    android:fillColor="#315eff"
+                    android:pathData="M100,190m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
+                <path
+                    android:fillColor="#c2c2c2"
+                    android:pathData="M-0,230h200v25h-200z" />
+                <path
+                    android:fillColor="#666666"
+                    android:pathData="M100.75,242.5m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0" />
+                <path
+                    android:fillColor="#666666"
+                    android:pathData="M38.79,236.5L43.68,236.5A3.56,3.5 0,0 1,47.24 240L47.24,245A3.56,3.5 0,0 1,43.68 248.5L38.79,248.5A3.56,3.5 0,0 1,35.24 245L35.24,240A3.56,3.5 0,0 1,38.79 236.5z" />
+                <path
+                    android:fillColor="#666666"
+                    android:pathData="m165.76,249 l-10,-6.5 10,-6.5z" />
+
+            </group>
+            <path
+                android:name="nav_tapper"
+                android:fillAlpha="0"
+                android:fillColor="#315eff"
+                android:pathData="M160.76,187.25m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
+        </vector>
+
+    </aapt:attr>
+
+    <target android:name="nav_opener">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <objectAnimator
+                    android:duration="100"
+                    android:propertyName="fillAlpha"
+                    android:startOffset="500"
+                    android:valueFrom="0"
+                    android:valueTo="1" />
+
+                <objectAnimator
+                    android:duration="100"
+                    android:propertyName="fillAlpha"
+                    android:startOffset="2000"
+                    android:valueFrom="1"
+                    android:valueTo="0" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <target android:name="navbar">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <objectAnimator
+                    android:duration="1000"
+                    android:propertyName="translateY"
+                    android:startOffset="1000"
+                    android:valueFrom="0"
+                    android:valueTo="-55" />
+
+                <!--Reset-->
+                <objectAnimator
+                    android:duration="0"
+                    android:propertyName="translateY"
+                    android:startOffset="3600"
+                    android:valueFrom="-55"
+                    android:valueTo="0" />
+
+            </set>
+        </aapt:attr>
+    </target>
+
+    <target android:name="nav_tapper">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <objectAnimator
+                    android:duration="100"
+                    android:propertyName="fillAlpha"
+                    android:startOffset="3000"
+                    android:valueFrom="0"
+                    android:valueTo="1" />
+
+                <objectAnimator
+                    android:duration="100"
+                    android:propertyName="fillAlpha"
+                    android:startOffset="200"
+                    android:valueFrom="1"
+                    android:valueTo="0" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <target android:name="viewer">
+        <aapt:attr name="android:animation">
+            <set android:ordering="sequentially">
+                <objectAnimator
+                    android:duration="300"
+                    android:interpolator="@android:anim/accelerate_interpolator"
+                    android:propertyName="translateX"
+                    android:startOffset="3800"
+                    android:valueFrom="0"
+                    android:valueTo="200" />
+
+                <!--Reset-->
+                <objectAnimator
+                    android:duration="0"
+                    android:propertyName="translateX"
+                    android:startOffset="1500"
+                    android:valueFrom="200"
+                    android:valueTo="0" />
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

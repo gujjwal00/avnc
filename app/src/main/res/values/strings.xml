@@ -55,6 +55,8 @@
     <string name="title_unlock_dialog">Unlock to continue</string>
     <string name="title_automatic">Automatic</string>
     <string name="title_none">None</string>
+    <string name="title_next">Next</string>
+    <string name="title_got_it">Got it</string>
 
 
     <string name="hint_urlbar">Connect to a Server</string>
@@ -94,6 +96,9 @@
     <string name="tip_empty_server_list">Server list is empty.\nClick \'<b>+</b>\' to add a server, or\nuse the top address bar to connect directly.</string>
     <string name="tip_urlbar">You can enter IP address, hostname, or \'vnc://\' URI.</string>
     <string name="tip_discovery">Discovery can automatically find supported servers\nrunning on your network.</string>
+    <string name="msg_viewer_tips_label">Couple of tips to get you started</string>
+    <string name="tip_toolbar_usage">Swipe-in from edge to open the toolbar. Use it to open keyboard, change gesture style, or reset zoom.</string>
+    <string name="tip_session_end">To end a session, tap on the Back navigation button, just like you would go back from a playing video.</string>
 
     <!-- Accessibility descriptions -->
     <string name="desc_navigation_btn">Open navigation drawer</string>

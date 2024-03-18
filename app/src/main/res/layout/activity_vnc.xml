@@ -52,6 +52,7 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true" />
 
+            <!--A View containing helpful tips will be dynamically inserted here for new users -->
 
             <!--Drawer-->
             <include
