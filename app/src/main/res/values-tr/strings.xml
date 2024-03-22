@@ -204,4 +204,10 @@
     <string name="pref_keep_screen_on">Ekranı açık tut</string>
     <string name="pref_toolbar_open_with_swipe">Açmak için kenardan içeri kaydır</string>
     <string name="pref_show_gesture_style_toggle">Hareket biçimi geçişini göster</string>
+    <string name="title_connect_on_app_start">Uygulama başladığında otomatik bağlan</string>
+    <string name="title_next">İleri</string>
+    <string name="title_got_it">Anladım</string>
+    <string name="msg_viewer_tips_label">Başlamanıza yardımcı olacak birkaç ipucu</string>
+    <string name="tip_toolbar_usage">Araç çubuğunu açmak için kenardan içeri kaydırın. Klavyeyi açmak, hareket biçimini değiştirmek veya yakınlaştırmayı sıfırlamak için kullanın.</string>
+    <string name="tip_session_end">Oturumu sonlandırmak için, tıpkı oynatılan bir videodan geri döndüğünüz gibi Geri gezinme düğmesine dokunun.</string>
 </resources>

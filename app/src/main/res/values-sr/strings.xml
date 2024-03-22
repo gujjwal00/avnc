@@ -186,4 +186,14 @@
     <string name="pref_display_cutout">Исцртавај иза одсека приказа (опитно)</string>
     <string name="pref_orientation">Усмерење заслона</string>
     <string name="pref_orientation_option_auto">Самостално</string>
+    <string name="hint_ssh_host">Домаћин ССХ-а</string>
+    <string name="hint_ssh_port">Прикључник ССХ-а</string>
+    <string name="msg_zoom_locked">Увећавање је закључано</string>
+    <string name="msg_zoom_unlocked">Увећавање је откључано</string>
+    <string name="msg_pk_password_not_saved">АВНЦ више не чува личне кључеве лозинки ради побољшања безбедности.</string>
+    <string name="desc_lock_zoom_btn">Закључај увећање</string>
+    <string name="msg_drag_gesture_help">Додељивање дејстава овом покрету ће променити препознавање дугог притиска:
+\n
+\n<b>Стисни-држи-пусти</b> → Дуги стисак
+\n<b>Стисни-држи-бриши</b> Дуги стисак и бриши</string>
 </resources>

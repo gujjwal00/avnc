@@ -10,7 +10,7 @@
     <string name="title_edit_server_profile">Editar servidor</string>
     <string name="title_duplicate">Duplicar</string>
     <string name="title_edit">Editar</string>
-    <string name="title_delete">Apagar</string>
+    <string name="title_delete">Excluir</string>
     <string name="title_copy_host">Copiar host</string>
     <string name="title_copy_name">Copiar nome</string>
     <string name="title_advanced">Avançado</string>
@@ -27,9 +27,9 @@
     <string name="title_key_compat_mode">Enviar eventos de teclado compatíveis</string>
     <string name="title_use_ssh_tunnel">Usar túnel SSH</string>
     <string name="title_unknown_ssh_host">Host SSH desconhecido</string>
-    <string name="title_ssh_host_key_changed">Chave do host de SSH mudou</string>
+    <string name="title_ssh_host_key_changed">Chave do host SSH alterada</string>
     <string name="title_continue">Continuar</string>
-    <string name="title_delete_servers_before_import">Apagar os servidores atuais antes de importar</string>
+    <string name="title_delete_servers_before_import">Excluir os servidores atuais antes de importar</string>
     <string name="title_password">Senha</string>
     <string name="title_use_repeater">Usar repetidor</string>
     <string name="title_private_key">Chave privada</string>
@@ -53,7 +53,7 @@
 \n
 \nO AVNC é de código aberto e sob licença copyleft — feito com a ajuda de muitos colaboradores.</string>
     <string name="msg_server_profile_added">Servidor adicionado</string>
-    <string name="msg_server_profile_deleted">Servidor apagado</string>
+    <string name="msg_server_profile_deleted">Servidor excluído</string>
     <string name="msg_pip_not_supported">Não suportado neste dispositivo</string>
     <string name="msg_loading">Carregando…</string>
     <string name="msg_imported">Importado</string>
@@ -66,7 +66,7 @@
     <string name="tip_empty_server_list">A lista de servidores está vazia.
 \nUse o botão \'<b>+</b>\' para adicionar um servidor, ou
 \nuse a barra de endereço na área superior para conectar diretamente.</string>
-    <string name="tip_urlbar">Você pode digitar o endereço de IP, nome de host ou \'vnc://\' URI.</string>
+    <string name="tip_urlbar">Você pode digitar o endereço IP, nome de host ou \'vnc://\' URI.</string>
     <string name="tip_discovery">A descoberta pode automaticamente encontrar os servidores suportados
 \nexecutados na sua rede.</string>
     <!-- Accessibility descriptions -->
@@ -81,7 +81,7 @@
     <string name="desc_keyboard_btn">Mostrar teclado</string>
     <string name="desc_virtual_keys_btn">Mostrar teclas virtuais</string>
     <string name="desc_reset_zoom_btn">Redefinir zoom</string>
-    <string name="desc_retry_connection_btn">Tente novamente</string>
+    <string name="desc_retry_connection_btn">Reconectar</string>
     <string name="desc_back_btn">Voltar</string>
     <string name="desc_clear_url_btn">Limpar</string>
     <string name="desc_server_url">Endereço do servidor</string>
@@ -112,7 +112,7 @@
     <string name="pref_gesture_action_remote_drag">Arrastar conteúdo remoto</string>
     <string name="pref_gesture_action_open_keyboard">Mostrar teclado</string>
     <string name="pref_theme">Tema</string>
-    <string name="pref_prefer_advanced_editor">Abrir diretamente opções avançadas de servidor</string>
+    <string name="pref_prefer_advanced_editor">Abrir diretamente opções avançadas do servidor</string>
     <string name="pref_sort_server_list">Ordenar servidores salvos pelo nome</string>
     <string name="pref_gesture">Gestos</string>
     <string name="pref_single_tap">Toque único</string>
@@ -140,7 +140,7 @@
     <string name="pref_zoom">Zoom</string>
     <string name="pref_zoom_min">Mínimo</string>
     <string name="pref_zoom_max">Máximo</string>
-    <string name="pref_clipboard_sync">Sincronização do clipboard</string>
+    <string name="pref_clipboard_sync">Sincronizar área de transferência</string>
     <string name="pref_discovery">Descoberta</string>
     <string name="pref_import_export">Importar/Exportar servidores</string>
     <string name="pref_debugging">Depuração</string>
@@ -154,12 +154,12 @@
     <string name="pref_hide_local_cursor">Esconder ponteiro local</string>
     <string name="title_clear">Limpar</string>
     <string name="msg_ptr_hiding_not_supported">Não suportado neste dispositivo</string>
-    <string name="desc_discovery_stop_btn">Parar a descoberta de servidores</string>
+    <string name="desc_discovery_stop_btn">Interromper a descoberta de servidores</string>
     <string name="pref_gesture_style_touchpad_summary">Faça ações no ponteiro</string>
     <string name="pref_mouse_back_action_default">Padrão</string>
     <string name="pref_mouse_back">Botão Voltar</string>
     <string name="pref_discovery_autorun">Execução automática</string>
-    <string name="pref_discovery_autorun_summary">Descubra servidores enquanto estiver na página inicial</string>
+    <string name="pref_discovery_autorun_summary">Descubrir servidores enquanto estiver na página inicial</string>
     <string name="pref_rediscovery_indicator">Destaque servidores redescobertos</string>
     <string name="pref_gesture_style_touchscreen_summary">Faça ações no ponto de contato</string>
     <string name="msg_drag_gesture_help">Ao atribuir ação de gesto de Arrastar você mudará Detecção de toque longo:
@@ -169,14 +169,14 @@
     <string name="pref_swipe_sensitivity">Sensibilidade de deslize</string>
     <string name="pref_orientation">Orientação da tela</string>
     <string name="pref_orientation_option_auto">Automática</string>
-    <string name="pref_orientation_option_portrait">Vertical</string>
-    <string name="pref_orientation_option_landscape">Horizontal</string>
+    <string name="pref_orientation_option_portrait">Modo retrato</string>
+    <string name="pref_orientation_option_landscape">Modo paisagem</string>
     <string name="pref_invert_vertical_scrolling">Inverter rolagem vertical</string>
     <string name="pref_saved_server_lock">Bloquear servidores salvos</string>
     <string name="pref_key_test">Teste de teclado</string>
     <string name="pref_touch_test">Teste de toque</string>
-    <string name="title_image_quality">Qualidade de imagem</string>
-    <string name="title_image_quality_raw">Imagem não processada</string>
+    <string name="title_image_quality">Qualidade da imagem</string>
+    <string name="title_image_quality_raw">Não processar imagem</string>
     <string name="title_vnc_security">Segurança</string>
     <string name="title_unlock_dialog">Desbloqueie para continuar</string>
     <string name="title_automatic">Automático</string>
@@ -185,10 +185,37 @@
     <string name="desc_zoom_options_btn">Opções de zoom</string>
     <string name="desc_save_zoom_btn">Definir zoom atual como padrão</string>
     <string name="pref_gesture_style">Modo de gesto</string>
-    <string name="pref_gesture_style_auto_summary">Baseado em Configurações do app</string>
+    <string name="pref_gesture_style_auto_summary">Baseado nas configurações do aplicativo</string>
     <string name="pref_gesture_style_touchscreen">Touch screen</string>
     <string name="pref_gesture_style_touchpad">Touch pad</string>
     <string name="pref_display_cutout">Desenhe atrás do corte da tela (experimental)</string>
     <string name="pref_saved_server_lock_summary">Requer desbloqueio biométrico/senha para conectar</string>
     <string name="pref_per_orientation_zoom">Zoom separado para cada orientação</string>
+    <string name="title_resize_remote_desktop">Redimensionar sessão remota à janela local</string>
+    <string name="title_orientation">Orientação</string>
+    <string name="msg_button_up_delay_help">Atrasar eventos de clique pode ajudar em alguns casos raros se um aplicativo não estiver respondendo aos cliques.</string>
+    <string name="msg_shortcut_server_deleted">Este servidor foi excluído</string>
+    <string name="pref_double_tap_swipe">Toque duas vezes e deslize</string>
+    <string name="pref_long_press_swipe">Pressione longamente e deslize</string>
+    <string name="title_unlock_private_key">Desbloquear chave privada</string>
+    <string name="title_button_up_delay">Enviar eventos de cliques atrasados</string>
+    <string name="title_ssh_login">Login SSH</string>
+    <string name="pref_keep_screen_on">Manter a tela ligada</string>
+    <string name="pref_auto_reconnect">Reconectar automaticamente</string>
+    <string name="pref_toolbar_open_with_swipe">Deslize na borda para abrir</string>
+    <string name="hint_ssh_host">Host SSH</string>
+    <string name="msg_zoom_locked">Zoom bloqueado</string>
+    <string name="msg_zoom_unlocked">Zoom desbloqueado</string>
+    <string name="msg_zoom_reset_default">Zoom redefinido para o padrão</string>
+    <string name="msg_pk_password_not_saved">AVNC não salva mais senhas de chaves privadas para melhorar a segurança.</string>
+    <string name="desc_lock_zoom_btn">Bloquear zoom</string>
+    <string name="pref_gesture_action_remote_drag_middle">Arraste com o botão do meio</string>
+    <string name="hint_ssh_port">Porta SSH</string>
+    <string name="pref_show_gesture_style_toggle">Mostrar alternador no modo de gesto</string>
+    <string name="title_connect_on_app_start">Conexão automática quando o aplicativo for iniciado</string>
+    <string name="title_got_it">Entendi</string>
+    <string name="tip_session_end">Para encerrar uma sessão, toque no botão de navegação Voltar, da mesma forma que voltaria de um vídeo em reprodução.</string>
+    <string name="title_next">Próximo</string>
+    <string name="msg_viewer_tips_label">Algumas dicas para você começar</string>
+    <string name="tip_toolbar_usage">Deslize a partir da borda para abrir a barra de ferramentas. Use-o para abrir o teclado, alterar o estilo do gesto ou redefinir o zoom.</string>
 </resources>
