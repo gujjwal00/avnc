@@ -293,6 +293,17 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeConfigure(JNIEnv *env, jobject thiz, jl
     client->appData.qualityLevel = image_quality;
     if (use_raw_encoding)
         client->appData.encodingsString = "raw";
+
+    // Change pixel format to match with the default format used by most VNC
+    // servers. Technically, we should not have to this as VNC servers have to
+    // respect whatever pixel format client prefers. But there are some wierd
+    // servers which ignore pixel format sent by client. As a result, users
+    // blame AVNC for not rendering the colors properly.
+    // Note: This change affects how OpenGL Texture for framebuffer is rendered,
+    // and it only works for 24 bit-per-pixel density.
+    client->format.redShift = 16;
+    client->format.greenShift = 8;
+    client->format.blueShift = 0;
 }
 
 extern "C"
@@ -480,6 +491,10 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeUploadFrameTexture(JNIEnv *env, jobject
                      GL_RGBA,
                      GL_UNSIGNED_BYTE,
                      client->frameBuffer);
+
+        // Note: client->frameBuffer data is actually in 'BGRA' format, instead of 'RGBA'.
+        // But OpenGL ES doesn't support that directly. So we use 'GL_RGBA' here, and flip
+        // the components to correct order inside fragment shader.
     }
 
     UNLOCK(ex->mutex);
