@@ -1,0 +1,3 @@
+* Added option to auto-connect to a server on app start
+* Added Viewer help for new users
+* Fixed a possible crash in Login dialog
