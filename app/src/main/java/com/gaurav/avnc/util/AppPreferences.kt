@@ -22,9 +22,9 @@ class AppPreferences(context: Context) {
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
     inner class UI {
-        val theme = LivePref("theme", "system")
+        val theme = LivePrefString("theme", "system")
         val preferAdvancedEditor; get() = prefs.getBoolean("prefer_advanced_editor", false)
-        val sortServerList = LivePref("sort_server_list", false)
+        val sortServerList = LivePrefBoolean("sort_server_list", false)
     }
 
     inner class Viewer {
@@ -78,7 +78,7 @@ class AppPreferences(context: Context) {
         val lockSavedServer; get() = prefs.getBoolean("lock_saved_server", false)
         val autoReconnect; get() = prefs.getBoolean("auto_reconnect", false)
         val discoveryAutorun; get() = prefs.getBoolean("discovery_autorun", true)
-        val rediscoveryIndicator = LivePref("rediscovery_indicator", true)
+        val rediscoveryIndicator = LivePrefBoolean("rediscovery_indicator", true)
     }
 
     /**
@@ -106,37 +106,23 @@ class AppPreferences(context: Context) {
      * For some preference changes we want to provide live feedback to user.
      * This class is used for such scenarios. Based on [LiveData], it notifies
      * the observers whenever the value of given preference is changed.
-     *
-     * For now, each [LivePref] creates a separate change listener, but if
-     * number of [LivePref]s grow, we can optimize by sharing a single listener.
      */
-    inner class LivePref<T>(val key: String, private val defValue: T) : LiveData<T>() {
+    open inner class LivePref<T>(val key: String, private val accessor: SharedPreferences.() -> T) : LiveData<T>() {
         private val prefChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, changedKey ->
             if (key == changedKey)
-                updateValue()
+                value = accessor(prefs)
         }
 
-        private var initialized = false
-
         override fun onActive() {
-            if (!initialized) {
-                initialized = true
-                updateValue()
+            if (!isInitialized) {
+                value = accessor(prefs)
                 prefs.registerOnSharedPreferenceChangeListener(prefChangeListener)
             }
         }
-
-        private fun updateValue() {
-            @Suppress("UNCHECKED_CAST")
-            when (defValue) {
-                is Boolean -> value = prefs.getBoolean(key, defValue) as T
-                is String -> value = prefs.getString(key, defValue) as T
-                is Int -> value = prefs.getInt(key, defValue) as T
-                is Long -> value = prefs.getLong(key, defValue) as T
-                is Float -> value = prefs.getFloat(key, defValue) as T
-            }
-        }
     }
+
+    inner class LivePrefBoolean(key: String, default: Boolean) : LivePref<Boolean>(key, { getBoolean(key, default) })
+    inner class LivePrefString(key: String, default: String) : LivePref<String>(key, { getString(key, default)!! })
 
 
     /****************************** Migrations *******************************/
