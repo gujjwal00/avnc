@@ -50,16 +50,21 @@ JNI_OnLoad(JavaVM *vm, void *unused) {
 
 JNIEXPORT void
 JNI_OnUnload(JavaVM *vm, void *reserved) {
-    if (context.managedCls != nullptr)
+    if (context.managedCls) {
         context.getEnv()->DeleteGlobalRef(context.managedCls);
+        context.managedCls = nullptr;
+    }
 }
 
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_initLibrary(JNIEnv *env, jclass clazz) {
+    if (context.managedCls)
+        context.getEnv()->DeleteGlobalRef(context.managedCls);
+
     context.managedCls = (jclass) env->NewGlobalRef(clazz);
-    context.cbFramebufferUpdated = env->GetMethodID(clazz, "cbFinishedFrameBufferUpdate", "()V");
+    context.cbFramebufferUpdated = env->GetMethodID(context.managedCls, "cbFinishedFrameBufferUpdate", "()V");
     //TODO: Cache more method IDs so we don't have to repeatedly search them
 
     rfbClientLog = &log_info;
