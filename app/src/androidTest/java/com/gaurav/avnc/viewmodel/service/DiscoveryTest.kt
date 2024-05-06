@@ -25,6 +25,7 @@ class DiscoveryTest {
     private val TAG = "DiscoveryTest"
     private var nsdManager: NsdManager? = null
     private var listeners = mutableListOf<NsdManager.RegistrationListener>()
+    private var addedServices = mutableListOf<String>()
 
     /**
      * If advertisement fails, this method will cause the calling test to be skipped.
@@ -38,13 +39,18 @@ class DiscoveryTest {
                 Log.e(TAG, "Registration failed: si: $serviceInfo, error:$errorCode")
             }
 
-            override fun onUnregistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {}
+            override fun onUnregistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
+                Log.e(TAG, "UnRegistration failed: si: $serviceInfo, error:$errorCode")
+            }
+
             override fun onServiceRegistered(serviceInfo: NsdServiceInfo) {
                 Log.d(TAG, "Registered si: $serviceInfo")
                 registeredService = serviceInfo.serviceName
             }
 
-            override fun onServiceUnregistered(serviceInfo: NsdServiceInfo?) {}
+            override fun onServiceUnregistered(serviceInfo: NsdServiceInfo?) {
+                Log.d(TAG, "Unregistered si: $serviceInfo")
+            }
         }
         val si = NsdServiceInfo().apply {
             serviceType = "_rfb._tcp"
@@ -55,6 +61,7 @@ class DiscoveryTest {
         listeners.add(listener)
 
         Assume.assumeTrue(runCatching { pollingAssert { assertTrue(registeredService == advertisedName) } }.isSuccess)
+        addedServices.add(advertisedName)
     }
 
     private fun assertDiscoveryState(test: Discovery.() -> Boolean) {
@@ -64,14 +71,15 @@ class DiscoveryTest {
     @Before
     fun before() {
         nsdManager = ContextCompat.getSystemService(targetContext, NsdManager::class.java)
+        addedServices.clear()
     }
 
     @After
     fun after() {
-        assertDiscoveryState { Log.d(TAG, "AfterTest: state: ${isRunning.value}, list: ${servers.value}"); true }
+        assertDiscoveryState { Log.d(TAG, "After unregister: isDiscoveryRunning: ${isRunning.value}, count:${servers.value?.size ?: 0}}, list: ${servers.value?.joinToString("\n")}"); true }
         listeners.forEach { nsdManager?.unregisterService(it) }
         listeners.clear()
-        assertDiscoveryState { servers.value!!.isEmpty() }
+        assertDiscoveryState { servers.value!!.none { it.name in addedServices } }
         Discovery.stop()
         assertDiscoveryState { isRunning.value == false }
     }
@@ -90,7 +98,7 @@ class DiscoveryTest {
         Discovery.start(targetContext)
         advertiseService("Server 1", 5999)
         assertDiscoveryState {
-            isRunning.value == true && servers.value!!.size == 1 && servers.value!![0].port == 5999
+            isRunning.value == true && servers.value!!.find { it.port == 5999 } != null
         }
     }
 
@@ -103,7 +111,7 @@ class DiscoveryTest {
             advertiseService("Server $i", 5900 + i)
 
         assertDiscoveryState {
-            isRunning.value == true && servers.value!!.size == count &&
+            isRunning.value == true && servers.value!!.size >= count &&  /*Discovery can find more than we advertise here*/
             servers.value!!.find { it.port == 5901 } != null &&
             servers.value!!.find { it.port == 5904 } != null &&
             servers.value!!.find { it.port == 5908 } != null
