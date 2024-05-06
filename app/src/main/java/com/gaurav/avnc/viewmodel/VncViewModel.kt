@@ -26,14 +26,15 @@ import com.gaurav.avnc.viewmodel.service.SshTunnel
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.IOException
 import java.lang.ref.WeakReference
+import kotlin.concurrent.thread
 
 /**
  * ViewModel for VncActivity
@@ -188,8 +189,7 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
     }
 
     private fun launchConnection() {
-        viewModelScope.launch(Dispatchers.IO) {
-
+        thread(name = "VncConnection") {
             runCatching {
 
                 preConnect()
@@ -198,13 +198,10 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
 
             }.onFailure {
                 if (it is IOException) disconnectReason.postValue(it.message)
-                Log.e("ReceiverCoroutine", "Connection failed", it)
+                Log.e(javaClass.simpleName, "Connection failed", it)
             }
 
             state.postValue(State.Disconnected)
-
-            //Wait until activity is finished and viewmodel is cleaned up.
-            runCatching { awaitCancellation() }
             cleanup()
         }
     }
@@ -246,6 +243,11 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
     }
 
     private fun cleanup() {
+        //Wait until activity is finished and viewmodel is cleaned up.
+        if (viewModelScope.isActive) {
+            runCatching { runBlocking { launch { awaitCancellation() } } }
+        }
+
         messenger.cleanup()
         client.cleanup()
         sshTunnel.close()
