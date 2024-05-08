@@ -35,7 +35,7 @@ class Frame {
         const val FLOAT_SIZE = 4
         const val TRIANGLE_COMPONENT = 2    //[x,y]
         const val TEXTURE_COMPONENT = 2     //[x,y]
-        const val STRIDE = (TEXTURE_COMPONENT + TEXTURE_COMPONENT) * FLOAT_SIZE
+        const val STRIDE = (TRIANGLE_COMPONENT + TEXTURE_COMPONENT) * FLOAT_SIZE
     }
 
     private var fbWidth = 0F
