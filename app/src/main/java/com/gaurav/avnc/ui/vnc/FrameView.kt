@@ -12,6 +12,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.opengl.GLSurfaceView
 import android.os.Build
+import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.MotionEvent
@@ -53,8 +54,17 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
      * Input connection used for intercepting key events
      */
     inner class InputConnection : BaseInputConnection(this, false) {
-        override fun commitText(text: CharSequence?, newCursorPosition: Int): Boolean {
-            return keyHandler.onCommitText(text) || super.commitText(text, newCursorPosition)
+
+        /**
+         * 'Ç' & 'ç' requires special handling. Android's keymap generates extra ALT key press for these characters,
+         * which results in servers not handling them correctly. So instead of letting [BaseInputConnection] generate
+         * [KeyEvent]s, and then call [sendKeyEvent], a [KeyEvent.ACTION_MULTIPLE] is directly synthesized here.
+         */
+        override fun commitText(text: CharSequence, newCursorPosition: Int): Boolean {
+            if (text.contains('ç', true))
+                return sendKeyEvent(KeyEvent(SystemClock.uptimeMillis(), text.toString(), 0, 0))
+
+            return super.commitText(text, newCursorPosition)
         }
 
         override fun sendKeyEvent(event: KeyEvent): Boolean {

@@ -356,4 +356,17 @@ class KeyHandlerTest {
         sendKey(KeyEvent.KEYCODE_SHIFT_RIGHT, 0)  // Meta-keys should be passed through
         assertEquals(XKeySym.XK_Shift_R, dispatchedKeyDowns.firstOrNull())
     }
+
+    @Test
+    fun cCedilla() {
+        keyHandler.onKeyEvent(KeyEvent(0, "ç", 0, 0))
+        assertEquals('ç'.code, dispatchedKeyDowns.firstOrNull())
+    }
+
+    @Test
+    fun cCedillaUppercase() {
+        keyHandler.onKeyEvent(KeyEvent(0, "Ç", 0, 0))
+        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[0])
+        assertEquals('Ç'.code, dispatchedKeyDowns[1])
+    }
 }
