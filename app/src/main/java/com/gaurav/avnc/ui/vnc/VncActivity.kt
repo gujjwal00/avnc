@@ -232,8 +232,10 @@ class VncActivity : AppCompatActivity() {
         updateStatusContainerVisibility(isConnected)
         autoReconnect(newState)
 
-        if (isConnected)
+        if (isConnected) {
             ViewerHelp().onConnected(this)
+            keyHandler.enableMacOSCompatibility = viewModel.client.isConnectedToMacOS
+        }
 
         if (isConnected && !restoredFromBundle) {
             incrementUseCount()

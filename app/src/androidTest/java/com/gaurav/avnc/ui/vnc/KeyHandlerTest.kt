@@ -369,4 +369,32 @@ class KeyHandlerTest {
         assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[0])
         assertEquals('Ç'.code, dispatchedKeyDowns[1])
     }
+
+    /**************************************************************************/
+
+    @Test
+    fun keyMappingPrefs() {
+        val mockPrefs = mockk<AppPreferences>()
+        every { mockPrefs.input.kmLanguageSwitchToSuper } returns true
+        every { mockPrefs.input.kmRightAltToSuper } returns true
+        val keyHandler = KeyHandler(mockDispatcher, true, mockPrefs)
+
+        keyHandler.onKey(KeyEvent.KEYCODE_LANGUAGE_SWITCH)
+        keyHandler.onKey(KeyEvent.KEYCODE_ALT_RIGHT)
+
+        assertEquals(XKeySym.XK_Super_L, dispatchedKeyDowns[0])
+        assertEquals(XKeySym.XK_Super_L, dispatchedKeyDowns[1])
+    }
+
+
+    @Test
+    fun macOSCompatibility() {
+        keyHandler.enableMacOSCompatibility = true
+        keyHandler.onKey(KeyEvent.KEYCODE_ALT_RIGHT)
+        keyHandler.onKey(KeyEvent.KEYCODE_ALT_LEFT)
+
+        // Should generate 'Meta' instead of normal 'Alt'
+        assertEquals(XKeySym.XK_Meta_R, dispatchedKeyDowns[0])
+        assertEquals(XKeySym.XK_Meta_L, dispatchedKeyDowns[1])
+    }
 }

@@ -26,11 +26,6 @@ object XKeySymAndroid {
             return 0
     }
 
-    fun updateKeyMap(keyCode: Int, xKeySym: Int) {
-        if (keyCode >= 0 && keyCode < AndroidKeyCodeToXKeySym.size)
-            AndroidKeyCodeToXKeySym[keyCode] = xKeySym
-    }
-
     /**
      * Lookup table for X KeySym.
      *

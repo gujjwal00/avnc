@@ -75,6 +75,11 @@ class VncClient(private val observer: Observer) {
     val isEncrypted; get() = nativeIsEncrypted(nativePtr)
 
     /**
+     * Whether connected to a MacOS server
+     */
+    val isConnectedToMacOS; get() = nativeIsServerMacOS(nativePtr)
+
+    /**
      * In 'View-only' mode input to remote server is disabled
      */
     var viewOnlyMode = false; private set
@@ -131,7 +136,6 @@ class VncClient(private val observer: Observer) {
     fun connect(host: String, port: Int) {
         connected = nativeInit(nativePtr, host, port)
         if (!connected) throw IOException(nativeGetLastErrorStr())
-        applyCompatQuirks()
     }
 
     /**
@@ -264,13 +268,6 @@ class VncClient(private val observer: Observer) {
     private inline fun ifConnectedAndInteractive(block: () -> Unit) = ifConnected {
         if (!viewOnlyMode)
             block()
-    }
-
-    private fun applyCompatQuirks() {
-        if (nativeIsServerMacOS(nativePtr)) {
-            XKeySymAndroid.updateKeyMap(KeyEvent.KEYCODE_ALT_LEFT, XKeySym.XK_Meta_L)
-            XKeySymAndroid.updateKeyMap(KeyEvent.KEYCODE_ALT_RIGHT, XKeySym.XK_Meta_R)
-        }
     }
 
     private external fun nativeClientCreate(): Long
