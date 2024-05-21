@@ -85,6 +85,7 @@ import com.gaurav.avnc.vnc.XTKeyCode
 class KeyHandler(private val dispatcher: Dispatcher, private val cfLegacyKeysym: Boolean, prefs: AppPreferences) {
 
     var enableMacOSCompatibility = false
+    private var hasSentShiftDown = false
 
     /**
      * Shortcut to send both up & down events. Useful for Virtual Keys.
@@ -103,7 +104,10 @@ class KeyHandler(private val dispatcher: Dispatcher, private val cfLegacyKeysym:
         if (shouldIgnoreEvent(event))
             return false
 
-        return handleKeyEvent(overrideKeyEvent(event))
+        val handled = handleKeyEvent(overrideKeyEvent(event))
+
+        postProcessEvent(event)
+        return handled
     }
 
 
@@ -198,9 +202,10 @@ class KeyHandler(private val dispatcher: Dispatcher, private val cfLegacyKeysym:
 
         // If we are generating legacy KeySym and the character is uppercase,
         // we need to fake press the Shift key. Otherwise, most servers can't
-        // handle them. This is just a compat shim and ideally server should
-        // support Unicode KeySym.
-        val shouldFakeShift = (uKeySym in 0x100..0xfffe && uChar.toChar().isUpperCase()) || uKeySym == 'Ç'.code
+        // handle them. It also helps with Android Keyboard apps which don't
+        // generates Shift key events correctly for uppercase letters. The
+        // CCedilla workaround in FrameView also relies on this feature.
+        val shouldFakeShift = uKeySym in 0x80..0xfffe && uChar.toChar().isUpperCase() && !hasSentShiftDown
         if (shouldFakeShift)
             emitForAndroidKeyCode(KeyEvent.KEYCODE_SHIFT_LEFT, true)
 
@@ -258,6 +263,11 @@ class KeyHandler(private val dispatcher: Dispatcher, private val cfLegacyKeysym:
         // So we have to ignore the first events when NumLock is off.
         return (keyCode in KeyEvent.KEYCODE_NUMPAD_0..KeyEvent.KEYCODE_NUMPAD_9
                 || keyCode == KeyEvent.KEYCODE_NUMPAD_DOT) && !event.isNumLockOn
+    }
+
+    private fun postProcessEvent(event: KeyEvent) {
+        if (event.keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || event.keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT)
+            hasSentShiftDown = event.action == KeyEvent.ACTION_DOWN
     }
 
     /************************************************************************************

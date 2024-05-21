@@ -282,9 +282,14 @@ class KeyHandlerTest {
 
     @Test
     fun diacriticTest_capitalCharAfterAccent() {
+        sendDown(KeyEvent.KEYCODE_SHIFT_RIGHT)
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_A, 'A')
-        assertEquals('Ã'.code, dispatchedKeyDowns.firstOrNull())
+        sendUp(KeyEvent.KEYCODE_SHIFT_RIGHT)
+
+        assertEquals(XKeySym.XK_Shift_R, dispatchedKeyDowns[0])
+        assertEquals('Ã'.code, dispatchedKeyDowns[1])
+        dispatchedKeyUps.reverse()
     }
 
     @Test
