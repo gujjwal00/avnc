@@ -70,6 +70,8 @@
     <string name="hint_ssh_host">SSH host</string>
     <string name="hint_ssh_port">SSH port</string>
     <string name="hint_key_password">Key password</string>
+    <string name="hint_send_text_to_server">Send text to server</string>
+
 
     <string name="msg_about_app">A fast and secure VNC client. Remotely view and control any device running a VNC server.\n\n\nAVNC is an open source and copyleft software — made with help from many contributors.</string>
     <string name="msg_server_profile_added">Server added</string>

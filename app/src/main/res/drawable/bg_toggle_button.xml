@@ -10,4 +10,5 @@
     <item android:state_checked="true">
         <color android:color="?colorControlHighlight" />
     </item>
+    <item android:drawable="@drawable/bg_selectable" />
 </selector>

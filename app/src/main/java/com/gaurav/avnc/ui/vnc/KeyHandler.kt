@@ -84,6 +84,7 @@ import com.gaurav.avnc.vnc.XTKeyCode
  */
 class KeyHandler(private val dispatcher: Dispatcher, private val cfLegacyKeysym: Boolean, prefs: AppPreferences) {
 
+    var processedEventObserver: ((KeyEvent) -> Unit)? = null
     var enableMacOSCompatibility = false
     private var hasSentShiftDown = false
 
@@ -268,6 +269,8 @@ class KeyHandler(private val dispatcher: Dispatcher, private val cfLegacyKeysym:
     private fun postProcessEvent(event: KeyEvent) {
         if (event.keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || event.keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT)
             hasSentShiftDown = event.action == KeyEvent.ACTION_DOWN
+
+        processedEventObserver?.invoke(event)
     }
 
     /************************************************************************************

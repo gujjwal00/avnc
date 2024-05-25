@@ -10,249 +10,264 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <import type="android.view.KeyEvent" />
-
-        <!--It controls whether all keys are visible OR only some of them-->
-        <variable
-            name="showAll"
-            type="boolean" />
-
-        <variable
-            name="h"
-            type="com.gaurav.avnc.ui.vnc.KeyHandler" />
-    </data>
-
-    <HorizontalScrollView
+    <com.gaurav.avnc.ui.vnc.NestableHorizontalScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?colorSurface"
         android:backgroundTint="#cfff"
-        android:backgroundTintMode="multiply">
+        android:backgroundTintMode="multiply"
+        android:contentDescription="Virtual Keys"
+        tools:ignore="HardcodedText">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="Virtual Keys"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            tools:ignore="HardcodedText">
+            android:layout_height="wrap_content">
 
-            <ImageButton
-                android:id="@+id/hide_btn"
-                style="@style/VirtualKey.Image"
-                android:contentDescription="Hide Virtual Keys"
-                android:minWidth="30dp"
-                android:src="@drawable/ic_clear"
-                app:tint="?colorError" />
+            <!--This is the main host for 'pages'-->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/pager"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~ Meta keys ~~~~~~~~~~~~~~~~~~~~~-->
+            <!--
+            This is a temporary host for pages.
+            Children of this ViewGroup will be detached at runtime and added to pager.
+            -->
+            <LinearLayout
+                android:id="@+id/tmp_page_host"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="invisible"
+                tools:orientation="vertical"
+                tools:visibility="visible">
 
-            <ToggleButton
-                android:id="@+id/super_btn"
-                style="@style/VirtualKey.Toggle.Image"
-                android:contentDescription="Super key"
-                android:drawableStart="@drawable/ic_super_key"
-                app:onCheckedChangeListener="@{(v,checked) -> h.onKeyEvent(KeyEvent.KEYCODE_META_LEFT, checked)}" />
+                <!--~~~~~~~~~~~~~~~~~~~~~~~ Primary keys ~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <GridLayout
+                    android:id="@+id/primary_key_page"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:rowCount="2">
 
-            <ToggleButton
-                android:id="@+id/shift_btn"
-                style="@style/VirtualKey.Toggle"
-                android:textOff="Shift"
-                android:textOn="Shift"
-                app:isVisible="@{showAll}"
-                app:onCheckedChangeListener="@{(v,checked) -> h.onKeyEvent(KeyEvent.KEYCODE_SHIFT_RIGHT, checked)}" />
+                    <ImageButton
+                        android:id="@+id/toggle_keyboard"
+                        style="@style/VirtualKey.Compact"
+                        android:contentDescription="Toggle keyboard"
+                        android:src="@drawable/ic_keyboard"
+                        app:tint="?colorPrimary" />
 
-            <ToggleButton
-                android:id="@+id/ctrl_btn"
-                style="@style/VirtualKey.Toggle"
-                android:textOff="Ctrl"
-                android:textOn="Ctrl"
-                app:onCheckedChangeListener="@{(v,checked) -> h.onKeyEvent(KeyEvent.KEYCODE_CTRL_RIGHT, checked)}" />
+                    <ImageButton
+                        android:id="@+id/close_btn"
+                        style="@style/VirtualKey.Compact"
+                        android:contentDescription="Hide Virtual Keys"
+                        android:src="@drawable/ic_clear"
+                        app:tint="?colorPrimary" />
 
-            <ToggleButton
-                android:id="@+id/alt_btn"
-                style="@style/VirtualKey.Toggle"
-                android:textOff="Alt"
-                android:textOn="Alt"
-                app:onCheckedChangeListener="@{(v,checked) -> h.onKeyEvent(KeyEvent.KEYCODE_ALT_RIGHT, checked)}" />
+                    <!--
+                    Note: 'AppCompatButton's are used instead of 'Button' to disable
+                    Material styles which are not suitable for virtual keys
+                    -->
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_esc"
+                        style="@style/VirtualKey"
+                        android:text="Esc" />
 
-            <!--AppCompatButton is used instead of Button to disable Material styles-->
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_TAB)}"
-                android:text="Tab"
-                app:isRepeatable="@{true}" />
+                    <ToggleButton
+                        android:id="@+id/vk_super"
+                        style="@style/VirtualKey.Toggle.Image"
+                        android:contentDescription="Super key"
+                        android:drawableStart="@drawable/ic_super_key"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_ESCAPE)}"
-                android:text="Esc"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_tab"
+                        style="@style/VirtualKey"
+                        android:text="Tab" />
+
+                    <ToggleButton
+                        android:id="@+id/vk_ctrl"
+                        style="@style/VirtualKey.Toggle"
+                        android:textOff="Ctrl"
+                        android:textOn="Ctrl" />
+
+                    <ToggleButton
+                        android:id="@+id/vk_shift"
+                        style="@style/VirtualKey.Toggle"
+                        android:textOff="Shift"
+                        android:textOn="Shift" />
+
+                    <ToggleButton
+                        android:id="@+id/vk_alt"
+                        style="@style/VirtualKey.Toggle"
+                        android:textOff="Alt"
+                        android:textOn="Alt" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_home"
+                        style="@style/VirtualKey"
+                        android:text="Home" />
+
+                    <ImageButton
+                        android:id="@+id/vk_left"
+                        style="@style/VirtualKey"
+                        android:contentDescription="Left"
+                        android:src="@drawable/ic_keyboard_arrow_left" />
+
+                    <ImageButton
+                        android:id="@+id/vk_up"
+                        style="@style/VirtualKey"
+                        android:contentDescription="Up"
+                        android:src="@drawable/ic_keyboard_arrow_up" />
+
+                    <ImageButton
+                        android:id="@+id/vk_down"
+                        style="@style/VirtualKey"
+                        android:contentDescription="Down"
+                        android:src="@drawable/ic_keyboard_arrow_down" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_end"
+                        style="@style/VirtualKey"
+                        android:text="End" />
+
+                    <ImageButton
+                        android:id="@+id/vk_right"
+                        style="@style/VirtualKey"
+                        android:contentDescription="Right"
+                        android:src="@drawable/ic_keyboard_arrow_right" />
 
 
-            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~ Arrow keys ~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_page_up"
+                        style="@style/VirtualKey"
+                        android:contentDescription="Page Up"
+                        android:text="PgUp" />
 
-            <ImageButton
-                style="@style/VirtualKey.Image"
-                android:contentDescription="Left"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_DPAD_LEFT)}"
-                android:src="@drawable/ic_keyboard_arrow_left"
-                app:isRepeatable="@{true}" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_page_down"
+                        style="@style/VirtualKey"
+                        android:contentDescription="Page Down"
+                        android:text="PgDn" />
 
-            <ImageButton
-                style="@style/VirtualKey.Image"
-                android:contentDescription="Up"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_DPAD_UP)}"
-                android:src="@drawable/ic_keyboard_arrow_up"
-                app:isRepeatable="@{true}" />
-
-            <ImageButton
-                style="@style/VirtualKey.Image"
-                android:contentDescription="Down"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_DPAD_DOWN)}"
-                android:src="@drawable/ic_keyboard_arrow_down"
-                app:isRepeatable="@{true}" />
-
-            <ImageButton
-                style="@style/VirtualKey.Image"
-                android:contentDescription="Right"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_DPAD_RIGHT)}"
-                android:src="@drawable/ic_keyboard_arrow_right"
-                app:isRepeatable="@{true}" />
+                </GridLayout>
 
 
-            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~ Miscellaneous ~~~~~~~~~~~~~~~~~~~~~~~-->
+                <!--~~~~~~~~~~~~~~~~~~~~~~~ Secondary keys ~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <GridLayout
+                    android:id="@+id/secondary_key_page"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="@dimen/padding_small"
+                    android:paddingEnd="@dimen/padding_small"
+                    android:rowCount="2">
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_MOVE_HOME)}"
-                android:text="Home"
-                app:isVisible="@{showAll}" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_insert"
+                        style="@style/VirtualKey"
+                        android:text="Insert" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_MOVE_END)}"
-                android:text="End"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_delete"
+                        style="@style/VirtualKey"
+                        android:text="Delete" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_PAGE_UP)}"
-                android:text="PgUp"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_f1"
+                        style="@style/VirtualKey"
+                        android:text="F1" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_PAGE_DOWN)}"
-                android:text="PgDn"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_f2"
+                        style="@style/VirtualKey"
+                        android:text="F2" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_INSERT)}"
-                android:text="Insert"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_f3"
+                        style="@style/VirtualKey"
+                        android:text="F3" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_FORWARD_DEL)}"
-                android:text="Delete"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_f4"
+                        style="@style/VirtualKey"
+                        android:text="F4" />
 
-            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~ Function Keys ~~~~~~~~~~~~~~~~~~~~~~~-->
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_f5"
+                        style="@style/VirtualKey"
+                        android:text="F5" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey.Compact"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F1)}"
-                android:text="F1"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_f6"
+                        style="@style/VirtualKey"
+                        android:text="F6" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey.Compact"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F2)}"
-                android:text="F2"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_f7"
+                        style="@style/VirtualKey"
+                        android:text="F7" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey.Compact"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F3)}"
-                android:text="F3"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_f8"
+                        style="@style/VirtualKey"
+                        android:text="F8" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey.Compact"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F4)}"
-                android:text="F4"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_f9"
+                        style="@style/VirtualKey"
+                        android:text="F9" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey.Compact"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F5)}"
-                android:text="F5"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_f10"
+                        style="@style/VirtualKey"
+                        android:text="F10" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey.Compact"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F6)}"
-                android:text="F6"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_f11"
+                        style="@style/VirtualKey"
+                        android:text="F11" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey.Compact"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F7)}"
-                android:text="F7"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/vk_f12"
+                        style="@style/VirtualKey"
+                        android:text="F12" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey.Compact"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F8)}"
-                android:text="F8"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                </GridLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey.Compact"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F9)}"
-                android:text="F9"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey.Compact"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F10)}"
-                android:text="F10"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                <!--~~~~~~~~~~~~~~~~~~~~~~~ Text box ~~~~~~~~~~~~~~~~~~~~~~~~-->
+                <LinearLayout
+                    android:id="@+id/text_page"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/padding_small"
+                    android:paddingEnd="@dimen/padding_normal">
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey.Compact"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F11)}"
-                android:text="F11"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                    <ImageButton
+                        android:id="@+id/text_page_back_btn"
+                        style="@style/VirtualKey.Compact"
+                        android:layout_gravity="center_vertical"
+                        android:contentDescription="@string/desc_back_btn"
+                        android:src="@drawable/ic_arrow_back"
+                        app:tint="?colorPrimary" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                style="@style/VirtualKey.Compact"
-                android:onClick="@{() -> h.onKey(KeyEvent.KEYCODE_F12)}"
-                android:text="F12"
-                app:isRepeatable="@{true}"
-                app:isVisible="@{showAll}" />
+                    <EditText
+                        android:id="@+id/text_box"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="1"
+                        android:hint="@string/hint_send_text_to_server"
+                        android:imeOptions="actionSend|flagNoFullscreen|flagNoExtractUi"
+                        android:importantForAutofill="no"
+                        android:inputType="text"
+                        android:minWidth="150sp" />
 
-        </LinearLayout>
-    </HorizontalScrollView>
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
+    </com.gaurav.avnc.ui.vnc.NestableHorizontalScrollView>
 </layout>

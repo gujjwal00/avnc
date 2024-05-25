@@ -127,11 +127,14 @@
     </style>
 
     <style name="VirtualKey">
-        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:minWidth">50dp</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">34dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body2</item>
     </style>
 
@@ -139,18 +142,12 @@
         <item name="android:minWidth">36dp</item>
     </style>
 
-    <style name="VirtualKey.Image">
-        <item name="android:minWidth">46dp</item>
-    </style>
-
     <style name="VirtualKey.Toggle">
         <item name="android:background">@drawable/bg_toggle_button</item>
     </style>
 
     <style name="VirtualKey.Toggle.Image">
-        <item name="android:minWidth">48dp</item>
         <item name="android:textOff" />
         <item name="android:textOn" />
-        <item name="android:padding">12dp</item>
     </style>
 </resources>
