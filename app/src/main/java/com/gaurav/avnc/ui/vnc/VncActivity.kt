@@ -10,6 +10,7 @@ package com.gaurav.avnc.ui.vnc
 
 import android.app.Activity
 import android.app.PictureInPictureParams
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -28,6 +29,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.os.BundleCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -293,6 +295,25 @@ class VncActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Clipboard changes are only subscribed to while App has focus. We don't want to access clipboard
+     * from background (newer Android versions already restricts this). This listener is primarily needed
+     * for clip changes initiated from the Text Box in Virtual Keys.
+     */
+    private val clipChangeListener = ClipboardManager.OnPrimaryClipChangedListener { viewModel.sendClipboardText() }
+    private var clipChangeListenerEnabled = false
+
+    private fun toggleClipboardListener(enable: Boolean) {
+        if (clipChangeListenerEnabled == enable)
+            return
+
+        ContextCompat.getSystemService(this, ClipboardManager::class.java)?.let {
+            if (enable) it.addPrimaryClipChangedListener(clipChangeListener)
+            else it.removePrimaryClipChangedListener(clipChangeListener)
+            clipChangeListenerEnabled = enable
+        }
+    }
+
     /************************************************************************************
      * Layout handling.
      ************************************************************************************/
@@ -323,6 +344,7 @@ class VncActivity : AppCompatActivity() {
         super.onWindowFocusChanged(hasFocus)
         layoutManager.onWindowFocusChanged(hasFocus)
         if (hasFocus) viewModel.sendClipboardText()
+        toggleClipboardListener(hasFocus)
     }
 
 

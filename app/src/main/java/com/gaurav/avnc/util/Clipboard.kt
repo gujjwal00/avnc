@@ -9,6 +9,7 @@
 package com.gaurav.avnc.util
 
 import android.content.ClipData
+import android.content.ClipDescription
 import android.content.ClipboardManager
 import android.content.Context
 import android.util.Log
@@ -53,7 +54,8 @@ suspend fun getClipboardText(context: Context): String? {
     try {
         getClipboardManager(context)?.let {
             withContext(Dispatchers.IO) {
-                result = it.primaryClip?.getItemAt(0)?.text?.toString()
+                if (it.primaryClipDescription?.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) == true)
+                    result = it.primaryClip?.getItemAt(0)?.text?.toString()
             }
         }
     } catch (e: CancellationException) {
