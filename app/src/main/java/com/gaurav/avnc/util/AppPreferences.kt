@@ -13,6 +13,7 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.preference.PreferenceManager
+import kotlin.reflect.KProperty
 
 /**
  * Utility class for accessing app preferences
@@ -22,9 +23,9 @@ class AppPreferences(context: Context) {
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
     inner class UI {
-        val theme = LivePrefString("theme", "system")
+        val theme = StringLivePref("theme", "system")
         val preferAdvancedEditor; get() = prefs.getBoolean("prefer_advanced_editor", false)
-        val sortServerList = LivePrefBoolean("sort_server_list", false)
+        val sortServerList = BooleanLivePref("sort_server_list", false)
     }
 
     inner class Viewer {
@@ -78,7 +79,7 @@ class AppPreferences(context: Context) {
         val lockSavedServer; get() = prefs.getBoolean("lock_saved_server", false)
         val autoReconnect; get() = prefs.getBoolean("auto_reconnect", false)
         val discoveryAutorun; get() = prefs.getBoolean("discovery_autorun", true)
-        val rediscoveryIndicator = LivePrefBoolean("rediscovery_indicator", true)
+        val rediscoveryIndicator = BooleanLivePref("rediscovery_indicator", true)
     }
 
     /**
@@ -86,13 +87,8 @@ class AppPreferences(context: Context) {
      * These are not exposed to user.
      */
     inner class RunInfo {
-        var hasShownViewerHelp: Boolean
-            get() = prefs.getBoolean("run_info_has_shown_viewer_help", false)
-            set(value) = prefs.edit { putBoolean("run_info_has_shown_viewer_help", value) }
-
-        var hasShownV2WelcomeMsg
-            get() = prefs.getBoolean("run_info_has_shown_v2_welcome_msg", false)
-            set(value) = prefs.edit { putBoolean("run_info_has_shown_v2_welcome_msg", value) }
+        var hasShownViewerHelp by BooleanPref("run_info_has_shown_viewer_help", false)
+        var hasShownV2WelcomeMsg by BooleanPref("run_info_has_shown_v2_welcome_msg", false)
     }
 
     val ui = UI()
@@ -101,28 +97,35 @@ class AppPreferences(context: Context) {
     val server = Server()
     val runInfo = RunInfo()
 
+    /****************************** Helpers *******************************/
+    open inner class Pref<T>(private val getter: SharedPreferences.() -> T, private val setter: SharedPreferences.Editor.(T) -> Unit) {
+        operator fun getValue(a: Any, kp: KProperty<*>) = getter(prefs)
+        operator fun setValue(a: Any, kp: KProperty<*>, value: T) = prefs.edit { setter(this, value) }
+    }
+
+    inner class BooleanPref(val key: String, default: Boolean) : Pref<Boolean>({ getBoolean(key, default) }, { putBoolean(key, it) })
 
     /**
      * For some preference changes we want to provide live feedback to user.
      * This class is used for such scenarios. Based on [LiveData], it notifies
      * the observers whenever the value of given preference is changed.
      */
-    open inner class LivePref<T>(val key: String, private val accessor: SharedPreferences.() -> T) : LiveData<T>() {
+    open inner class LivePref<T>(val key: String, private val getter: SharedPreferences.() -> T) : LiveData<T>() {
         private val prefChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, changedKey ->
             if (key == changedKey)
-                value = accessor(prefs)
+                value = getter(prefs)
         }
 
         override fun onActive() {
             if (!isInitialized) {
-                value = accessor(prefs)
+                value = getter(prefs)
                 prefs.registerOnSharedPreferenceChangeListener(prefChangeListener)
             }
         }
     }
 
-    inner class LivePrefBoolean(key: String, default: Boolean) : LivePref<Boolean>(key, { getBoolean(key, default) })
-    inner class LivePrefString(key: String, default: String) : LivePref<String>(key, { getString(key, default)!! })
+    inner class BooleanLivePref(key: String, default: Boolean) : LivePref<Boolean>(key, { getBoolean(key, default) })
+    inner class StringLivePref(key: String, default: String) : LivePref<String>(key, { getString(key, default)!! })
 
 
     /****************************** Migrations *******************************/
