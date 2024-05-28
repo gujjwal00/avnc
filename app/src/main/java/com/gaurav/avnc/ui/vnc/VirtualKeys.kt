@@ -41,7 +41,7 @@ import kotlin.math.sign
  */
 class VirtualKeys(activity: VncActivity) {
 
-    private val pref = activity.viewModel.pref.input
+    private val pref = activity.viewModel.pref
     private val keyHandler = activity.keyHandler
     private val frameView = activity.binding.frameView
     private val stub = activity.binding.virtualKeysStub
@@ -53,18 +53,20 @@ class VirtualKeys(activity: VncActivity) {
 
     val container: View? get() = stub.root
 
-    fun show() {
+    fun show(saveVisibility: Boolean = false) {
         init()
         container?.visibility = View.VISIBLE
+        if (saveVisibility) pref.runInfo.showVirtualKeys = true
     }
 
-    fun hide() {
+    fun hide(saveVisibility: Boolean = false) {
         container?.visibility = View.GONE
         openedWithKb = false //Reset flag
+        if (saveVisibility) pref.runInfo.showVirtualKeys = false
     }
 
     fun onKeyboardOpen() {
-        if (pref.vkOpenWithKeyboard && container?.visibility != View.VISIBLE) {
+        if (pref.input.vkOpenWithKeyboard && container?.visibility != View.VISIBLE) {
             show()
             openedWithKb = true
         }
@@ -75,6 +77,11 @@ class VirtualKeys(activity: VncActivity) {
             hide()
             openedWithKb = false
         }
+    }
+
+    fun onConnected() {
+        if (pref.runInfo.showVirtualKeys)
+            show()
     }
 
     fun releaseMetaKeys() {
@@ -126,7 +133,7 @@ class VirtualKeys(activity: VncActivity) {
      * from LinearLayout and attached to ViewPager2 via [PagerAdapter].
      */
     private fun initPager(binding: VirtualKeysBinding) {
-        val pages = binding.tmpPageHost.children.toList().filter { pref.vkShowAll || it != binding.secondaryKeyPage }
+        val pages = binding.tmpPageHost.children.toList().filter { pref.input.vkShowAll || it != binding.secondaryKeyPage }
         val maxPageWidth = pages.maxOf { it.width }
         val maxPageHeight = pages.maxOf { it.height }
 
@@ -182,7 +189,7 @@ class VirtualKeys(activity: VncActivity) {
             if (!hasFocus) frameView.requestFocus()
         }
         binding.closeBtn.setOnClickListener {
-            hide()
+            hide(true)
         }
     }
 

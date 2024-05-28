@@ -83,12 +83,13 @@ class AppPreferences(context: Context) {
     }
 
     /**
-     * These are used for one-time features/tips.
+     * These are used for one-time features/tips, or UI state .
      * These are not exposed to user.
      */
     inner class RunInfo {
         var hasShownViewerHelp by BooleanPref("run_info_has_shown_viewer_help", false)
         var hasShownV2WelcomeMsg by BooleanPref("run_info_has_shown_v2_welcome_msg", false)
+        var showVirtualKeys by BooleanPref("run_info_show_virtual_keys", false)
     }
 
     val ui = UI()

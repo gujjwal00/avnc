@@ -237,6 +237,7 @@ class VncActivity : AppCompatActivity() {
         if (isConnected) {
             ViewerHelp().onConnected(this)
             keyHandler.enableMacOSCompatibility = viewModel.client.isConnectedToMacOS
+            virtualKeys.onConnected()
         }
 
         if (isConnected && !restoredFromBundle) {
