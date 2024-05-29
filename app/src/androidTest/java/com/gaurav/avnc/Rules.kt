@@ -8,6 +8,7 @@
 
 package com.gaurav.avnc
 
+import androidx.core.content.edit
 import com.gaurav.avnc.model.db.MainDb
 import kotlinx.coroutines.runBlocking
 import org.junit.rules.ExternalResource
@@ -23,3 +24,13 @@ class EmptyDatabaseRule : ExternalResource() {
         runBlocking { db.serverProfileDao.deleteAll() }
     }
 }
+
+/**
+ * JUnit rule to clear all preferences
+ */
+class CleanPrefsRule : ExternalResource() {
+    override fun before() {
+        targetPrefs.edit { clear() }
+    }
+}
+
