@@ -325,6 +325,9 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         private var scrolling = false
         private var maxFingerDown = 0
         private var currentDownEvent: MotionEvent? = null
+        private var cumulatedX = 0f
+        private var cumulatedY = 0f
+        private val multiTapSlopSquare = 30 * 30
 
 
         private inner class InnerListener1 : SimpleOnGestureListener() {
@@ -373,6 +376,8 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
             }
 
             callOnScroll(e1, e2, -dx, -dy)
+            cumulatedX += dx
+            cumulatedY += dy
             return true
         }
 
@@ -411,7 +416,8 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
                             listener.onDoubleTapConfirmed(downEvent)
 
                         val gestureDuration = (e.eventTime - downEvent.eventTime)
-                        if (maxFingerDown > 1 && !scrolling && gestureDuration < ViewConfiguration.getDoubleTapTimeout())
+                        val isWithinSlop = (cumulatedX * cumulatedX + cumulatedY * cumulatedY) < multiTapSlopSquare
+                        if (maxFingerDown > 1 && (!scrolling || isWithinSlop) && gestureDuration < ViewConfiguration.getDoubleTapTimeout())
                             listener.onMultiFingerTap(downEvent, maxFingerDown)
                     }
 
@@ -431,6 +437,8 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
             maxFingerDown = 0
             currentDownEvent?.recycle()
             currentDownEvent = null
+            cumulatedX = 0f
+            cumulatedY = 0f
         }
     }
 
