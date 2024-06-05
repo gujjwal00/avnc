@@ -107,10 +107,10 @@
     <string name="desc_settings_btn">設定</string>
     <string name="desc_discovered_servers_tab">被發現的伺服器</string>
     <string name="desc_keyboard_btn">打開鍵盤</string>
-    <string name="msg_about_app">快速安全的 VNC 客戶端，遠程查看和控制任何 VNC 服務器。
+    <string name="msg_about_app">快速安全的 VNC 用戶端，遠程查看和控制任何 VNC 伺服器。
 \n
 \n
-\nAVNC 是一個開源和自由軟件：在許多貢獻者的幫助下製作。</string>
+\nAVNC 是一個開源和自由軟體：在許多貢獻者的幫助下製作。</string>
     <string name="desc_retry_connection_btn">重新連接</string>
     <string name="desc_server_url">伺服器地址</string>
     <string name="desc_help_btn">幫助</string>
@@ -191,4 +191,23 @@
     <string name="pref_km_right_alt_to_super">右 Alt → Super</string>
     <string name="msg_shortcut_server_deleted">此伺服器已被刪除</string>
     <string name="title_ssh_login">SSH 登入</string>
+    <string name="title_next">下一步</string>
+    <string name="title_got_it">瞭解</string>
+    <string name="hint_ssh_port">SSH連接埠</string>
+    <string name="msg_zoom_unlocked">縮放已解鎖</string>
+    <string name="msg_pk_password_not_saved">為確保安全，AVNC不再保存私有密鑰之密碼。</string>
+    <string name="tip_session_end">要中斷連線，只需按返回按鈕，就像你在從影片返回一樣。</string>
+    <string name="desc_lock_zoom_btn">鎖定縮放</string>
+    <string name="pref_gesture_action_remote_drag_middle">用中鍵拖放</string>
+    <string name="pref_show_gesture_style_toggle">顯示手勢樣式切換</string>
+    <string name="hint_ssh_host">SSH主機</string>
+    <string name="title_resize_remote_desktop">調整至本地大小</string>
+    <string name="title_unlock_private_key">解鎖私鑰</string>
+    <string name="msg_viewer_tips_label">一些讓你快速上手的提示</string>
+    <string name="tip_toolbar_usage">從螢幕邊緣滑入以打開工具欄。用它來呼出鍵盤、變換手勢或者重設縮放。</string>
+    <string name="pref_toolbar_open_with_swipe">從螢幕邊緣滑入以開啟</string>
+    <string name="msg_zoom_reset_default">還原至默認縮放</string>
+    <string name="pref_keep_screen_on">螢幕長亮</string>
+    <string name="msg_zoom_locked">縮放鎖定</string>
+    <string name="title_connect_on_app_start">當軟體啟動時自動連線</string>
 </resources>

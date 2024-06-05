@@ -195,4 +195,19 @@
     <string name="title_unlock_private_key">개인 키 잠금 해제</string>
     <string name="title_resize_remote_desktop">원격 세션 크기를 로컬 창으로 조정</string>
     <string name="pref_gesture_action_remote_drag_middle">가운데 버튼으로 드래그</string>
+    <string name="tip_session_end">세션을 종료하려면 재생 중인 비디오에서 돌아가는 것처럼 뒤로 이동 단추를 누릅니다.</string>
+    <string name="hint_ssh_host">SSH 호스트</string>
+    <string name="msg_zoom_unlocked">줌 잠금 해제</string>
+    <string name="title_connect_on_app_start">앱 시작 시 자동 연결</string>
+    <string name="title_next">다음</string>
+    <string name="title_got_it">확인</string>
+    <string name="pref_keep_screen_on">화면 켜기</string>
+    <string name="hint_ssh_port">SSH 호스트</string>
+    <string name="msg_zoom_locked">줌 잠금</string>
+    <string name="msg_viewer_tips_label">시작할 수 있는 몇 가지 팁</string>
+    <string name="msg_pk_password_not_saved">AVNC는 보안 향상을 위해 더 이상 개인 키 비밀번호를 저장하지 않습니다.</string>
+    <string name="tip_toolbar_usage">가장자리에서 스와이프 인하여 도구 모음을 엽니다. 키보드를 열거나 제스처 스타일을 변경하거나 줌을 재설정하는 데 사용합니다.</string>
+    <string name="desc_lock_zoom_btn">잠금 줌</string>
+    <string name="pref_toolbar_open_with_swipe">가장자리에서 열리도록 스와이프 인</string>
+    <string name="pref_show_gesture_style_toggle">토글 스타일 표시</string>
 </resources>
