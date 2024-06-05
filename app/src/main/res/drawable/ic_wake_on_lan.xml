@@ -1,0 +1,21 @@
+<!--
+  ~ Copyright (c) 2024  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:tint="?colorOnSurface"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#fff"
+        android:pathData="m12.92,2h-1.839v9.196h1.839zM16.193,4.244 L14.86,5.577c1.591,0.966 2.658,2.704 2.658,4.699 0,3.044 -2.474,5.518 -5.518,5.518 -3.044,0 -5.518,-2.474 -5.518,-5.518 0,-1.996 1.067,-3.734 2.649,-4.708L7.807,4.244c-1.913,1.324 -3.164,3.531 -3.164,6.033 0,4.065 3.292,7.357 7.357,7.357 4.065,0 7.357,-3.292 7.357,-7.357 0,-2.501 -1.251,-4.708 -3.164,-6.033z" />
+    <path
+        android:fillColor="#fff"
+        android:pathData="M2,18L2,22L6,22L6,20.5L18,20.5L18,22L22,22L22,18L18,18L18,19.5L6,19.5L6,18L2,18z" />
+</vector>

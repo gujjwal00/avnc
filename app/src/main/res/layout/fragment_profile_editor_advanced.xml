@@ -153,6 +153,40 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view_only" />
 
+                <!--Wake-on-LAN-->
+                <CheckBox
+                    android:id="@+id/wol"
+                    style="@style/FormField.CheckBox"
+                    android:checked="@={viewModel.enableWol}"
+                    android:text="@string/title_enable_wol"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/auto_connect" />
+
+                <ImageButton
+                    android:id="@+id/wol_help_btn"
+                    style="@style/ImageButton"
+                    android:contentDescription="@string/desc_help_btn"
+                    android:src="@drawable/ic_help"
+                    app:layout_constraintBottom_toBottomOf="@id/wol"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/wol"
+                    app:tint="?colorControlNormal" />
+
+                <EditText
+                    android:id="@+id/wol_mac"
+                    style="@style/FormField.EditText"
+                    android:drawableStart="@drawable/ic_wake_on_lan"
+                    android:hint="@string/hint_wol_mac"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:text="@={viewModel.profile.wolMAC}"
+                    app:isVisible="@{viewModel.enableWol}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/wol" />
+
+
                 <!--Key Compatibility mode-->
                 <CheckBox
                     android:id="@+id/key_compat_mode"
@@ -161,7 +195,7 @@
                     android:text="@string/title_key_compat_mode"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/auto_connect" />
+                    app:layout_constraintTop_toBottomOf="@id/wol_mac" />
 
                 <ImageButton
                     android:id="@+id/key_compat_mode_help_btn"

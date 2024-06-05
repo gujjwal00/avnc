@@ -146,7 +146,7 @@
                 app:indicatorColor="?colorSecondary"
                 app:indicatorInset="0dp"
                 app:indicatorSize="@dimen/action_btn_size"
-                app:isVisible="@{viewModel.state == State.Disconnected &amp;&amp; viewModel.pref.server.autoReconnect}"
+                app:isVisible="@{viewModel.state == State.Disconnected &amp;&amp; (viewModel.pref.server.autoReconnect || viewModel.profile.enableWol)}"
                 app:layout_constraintStart_toStartOf="@id/reconnect_btn"
                 app:layout_constraintTop_toTopOf="@id/reconnect_btn"
                 app:trackThickness="1dp"

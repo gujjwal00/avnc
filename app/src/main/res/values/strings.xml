@@ -30,6 +30,7 @@
     <string name="title_import">Import</string>
     <string name="title_view_only_mode">View-only</string>
     <string name="title_connect_on_app_start">Auto-connect when app starts</string>
+    <string name="title_enable_wol">Wake-on-LAN</string>
     <string name="title_hide_remote_cursor">Hide remote pointer</string>
     <string name="title_key_compat_mode">Send legacy key events</string>
     <string name="title_button_up_delay">Send delayed click events</string>
@@ -67,6 +68,7 @@
     <string name="hint_server_id">Server ID</string>
     <string name="hint_username">Username</string>
     <string name="hint_password">Password</string>
+    <string name="hint_wol_mac">MAC address</string>
     <string name="hint_ssh_host">SSH host</string>
     <string name="hint_ssh_port">SSH port</string>
     <string name="hint_key_password">Key password</string>
@@ -93,6 +95,7 @@
     <string name="msg_pk_password_not_saved">AVNC no longer saves private key passwords to improve security.</string>
     <string name="msg_key_compat_mode_help">Some servers have limited Unicode support. Legacy key events can help input non-English text.</string>
     <string name="msg_button_up_delay_help">Delaying click events can help in some rare cases if an app is not responding to clicks.</string>
+    <string name="msg_wake_on_lan_help">Wake-on-LAN can be used to remotely power-on a computer.\n\nFirst, configure WoL on remote computer, then enable it in AVNC.\nOnce enabled, WoL magic packet will be automatically sent before connecting to this server.</string>
     <string name="msg_drag_gesture_help">Assigning an action to this gesture will change Long press detection:\n\n<b>Press-hold-release</b> → Long press\n<b>Press-hold-swipe</b> → Long press and swipe</string>
     <string name="msg_shortcut_server_deleted">This server has been deleted</string>
     <string name="tip_empty_server_list">Server list is empty.\nClick \'<b>+</b>\' to add a server, or\nuse the top address bar to connect directly.</string>

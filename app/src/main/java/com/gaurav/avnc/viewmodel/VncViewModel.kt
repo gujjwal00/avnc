@@ -11,6 +11,7 @@ package com.gaurav.avnc.viewmodel
 import android.app.Application
 import android.graphics.RectF
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.LoginInfo
@@ -19,6 +20,7 @@ import com.gaurav.avnc.ui.vnc.FrameScroller
 import com.gaurav.avnc.ui.vnc.FrameState
 import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.util.LiveRequest
+import com.gaurav.avnc.util.broadcastWoLPackets
 import com.gaurav.avnc.util.getClipboardText
 import com.gaurav.avnc.util.setClipboardText
 import com.gaurav.avnc.viewmodel.service.HostKey
@@ -216,6 +218,15 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
 
         if (profile.useRepeater)
             client.setupRepeater(profile.idOnRepeater)
+
+        if (profile.enableWol)
+            runCatching { broadcastWoLPackets(profile.wolMAC) }
+                    .onFailure {
+                        launchMain {
+                            Toast.makeText(app, "Wake-on-LAN: ${it.message}", Toast.LENGTH_LONG).show()
+                            Log.w(javaClass.simpleName, "Cannot send WoL packet", it)
+                        }
+                    }
     }
 
     private fun connect() {

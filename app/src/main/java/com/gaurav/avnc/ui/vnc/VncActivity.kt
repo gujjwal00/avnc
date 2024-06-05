@@ -277,9 +277,10 @@ class VncActivity : AppCompatActivity() {
         if (wasConnectedWhenStopped && (SystemClock.uptimeMillis() - onStartTime) in 0..2000) {
             Log.d(javaClass.simpleName, "Disconnected while in background, reconnecting ...")
             retryConnection(true)
+            return
         }
 
-        if (autoReconnecting || !viewModel.pref.server.autoReconnect)
+        if ((autoReconnecting || !viewModel.pref.server.autoReconnect) && !viewModel.profile.enableWol)
             return
 
         autoReconnecting = true

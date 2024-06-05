@@ -32,6 +32,7 @@ import com.gaurav.avnc.databinding.FragmentProfileEditorBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.util.MsgDialog
 import com.gaurav.avnc.util.OpenableDocument
+import com.gaurav.avnc.util.parseMacAddress
 import com.gaurav.avnc.viewmodel.EditorViewModel
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -171,6 +172,7 @@ class AdvancedProfileEditor : Fragment() {
 
         setupHelpButton(binding.keyCompatModeHelpBtn, R.string.title_key_compat_mode, R.string.msg_key_compat_mode_help)
         setupHelpButton(binding.buttonUpDelayHelpBtn, R.string.title_button_up_delay, R.string.msg_button_up_delay_help)
+        setupHelpButton(binding.wolHelpBtn, R.string.title_enable_wol, R.string.msg_wake_on_lan_help)
 
         return binding.root
     }
@@ -195,6 +197,9 @@ class AdvancedProfileEditor : Fragment() {
         if (binding.useRepeater.isChecked)
             result = result and validateNotEmpty(binding.idOnRepeater)
 
+        if (binding.wol.isChecked)
+            result = result and (validateNotEmpty(binding.wolMac) && validateMACAddress())
+
         if (binding.useSshTunnel.isChecked) {
             result = result and
                     validateNotEmpty(binding.sshHost) and
@@ -206,6 +211,13 @@ class AdvancedProfileEditor : Fragment() {
         return result
     }
 
+    private fun validateMACAddress(): Boolean {
+        if (runCatching { parseMacAddress(binding.wolMac.text.toString()) }.isFailure) {
+            binding.wolMac.error = "Invalid MAC address"
+            return false
+        }
+        return true
+    }
 
     private fun validatePrivateKey(): Boolean {
         if (binding.sshAuthTypeKey.isChecked && viewModel.hasSshPrivateKey.value != true) {
