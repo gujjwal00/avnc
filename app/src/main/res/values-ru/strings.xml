@@ -3,7 +3,7 @@
     <string name="title_add_server_profile">Добавить сервер</string>
     <string name="title_edit_server_profile">Изменить сервер</string>
     <string name="title_duplicate">Создать копию</string>
-    <string name="title_edit">Изменить</string>
+    <string name="title_edit">Редактировать</string>
     <string name="title_delete">Удалить</string>
     <string name="title_cancel">Отменить</string>
     <string name="title_save">Сохранить</string>
@@ -57,7 +57,7 @@
     <string name="pref_discovery_autorun">Автозапуск</string>
     <string name="title_none">Нет</string>
     <string name="pref_gesture_action_right_click">Правая кнопка мыши</string>
-    <string name="pref_gesture_action_double_click">Двойное нажатие</string>
+    <string name="pref_gesture_action_double_click">Двойной клик</string>
     <string name="pref_vk_show_all">Показать все клавиши</string>
     <string name="pref_vk_open_with_keyboard">Открыть с клавиатурой</string>
     <string name="pref_km_language_switch_to_super">Переключение раскладки → Super</string>
@@ -134,7 +134,7 @@
     <string name="pref_fullscreen">Полноэкранный режим</string>
     <string name="pref_clipboard_sync">Синхронизация буфера обмена</string>
     <string name="title_advanced">Дополнительно</string>
-    <string name="title_undo">Отменить</string>
+    <string name="title_undo">Вернуть</string>
     <string name="title_remember">Запомнить</string>
     <string name="hint_key_password">Пароль ключа</string>
     <string name="pref_discovery_autorun_summary">Обнаружение серверов на домашней странице</string>
@@ -202,4 +202,12 @@
     <string name="msg_pk_password_not_saved">AVNC больше не сохраняет частные ключевые пароли для улучшения безопасности.</string>
     <string name="desc_lock_zoom_btn">Заблокировать масштаб</string>
     <string name="pref_keep_screen_on">Держать экран включенным</string>
+    <string name="tip_session_end">Чтобы закончить сеанс, нажмите на кнопку Назад навигации, так же, как вы возвращаетесь с игрового видео.</string>
+    <string name="title_next">Далее</string>
+    <string name="title_got_it">Понятно</string>
+    <string name="msg_viewer_tips_label">Пара советов, чтобы начать</string>
+    <string name="tip_toolbar_usage">Проведите от края для открытия панели инструментов. Используйте его, чтобы открыть клавиатуру, изменить стиль жестов или сбросить зум.</string>
+    <string name="pref_toolbar_open_with_swipe">Провести от края чтобы открыть</string>
+    <string name="title_connect_on_app_start">Автоподключение при запуске приложения</string>
+    <string name="pref_show_gesture_style_toggle">Показывать переключатель стиля жестов</string>
 </resources>

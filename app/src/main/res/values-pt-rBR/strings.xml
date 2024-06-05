@@ -218,4 +218,5 @@
     <string name="title_next">Próximo</string>
     <string name="msg_viewer_tips_label">Algumas dicas para você começar</string>
     <string name="tip_toolbar_usage">Deslize a partir da borda para abrir a barra de ferramentas. Use-o para abrir o teclado, alterar o estilo do gesto ou redefinir o zoom.</string>
+    <string name="hint_send_text_to_server">Enviar texto para o servidor</string>
 </resources>

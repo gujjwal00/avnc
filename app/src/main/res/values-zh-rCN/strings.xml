@@ -195,4 +195,19 @@
     <string name="msg_button_up_delay_help">在某些罕见的情况下，如果应用程序无法响应点击，延迟点击事件会有所帮助。</string>
     <string name="pref_long_press_swipe">长按轻扫</string>
     <string name="pref_auto_reconnect">自动重连</string>
+    <string name="title_next">下一则</string>
+    <string name="pref_keep_screen_on">保持屏幕亮起</string>
+    <string name="pref_show_gesture_style_toggle">显示手势样式切换</string>
+    <string name="tip_toolbar_usage">从边缘向内滑动打开工具栏。用它来打开键盘、更改手势样式，或重设缩放。</string>
+    <string name="title_got_it">知道了</string>
+    <string name="hint_ssh_host">SSH 主机</string>
+    <string name="hint_ssh_port">SSH 端口</string>
+    <string name="msg_zoom_locked">缩放已锁定</string>
+    <string name="msg_zoom_unlocked">缩放已解锁</string>
+    <string name="msg_pk_password_not_saved">AVNC 不再保存私钥以改进安全性。</string>
+    <string name="msg_viewer_tips_label">从几则小提示开始吧</string>
+    <string name="desc_lock_zoom_btn">锁定缩放</string>
+    <string name="tip_session_end">要结束会话，轻按返回导航按钮，就像你退出视频播放所做的那样。</string>
+    <string name="pref_toolbar_open_with_swipe">从边缘向内滑动来打开</string>
+    <string name="title_connect_on_app_start">应用启动时自动连接</string>
 </resources>

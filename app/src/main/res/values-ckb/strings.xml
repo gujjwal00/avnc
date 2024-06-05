@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_clear">پاککردنەوە</string>
+    <string name="title_cancel">هەڵوەشاندنەوە</string>
+    <string name="title_import">هاوردەکردن</string>
+    <string name="title_duplicate">لەبەرگرتنەوە</string>
+    <string name="title_edit">دەستکاریکردن</string>
+    <string name="title_delete">سڕینەوە</string>
+    <string name="title_copy_name">لەبەرگرتنەوەی ناو</string>
+    <string name="title_advanced">پێشکەوتوو</string>
+    <string name="title_save">پاشەکەوتکردن</string>
+    <string name="title_settings">ڕێکخستنەکان</string>
+    <string name="title_remember">لەبیربوون</string>
+    <string name="title_export">هەناردەکردن</string>
+    <string name="title_view_only_mode">تەنیا سەیرکردن</string>
+    <string name="title_connect_on_app_start">پەیوەستبوونی خۆکار لەگەڵ هەڵبوونی نەرمەواڵە</string>
+</resources>
