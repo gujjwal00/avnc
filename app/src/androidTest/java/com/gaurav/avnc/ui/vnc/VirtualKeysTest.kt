@@ -15,7 +15,6 @@ import androidx.test.espresso.Espresso.onIdle
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.pressImeActionButton
 import androidx.test.espresso.action.ViewActions.pressKey
-import androidx.test.espresso.action.ViewActions.swipeLeft
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.DrawerActions
@@ -28,6 +27,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.gaurav.avnc.CleanPrefsRule
 import com.gaurav.avnc.R
 import com.gaurav.avnc.TestServer
+import com.gaurav.avnc.ViewPager2Actions
 import com.gaurav.avnc.checkIsDisplayed
 import com.gaurav.avnc.checkIsNotDisplayed
 import com.gaurav.avnc.checkWillBeDisplayed
@@ -101,7 +101,7 @@ class VirtualKeysTest {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.virtual_keys_btn)).doClick()
 
-            onView(withId(R.id.pager)).checkWillBeDisplayed().perform(swipeLeft())
+            onView(withId(R.id.pager)).checkWillBeDisplayed().perform(ViewPager2Actions.scrollToNextPage())
             onView(withText("Insert")).checkIsDisplayed()
             onView(withText("Delete")).checkIsDisplayed()
             onView(withText("F1")).checkIsDisplayed()
@@ -163,7 +163,7 @@ class VirtualKeysTest {
             onView(withId(R.id.virtual_keys_btn)).doClick()
             onView(withText("Ctrl")).checkIsDisplayed()
 
-            onView(withId(R.id.pager)).perform(swipeLeft())
+            onView(withId(R.id.pager)).perform(ViewPager2Actions.scrollToNextPage())
             onView(withHint(R.string.hint_send_text_to_server))
                     .checkIsDisplayed()
                     .doTypeText(text)

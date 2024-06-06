@@ -23,6 +23,7 @@ import androidx.preference.PreferenceManager
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.ViewInteraction
@@ -36,6 +37,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.viewpager2.widget.ViewPager2
 import junit.framework.AssertionFailedError
 import org.hamcrest.core.IsNot.not
 import org.junit.Assert
@@ -161,3 +163,18 @@ fun setupFileOpenIntent(fileWriter: BufferedWriter.() -> Unit) {
 }
 
 fun setupFileOpenIntent(fileContent: String) = setupFileOpenIntent { write(fileContent) }
+
+/**
+ * Actions for [ViewPager2]
+ */
+object ViewPager2Actions {
+    fun scrollToNextPage() = object : ViewAction {
+        override fun getDescription() = "Scroll ViewPager2 to next page"
+        override fun getConstraints() = isDisplayed()
+        override fun perform(uiController: UiController, view: View) {
+            check(view is ViewPager2)
+            view.setCurrentItem(view.currentItem + 1, false)
+            uiController.loopMainThreadUntilIdle()
+        }
+    }
+}
