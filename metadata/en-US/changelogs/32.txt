@@ -1,0 +1,8 @@
+* Many improvements to virtual keys
+  - Two-row layout, similar to Termux
+  - Dedicated button to toggle Android keyboard
+  - Save virtual keys visibility across sessions
+  - A textbox (accessed by left swipe) to allow full-fledged Android editing experience
+  - Long-press to 'lock' meta keys like Alt/Ctrl
+* Wake-on-LAN support
+* Made it easier to perform two-finger tap
