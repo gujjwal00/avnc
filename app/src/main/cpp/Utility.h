@@ -64,7 +64,6 @@ static const char *errnoToStr(int e) {
         case ENETDOWN:
         case ENETRESET:
         case ENETUNREACH:
-        case ECONNABORTED:
         case EHOSTDOWN:
         case EHOSTUNREACH:
         case ETIMEDOUT:
@@ -74,13 +73,19 @@ static const char *errnoToStr(int e) {
             return strerror(e);
 
         case ECONNREFUSED:
-            return "Connection refused! Server may be down or running on different port";
+            return "VNC Server is not running, or port number is incorrect";
+
+        case ECONNABORTED:
+            return "Connection aborted";
 
         case ECONNRESET:
-            return "Connection closed by server";
+            return "Connection closed abruptly by remote host";
 
         case EACCES:
             return "Authentication failed";
+
+        case 0:
+            return "Connection closed by server";
 
         default:
             // In this case we don't want to display errno description to user
