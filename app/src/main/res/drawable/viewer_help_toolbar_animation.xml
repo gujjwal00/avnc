@@ -40,12 +40,17 @@
                 android:fillColor="#f2f2f2"
                 android:pathData="M169.39,179.76L187.27,179.76A3.56,3.5 0,0 1,190.83 183.26L190.83,188.26A3.56,3.5 0,0 1,187.27 191.76L169.39,191.76A3.56,3.5 0,0 1,165.83 188.26L165.83,183.26A3.56,3.5 0,0 1,169.39 179.76z" />
 
-            <group android:name="toolbar">
+            <group
+                android:name="toolbar"
+                android:translateX="-40">
                 <path
                     android:name="tapper"
-                    android:fillAlpha="0"
-                    android:fillColor="#315eff"
-                    android:pathData="M10,100m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
+                    android:fillAlpha=".8"
+                    android:fillColor="#cc315eff"
+                    android:pathData="M10,100m-10,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0"
+                    android:strokeWidth="10"
+                    android:strokeAlpha=".4"
+                    android:strokeColor="#66315eff" />
                 <path
                     android:fillColor="#d7d7d7"
                     android:pathData="M-30.91,63.57L-18.09,63.57A3.54,4.25 0,0 1,-14.55 67.82L-14.55,132.18A3.54,4.25 0,0 1,-18.09 136.43L-30.91,136.43A3.54,4.25 0,0 1,-34.45 132.18L-34.45,67.82A3.54,4.25 0,0 1,-30.91 63.57z"
@@ -69,46 +74,30 @@
         </vector>
     </aapt:attr>
 
-
-    <target android:name="tapper">
-        <aapt:attr name="android:animation">
-            <set android:ordering="sequentially">
-
-                <objectAnimator
-                    android:duration="100"
-                    android:propertyName="fillAlpha"
-                    android:startOffset="500"
-                    android:valueFrom="0"
-                    android:valueTo="1" />
-
-                <objectAnimator
-                    android:duration="100"
-                    android:propertyName="fillAlpha"
-                    android:startOffset="1600"
-                    android:valueFrom="1"
-                    android:valueTo="0" />
-            </set>
-        </aapt:attr>
-    </target>
-
     <target android:name="toolbar">
         <aapt:attr name="android:animation">
             <set android:ordering="sequentially">
 
-                <objectAnimator
-                    android:duration="1000"
-                    android:propertyName="translateX"
-                    android:startOffset="1000"
-                    android:valueFrom="0"
-                    android:valueTo="36" />
-
-
+                <!-- Show tapper -->
                 <objectAnimator
                     android:duration="0"
                     android:propertyName="translateX"
-                    android:startOffset="1500"
-                    android:valueFrom="36"
+                    android:startOffset="300"
                     android:valueTo="0" />
+
+                <!-- Slide toolbar -->
+                <objectAnimator
+                    android:duration="500"
+                    android:propertyName="translateX"
+                    android:startOffset="0"
+                    android:valueTo="36" />
+
+                <!-- Hide -->
+                <objectAnimator
+                    android:duration="0"
+                    android:propertyName="translateX"
+                    android:startOffset="600"
+                    android:valueTo="-40" />
             </set>
         </aapt:attr>
     </target>

@@ -37,13 +37,14 @@ class ViewerHelp {
         val binding = ViewerHelpBinding.inflate(activity.layoutInflater, activity.binding.drawerLayout, false)
         activity.binding.drawerLayout.addView(binding.root, 1)
 
-        // Open help view with animation
-        binding.root.alpha = 0f
-        binding.root.animate().alpha(1f).setStartDelay(500)
         binding.root.setOnClickListener { /* Consume clicks to stop them from passing through to FrameView */ }
 
+        // Open help view with animation
+        binding.root.alpha = 0f
+        binding.root.animate().alpha(1f).setStartDelay(500).withEndAction {
+            initAnimatedDrawable(binding.toolbarAnimation)
+        }
 
-        initAnimatedDrawable(binding.toolbarAnimation)
         binding.nextBtn.setOnClickListener {
             binding.page1.isVisible = false
             binding.page2.isVisible = true

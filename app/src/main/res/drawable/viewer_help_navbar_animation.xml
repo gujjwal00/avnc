@@ -72,11 +72,6 @@
 
             <group android:name="navbar">
                 <path
-                    android:name="nav_opener"
-                    android:fillAlpha="0"
-                    android:fillColor="#315eff"
-                    android:pathData="M100,190m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
-                <path
                     android:fillColor="#c2c2c2"
                     android:pathData="M-0,230h200v25h-200z" />
                 <path
@@ -90,30 +85,59 @@
                     android:pathData="m165.76,249 l-10,-6.5 10,-6.5z" />
 
             </group>
-            <path
-                android:name="nav_tapper"
-                android:fillAlpha="0"
-                android:fillColor="#315eff"
-                android:pathData="M160.76,187.25m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
+
+            <group
+                android:name="tapper"
+                android:translateY="50">
+                <path
+                    android:fillAlpha=".8"
+                    android:fillColor="#cc315eff"
+                    android:pathData="M106,187m-10,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0"
+                    android:strokeWidth="10"
+                    android:strokeAlpha=".4"
+                    android:strokeColor="#66315eff" />
+            </group>
         </vector>
 
     </aapt:attr>
 
-    <target android:name="nav_opener">
+    <target android:name="tapper">
         <aapt:attr name="android:animation">
             <set android:ordering="sequentially">
+                <!-- Show -->
                 <objectAnimator
-                    android:duration="100"
-                    android:propertyName="fillAlpha"
-                    android:startOffset="500"
-                    android:valueFrom="0"
-                    android:valueTo="1" />
+                    android:duration="0"
+                    android:propertyName="translateY"
+                    android:startOffset="300"
+                    android:valueTo="0" />
 
+                <!-- Slide with navbar -->
                 <objectAnimator
-                    android:duration="100"
-                    android:propertyName="fillAlpha"
-                    android:startOffset="2000"
-                    android:valueFrom="1"
+                    android:duration="500"
+                    android:propertyName="translateY"
+                    android:startOffset="300"
+                    android:valueTo="-55" />
+
+                <!--Move to back button -->
+                <objectAnimator
+                    android:duration="0"
+                    android:propertyName="translateY"
+                    android:startOffset="300"
+                    android:valueTo="0" />
+                <objectAnimator
+                    android:duration="0"
+                    android:propertyName="translateX"
+                    android:valueTo="60" />
+
+                <!-- Tap & hide -->
+                <objectAnimator
+                    android:duration="0"
+                    android:propertyName="translateY"
+                    android:startOffset="300"
+                    android:valueTo="50" />
+                <objectAnimator
+                    android:duration="0"
+                    android:propertyName="translateX"
                     android:valueTo="0" />
             </set>
         </aapt:attr>
@@ -123,9 +147,9 @@
         <aapt:attr name="android:animation">
             <set android:ordering="sequentially">
                 <objectAnimator
-                    android:duration="1000"
+                    android:duration="500"
                     android:propertyName="translateY"
-                    android:startOffset="1000"
+                    android:startOffset="600"
                     android:valueFrom="0"
                     android:valueTo="-55" />
 
@@ -133,30 +157,9 @@
                 <objectAnimator
                     android:duration="0"
                     android:propertyName="translateY"
-                    android:startOffset="3600"
-                    android:valueFrom="-55"
-                    android:valueTo="0" />
+                    android:startOffset="1800"
+                    android:valueTo="55" />
 
-            </set>
-        </aapt:attr>
-    </target>
-
-    <target android:name="nav_tapper">
-        <aapt:attr name="android:animation">
-            <set android:ordering="sequentially">
-                <objectAnimator
-                    android:duration="100"
-                    android:propertyName="fillAlpha"
-                    android:startOffset="3000"
-                    android:valueFrom="0"
-                    android:valueTo="1" />
-
-                <objectAnimator
-                    android:duration="100"
-                    android:propertyName="fillAlpha"
-                    android:startOffset="200"
-                    android:valueFrom="1"
-                    android:valueTo="0" />
             </set>
         </aapt:attr>
     </target>
@@ -168,16 +171,14 @@
                     android:duration="300"
                     android:interpolator="@android:anim/accelerate_interpolator"
                     android:propertyName="translateX"
-                    android:startOffset="3800"
-                    android:valueFrom="0"
+                    android:startOffset="1800"
                     android:valueTo="200" />
 
                 <!--Reset-->
                 <objectAnimator
                     android:duration="0"
                     android:propertyName="translateX"
-                    android:startOffset="1500"
-                    android:valueFrom="200"
+                    android:startOffset="800"
                     android:valueTo="0" />
             </set>
         </aapt:attr>
