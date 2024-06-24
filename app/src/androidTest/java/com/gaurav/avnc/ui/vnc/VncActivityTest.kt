@@ -108,4 +108,13 @@ class VncActivityTest {
         }
     }
 
+    @Test
+    fun clientToServerClipboardWithHtmlClip() {
+        val sample = "Pivot! Pivot! Pivot! Pivot!!!"
+        setClipboardHtml(sample)
+        testWrapper {
+            pollingAssert { Assert.assertEquals(sample, testServer.receivedCutText) }
+        }
+    }
+
 }

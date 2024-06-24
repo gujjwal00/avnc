@@ -136,6 +136,11 @@ fun setClipboardText(text: String) = runOnMainSync {
             .setPrimaryClip(ClipData.newPlainText(null, text))
 }
 
+fun setClipboardHtml(text: String) = runOnMainSync {
+    ContextCompat.getSystemService(targetContext, ClipboardManager::class.java)!!
+            .setPrimaryClip(ClipData.newHtmlText(null, text, text))
+}
+
 /**
  * Asserts that given [test] passes against current progress of a [ProgressBar].
  */
