@@ -309,7 +309,7 @@ class VncActivity : AppCompatActivity() {
         if (clipChangeListenerEnabled == enable)
             return
 
-        ContextCompat.getSystemService(this, ClipboardManager::class.java)?.let {
+        ContextCompat.getSystemService(applicationContext, ClipboardManager::class.java)?.let {
             if (enable) it.addPrimaryClipChangedListener(clipChangeListener)
             else it.removePrimaryClipChangedListener(clipChangeListener)
             clipChangeListenerEnabled = enable
