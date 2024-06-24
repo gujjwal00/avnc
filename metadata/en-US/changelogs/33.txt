@@ -1,0 +1,3 @@
+* Improved error reporting
+* Fixed HTML content not being copied to server
+* Fixed a memory leak
