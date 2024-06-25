@@ -17,12 +17,11 @@ import android.view.MotionEvent.PointerCoords
 import android.view.MotionEvent.PointerProperties
 import android.view.ViewConfiguration
 import androidx.core.content.edit
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.filters.SdkSuppress
 import com.gaurav.avnc.instrumentation
-import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.targetContext
 import com.gaurav.avnc.targetPrefs
-import com.gaurav.avnc.viewmodel.VncViewModel
+import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.vnc.PointerButton
 import io.mockk.mockk
 import io.mockk.verify
@@ -49,7 +48,7 @@ class TouchHandlerTest {
     fun setup() {
         instrumentation.runOnMainSync {
             mockDispatcher = mockk(relaxed = true)
-            touchHandler = TouchHandler(VncViewModel(ServerProfile(), ApplicationProvider.getApplicationContext()), mockDispatcher)
+            touchHandler = TouchHandler(FrameView(targetContext), mockDispatcher, AppPreferences(targetContext))
         }
 
         // Internally, mocks seems to be lazily initialized, and the initialization can take some time.

@@ -88,7 +88,7 @@ class VncActivity : AppCompatActivity() {
     lateinit var viewModel: VncViewModel
     lateinit var binding: ActivityVncBinding
     private val dispatcher by lazy { Dispatcher(this) }
-    val touchHandler by lazy { TouchHandler(viewModel, dispatcher) }
+    val touchHandler by lazy { TouchHandler(binding.frameView, dispatcher, viewModel.pref) }
     val keyHandler by lazy { KeyHandler(dispatcher, viewModel.profile.fLegacyKeySym, viewModel.pref) }
     val virtualKeys by lazy { VirtualKeys(this) }
     private val serverUnlockPrompt = DeviceAuthPrompt(this)

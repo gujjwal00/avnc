@@ -18,7 +18,7 @@ import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ViewConfiguration
-import com.gaurav.avnc.viewmodel.VncViewModel
+import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.vnc.PointerButton
 import kotlin.math.PI
 import kotlin.math.abs
@@ -28,8 +28,8 @@ import kotlin.math.max
 /**
  * Handler for touch events. It detects various gestures and notifies [dispatcher].
  */
-class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: Dispatcher)
-    : ScaleGestureDetector.OnScaleGestureListener, SimpleOnGestureListener() {
+class TouchHandler(private val frameView: FrameView, private val dispatcher: Dispatcher, private val pref: AppPreferences)
+    : ScaleGestureDetector.OnScaleGestureListener {
 
     //Extension to easily access touch position
     private fun MotionEvent.point() = PointF(x, y)
@@ -78,7 +78,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     /****************************************************************************************
      * Mouse
      ****************************************************************************************/
-    private val mousePassthrough = viewModel.pref.input.mousePassthrough
+    private val mousePassthrough = pref.input.mousePassthrough
 
     private fun handleMouseEvent(e: MotionEvent): Boolean {
         if (Build.VERSION.SDK_INT < 23 || !mousePassthrough || !e.isFromSource(InputDevice.SOURCE_MOUSE))
@@ -116,7 +116,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     /****************************************************************************************
      * Stylus
      ****************************************************************************************/
-    private val stylusGestureDetector = GestureDetector(viewModel.app, StylusGestureListener())
+    private val stylusGestureDetector = GestureDetector(frameView.context, StylusGestureListener())
 
     private fun handleStylusEvent(event: MotionEvent): Boolean {
         if (event.isFromSource(InputDevice.SOURCE_STYLUS) &&
@@ -146,7 +146,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         }
 
         override fun onLongPress(e: MotionEvent) {
-            viewModel.frameViewRef.get()?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            frameView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             dispatcher.onStylusLongPress(e.point())
         }
 
@@ -170,11 +170,11 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
     /****************************************************************************************
      * Finger Gestures (and everything else beside mouse & stylus)
      ****************************************************************************************/
-    private val scaleDetector = ScaleGestureDetector(viewModel.app, this).apply { isQuickScaleEnabled = false }
-    private val gestureDetector = GestureDetectorEx(viewModel.app, FingerGestureListener())
+    private val scaleDetector = ScaleGestureDetector(frameView.context, this).apply { isQuickScaleEnabled = false }
+    private val gestureDetector = GestureDetectorEx(frameView.context, FingerGestureListener())
     private val swipeVsScale = SwipeVsScale()
-    private val longPressSwipeEnabled = viewModel.pref.input.gesture.longPressSwipeEnabled
-    private val swipeSensitivity = viewModel.pref.input.gesture.swipeSensitivity
+    private val longPressSwipeEnabled = pref.input.gesture.longPressSwipeEnabled
+    private val swipeSensitivity = pref.input.gesture.swipeSensitivity
 
 
     private fun handleGestureEvent(event: MotionEvent): Boolean {
@@ -204,7 +204,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
         }
 
         override fun onLongPress(e: MotionEvent) {
-            viewModel.frameViewRef.get()?.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            frameView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
 
             // If long-press-swipe is disabled, we can dispatch long-press immediately
             if (!longPressSwipeEnabled) dispatcher.onLongPress(e.point())
@@ -461,7 +461,7 @@ class TouchHandler(private val viewModel: VncViewModel, private val dispatcher: 
      * perfectly, but it does provide huge improvement over existing situation.
      */
     private inner class SwipeVsScale {
-        private val enabled = viewModel.pref.input.gesture.swipe2 == "remote-scroll"
+        private val enabled = pref.input.gesture.swipe2 == "remote-scroll"
         private var detecting = false
         private var scaleDetected = false
         private var swipeDetected = false
