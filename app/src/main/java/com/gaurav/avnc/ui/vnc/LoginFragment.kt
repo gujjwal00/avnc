@@ -9,6 +9,7 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.ArrayMap
 import android.util.Log
@@ -64,14 +65,19 @@ class LoginFragment : DialogFragment() {
         }
 
         setupAutoComplete()
-        isCancelable = false
 
         return MaterialAlertDialogBuilder(requireContext())
                 .setTitle(getTitle())
                 .setView(binding.root)
                 .setPositiveButton(android.R.string.ok) { _, _ -> onOk() }
                 .setNegativeButton(android.R.string.cancel) { _, _ -> onCancel() }
-                .create()
+                .create().apply {
+                    setCanceledOnTouchOutside(false)
+                }
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        onCancel()
     }
 
     private fun getTitle() = when (loginType) {
@@ -110,7 +116,6 @@ class LoginFragment : DialogFragment() {
     }
 
     private fun onCancel() {
-        viewModel.loginInfoRequest.cancelRequest()
         requireActivity().finish()
     }
 
