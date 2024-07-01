@@ -59,6 +59,12 @@ class LoginFragment : DialogFragment() {
         binding.passwordLayout.isVisible = loginInfo.password.isBlank()
         binding.remember.isVisible = viewModel.profile.ID != 0L && loginType != LoginInfo.Type.SSH_KEY_PASSWORD
 
+        binding.password.setOnEditorActionListener { _, _, _ ->
+            onOk()
+            dismiss()
+            true
+        }
+
         if (loginType == LoginInfo.Type.SSH_KEY_PASSWORD) {
             binding.passwordLayout.setHint(R.string.hint_key_password)
             binding.pkPasswordMsg.isVisible = viewModel.profile.sshPrivateKeyPassword.isNotBlank()
