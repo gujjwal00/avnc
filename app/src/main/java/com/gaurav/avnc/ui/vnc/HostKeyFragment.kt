@@ -9,7 +9,9 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.gaurav.avnc.R
@@ -24,6 +26,13 @@ class HostKeyFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val request = viewModel.sshHostKeyVerifyRequest
+        if (savedInstanceState != null && request.value == null) {
+            Log.i(javaClass.simpleName, "Activity is being recreated and old ViewModel is gone, removing stale dialog")
+            showsDialog = false
+            dismiss()
+            return Dialog(requireContext()) // Can't return null
+        }
+
         val hostKey = request.value!!
         val titleRes = if (hostKey.isKnownHost) R.string.title_ssh_host_key_changed else R.string.title_unknown_ssh_host
 
@@ -44,8 +53,17 @@ class HostKeyFragment : DialogFragment() {
                 .setTitle(titleRes)
                 .setMessage(message)
                 .setPositiveButton(R.string.title_continue) { _, _ -> request.offerResponse(true) }
-                .setNegativeButton(android.R.string.cancel) { _, _ -> request.offerResponse(false) }
-                .setCancelable(false)
-                .create()
+                .setNegativeButton(android.R.string.cancel) { _, _ -> abortSession() }
+                .create().apply {
+                    setCanceledOnTouchOutside(false)
+                }
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        abortSession()
+    }
+
+    private fun abortSession() {
+        requireActivity().finish()
     }
 }
