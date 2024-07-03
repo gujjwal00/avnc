@@ -29,7 +29,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.os.BundleCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -43,6 +42,7 @@ import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.SamsungDex
+import com.gaurav.avnc.util.getClipboard
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
 import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isDisconnected
@@ -309,7 +309,7 @@ class VncActivity : AppCompatActivity() {
         if (clipChangeListenerEnabled == enable)
             return
 
-        ContextCompat.getSystemService(applicationContext, ClipboardManager::class.java)?.let {
+        getClipboard(this).let {
             if (enable) it.addPrimaryClipChangedListener(clipChangeListener)
             else it.removePrimaryClipChangedListener(clipChangeListener)
             clipChangeListenerEnabled = enable

@@ -24,13 +24,25 @@ import kotlinx.coroutines.withContext
  * use a background thread for accessing clipboard.
  */
 
+
+/**
+ * Should be called from Main thread because ClipboardManager can only be created
+ * from a Looper thread.
+ */
+fun getClipboard(context: Context): ClipboardManager {
+    // Use application context to create ClipboardManager to
+    // - avoid leaking the context
+    // - have single instance
+    return ContextCompat.getSystemService(context.applicationContext, ClipboardManager::class.java)!!
+}
+
 /**
  * Puts given text on the clipboard.
  */
 suspend fun setClipboardText(context: Context, text: String): Boolean {
     var success = false
     try {
-        getClipboardManager(context)?.let {
+        withContext(Dispatchers.Main.immediate) { getClipboard(context) }.let {
             withContext(Dispatchers.IO) {
                 it.setPrimaryClip(ClipData.newPlainText(null, text))
                 success = true
@@ -51,7 +63,7 @@ suspend fun setClipboardText(context: Context, text: String): Boolean {
 suspend fun getClipboardText(context: Context): String? {
     var result: String? = null
     try {
-        getClipboardManager(context)?.let {
+        withContext(Dispatchers.Main.immediate) { getClipboard(context) }.let {
             withContext(Dispatchers.IO) {
                 result = it.primaryClip?.getItemAt(0)?.text?.toString()
             }
@@ -62,11 +74,4 @@ suspend fun getClipboardText(context: Context): String? {
         Log.e("ClipboardUtil", "Could not retrieve text from clipboard.", t)
     }
     return result
-}
-
-/**
- * [ClipboardManager] has to be created on a thread where Looper has been initialized.
- */
-private suspend fun getClipboardManager(context: Context) = withContext(Dispatchers.Main.immediate) {
-    ContextCompat.getSystemService(context, ClipboardManager::class.java)
 }
