@@ -109,6 +109,7 @@
                     android:duration="0"
                     android:propertyName="translateY"
                     android:startOffset="300"
+                    android:valueFrom="50"
                     android:valueTo="0" />
 
                 <!-- Slide with navbar -->
@@ -116,6 +117,7 @@
                     android:duration="500"
                     android:propertyName="translateY"
                     android:startOffset="300"
+                    android:valueFrom="0"
                     android:valueTo="-55" />
 
                 <!--Move to back button -->
@@ -123,10 +125,12 @@
                     android:duration="0"
                     android:propertyName="translateY"
                     android:startOffset="300"
+                    android:valueFrom="-55"
                     android:valueTo="0" />
                 <objectAnimator
                     android:duration="0"
                     android:propertyName="translateX"
+                    android:valueFrom="0"
                     android:valueTo="60" />
 
                 <!-- Tap & hide -->
@@ -134,10 +138,12 @@
                     android:duration="0"
                     android:propertyName="translateY"
                     android:startOffset="300"
+                    android:valueFrom="0"
                     android:valueTo="50" />
                 <objectAnimator
                     android:duration="0"
                     android:propertyName="translateX"
+                    android:valueFrom="60"
                     android:valueTo="0" />
             </set>
         </aapt:attr>
@@ -158,7 +164,8 @@
                     android:duration="0"
                     android:propertyName="translateY"
                     android:startOffset="1800"
-                    android:valueTo="55" />
+                    android:valueFrom="-55"
+                    android:valueTo="0" />
 
             </set>
         </aapt:attr>
@@ -172,6 +179,7 @@
                     android:interpolator="@android:anim/accelerate_interpolator"
                     android:propertyName="translateX"
                     android:startOffset="1800"
+                    android:valueFrom="0"
                     android:valueTo="200" />
 
                 <!--Reset-->
@@ -179,6 +187,7 @@
                     android:duration="0"
                     android:propertyName="translateX"
                     android:startOffset="800"
+                    android:valueFrom="200"
                     android:valueTo="0" />
             </set>
         </aapt:attr>
