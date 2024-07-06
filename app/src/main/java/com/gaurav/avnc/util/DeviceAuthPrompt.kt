@@ -73,14 +73,20 @@ class DeviceAuthPrompt(private val activity: FragmentActivity) {
         check(onAuthSuccess != null)
         check(onAuthFail != null)
 
-        activity.startClass2BiometricOrCredentialAuthentication(
-                title = title,
-                confirmationRequired = false,
-                callback = PromptCallback()
-        )
+        runCatching {
+            activity.startClass2BiometricOrCredentialAuthentication(
+                    title = title,
+                    confirmationRequired = false,
+                    callback = PromptCallback()
+            )
 
-        viewModel.isPromptShown = true
-        viewModel.promptTitle = title
+            viewModel.isPromptShown = true
+            viewModel.promptTitle = title
+        }.onFailure {
+            Log.e(javaClass.simpleName, "Error launching auth prompt: ${it.message}", it)
+            onAuthFail?.invoke("Error launching auth prompt")
+            onAuthFinished()
+        }
     }
 
     private fun onAuthFinished() {
