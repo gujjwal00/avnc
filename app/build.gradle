@@ -16,8 +16,8 @@ android {
         applicationId "com.gaurav.avnc"
         minSdk 21
         targetSdk 34
-        versionCode 33
-        versionName "2.5.1"
+        versionCode 34
+        versionName "2.5.2"
 
         javaCompileOptions {
             annotationProcessorOptions {

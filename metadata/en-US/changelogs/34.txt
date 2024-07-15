@@ -1,0 +1,3 @@
+* Added an experimental option to pause updates in background
+* Improved keyboard navigation for Login dialog
+* Fixed couple of possible crashes
