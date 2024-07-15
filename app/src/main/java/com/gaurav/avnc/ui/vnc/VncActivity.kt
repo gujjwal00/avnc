@@ -135,7 +135,6 @@ class VncActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         binding.frameView.onResume()
-        viewModel.resumeFrameBufferUpdates()
         onStartTime = SystemClock.uptimeMillis()
 
         // Refresh framebuffer on activity restart:
@@ -143,14 +142,18 @@ class VncActivity : AppCompatActivity() {
         //   been closed by the server while app process was frozen in background
         // - It also attempts to fix some unusual cases of old updates requests being lost while AVNC
         //   was frozen by the system
-        if (wasConnectedWhenStopped) viewModel.refreshFrameBuffer()
+        if (viewModel.pref.viewer.pauseUpdatesInBackground)
+            viewModel.resumeFrameBufferUpdates()
+        else if (wasConnectedWhenStopped)
+            viewModel.refreshFrameBuffer()
     }
 
     override fun onStop() {
         super.onStop()
         virtualKeys.releaseMetaKeys()
         binding.frameView.onPause()
-        viewModel.pauseFrameBufferUpdates()
+        if (viewModel.pref.viewer.pauseUpdatesInBackground)
+            viewModel.pauseFrameBufferUpdates()
         wasConnectedWhenStopped = viewModel.state.value.isConnected
     }
 

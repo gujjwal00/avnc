@@ -38,6 +38,11 @@
         app:key="keep_screen_on"
         app:title="@string/pref_keep_screen_on" />
 
+    <SwitchPreference
+        app:defaultValue="false"
+        app:key="pause_fb_updates_in_background"
+        app:title="Pause updates when in background (experimental)" />
+
     <PreferenceCategory
         app:icon="@drawable/ic_zoom_in"
         app:title="@string/pref_zoom">

@@ -445,11 +445,13 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeRefreshFrameBuffer(JNIEnv *env, jobject
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_gaurav_avnc_vnc_VncClient_nativeSetAutomaticFramebufferUpdates(JNIEnv *env, jobject thiz, jlong client_ptr,
-                                                                        jboolean enabled) {
+Java_com_gaurav_avnc_vnc_VncClient_nativePauseFramebufferUpdates(JNIEnv *env, jobject thiz, jlong client_ptr,
+                                                                 jboolean pause) {
     auto client = ((rfbClient *) client_ptr);
-    client->automaticUpdateRequests = enabled ? TRUE : FALSE;
-    if (enabled) SendIncrementalFramebufferUpdateRequest(client);
+    auto wasPaused = client->pauseFramebufferUpdates;
+    client->pauseFramebufferUpdates = pause;
+    if (wasPaused && !pause)
+        SendFramebufferUpdateRequest(client, 0, 0, client->width, client->height, FALSE);
 }
 
 extern "C"

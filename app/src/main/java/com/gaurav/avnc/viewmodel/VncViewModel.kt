@@ -397,11 +397,11 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
     }
 
     fun pauseFrameBufferUpdates() {
-        //client.setAutomaticFrameBufferUpdates(false)
+        messenger.pauseFramebufferUpdates(true)
     }
 
     fun resumeFrameBufferUpdates() {
-        //client.setAutomaticFrameBufferUpdates(true)
+        messenger.pauseFramebufferUpdates(false)
     }
 
     fun refreshFrameBuffer() {

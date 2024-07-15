@@ -99,4 +99,8 @@ class Messenger(private val client: VncClient) {
     fun refreshFrameBuffer() {
         execute { client.refreshFrameBuffer() }
     }
+
+    fun pauseFramebufferUpdates(pause: Boolean) {
+        execute { client.pauseFramebufferUpdates(pause) }
+    }
 }

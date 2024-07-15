@@ -40,6 +40,7 @@ class AppPreferences(context: Context) {
         val zoomMin; get() = prefs.getInt("zoom_min", 50) / 100F
         val perOrientationZoom; get() = prefs.getBoolean("per_orientation_zoom", true)
         val toolbarShowGestureStyleToggle; get() = prefs.getBoolean("toolbar_show_gesture_style_toggle", true)
+        val pauseUpdatesInBackground; get() = prefs.getBoolean("pause_fb_updates_in_background", false)
     }
 
     inner class Gesture {
