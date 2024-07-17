@@ -210,4 +210,11 @@
     <string name="msg_viewer_tips_label">Başlamanıza yardımcı olacak birkaç ipucu</string>
     <string name="tip_toolbar_usage">Araç çubuğunu açmak için kenardan içeri kaydırın. Klavyeyi açmak, hareket biçimini değiştirmek veya yakınlaştırmayı sıfırlamak için kullanın.</string>
     <string name="tip_session_end">Oturumu sonlandırmak için, tıpkı oynatılan bir videodan geri döndüğünüz gibi Geri gezinme düğmesine dokunun.</string>
+    <string name="hint_send_text_to_server">Sunucuya metin gönder</string>
+    <string name="title_enable_wol">LAN üzerinden uyandır</string>
+    <string name="hint_wol_mac">MAC adresi</string>
+    <string name="msg_wake_on_lan_help">LAN üzerinden uyandırma bir bilgisayarı uzaktan açmak için kullanılabilir.
+\n
+\nİlk olarak, LAN üzerinden uyandırmayı uzak bilgisayarda yapılandırın, ardından AVNC\'de etkinleştirin.
+\nEtkinleştirildikten sonra, LAN üzerinden uyandırma sihirli paketi bu sunucuya bağlanmadan önce otomatik olarak gönderilecektir.</string>
 </resources>
