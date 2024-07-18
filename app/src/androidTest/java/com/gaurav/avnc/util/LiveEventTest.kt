@@ -8,7 +8,9 @@
 
 package com.gaurav.avnc.util
 
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.gaurav.avnc.pollingAssert
 import com.gaurav.avnc.runOnMainSync
@@ -18,6 +20,16 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class LiveEventTest {
+
+    // A lifecycle owner which is in resumed state
+    class ActiveOwner : LifecycleOwner {
+        private val registry = LifecycleRegistry(this)
+        override val lifecycle get() = registry
+
+        init {
+            registry.currentState = Lifecycle.State.RESUMED
+        }
+    }
 
     /**
      * [LiveEvent] should NOT notify observer installed after event was fired.
@@ -31,10 +43,10 @@ class LiveEventTest {
         var futureObserverNotified = false
 
         runOnMainSync {
-            testEvent.observeForever { observer1Notified = true }
-            testEvent.observeForever { observer2Notified = true }
+            testEvent.observe(ActiveOwner()) { observer1Notified = true }
+            testEvent.observe(ActiveOwner()) { observer2Notified = true }
             testEvent.fire(Any())
-            testEvent.observeForever { futureObserverNotified = true }
+            testEvent.observe(ActiveOwner()) { futureObserverNotified = true }
         }
 
         Assert.assertTrue(observer1Notified)
@@ -54,25 +66,10 @@ class LiveEventTest {
 
         runOnMainSync {
             testEvent.fire(Any())
-            testEvent.observeForever { observerNotified = true }
+            testEvent.observe(ActiveOwner()) { observerNotified = true }
         }
 
         Assert.assertTrue(observerNotified)
-    }
-
-    @Test
-    fun testObserverRemoval() {
-        val testEvent = LiveEvent<Any>()
-        var notified = false
-
-        runOnMainSync {
-            val observer = Observer<Any> { notified = true }
-            testEvent.observeForever(observer)
-            testEvent.removeObserver(observer)
-            testEvent.fire(Any())
-        }
-
-        Assert.assertFalse(notified)
     }
 
     @Test
@@ -81,7 +78,7 @@ class LiveEventTest {
         var observedValue = 0
 
         runOnMainSync {
-            testEvent.observeForever { observedValue = it }
+            testEvent.observe(ActiveOwner()) { observedValue = it }
         }
 
         testEvent.fireAsync(1)

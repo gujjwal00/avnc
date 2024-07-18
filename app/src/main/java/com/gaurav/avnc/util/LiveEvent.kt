@@ -44,7 +44,6 @@ open class LiveEvent<T> {
     }
 
     private val liveData = MutableLiveData<WrappedData<T>>()
-    private val wrappedObservers = mutableMapOf<Observer<T>, WrappedObserver<T>>()
 
     /**
      * Peek current value of this event, irrespective of whether any observer has been notified.
@@ -71,19 +70,6 @@ open class LiveEvent<T> {
     @MainThread
     fun observe(owner: LifecycleOwner, observer: Observer<T>) {
         val wrapped = WrappedObserver(observer)
-        wrappedObservers[observer] = wrapped
         liveData.observe(owner, wrapped)
-    }
-
-    @MainThread
-    fun observeForever(observer: Observer<T>) {
-        val wrapped = WrappedObserver(observer)
-        wrappedObservers[observer] = wrapped
-        liveData.observeForever(wrapped)
-    }
-
-    @MainThread
-    fun removeObserver(observer: Observer<T>) {
-        wrappedObservers.remove(observer)?.let { liveData.removeObserver(it) }
     }
 }
