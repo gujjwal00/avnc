@@ -254,7 +254,7 @@
                         android:src="@drawable/ic_arrow_back"
                         app:tint="?colorPrimary" />
 
-                    <EditText
+                    <com.gaurav.avnc.ui.vnc.VkEditText
                         android:id="@+id/text_box"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

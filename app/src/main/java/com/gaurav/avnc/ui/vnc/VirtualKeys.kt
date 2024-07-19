@@ -24,6 +24,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.HorizontalScrollView
 import android.widget.ToggleButton
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.doOnLayout
@@ -41,6 +42,7 @@ import kotlin.math.sign
  */
 class VirtualKeys(activity: VncActivity) {
 
+    private val viewModel = activity.viewModel
     private val pref = activity.viewModel.pref
     private val keyHandler = activity.keyHandler
     private val frameView = activity.binding.frameView
@@ -188,6 +190,9 @@ class VirtualKeys(activity: VncActivity) {
         binding.textBox.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) frameView.requestFocus()
         }
+        binding.textBox.onTextCopyListener = {
+            viewModel.sendClipboardText()
+        }
         binding.closeBtn.setOnClickListener {
             hide(true)
         }
@@ -291,6 +296,22 @@ class VirtualKeys(activity: VncActivity) {
             events.forEach { keyHandler.onKeyEvent(it) }
 
         textBox.setText("")
+    }
+}
+
+/**
+ * Simple extension to add hook for Copy action.
+ */
+class VkEditText(context: Context, attributeSet: AttributeSet? = null) : AppCompatEditText(context, attributeSet) {
+
+    var onTextCopyListener: (() -> Unit)? = null
+
+    override fun onTextContextMenuItem(id: Int): Boolean {
+        val result = super.onTextContextMenuItem(id)
+        if (result && (id == android.R.id.cut || id == android.R.id.copy)) {
+            onTextCopyListener?.invoke()
+        }
+        return result
     }
 }
 

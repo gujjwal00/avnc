@@ -10,7 +10,6 @@ package com.gaurav.avnc.ui.vnc
 
 import android.app.Activity
 import android.app.PictureInPictureParams
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -42,7 +41,6 @@ import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.SamsungDex
-import com.gaurav.avnc.util.getClipboard
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
 import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isDisconnected
@@ -300,24 +298,6 @@ class VncActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Clipboard changes are only subscribed to while App has focus. We don't want to access clipboard
-     * from background (newer Android versions already restricts this). This listener is primarily needed
-     * for clip changes initiated from the Text Box in Virtual Keys.
-     */
-    private val clipChangeListener = ClipboardManager.OnPrimaryClipChangedListener { viewModel.sendClipboardText() }
-    private var clipChangeListenerEnabled = false
-
-    private fun toggleClipboardListener(enable: Boolean) {
-        if (clipChangeListenerEnabled == enable)
-            return
-
-        getClipboard(this).let {
-            if (enable) it.addPrimaryClipChangedListener(clipChangeListener)
-            else it.removePrimaryClipChangedListener(clipChangeListener)
-            clipChangeListenerEnabled = enable
-        }
-    }
 
     /************************************************************************************
      * Layout handling.
@@ -349,7 +329,6 @@ class VncActivity : AppCompatActivity() {
         super.onWindowFocusChanged(hasFocus)
         layoutManager.onWindowFocusChanged(hasFocus)
         if (hasFocus) viewModel.sendClipboardText()
-        toggleClipboardListener(hasFocus)
     }
 
 
