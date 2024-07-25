@@ -18,6 +18,7 @@ import android.view.KeyCharacterMap
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.MeasureSpec
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -26,11 +27,10 @@ import android.widget.HorizontalScrollView
 import android.widget.ToggleButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
-import androidx.core.view.children
-import androidx.core.view.doOnLayout
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.gaurav.avnc.databinding.VirtualKeysBinding
+import kotlin.math.min
 import kotlin.math.sign
 
 
@@ -51,7 +51,6 @@ class VirtualKeys(activity: VncActivity) {
     private val lockedToggleKeys = mutableSetOf<ToggleButton>()
     private val keyCharMap by lazy { KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD) }
     private var openedWithKb = false
-    private var textPageIndex = 2
 
     val container: View? get() = stub.root
 
@@ -113,66 +112,71 @@ class VirtualKeys(activity: VncActivity) {
         val binding = stub.binding as VirtualKeysBinding
         initControls(binding)
         initKeys(binding)
-        binding.tmpPageHost.doOnLayout { binding.root.post { initPager(binding) } }
+        initPager(binding)
         keyHandler.processedEventObserver = ::onAfterKeyEvent
     }
 
     /**
-     * This is a wierd way to do things, but I have not found an alternative yet.
-     *
-     * Basically, the optimal UX is:
-     * - Have several 'pages' of keys & controls. User can flip through them with horizontal swipe.
-     * - Take minimal horizontal space, i.e. don't use 'fill_parent' for width. If virtual keys are
-     *   stretched to full width in landscape mode, it leaves very little vertical room for FrameView.
-     *
-     * But using [ViewPager2] creates certain problems:
-     * - It doesn't support 'wrap_content', so we have to use a fixed width & height.
-     * - It also requires child views to use 'fill_parent' for width & height.
-     * - Cannot directly add child views to ViewPager2 in single XML layout.
-     *
-     * To workaround these limitations, all pages are initially attached to a LinearLayout.
-     * Once layout is complete (to allow proper calculation to width & height), the pages are removed
-     * from LinearLayout and attached to ViewPager2 via [PagerAdapter].
+     * To keep everything in single XML layout file, things are done in a slightly weird way.
+     * Both keys & text pages are initially attached to temporary View. After inflation, they
+     * are detached and passed onto ViewPager adapter. Adapter will insert them at proper place.
      */
     private fun initPager(binding: VirtualKeysBinding) {
-        val pages = binding.tmpPageHost.children.toList().filter { pref.input.vkShowAll || it != binding.secondaryKeyPage }
-        val maxPageWidth = pages.maxOf { it.width }
-        val maxPageHeight = pages.maxOf { it.height }
+        val root = binding.root
+        val keys = binding.keys
+        val pager = binding.pager
+        val pages = listOf(binding.keysPage, binding.textPage)
 
-        pages.forEach {
-            binding.tmpPageHost.removeView(it)
-            it.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        if (!pref.input.vkShowAll)
+            keys.removeViews(16, 14)
+
+        binding.tmpPageHost.apply {
+            removeAllViews()
+            (parent as ViewGroup).removeView(this)
         }
 
-        textPageIndex = pages.indexOf(binding.textPage)
-
-        binding.pager.let {
-            it.offscreenPageLimit = pages.size
-            it.adapter = PagerAdapter(pages)
-            it.layoutParams = it.layoutParams.apply {
-                width = maxPageWidth + it.paddingLeft + it.paddingRight
-                height = maxPageHeight + it.paddingTop + it.paddingBottom
-            }
-            it.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    if (position == textPageIndex) {
-                        binding.textBox.requestFocus()
-                    }
+        // Setup pager
+        pager.offscreenPageLimit = pages.size
+        pager.adapter = object : PagerAdapter() {
+            override fun getCount() = pages.size
+            override fun isViewFromObject(view: View, obj: Any) = (view === obj)
+            override fun instantiateItem(container: ViewGroup, position: Int): Any {
+                pages[position].let {
+                    container.addView(it)
+                    return it
                 }
-            })
+            }
+
+            override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
+                container.removeView(obj as View)
+            }
         }
+        pager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            val textPageIndex = pages.indexOf(binding.textPage)
+            override fun onPageSelected(position: Int) {
+                if (position == textPageIndex) binding.textBox.requestFocus()
+                else frameView.requestFocus()
+            }
+        })
 
-        binding.tmpPageHost.visibility = View.GONE
+        // Setup Layout. Keys grid is the primary View used for deciding size of Virtual keys.
+        // All keys are shown if screen is wide enough. Otherwise width is limited to FrameView,
+        // and HorizontalScrollView is relied upon to access all keys.
+        // NOTE: Paddings in root/pager view is NOT handled by this code.
+
+        // Start with something sane
+        MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED).let { keys.measure(it, it) }
+        root.layoutParams = root.layoutParams.apply { width = keys.measuredWidth; height = keys.measuredHeight }
+
+        // Update size after layout changes
+        keys.viewTreeObserver.addOnGlobalLayoutListener {
+            val w = min(keys.width, frameView.width)
+            val h = keys.height
+            if (w > 0 && h > 0 && (root.width != w || root.height != h))
+                root.layoutParams = root.layoutParams.apply { width = w; height = h }
+        }
     }
 
-    private inner class PagerAdapter(private val views: List<View>) : RecyclerView.Adapter<PagerAdapter.ViewHolder>() {
-        private inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v)
-
-        override fun getItemCount() = views.size
-        override fun getItemViewType(position: Int) = position
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(views[viewType])
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {}
-    }
 
     private fun initControls(binding: VirtualKeysBinding) {
         binding.toggleKeyboard.setOnClickListener {
@@ -316,9 +320,14 @@ class VkEditText(context: Context, attributeSet: AttributeSet? = null) : AppComp
 }
 
 /**
- * Horizontal scroll view with support for horizontally scrollable child views, e.g. ViewPager.
+ * Stock [HorizontalScrollView] intercepts all scroll events irrespective of whether
+ * it can actually scroll or not. It makes it unsuitable for use as child/parent of
+ * another horizontally scrollable View, e.g. ViewPager.
+ *
+ * [NestableHorizontalScrollView] fixes this by only intercepting events when it is scrollable.
  */
-class NestableHorizontalScrollView(context: Context, attributeSet: AttributeSet? = null) : HorizontalScrollView(context, attributeSet) {
+class NestableHorizontalScrollView(context: Context, attributeSet: AttributeSet? = null) :
+    HorizontalScrollView(context, attributeSet) {
     /**
      * Direction of current horizontal scrolling.
      * See [canScrollHorizontally].
