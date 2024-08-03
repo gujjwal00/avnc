@@ -37,7 +37,7 @@
     <string name="title_about">Sobre</string>
     <string name="title_license">Licença</string>
     <string name="title_open_source_libraries">Bibliotecas de código livre</string>
-    <string name="title_report_bug">Relatar um problema</string>
+    <string name="title_report_bug">Informar um problema</string>
     <string name="title_source_code">Código fonte</string>
     <string name="hint_urlbar">Conectar ao servidor</string>
     <string name="hint_server_name">Nome (ex. PC do trabalho)</string>
@@ -45,7 +45,7 @@
     <string name="hint_repeater_host">Host do repetidor</string>
     <string name="hint_port">Porta</string>
     <string name="hint_server_id">ID do servidor</string>
-    <string name="hint_username">Nome de usuário</string>
+    <string name="hint_username">Usuário</string>
     <string name="hint_password">Senha</string>
     <string name="hint_key_password">Senha chave</string>
     <string name="msg_about_app">Um cliente VNC rápido e seguro. Permite visualizar e controlar remotamente qualquer dispositivo que executa um servidor VNC.
@@ -67,8 +67,8 @@
 \nUse o botão \'<b>+</b>\' para adicionar um servidor, ou
 \nuse a barra de endereço na área superior para conectar diretamente.</string>
     <string name="tip_urlbar">Você pode digitar o endereço IP, nome de host ou \'vnc://\' URI.</string>
-    <string name="tip_discovery">A descoberta pode automaticamente encontrar os servidores suportados
-\nexecutados na sua rede.</string>
+    <string name="tip_discovery">A descoberta pode encontrar automaticamente servidores compatíveis
+\nem execução na sua rede.</string>
     <!-- Accessibility descriptions -->
     <string name="desc_navigation_btn">Abrir aba de navegação</string>
     <string name="desc_settings_btn">Configurações</string>
@@ -142,9 +142,9 @@
     <string name="pref_zoom_max">Máximo</string>
     <string name="pref_clipboard_sync">Sincronizar área de transferência</string>
     <string name="pref_discovery">Descoberta</string>
-    <string name="pref_import_export">Importar/Exportar servidores</string>
+    <string name="pref_import_export">Importar/exportar servidores</string>
     <string name="pref_debugging">Depuração</string>
-    <string name="pref_logs">Registros</string>
+    <string name="pref_logs">Logs</string>
     <string name="pref_keycode_map">Mapa de códigos de teclado</string>
     <string name="pref_theme_option_system">Sistema</string>
     <string name="pref_theme_option_dark">Escuro</string>
@@ -160,7 +160,7 @@
     <string name="pref_mouse_back">Botão Voltar</string>
     <string name="pref_discovery_autorun">Execução automática</string>
     <string name="pref_discovery_autorun_summary">Descubrir servidores enquanto estiver na página inicial</string>
-    <string name="pref_rediscovery_indicator">Destaque servidores redescobertos</string>
+    <string name="pref_rediscovery_indicator">Destacar servidores redescobertos</string>
     <string name="pref_gesture_style_touchscreen_summary">Faça ações no ponto de contato</string>
     <string name="msg_drag_gesture_help">Ao atribuir ação de gesto de Arrastar você mudará Detecção de toque longo:
 \n
@@ -189,7 +189,7 @@
     <string name="pref_gesture_style_touchscreen">Touch screen</string>
     <string name="pref_gesture_style_touchpad">Touch pad</string>
     <string name="pref_display_cutout">Desenhe atrás do corte da tela (experimental)</string>
-    <string name="pref_saved_server_lock_summary">Requer desbloqueio biométrico/senha para conectar</string>
+    <string name="pref_saved_server_lock_summary">Necessário desbloqueio biométrico/senha para conexões</string>
     <string name="pref_per_orientation_zoom">Zoom separado para cada orientação</string>
     <string name="title_resize_remote_desktop">Redimensionar sessão remota à janela local</string>
     <string name="title_orientation">Orientação</string>
@@ -219,4 +219,10 @@
     <string name="msg_viewer_tips_label">Algumas dicas para você começar</string>
     <string name="tip_toolbar_usage">Deslize a partir da borda para abrir a barra de ferramentas. Use-o para abrir o teclado, alterar o estilo do gesto ou redefinir o zoom.</string>
     <string name="hint_send_text_to_server">Enviar texto para o servidor</string>
+    <string name="title_enable_wol">Wake-on-LAN</string>
+    <string name="hint_wol_mac">Endereço MAC</string>
+    <string name="msg_wake_on_lan_help">Wake-on-LAN pode ser usado para ligar remotamente um computador.
+\n
+\nPrimeiro, configure o WoL no computador remoto e, em seguida, ative-o no AVNC.
+\nUma vez ativado, o pacote mágico WoL será enviado automaticamente antes da conexão com esse servidor.</string>
 </resources>

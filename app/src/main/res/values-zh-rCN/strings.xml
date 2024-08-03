@@ -210,4 +210,11 @@
     <string name="tip_session_end">要结束会话，轻按返回导航按钮，就像你退出视频播放所做的那样。</string>
     <string name="pref_toolbar_open_with_swipe">从边缘向内滑动来打开</string>
     <string name="title_connect_on_app_start">应用启动时自动连接</string>
+    <string name="hint_send_text_to_server">发送文本到服务器</string>
+    <string name="title_enable_wol">局域网唤醒</string>
+    <string name="hint_wol_mac">MAC 地址</string>
+    <string name="msg_wake_on_lan_help">局域网唤醒（Wake-on-LAN） 可用于远程启动一台计算机。
+\n
+\n首先，在远程计算机上配置 WoL，然后在 AVNC 中启用它。
+\n启用后，在连接到此服务器前，将自动发送 WoL 魔法数据包。</string>
 </resources>
