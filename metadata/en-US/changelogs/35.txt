@@ -1,0 +1,2 @@
+* All virtual keys will now be shown on the same page
+* Disabled long-press detection when not used
