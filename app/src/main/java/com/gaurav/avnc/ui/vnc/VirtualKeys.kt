@@ -327,7 +327,7 @@ class VkEditText(context: Context, attributeSet: AttributeSet? = null) : AppComp
  * [NestableHorizontalScrollView] fixes this by only intercepting events when it is scrollable.
  */
 class NestableHorizontalScrollView(context: Context, attributeSet: AttributeSet? = null) :
-    HorizontalScrollView(context, attributeSet) {
+        HorizontalScrollView(context, attributeSet) {
     /**
      * Direction of current horizontal scrolling.
      * See [canScrollHorizontally].

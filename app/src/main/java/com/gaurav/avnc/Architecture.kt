@@ -24,9 +24,9 @@ import com.gaurav.avnc.ui.vnc.VirtualKeys
 import com.gaurav.avnc.ui.vnc.VncActivity
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.gaurav.avnc.viewmodel.PrefsViewModel
-import com.gaurav.avnc.viewmodel.service.SshTunnel
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.viewmodel.service.Discovery
+import com.gaurav.avnc.viewmodel.service.SshTunnel
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.VncClient
 

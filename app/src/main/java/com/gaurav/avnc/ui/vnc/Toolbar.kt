@@ -20,12 +20,9 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.lifecycleScope
 import com.gaurav.avnc.R
 import com.gaurav.avnc.viewmodel.VncViewModel.State
 import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 /**
  *
