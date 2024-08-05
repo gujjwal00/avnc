@@ -22,6 +22,7 @@ import androidx.test.espresso.contrib.DrawerActions
 import androidx.test.espresso.contrib.ViewPagerActions
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isNotChecked
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withHint
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -144,7 +145,7 @@ class VirtualKeysTest {
             onView(withText("Tab")).checkIsDisplayed()
 
             // close it
-            onView(withId(R.id.close_btn)).doClick()
+            onView(withContentDescription("Close virtual keys")).doClick()
             onView(withText("Ctrl")).checkIsNotDisplayed()
         }
 

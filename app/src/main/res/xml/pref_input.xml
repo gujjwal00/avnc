@@ -131,11 +131,13 @@
             app:defaultValue="false"
             app:key="vk_open_with_keyboard"
             app:title="@string/pref_vk_open_with_keyboard" />
+        <!--
 
-        <SwitchPreference
-            app:defaultValue="false"
-            app:key="vk_show_all"
-            app:title="@string/pref_vk_show_all" />
+                <SwitchPreference
+                    app:defaultValue="false"
+                    app:key="vk_show_all"
+                    app:title="@string/pref_vk_show_all" />
+        -->
 
         <Preference
             app:fragment="com.gaurav.avnc.ui.prefs.VirtualKeysEditor"
