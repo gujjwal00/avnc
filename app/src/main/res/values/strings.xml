@@ -58,6 +58,7 @@
     <string name="title_none">None</string>
     <string name="title_next">Next</string>
     <string name="title_got_it">Got it</string>
+    <string name="title_load_defaults">Load defaults</string>
 
 
     <string name="hint_urlbar">Connect to a Server</string>
@@ -88,10 +89,12 @@
     <string name="msg_loading">Loading…</string>
     <string name="msg_imported">Imported</string>
     <string name="msg_exported">Exported</string>
+    <string name="msg_saved">Saved</string>
     <string name="msg_export_auth_required">Authenticate to export servers</string>
     <string name="msg_invalid_key_file">Invalid private key file</string>
     <string name="msg_invalid_vnc_uri">Invalid VNC URI</string>
     <string name="msg_copied_to_clipboard">Copied</string>
+    <string name="msg_tap_to_select_a_key">Tap to select a key:</string>
     <string name="msg_pk_password_not_saved">AVNC no longer saves private key passwords to improve security.</string>
     <string name="msg_key_compat_mode_help">Some servers have limited Unicode support. Legacy key events can help input non-English text.</string>
     <string name="msg_button_up_delay_help">Delaying click events can help in some rare cases if an app is not responding to clicks.</string>
@@ -188,6 +191,7 @@
     <string name="pref_mouse_back_action_default">Default</string>
     <string name="pref_vk">Virtual keys</string>
     <string name="pref_vk_show_all">Show all keys</string>
+    <string name="pref_customize_virtual_keys">Customize keys</string>
     <string name="pref_vk_open_with_keyboard">Open with keyboard</string>
     <string name="pref_km">Key mappings</string>
     <string name="pref_km_right_alt_to_super">Right Alt → Super</string>

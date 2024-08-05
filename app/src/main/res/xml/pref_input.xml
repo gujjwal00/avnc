@@ -136,6 +136,10 @@
             app:defaultValue="false"
             app:key="vk_show_all"
             app:title="@string/pref_vk_show_all" />
+
+        <Preference
+            app:fragment="com.gaurav.avnc.ui.prefs.VirtualKeysEditor"
+            app:title="@string/pref_customize_virtual_keys" />
     </PreferenceCategory>
 
     <PreferenceCategory

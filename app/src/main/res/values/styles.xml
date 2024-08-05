@@ -142,11 +142,16 @@
         <item name="android:minWidth">36dp</item>
     </style>
 
+    <style name="VirtualKey.Special">
+        <item name="android:tint">?colorPrimary</item>
+    </style>
+
     <style name="VirtualKey.Toggle">
         <item name="android:background">@drawable/bg_toggle_button</item>
     </style>
 
     <style name="VirtualKey.Toggle.Image">
+        <item name="android:paddingStart">12dp</item> <!--To make the start drawable centered-->
         <item name="android:textOff" />
         <item name="android:textOn" />
     </style>

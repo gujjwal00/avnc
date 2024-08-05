@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/padding_normal">
+
+        <TextView
+            android:id="@+id/key_grid_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:text="@string/msg_tap_to_select_a_key"
+            app:layout_constraintBottom_toTopOf="@id/scroll_view"
+            app:layout_constraintStart_toStartOf="@id/scroll_view" />
+
+
+        <TextView
+            android:id="@+id/focused_key_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/scroll_view"
+            app:layout_constraintTop_toTopOf="@id/key_grid_label" />
+
+        <HorizontalScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#2777"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias=".3">
+
+            <GridLayout
+                android:id="@+id/key_grid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true" />
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:id="@+id/key_actions"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            app:layout_constraintEnd_toEndOf="@id/scroll_view"
+            app:layout_constraintStart_toStartOf="@id/scroll_view"
+            app:layout_constraintTop_toBottomOf="@id/scroll_view">
+
+            <ImageButton
+                android:id="@+id/add_key_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_plus"
+                app:tint="?android:textColorPrimary" />
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageButton
+                    android:id="@+id/move_up_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_keyboard_arrow_up"
+                    app:tint="?android:textColorPrimary" />
+
+                <ImageButton
+                    android:id="@+id/move_down_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_keyboard_arrow_down"
+                    app:tint="?android:textColorPrimary" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/delete_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_recycle_bin"
+                app:tint="?android:textColorPrimary" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/global_actions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/margin_normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <Button
+                android:id="@+id/cancel_btn"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="@string/title_cancel" />
+
+            <Button
+                android:id="@+id/save_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="@string/title_save" />
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

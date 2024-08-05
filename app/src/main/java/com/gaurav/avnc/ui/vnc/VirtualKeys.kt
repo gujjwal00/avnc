@@ -12,8 +12,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.SystemClock
 import android.util.AttributeSet
+import android.util.Log
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
+import android.view.Gravity
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
 import android.view.MotionEvent
@@ -22,14 +24,20 @@ import android.view.View.MeasureSpec
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
+import android.widget.GridLayout
 import android.widget.HorizontalScrollView
+import android.widget.ImageButton
 import android.widget.ToggleButton
+import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.VirtualKeysBinding
+import com.gaurav.avnc.util.AppPreferences
 import kotlin.math.min
 import kotlin.math.sign
 
@@ -301,6 +309,193 @@ class VirtualKeys(activity: VncActivity) {
 
         textBox.setText("")
     }
+}
+
+/**
+ * NOTE: Names of these enums may be persisted in app preferences. So if any key name
+ *       is ever modified, add a migration to handle old name.
+ */
+enum class VirtualKey(
+        /**
+         * [KeyEvent] keycode to be generated when this key is pressed.
+         */
+        val keyCode: Int? = null,
+
+        /**
+         * If key name is not appropriate for UI, use this to set the label.
+         */
+        val label: String? = null,
+
+        /**
+         * If icon is set, this key will be rendered as an ImageButton.
+         */
+        @DrawableRes
+        val icon: Int? = null,
+
+        /**
+         * Short description of the key, if the itself isn't sufficient.
+         */
+        val description: String? = null,
+
+        val isToggle: Boolean = false,
+) {
+
+    // Special actions
+    ToggleKeyboard(description = "Toggle keyboard", icon = R.drawable.ic_keyboard),
+    CloseKeys(description = "Close virtual keys", icon = R.drawable.ic_clear),
+
+    // Meta keys
+    RightShift(keyCode = KeyEvent.KEYCODE_SHIFT_RIGHT, label = "Shift", isToggle = true),
+    RightCtrl(keyCode = KeyEvent.KEYCODE_CTRL_RIGHT, label = "Ctrl", isToggle = true),
+    RightAlt(keyCode = KeyEvent.KEYCODE_ALT_RIGHT, label = "Alt", isToggle = true),
+    RightSuper(keyCode = KeyEvent.KEYCODE_META_RIGHT, label = "Super", icon = R.drawable.ic_super_key, isToggle = true),
+
+    Esc(keyCode = KeyEvent.KEYCODE_ESCAPE),
+    Tab(keyCode = KeyEvent.KEYCODE_TAB),
+    Home(keyCode = KeyEvent.KEYCODE_MOVE_HOME),
+    End(keyCode = KeyEvent.KEYCODE_MOVE_END),
+    PgUp(keyCode = KeyEvent.KEYCODE_PAGE_UP),
+    PgDn(keyCode = KeyEvent.KEYCODE_PAGE_DOWN),
+    Insert(keyCode = KeyEvent.KEYCODE_INSERT),
+    Delete(keyCode = KeyEvent.KEYCODE_FORWARD_DEL),
+
+    // Arrow keys
+    Left(keyCode = KeyEvent.KEYCODE_DPAD_LEFT, icon = R.drawable.ic_keyboard_arrow_left),
+    Right(keyCode = KeyEvent.KEYCODE_DPAD_RIGHT, icon = R.drawable.ic_keyboard_arrow_right),
+    Up(keyCode = KeyEvent.KEYCODE_DPAD_UP, icon = R.drawable.ic_keyboard_arrow_up),
+    Down(keyCode = KeyEvent.KEYCODE_DPAD_DOWN, icon = R.drawable.ic_keyboard_arrow_down),
+
+    F1(keyCode = KeyEvent.KEYCODE_F1),
+    F2(keyCode = KeyEvent.KEYCODE_F2),
+    F3(keyCode = KeyEvent.KEYCODE_F3),
+    F4(keyCode = KeyEvent.KEYCODE_F4),
+    F5(keyCode = KeyEvent.KEYCODE_F5),
+    F6(keyCode = KeyEvent.KEYCODE_F6),
+    F7(keyCode = KeyEvent.KEYCODE_F7),
+    F8(keyCode = KeyEvent.KEYCODE_F8),
+    F9(keyCode = KeyEvent.KEYCODE_F9),
+    F10(keyCode = KeyEvent.KEYCODE_F10),
+    F11(keyCode = KeyEvent.KEYCODE_F11),
+    F12(keyCode = KeyEvent.KEYCODE_F12),
+}
+
+/**
+ * Users can change the layout of keys in app settings.
+ * Layout configuration is stored as a simple list of key-names.
+ */
+object VirtualKeyLayoutConfig {
+
+    private val DEFAULT_LAYOUT = listOf(VirtualKey.ToggleKeyboard, VirtualKey.CloseKeys, VirtualKey.Esc, VirtualKey.RightSuper,
+                                        VirtualKey.Tab, VirtualKey.RightCtrl, VirtualKey.RightShift, VirtualKey.RightAlt,
+                                        VirtualKey.Home, VirtualKey.Left, VirtualKey.Up, VirtualKey.Down, VirtualKey.End,
+                                        VirtualKey.Right, VirtualKey.PgUp, VirtualKey.PgDn)
+
+    /**
+     * In older versions, before users could customize key layout, there was a pref to
+     * 'Show all' keys. This layout is used for compatibility with that pref.
+     */
+    private val DEFAULT_LAYOUT_ALL = DEFAULT_LAYOUT +
+                                     listOf(VirtualKey.Insert, VirtualKey.Delete, VirtualKey.F1, VirtualKey.F2, VirtualKey.F3,
+                                            VirtualKey.F4, VirtualKey.F5, VirtualKey.F6, VirtualKey.F7, VirtualKey.F8,
+                                            VirtualKey.F9, VirtualKey.F10, VirtualKey.F11, VirtualKey.F12)
+
+
+    fun getDefaultLayout(pref: AppPreferences): List<VirtualKey> {
+        return if (pref.input.vkShowAll) DEFAULT_LAYOUT_ALL else DEFAULT_LAYOUT
+    }
+
+    fun getLayout(pref: AppPreferences): List<VirtualKey> {
+        runCatching {
+            pref.input.vkLayout?.let { vkLayout ->
+                vkLayout.split(',').map { VirtualKey.valueOf(it) }.let { keys ->
+                    check(keys.isNotEmpty())
+                    return keys
+                }
+            }
+        }.onFailure { Log.e(javaClass.simpleName, "Error parsing key layout [${pref.input.vkLayout}]: ", it) }
+
+        return getDefaultLayout(pref)
+    }
+
+    fun setLayout(pref: AppPreferences, keys: List<VirtualKey>) {
+        if (keys == getDefaultLayout(pref) && pref.input.vkLayout != null) {
+            // Restoring the defaults, so simply remove the pref.
+            // Pref is only used if user changes the default layout.
+            pref.input.vkLayout = null
+            return
+        }
+
+        if (keys == getLayout(pref))
+            return   // Nothing changed
+
+        pref.input.vkLayout = keys.joinToString(",") { it.name }
+    }
+}
+
+/**
+ * Factory for creating individual key [View]s.
+ */
+object VirtualKeyViewFactory {
+
+    /**
+     * There are three types of Views tht are generated:
+     *
+     * [ToggleButton] - if [key] is a toggle
+     * [ImageButton]  - if [key] has an icon (label will be ignored)
+     * [Button]       - in all other cases
+     */
+    fun create(context: Context, key: VirtualKey): View {
+        val view = if (key.isToggle) createToggle(context, key) else createSimple(context, key)
+        view.layoutParams = GridLayout.LayoutParams().apply {
+            width = GridLayout.LayoutParams.WRAP_CONTENT
+            height = GridLayout.LayoutParams.WRAP_CONTENT
+            setGravity(Gravity.CENTER)
+        }
+        return view
+    }
+
+    private fun createSimple(context: Context, key: VirtualKey): View {
+        return if (key.icon != null)
+            ImageButton(context, null, 0, selectStyle(key))
+                    .apply {
+                        setImageDrawable(ContextCompat.getDrawable(context, key.icon))
+                        contentDescription = getDescription(key)
+                    }
+        else
+            Button(context, null, 0, selectStyle(key))
+                    .apply { text = getLabel(key) }
+    }
+
+    private fun createToggle(context: Context, key: VirtualKey): View {
+        val view = ToggleButton(context, null, 0, selectStyle(key))
+        view.isClickable = true
+
+        if (key.icon != null) {
+            view.setCompoundDrawablesRelativeWithIntrinsicBounds(key.icon, 0, 0, 0)
+            view.contentDescription = getDescription(key)
+        } else {
+            val label = getLabel(key)
+            view.text = label
+            view.textOff = label
+            view.textOn = label
+        }
+
+        return view
+    }
+
+    private fun selectStyle(key: VirtualKey): Int {
+        if (key == VirtualKey.CloseKeys || key == VirtualKey.ToggleKeyboard)
+            return R.style.VirtualKey_Special
+
+        if (key.isToggle) {
+            return if (key.icon != null) R.style.VirtualKey_Toggle_Image else R.style.VirtualKey_Toggle
+        }
+
+        return R.style.VirtualKey
+    }
+
+    private fun getLabel(virtualKey: VirtualKey) = virtualKey.label ?: virtualKey.name
+    private fun getDescription(virtualKey: VirtualKey) = virtualKey.description ?: getLabel(virtualKey)
 }
 
 /**

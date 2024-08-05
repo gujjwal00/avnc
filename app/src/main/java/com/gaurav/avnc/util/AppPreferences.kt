@@ -64,6 +64,7 @@ class AppPreferences(context: Context) {
 
         val vkOpenWithKeyboard; get() = prefs.getBoolean("vk_open_with_keyboard", false)
         val vkShowAll; get() = prefs.getBoolean("vk_show_all", false)
+        var vkLayout by StringPref("vk_keys_layout", null)
 
         val mousePassthrough; get() = prefs.getBoolean("mouse_passthrough", true)
         val hideLocalCursor; get() = prefs.getBoolean("hide_local_cursor", false)
@@ -107,6 +108,7 @@ class AppPreferences(context: Context) {
     }
 
     inner class BooleanPref(val key: String, default: Boolean) : Pref<Boolean>({ getBoolean(key, default) }, { putBoolean(key, it) })
+    inner class StringPref(val key: String, default: String?) : Pref<String?>({ getString(key, default) }, { putString(key, it) })
 
     /**
      * For some preference changes we want to provide live feedback to user.

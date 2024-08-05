@@ -36,8 +36,10 @@ import com.gaurav.avnc.doClick
 import com.gaurav.avnc.doLongClick
 import com.gaurav.avnc.doTypeText
 import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.runOnMainSync
 import com.gaurav.avnc.targetContext
 import com.gaurav.avnc.targetPrefs
+import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.vnc.XKeySym
 import org.junit.Assert
 import org.junit.Before
@@ -206,5 +208,32 @@ class VirtualKeysTest {
                     .perform(pressKey(KeyEvent.KEYCODE_C))
             onView(withText("Shift")).check(matches(isChecked()))
         }
+    }
+
+    @Test
+    fun defaultConfigTest() {
+        val prefs = runOnMainSync { AppPreferences(targetContext) }
+        val defaultKeys = VirtualKeyLayoutConfig.getDefaultLayout(prefs)
+
+        targetPrefs.edit { putBoolean("vk_show_all", true) }
+        val defaultAllKeys = VirtualKeyLayoutConfig.getDefaultLayout(prefs)
+
+        Assert.assertNotEquals(defaultKeys, defaultAllKeys)
+
+        // For now, duplicate keys are not allowed
+        Assert.assertEquals(defaultKeys, defaultKeys.distinct())
+        Assert.assertEquals(defaultAllKeys, defaultAllKeys.distinct())
+    }
+
+    @Test
+    fun corruptedConfigTest() {
+        targetPrefs.edit { putString("vk_keys_layout", "foobar") }
+        val prefs = runOnMainSync { AppPreferences(targetContext) }
+
+        val keys = VirtualKeyLayoutConfig.getLayout(prefs)
+        val defaultKeys = VirtualKeyLayoutConfig.getDefaultLayout(prefs)
+
+        // If for some reason layout pref is corrupted, default config should be loaded
+        Assert.assertEquals(defaultKeys, keys)
     }
 }
