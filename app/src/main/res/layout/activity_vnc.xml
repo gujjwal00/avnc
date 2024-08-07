@@ -70,12 +70,36 @@
             android:layout_gravity="center_horizontal|bottom"
             android:layout="@layout/virtual_keys" />
 
+        <!--Measurements-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin_normal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_round_rect"
+                android:padding="@dimen/padding_small"
+                android:text='@{viewModel.snapshot.toString().replace(",", "\n")}' />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@drawable/bg_round_rect"
+                android:padding="@dimen/padding_small"
+                android:text='@{ "Fullscreen: " + viewModel.pref.viewer.fullscreen + "\nImmersive: " + viewModel.pref.viewer.drawBehindCutout}' />
+
+        </FrameLayout>
+
         <!--Status-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/status_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?colorSurface">
+            android:background="?colorSurface"
+            tools:visibility="gone">
 
             <ProgressBar
                 style="@style/Widget.AppCompat.ProgressBar"

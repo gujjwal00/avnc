@@ -151,7 +151,10 @@ class FrameState(
             val fbHeight: Float,
             val vpWidth: Float,
             val vpHeight: Float,
-            val scale: Float
+            val windowWidth: Float,
+            val windowHeight: Float,
+            val scale: Float,
+            val baseScale: Float,
     )
 
     private val lock = Any()
@@ -253,7 +256,9 @@ class FrameState(
     fun getSnapshot(): Snapshot = withLock {
         return Snapshot(frameX = frameX, frameY = frameY,
                         fbWidth = fbWidth, fbHeight = fbHeight,
-                        vpWidth = vpWidth, vpHeight = vpHeight, scale = scale)
+                        vpWidth = vpWidth, vpHeight = vpHeight,
+                        windowWidth = windowWidth, windowHeight = windowHeight,
+                        scale = scale, baseScale = baseScale)
     }
 
     /**

@@ -78,6 +78,7 @@ class LayoutManager(activity: VncActivity) {
             viewModel.frameState.setWindowSize(rootView.width.toFloat(), rootView.height.toFloat())
             viewModel.frameState.setViewportSize(frameView.width.toFloat(), frameView.height.toFloat())
             virtualKeys.container?.let { updateVirtualKeyInsets(it) }
+            viewModel.snapshot.value = viewModel.frameState.getSnapshot()
 
             if (SDK_INT < 30)
                 manuallyGenerateWindowInsets()

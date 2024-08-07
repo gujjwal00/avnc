@@ -153,6 +153,8 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
      */
     val frameState = with(pref.viewer) { FrameState(zoomMin, zoomMax, perOrientationZoom) }
 
+    val snapshot = MutableLiveData<FrameState.Snapshot>()
+
     /**
      * Used for scrolling/animating the frame.
      */
@@ -295,31 +297,37 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
         frameState.pan(-dfx, -dfy)
 
         frameViewRef.get()?.requestRender()
+        snapshot.value = frameState.getSnapshot()
     }
 
     fun resetZoom() {
         frameState.setZoom(1f, 1f)
         frameViewRef.get()?.requestRender()
+        snapshot.value = frameState.getSnapshot()
     }
 
     fun resetZoomToDefault() {
         frameState.setZoom(profile.zoom1, profile.zoom2)
         frameViewRef.get()?.requestRender()
+        snapshot.value = frameState.getSnapshot()
     }
 
     fun setZoom(zoom1: Float, zoom2: Float) {
         frameState.setZoom(zoom1, zoom2)
         frameViewRef.get()?.requestRender()
+        snapshot.value = frameState.getSnapshot()
     }
 
     fun panFrame(deltaX: Float, deltaY: Float) {
         frameState.pan(deltaX, deltaY)
         frameViewRef.get()?.requestRender()
+        snapshot.value = frameState.getSnapshot()
     }
 
     fun moveFrameTo(x: Float, y: Float) {
         frameState.moveTo(x, y)
         frameViewRef.get()?.requestRender()
+        snapshot.value = frameState.getSnapshot()
     }
 
     fun toggleZoomLock(enabled: Boolean) {
@@ -431,6 +439,7 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
     override fun onFramebufferSizeChanged(width: Int, height: Int) {
         launchMain {
             frameState.setFramebufferSize(width.toFloat(), height.toFloat())
+            snapshot.value = frameState.getSnapshot()
         }
     }
 
