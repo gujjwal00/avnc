@@ -285,6 +285,10 @@ class FrameState(
 
         frameX = coercePosition(frameX, safeArea.left, safeArea.right, fbWidth)
         frameY = coercePosition(frameY, safeArea.top, safeArea.bottom, fbHeight)
+
+        // Align to integral boundary
+        frameX = frameX.toInt().toFloat()
+        frameY = frameY.toInt().toFloat()
     }
 
     /**
