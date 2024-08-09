@@ -222,22 +222,26 @@ class FrameState(
     }
 
     /**
-     * Checks if given point is inside of framebuffer.
+     * Converts given viewport point to corresponding framebuffer point.
+     * Not all viewport points have a corresponding framebuffer point
+     * because drawn frame can be smaller than viewport.
      */
-    fun isValidFbPoint(x: Float, y: Float) = (x >= 0F && x < fbWidth) && (y >= 0F && y < fbHeight)
+    fun toFbUnchecked(vpPoint: PointF): PointF {
+        val fbX = (vpPoint.x - frameX) / scale
+        val fbY = (vpPoint.y - frameY) / scale
+        return PointF(fbX, fbY)
+    }
 
     /**
      * Converts given viewport point to corresponding framebuffer point.
      * Returns null if given point lies outside of framebuffer.
      */
     fun toFb(vpPoint: PointF): PointF? {
-        val fbX = (vpPoint.x - frameX) / scale
-        val fbY = (vpPoint.y - frameY) / scale
-
-        if (isValidFbPoint(fbX, fbY))
-            return PointF(fbX, fbY)
-        else
+        val fb = toFbUnchecked(vpPoint)
+        if (fb.x < 0F || fb.y < 0f || fb.x >= fbWidth || fb.y >= fbHeight)
             return null
+        else
+            return fb
     }
 
     /**

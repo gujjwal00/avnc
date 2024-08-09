@@ -203,7 +203,7 @@ class Dispatcher(private val activity: VncActivity) {
             transformPoint(p)?.let { messenger.sendPointerButtonRelease(it) }
         }
 
-        fun doClick(button: PointerButton, p: PointF) {
+        open fun doClick(button: PointerButton, p: PointF) {
             doButtonDown(button, p)
             // Some (obscure) apps seems to ignore click event if button-up is received too early
             if (button == PointerButton.Left && profile.fButtonUpDelay)
@@ -260,6 +260,24 @@ class Dispatcher(private val activity: VncActivity) {
         override fun transformPoint(p: PointF) = viewModel.frameState.toFb(p)
         override fun doMovePointer(p: PointF, dx: Float, dy: Float) = doButtonDown(PointerButton.None, p)
         override fun doRemoteDrag(button: PointerButton, p: PointF, dx: Float, dy: Float) = doButtonDown(button, p)
+        override fun doClick(button: PointerButton, p: PointF) {
+            if (transformPoint(p) != null)
+                super.doClick(button, p)
+            else if (button == PointerButton.Left)
+                doMovePointer(coerceToFbEdge(p), 0f, 0f)
+        }
+
+        // When user taps outside the frame, move the pointer to edge of the frame
+        // It allows opening of taskbar/panels when they are set to auto-hide.
+        // It can also be used for previewing taskbar items.
+        private fun coerceToFbEdge(p: PointF) = viewModel.frameState.let {
+            it.toVP(
+                    it.toFbUnchecked(p).apply {
+                        x = x.coerceIn(0f, it.fbWidth - 1)
+                        y = y.coerceIn(0f, it.fbHeight - 1)
+                    }
+            )
+        }
     }
 
     /**
