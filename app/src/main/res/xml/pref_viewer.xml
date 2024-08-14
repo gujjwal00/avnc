@@ -30,6 +30,7 @@
 
     <SwitchPreference
         app:defaultValue="false"
+        app:dependency="fullscreen_display"
         app:key="viewer_draw_behind_cutout"
         app:title="@string/pref_display_cutout" />
 

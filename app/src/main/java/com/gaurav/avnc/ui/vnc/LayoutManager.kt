@@ -42,6 +42,7 @@ class LayoutManager(activity: VncActivity) {
     private val rootView = activity.binding.root
     private val frameView = activity.binding.frameView
     private val virtualKeys = activity.virtualKeys
+    private val toolbar = activity.toolbar
     private val window = activity.window
     private val insetController = WindowCompat.getInsetsController(window, window.decorView)
 
@@ -228,7 +229,7 @@ class LayoutManager(activity: VncActivity) {
         val maxSafeAreaInsets = safeAreaInsets.fold(Insets.NONE) { a, i -> Insets.max(a, i) }
         applySafeAreaInsets(maxSafeAreaInsets)
 
-        // TODO: Apply insets to drawer
+        toolbar.handleInsets(windowInsets)
     }
 
     private fun applyOpaqueInsets(opaqueInsets: Insets) {

@@ -19,6 +19,8 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.view.GravityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.gaurav.avnc.R
 import com.gaurav.avnc.viewmodel.VncViewModel.State
@@ -87,6 +89,26 @@ class Toolbar(private val activity: VncActivity, private val dispatcher: Dispatc
         drawerLayout.closeDrawer(drawerView)
     }
 
+    /**
+     * The main thing problematic for toolbar is the display cutout.
+     * If any cutout is found to overlap the toolbar, system window
+     * fitting is enabled, which automatically adds required paddings.
+     */
+    fun handleInsets(insets: WindowInsetsCompat) {
+        val cutout = insets.displayCutout
+        if (cutout == null || !viewModel.pref.viewer.drawBehindCutout)
+            return
+
+        val v = binding.primaryButtons
+        val r = getActionableToolbarRect()
+        val shouldFit = cutout.boundingRects.find { it.intersect(r) } != null
+
+        if (v.fitsSystemWindows != shouldFit) {
+            v.fitsSystemWindows = shouldFit
+            ViewCompat.onApplyWindowInsets(v, WindowInsetsCompat(insets))
+        }
+    }
+
     private fun toast(@StringRes msgRes: Int) = Toast.makeText(activity, msgRes, Toast.LENGTH_SHORT).show()
 
     private fun resetZoom() {
@@ -140,6 +162,20 @@ class Toolbar(private val activity: VncActivity, private val dispatcher: Dispatc
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED)
         else
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+    }
+
+    /**
+     * Returns a rectangle covering the area occupied by primary buttons in opened state.
+     * Returned rectangle is in [drawerLayout]'s coordinate space.
+     */
+    private fun getActionableToolbarRect(): Rect {
+        val v = drawerView
+        val r = Rect(v.left, binding.primaryButtons.top, v.right, binding.primaryButtons.bottom)
+
+        if (r.left < 0) r.offset(v.width, 0)                          // closed along left edge
+        else if (r.right > drawerLayout.right) r.offset(-v.width, 0)  // closed along right edge
+
+        return r
     }
 
 

@@ -89,9 +89,9 @@ class VncActivity : AppCompatActivity() {
     val touchHandler by lazy { TouchHandler(binding.frameView, dispatcher, viewModel.pref) }
     val keyHandler by lazy { KeyHandler(dispatcher, viewModel.profile.fLegacyKeySym, viewModel.pref) }
     val virtualKeys by lazy { VirtualKeys(this) }
+    val toolbar by lazy { Toolbar(this, dispatcher) }
     private val serverUnlockPrompt = DeviceAuthPrompt(this)
     private val layoutManager by lazy { LayoutManager(this) }
-    private val toolbar by lazy { Toolbar(this, dispatcher) }
     private var restoredFromBundle = false
     private var wasConnectedWhenStopped = false
     private var onStartTime = 0L
