@@ -19,9 +19,9 @@
         app:useSimpleSummaryProvider="true" />
 
     <SwitchPreference
-        app:defaultValue="false"
-        app:key="pip_enabled"
-        app:title="@string/pref_enable_pip" />
+        app:defaultValue="true"
+        app:key="keep_screen_on"
+        app:title="@string/pref_keep_screen_on" />
 
     <SwitchPreference
         app:defaultValue="true"
@@ -35,9 +35,9 @@
         app:title="@string/pref_display_cutout" />
 
     <SwitchPreference
-        app:defaultValue="true"
-        app:key="keep_screen_on"
-        app:title="@string/pref_keep_screen_on" />
+        app:defaultValue="false"
+        app:key="pip_enabled"
+        app:title="@string/pref_enable_pip" />
 
     <SwitchPreference
         app:defaultValue="false"
