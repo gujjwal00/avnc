@@ -223,10 +223,7 @@ class Toolbar(private val activity: VncActivity, private val dispatcher: Dispatc
             drawerLayout.systemGestureExclusionRects = listOf()
         } else {
             // Area covered by primaryButtons, in drawerLayout's coordinate space
-            val rect = Rect(drawerView.left, binding.primaryButtons.top, drawerView.right, binding.primaryButtons.bottom)
-
-            if (rect.left < 0) rect.offset(-rect.left, 0)
-            if (rect.right > drawerLayout.width) rect.offset(-(rect.right - drawerLayout.width), 0)
+            val rect = getActionableToolbarRect()
 
             if (viewModel.pref.viewer.fullscreen) {
                 // For fullscreen activities, Android does not enforce the height limit of exclusion area.
