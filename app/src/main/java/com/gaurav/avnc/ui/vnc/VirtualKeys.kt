@@ -80,8 +80,8 @@ class VirtualKeys(activity: VncActivity) {
         }
     }
 
-    fun onConnected() {
-        if (pref.runInfo.showVirtualKeys)
+    fun onConnected(inPiP: Boolean) {
+        if (!inPiP && pref.runInfo.showVirtualKeys)
             show()
     }
 

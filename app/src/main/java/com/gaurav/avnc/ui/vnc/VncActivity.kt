@@ -238,7 +238,7 @@ class VncActivity : AppCompatActivity() {
         if (isConnected) {
             ViewerHelp().onConnected(this)
             keyHandler.enableMacOSCompatibility = viewModel.client.isConnectedToMacOS
-            virtualKeys.onConnected()
+            virtualKeys.onConnected(isInPiPMode())
         }
 
         if (isConnected && !restoredFromBundle) {
@@ -335,6 +335,10 @@ class VncActivity : AppCompatActivity() {
     /************************************************************************************
      * Picture-in-Picture support
      ************************************************************************************/
+
+    private fun isInPiPMode(): Boolean {
+        return Build.VERSION.SDK_INT >= 24 && isInPictureInPictureMode
+    }
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
