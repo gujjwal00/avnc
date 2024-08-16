@@ -77,6 +77,7 @@ class LoginFragmentTest {
 
         override fun close() {
             activityScenario.close()
+            runBlocking { dao.deleteAll() }
         }
     }
 
