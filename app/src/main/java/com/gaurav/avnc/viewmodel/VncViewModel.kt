@@ -408,6 +408,13 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
         messenger.refreshFrameBuffer()
     }
 
+    /**
+     * Resolves applicable gesture style.
+     */
+    fun resolveGestureStyle(): String {
+        return if (profile.gestureStyle == "auto") pref.input.gesture.style else profile.gestureStyle
+    }
+
     /**************************************************************************
      * [VncClient.Observer] Implementation
      **************************************************************************/

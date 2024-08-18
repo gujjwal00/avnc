@@ -65,7 +65,7 @@ class Dispatcher(private val activity: VncActivity) {
     private var config = Config()
 
     private inner class Config {
-        val gestureStyle = if (profile.gestureStyle == "auto") gesturePref.style else profile.gestureStyle
+        val gestureStyle = viewModel.resolveGestureStyle()
         val defaultMode = if (gestureStyle == "touchscreen") directMode else relativeMode
 
         val tap1Action = selectPointAction(gesturePref.tap1)

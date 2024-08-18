@@ -205,8 +205,16 @@ class LayoutManager(activity: VncActivity) {
         windowInsets = if (SDK_INT < 30) insetsCompat else WindowInsetsCompat(insetsCompat)
     }
 
+    private fun shouldGenerateVirtualKeyInsets(): Boolean {
+        // Virtual key insets allow to move the frame up to access the area hidden behind keys.
+        // But in landscape mode, when touchpad gesture style is active, they cause unnecessary
+        // frame movement when pointer moves around. So insets are restricted to following cases:
+        return rootView.width < rootView.height || // portrait mode
+               viewModel.resolveGestureStyle() == "touchscreen"
+    }
+
     private fun updateVirtualKeyInsets(vkRoot: View) {
-        if (vkRoot.isVisible) {
+        if (vkRoot.isVisible && shouldGenerateVirtualKeyInsets()) {
             val vkLocation = intArrayOf(0, 0)
             vkRoot.getLocationInWindow(vkLocation)
             val b = max(0, window.decorView.height - vkLocation[1])
