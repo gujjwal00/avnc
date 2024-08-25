@@ -210,4 +210,11 @@
     <string name="pref_toolbar_open_with_swipe">Провести от края чтобы открыть</string>
     <string name="title_connect_on_app_start">Автоподключение при запуске приложения</string>
     <string name="pref_show_gesture_style_toggle">Показывать переключатель стиля жестов</string>
+    <string name="title_enable_wol">Пробуждение по локальной сети (Wake-on-LAN)</string>
+    <string name="hint_wol_mac">MAC-адрес</string>
+    <string name="hint_send_text_to_server">Отправить текст на сервер</string>
+    <string name="msg_wake_on_lan_help">Wake-on-LAN (WoL) можно использовать для удаленного включения компьютера.
+\n
+\nСначала настройте WoL на удаленном компьютере, а затем включите его на AVNC.
+\nПосле включения пакет WoL Magic будет автоматически отправлен перед подключением к этому серверу.</string>
 </resources>
