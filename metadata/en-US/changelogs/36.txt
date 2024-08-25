@@ -1,0 +1,5 @@
+* Added ability to customize Virtual Key layout
+  Go to `Settings => Input => Virtual keys => Customize keys` to make changes
+* Move pointer to frame edge when tapped outside of frame
+* Made sure Toolbar is not obstructed by display cutout
+* Stopped the frame from moving up/down when touchpad gesture style is active
