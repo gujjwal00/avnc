@@ -21,6 +21,7 @@ import android.widget.GridLayout
 import android.widget.PopupWindow
 import android.widget.ScrollView
 import android.widget.ToggleButton
+import androidx.annotation.Keep
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
@@ -39,6 +40,7 @@ import com.google.android.material.snackbar.Snackbar
 /**
  * Editor for virtual key layout
  */
+@Keep
 class VirtualKeysEditor : Fragment() {
 
     // Wraps a VirtualKey & corresponding View
