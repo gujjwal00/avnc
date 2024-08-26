@@ -185,7 +185,7 @@
     <string name="title_resize_remote_desktop">缩放远程会话到本地窗口</string>
     <string name="msg_zoom_reset_default">重置缩放到默认值</string>
     <string name="msg_shortcut_server_deleted">该服务器已被删除</string>
-    <string name="pref_display_cutout">在异形屏区域显示（试验性）</string>
+    <string name="pref_display_cutout">扩展到刘海屏</string>
     <string name="title_ssh_login">SSH登录</string>
     <string name="title_unlock_private_key">解锁私钥</string>
     <string name="pref_double_tap_swipe">双击轻扫</string>
@@ -217,4 +217,8 @@
 \n
 \n首先，在远程计算机上配置 WoL，然后在 AVNC 中启用它。
 \n启用后，在连接到此服务器前，将自动发送 WoL 魔法数据包。</string>
+    <string name="title_load_defaults">加载默认</string>
+    <string name="msg_saved">已保存</string>
+    <string name="pref_customize_virtual_keys">自定义密钥</string>
+    <string name="msg_tap_to_select_a_key">轻按选择密钥：</string>
 </resources>

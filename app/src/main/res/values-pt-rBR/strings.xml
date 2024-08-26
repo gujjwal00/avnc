@@ -188,7 +188,7 @@
     <string name="pref_gesture_style_auto_summary">Baseado nas configurações do aplicativo</string>
     <string name="pref_gesture_style_touchscreen">Touch screen</string>
     <string name="pref_gesture_style_touchpad">Touch pad</string>
-    <string name="pref_display_cutout">Desenhe atrás do corte da tela (experimental)</string>
+    <string name="pref_display_cutout">Estender-se até a área de corte</string>
     <string name="pref_saved_server_lock_summary">Necessário desbloqueio biométrico/senha para conexões</string>
     <string name="pref_per_orientation_zoom">Zoom separado para cada orientação</string>
     <string name="title_resize_remote_desktop">Redimensionar sessão remota à janela local</string>
@@ -200,7 +200,7 @@
     <string name="title_unlock_private_key">Desbloquear chave privada</string>
     <string name="title_button_up_delay">Enviar eventos de cliques atrasados</string>
     <string name="title_ssh_login">Login SSH</string>
-    <string name="pref_keep_screen_on">Manter a tela ligada</string>
+    <string name="pref_keep_screen_on">Manter a tela LIGADA</string>
     <string name="pref_auto_reconnect">Reconectar automaticamente</string>
     <string name="pref_toolbar_open_with_swipe">Deslize na borda para abrir</string>
     <string name="hint_ssh_host">Host SSH</string>
@@ -225,4 +225,8 @@
 \n
 \nPrimeiro, configure o WoL no computador remoto e, em seguida, ative-o no AVNC.
 \nUma vez ativado, o pacote mágico WoL será enviado automaticamente antes da conexão com esse servidor.</string>
+    <string name="msg_saved">Salvo</string>
+    <string name="msg_tap_to_select_a_key">Toque para selecionar uma tecla:</string>
+    <string name="title_load_defaults">Carregar padrões</string>
+    <string name="pref_customize_virtual_keys">Personalizar teclas</string>
 </resources>
