@@ -48,7 +48,8 @@ class VncUri(str: String) {
     val channelType = uri.getQueryParameter("ChannelType")?.toIntOrNull() ?: ServerProfile.CHANNEL_TCP
     val colorLevel = uri.getQueryParameter("ColorLevel")?.toIntOrNull() ?: 7
     val viewOnly = uri.getBooleanQueryParameter("ViewOnly", false)
-    val saveConnection = uri.getBooleanQueryParameter("SaveConnection", false)
+
+    //val saveConnection = uri.getBooleanQueryParameter("SaveConnection", false)
     val sshHost = uri.getQueryParameter("SshHost") ?: host
     val sshPort = uri.getQueryParameter("SshPort")?.toIntOrNull() ?: 22
     val sshUsername = uri.getQueryParameter("SshUsername") ?: ""
