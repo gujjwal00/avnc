@@ -47,7 +47,7 @@ fun broadcastWoLPackets(macAddress: String) {
  * Returns list of all broadcast addresses available on this system.
  */
 private fun getBroadcastAddresses(): List<InetAddress> {
-    return NetworkInterface.getNetworkInterfaces().toList()
+    return NetworkInterface.getNetworkInterfaces().asSequence()
             .filter { it.isUp && !it.isLoopback }
             .map { it.interfaceAddresses }
             .fold(mutableListOf<InterfaceAddress>()) { list, addresses -> list.apply { addAll(addresses) } }

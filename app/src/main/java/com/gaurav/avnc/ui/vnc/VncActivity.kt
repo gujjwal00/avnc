@@ -82,6 +82,7 @@ private fun startVncActivity(source: Activity, profile: ServerProfile, frameStat
  * This activity handles the connection to a VNC server.
  */
 class VncActivity : AppCompatActivity() {
+    private val TAG = "VncActivity"
 
     lateinit var viewModel: VncViewModel
     lateinit var binding: ActivityVncBinding
@@ -276,7 +277,7 @@ class VncActivity : AppCompatActivity() {
 
         // If disconnected when coming back from background, try to reconnect immediately
         if (wasConnectedWhenStopped && (SystemClock.uptimeMillis() - onStartTime) in 0..2000) {
-            Log.d(javaClass.simpleName, "Disconnected while in background, reconnecting ...")
+            Log.i(TAG, "Disconnected while in background, reconnecting ...")
             retryConnection(true)
             return
         }
@@ -375,7 +376,7 @@ class VncActivity : AppCompatActivity() {
             try {
                 enterPictureInPictureMode(param)
             } catch (e: IllegalStateException) {
-                Log.w(javaClass.simpleName, "Cannot enter PiP mode", e)
+                Log.e(TAG, "Cannot enter PiP mode", e)
             }
         }
     }

@@ -48,6 +48,6 @@ object SamsungDex {
                                                                ComponentName::class.java,
                                                                Boolean::class.java)
             requestMethod.invoke(manager, activity.componentName, isEnabled)
-        }.onFailure { Log.d("DeX Support", "Meta key capture error", it) }
+        }.onFailure { Log.e("DeX Support", "Meta key capture error", it) }
     }
 }
