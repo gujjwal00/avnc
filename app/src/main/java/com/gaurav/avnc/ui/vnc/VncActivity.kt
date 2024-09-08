@@ -347,9 +347,9 @@ class VncActivity : AppCompatActivity() {
     }
 
     @RequiresApi(26)
-    override fun onPictureInPictureModeChanged(inPiP: Boolean, newConfig: Configuration) {
-        super.onPictureInPictureModeChanged(inPiP, newConfig)
-        if (inPiP) {
+    override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        if (isInPictureInPictureMode) {
             toolbar.close()
             viewModel.resetZoom()
             virtualKeys.hide()
