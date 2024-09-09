@@ -264,17 +264,21 @@ class Dispatcher(private val activity: VncActivity) {
             if (transformPoint(p) != null)
                 super.doClick(button, p)
             else if (button == PointerButton.Left)
-                doMovePointer(coerceToFbEdge(p), 0f, 0f)
+                coerceToFbEdge(p)?.let { doMovePointer(it, 0f, 0f) }
         }
 
         // When user taps outside the frame, move the pointer to edge of the frame
         // It allows opening of taskbar/panels when they are set to auto-hide.
         // It can also be used for previewing taskbar items.
-        private fun coerceToFbEdge(p: PointF) = viewModel.frameState.let {
-            it.toVP(
-                    it.toFbUnchecked(p).apply {
-                        x = x.coerceIn(0f, it.fbWidth - 1)
-                        y = y.coerceIn(0f, it.fbHeight - 1)
+        private fun coerceToFbEdge(p: PointF): PointF? {
+            val fs = viewModel.frameState
+            if (fs.fbWidth < 1 || fs.fbHeight < 1)
+                return null
+
+            return fs.toVP(
+                    fs.toFbUnchecked(p).apply {
+                        x = x.coerceIn(0f, fs.fbWidth - 1)
+                        y = y.coerceIn(0f, fs.fbHeight - 1)
                     }
             )
         }
