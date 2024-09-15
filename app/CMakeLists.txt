@@ -88,7 +88,7 @@ include_directories(${AVNC_LIBVNC_SRC_DIR}/include ${AVNC_LIBVNC_BUILD_DIR}/incl
 # Native VNC
 #
 # It contains implementation of JNI native methods, some NDK scaffolding and
-# some helpers for OpenGL ES rendring. This is the library loaded from Java.
+# some helpers for OpenGL ES rendering. This is the library loaded from Java.
 ###############################################################################
 set(AVNC_NATIVE_SOURCE src/main/cpp/native-vnc.cpp)
 
