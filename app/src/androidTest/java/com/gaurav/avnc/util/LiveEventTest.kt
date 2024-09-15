@@ -57,7 +57,7 @@ class LiveEventTest {
 
     /**
      * But if no observer is active when event is fired, event should be queued,
-     * and observers should be notified when they are active.
+     * and the observer should be notified when it becomes active.
      */
     @Test
     fun eventShouldNotBeLost() {
