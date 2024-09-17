@@ -30,6 +30,10 @@ struct ClientEx {
     // Cursor data used for client-side cursor rendering
     Cursor *cursor;
 
+    // Read/Write FDs of interrupt pipe
+    int interruptReadFd;
+    int interruptWriteFd;
+
     // Protects modification to framebuffer & cursor
     MUTEX(mutex);
 };
@@ -63,9 +67,15 @@ void setManagedClient(rfbClient *client, jobject managedClient) {
  */
 ClientEx *assignClientExtension(rfbClient *client) {
     auto ex = (ClientEx *) malloc(sizeof(ClientEx));
+    int interruptPipe[2];
     if (ex) {
         INIT_MUTEX(ex->mutex);
         ex->cursor = nullptr;
+
+        int r = pipe2(interruptPipe, O_NONBLOCK);
+        ex->interruptReadFd = (r == 0) ? interruptPipe[0] : -1;
+        ex->interruptWriteFd = (r == 0) ? interruptPipe[1] : -1;
+
         setClientExtension(client, ex);
     }
     return ex;
@@ -79,6 +89,10 @@ void freeClientExtension(rfbClient *client) {
     if (ex) {
         TINI_MUTEX(ex->mutex);
         freeCursor(ex->cursor);
+
+        if (ex->interruptReadFd > -1) close(ex->interruptReadFd);
+        if (ex->interruptWriteFd > -1) close(ex->interruptWriteFd);
+
         free(ex);
         setClientExtension(client, nullptr);
     }

@@ -178,6 +178,8 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
 
     override fun onCleared() {
         super.onCleared()
+        if (state.value == State.Connecting)
+            client.interrupt()
         viewModelClearedFlag.set()
     }
 

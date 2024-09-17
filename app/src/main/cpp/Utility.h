@@ -30,6 +30,18 @@ static char *getNativeStrCopy(JNIEnv *env, jstring jStr) {
     return str;
 }
 
+static void setInterrupt(rfbClient *client) {
+    auto ex = getClientExtension(client);
+    char i = 'i';
+    write(ex->interruptWriteFd, &i, sizeof(i));
+}
+
+static void clearInterrupt(rfbClient *client) {
+    auto ex = getClientExtension(client);
+    char i;
+    while (read(ex->interruptReadFd, &i, 1) > 0);
+}
+
 /******************************************************************************
  * Logging
  *****************************************************************************/
