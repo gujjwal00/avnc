@@ -264,11 +264,13 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeClientCreate(JNIEnv *env, jobject thiz)
     if (client == nullptr)
         return 0;
 
-    if (!assignClientExtension(client))
+    auto ex = assignClientExtension(client);
+    if (!ex)
         return 0;
 
     setCallbacks(client);
     client->canHandleNewFBSize = TRUE;
+    client->interruptFd = ex->interruptReadFd;
 
     //Attach reference to managed object
     auto obj = env->NewGlobalRef(thiz);
@@ -345,6 +347,12 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeIsServerMacOS(JNIEnv *env, jobject thiz
 
 extern "C"
 JNIEXPORT void JNICALL
+Java_com_gaurav_avnc_vnc_VncClient_nativeInterrupt(JNIEnv *env, jobject thiz, jlong client_ptr) {
+    setInterrupt((rfbClient *) client_ptr);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeCleanup(JNIEnv *env, jobject thiz,
                                                  jlong client_ptr) {
     auto client = (rfbClient *) client_ptr;
@@ -368,9 +376,11 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeProcessServerMessage(JNIEnv *env, jobje
                                                               jint u_sec_timeout) {
     auto client = (rfbClient *) client_ptr;
 
-    auto waitResult = WaitForMessage(client, static_cast<unsigned int>(u_sec_timeout));
+    clearInterrupt(client);
+    auto waitResult = WaitForMessageInterruptible(client, static_cast<unsigned int>(u_sec_timeout),
+                                                  client->interruptFd);
 
-    if (waitResult == 0) // Timeout
+    if (waitResult == 0) // Timeout or interrupted
         return JNI_TRUE;
 
     if (waitResult > 0 && HandleRFBServerMessage(client))

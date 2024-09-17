@@ -242,6 +242,15 @@ class VncClient(private val observer: Observer) {
     fun uploadCursor() = nativeUploadCursor(nativePtr, pointerX, pointerY)
 
     /**
+     * Set the interrupt flag.
+     * If [connect] is executing in another thread (and not yet successful),
+     * it will abandon the attempt and throw an error.
+     *
+     * TODO: avoid race with [cleanup]
+     */
+    fun interrupt() = nativeInterrupt(nativePtr)
+
+    /**
      * Release all resources allocated by the client.
      * DO NOT use this client after [cleanup].
      */
@@ -280,6 +289,7 @@ class VncClient(private val observer: Observer) {
     private external fun nativeUploadCursor(clientPtr: Long, px: Int, py: Int)
     private external fun nativeGetLastErrorStr(): String
     private external fun nativeIsServerMacOS(clientPtr: Long): Boolean
+    private external fun nativeInterrupt(clientPtr: Long)
     private external fun nativeCleanup(clientPtr: Long)
 
     @Keep
