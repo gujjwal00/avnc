@@ -118,7 +118,7 @@ fun <A : Activity, R> ActivityScenario<A>.withActivity(block: A.() -> R): R {
 
 /**
  * Runs given block synchronously on main thread.
- * Unlike [Instrumentation.runOnMainSync], this functions can return a value.
+ * Unlike [Instrumentation.runOnMainSync], this function can return a value.
  */
 fun <R> runOnMainSync(block: () -> R): R {
     var r: R? = null
