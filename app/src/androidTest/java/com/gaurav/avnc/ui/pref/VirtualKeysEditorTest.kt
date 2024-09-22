@@ -22,6 +22,7 @@ import com.gaurav.avnc.R
 import com.gaurav.avnc.checkIsDisplayed
 import com.gaurav.avnc.checkWillBeDisplayed
 import com.gaurav.avnc.doClick
+import com.gaurav.avnc.targetConfigContext
 import com.gaurav.avnc.targetContext
 import com.gaurav.avnc.targetPrefs
 import com.gaurav.avnc.ui.prefs.PrefsActivity
@@ -50,7 +51,7 @@ class VirtualKeysEditorTest {
     fun restoreDefaultConfig() {
         targetPrefs.edit { putString("vk_keys_layout", "Up,Down,Left,Right") }
         openEditor()
-        openActionBarOverflowOrOptionsMenu(targetContext)
+        openActionBarOverflowOrOptionsMenu(targetConfigContext)
 
         onView(withText(R.string.title_load_defaults)).doClick()
         onView(withText(R.string.title_save)).doClick()

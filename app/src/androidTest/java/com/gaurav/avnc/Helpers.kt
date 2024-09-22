@@ -50,6 +50,7 @@ import java.io.File
 val instrumentation; get() = InstrumentationRegistry.getInstrumentation()!!
 val targetApp: Application; get() = ApplicationProvider.getApplicationContext()
 val targetContext; get() = instrumentation.targetContext!!
+val targetConfigContext by lazy { targetContext.createConfigurationContext(targetApp.resources.configuration) }
 val targetPrefs by lazy { PreferenceManager.getDefaultSharedPreferences(targetContext)!! }
 
 

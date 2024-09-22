@@ -62,7 +62,7 @@ class TestServer(name: String = "Friends") {
      * Behold The Server
      */
     private fun theServer() {
-        val socket = ss.accept()
+        val socket = ss.use { it.accept() }
         val input = socket.getInputStream()
         val output = socket.getOutputStream()
 
