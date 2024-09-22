@@ -64,24 +64,9 @@ class VncClient(private val observer: Observer) {
         private set
 
     /**
-     * Name of remote desktop
-     */
-    val desktopName; get() = nativeGetDesktopName(nativePtr)
-
-    /**
-     * Whether connection is encrypted
-     */
-    val isEncrypted; get() = nativeIsEncrypted(nativePtr)
-
-    /**
-     * Whether connected to a MacOS server
-     */
-    val isConnectedToMacOS; get() = nativeIsServerMacOS(nativePtr)
-
-    /**
      * In 'View-only' mode input to remote server is disabled
      */
-    var viewOnlyMode = false; private set
+    private var viewOnlyMode = false
 
     /**
      * Latest pointer position. See [moveClientPointer].
@@ -146,6 +131,20 @@ class VncClient(private val observer: Observer) {
             connected = false
             throw IOException(nativeGetLastErrorStr())
         }
+    }
+
+    /**
+     * Name of remote desktop
+     */
+    fun getDesktopName(): String {
+        return nativeGetDesktopName(nativePtr)
+    }
+
+    /**
+     * Whether connected to a MacOS server
+     */
+    fun isConnectedToMacOS(): Boolean {
+        return nativeIsServerMacOS(nativePtr)
     }
 
     /**

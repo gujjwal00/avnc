@@ -57,14 +57,14 @@ class VncClientTest {
     fun serverName() {
         server = TestServer(sampleText)
         connect()
-        assertEquals(sampleText, client.desktopName)
+        assertEquals(sampleText, client.getDesktopName())
     }
 
     @Test
     fun serverNameWithAccent() {
         server = TestServer(sampleTextWithAccent)
         connect()
-        assertEquals(sampleTextWithAccent, client.desktopName)
+        assertEquals(sampleTextWithAccent, client.getDesktopName())
     }
 
     @Test
