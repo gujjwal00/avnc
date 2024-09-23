@@ -176,6 +176,7 @@
         <item>VncAuth</item>
         <item>AnonTLS</item>
         <item>VeNCrypt</item>
+        <item>macOS</item>
     </string-array>
     <string-array name="profile_editor_security_values">
         <item>0</item>
@@ -183,6 +184,7 @@
         <item>2</item>
         <item>18</item>
         <item>19</item>
+        <item>30</item>
     </string-array>
 
 
