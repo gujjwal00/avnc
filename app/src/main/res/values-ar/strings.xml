@@ -164,7 +164,6 @@
     <string name="pref_sort_server_list">ترتيب الخوادم المحفوظة حسب الاسم</string>
     <string name="pref_gesture">الإيماءات</string>
     <string name="pref_gesture_style">نمط الإيماءة</string>
-    <string name="pref_gesture_style_auto" translatable="false">@string/title_automatic</string>
     <string name="pref_gesture_style_auto_summary">حسب إعدادات التطبيق</string>
     <string name="pref_gesture_style_touchscreen">شاشة اللمس</string>
     <string name="pref_gesture_style_touchscreen_summary">تنفيذ الإجراءات عند نقطة اللمس</string>
