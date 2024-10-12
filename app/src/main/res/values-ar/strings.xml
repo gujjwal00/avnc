@@ -181,9 +181,6 @@
     <string name="pref_customize_virtual_keys">تخصيص المفاتيح</string>
     <string name="pref_vk_open_with_keyboard">فتح باستخدام لوحة المفاتيح</string>
     <string name="pref_km">تخصيص المفاتيح</string>
-    <string name="pref_km_right_alt_to_super">Right Alt → Super</string>
-    <string name="pref_km_language_switch_to_super">Language Switch → Super</string>
-    <string name="pref_km_back_to_escape">Back → Escape</string>
     <string name="pref_km_back_to_escape_summary">لا تؤثر على شريط التنقل</string>
     <string name="pref_orientation">اتجاه الشاشة</string>
     <string name="pref_orientation_option_auto">تلقائي</string>
