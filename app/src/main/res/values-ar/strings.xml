@@ -1,13 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2020  Ahmed (@ahmed-0011).
   ~
   ~ SPDX-License-Identifier:  GPL-3.0-or-later
   ~
   ~ See COPYING.txt for more details.
-  -->
-
-<resources>
-
+  --><resources>
     <string name="title_add_server_profile">إضافة خادم</string>
     <string name="title_edit_server_profile">تعديل الخادم</string>
     <string name="title_duplicate">نسخة مكررة</string>
@@ -58,8 +56,6 @@
     <string name="title_next">التالي</string>
     <string name="title_got_it">تم الوصول</string>
     <string name="title_load_defaults">تحميل الإعدادات الافتراضية</string>
-
-
     <string name="hint_urlbar">اتصل بخادم</string>
     <string name="hint_server_name">الاسم (مثال: كمبيوتر العمل)</string>
     <string name="hint_host">المضيف</string>
@@ -73,9 +69,7 @@
     <string name="hint_ssh_port">منفذ SSH</string>
     <string name="hint_key_password">كلمة المرور الرئيسية</string>
     <string name="hint_send_text_to_server">إرسال النص إلى الخادم</string>
-
-
-    <string name="msg_about_app">عميل VNC سريع وآمن. عرض أي جهاز يقوم بتشغيل خادم VNC والتحكم به عن بُعد.\n\n\AVNC هو برنامج مفتوح المصدر — تم إنشاؤه بمساعدة العديد من المساهمين.</string>
+    <string name="msg_about_app">عميل VNC سريع وآمن. عرض أي جهاز يقوم بتشغيل خادم VNC والتحكم به عن بُعد.\n\n\nVNC هو برنامج مفتوح المصدر — تم إنشاؤه بمساعدة العديد من المساهمين.</string>
     <string name="msg_server_profile_added">تم إضافة الخادم</string>
     <string name="msg_server_profile_deleted">تم حذف الخادم</string>
     <string name="msg_zoom_locked">التكبير/التصغير مقفل</string>
@@ -85,7 +79,7 @@
     <string name="msg_zoom_saved">تم حفظ التكبير الحالي كافتراضي</string>
     <string name="msg_pip_not_supported">غير مدعوم على هذا الجهاز</string>
     <string name="msg_ptr_hiding_not_supported">غير مدعوم على هذا الجهاز</string>
-    <string name="msg_loading">جارٍ التحميل...</string>
+    <string name="msg_loading">جارٍ التحميل…</string>
     <string name="msg_imported">تم الاستيراد</string>
     <string name="msg_exported">تم التصدير</string>
     <string name="msg_saved">تم الحفظ</string>
@@ -106,7 +100,6 @@
     <string name="msg_viewer_tips_label">بعض النصائح التي ستساعدك على البدء</string>
     <string name="tip_toolbar_usage">تمرير سريع من الحافة لفتح شريط الأدوات. استخدمه لفتح لوحة المفاتيح أو تغيير نمط الإيماءات أو إعادة ضبط التكبير/التصغير.</string>
     <string name="tip_session_end">لإنهاء جلسة معينة، اضغط على زر التنقل "رجوع"، تمامًا كما لو كنت ستعود من فيديو قيد التشغيل.</string>
-
     <!-- Accessibility descriptions -->
     <string name="desc_navigation_btn">فتح درج التنقل</string>
     <string name="desc_settings_btn">الإعدادات</string>
@@ -130,7 +123,6 @@
     <string name="desc_help_btn">المساعدة</string>
     <string name="desc_discovered_list">قائمة بالخوادم المكتشفة تلقائيًا</string>
     <string name="desc_saved_servers_list">قائمة بالخوادم المحفوظة</string>
-
     <!-- Preference -->
     <string name="pref_ui">الواجهة</string>
     <string name="pref_ui_summary">الشكل والمظهر</string>
@@ -144,7 +136,6 @@
     <string name="pref_tools_summary">الاستيراد/التصدير وتصحيح الأخطاء</string>
     <string name="pref_experimental">تجريبي</string>
     <string name="pref_experimental_summary">ميزات إضافية</string>
-
     <string name="pref_gesture_action_left_click">النقر بالزر الأيسر</string>
     <string name="pref_gesture_action_middle_click">النقر بالزر الأوسط</string>
     <string name="pref_gesture_action_right_click">النقر بالزر الأيمن</string>
@@ -155,7 +146,6 @@
     <string name="pref_gesture_action_remote_drag">سحب المحتوى البعيد</string>
     <string name="pref_gesture_action_remote_drag_middle">السحب بالزر الأوسط</string>
     <string name="pref_gesture_action_open_keyboard">فتح لوحة المفاتيح</string>
-
     <string name="pref_theme">السمة</string>
     <string name="pref_theme_option_system">النظام</string>
     <string name="pref_theme_option_dark">داكن</string>
