@@ -1,0 +1,3 @@
+* New Arabic localization by Ahmed
+* Fixed possible crash when coercing tap to frame edge
+* Added option to force masOS security type
