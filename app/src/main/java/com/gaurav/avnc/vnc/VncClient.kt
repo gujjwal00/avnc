@@ -4,6 +4,9 @@ import androidx.annotation.Keep
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.read
+import kotlin.concurrent.write
 
 /**
  * This is a thin wrapper around native client.
@@ -63,6 +66,13 @@ class VncClient(private val observer: Observer) {
     var connected = false
         private set
 
+    private var destroyed = false
+
+    /**
+     * Lock protecting access to [connected] & [destroyed] state.
+     */
+    private val stateLock = ReentrantReadWriteLock()
+
     /**
      * In 'View-only' mode input to remote server is disabled
      */
@@ -102,20 +112,30 @@ class VncClient(private val observer: Observer) {
      * @param securityType RFB security type to use.
      */
     fun configure(viewOnly: Boolean, securityType: Int, useLocalCursor: Boolean, imageQuality: Int, useRawEncoding: Boolean) {
-        viewOnlyMode = viewOnly
-        nativeConfigure(nativePtr, securityType, useLocalCursor, imageQuality, useRawEncoding)
+        stateLock.read {
+            if (!connected && !destroyed) {
+                viewOnlyMode = viewOnly
+                nativeConfigure(nativePtr, securityType, useLocalCursor, imageQuality, useRawEncoding)
+            }
+        }
     }
 
     fun setupRepeater(serverId: Int) {
-        nativeSetDest(nativePtr, "ID", serverId)
+        stateLock.read {
+            if (!connected && !destroyed)
+                nativeSetDest(nativePtr, "ID", serverId)
+        }
     }
 
     /**
      * Initializes VNC connection.
      */
     fun connect(host: String, port: Int) {
-        connected = nativeInit(nativePtr, host, port)
-        if (!connected) throw IOException(nativeGetLastErrorStr())
+        stateLock.write {
+            if (connected || destroyed) return
+            connected = nativeInit(nativePtr, host, port)
+            if (!connected) throw IOException(nativeGetLastErrorStr())
+        }
     }
 
     /**
@@ -124,10 +144,13 @@ class VncClient(private val observer: Observer) {
      * @param uSecTimeout Timeout in microseconds.
      */
     fun processServerMessage(uSecTimeout: Int = 1000000) {
-        if (!connected)
-            return
+        stateLock.read {
+            if (connected && nativeProcessServerMessage(nativePtr, uSecTimeout))
+                return
+        }
 
-        if (!nativeProcessServerMessage(nativePtr, uSecTimeout)) {
+        // Either not connected or an error occurred when processing message
+        stateLock.write {
             connected = false
             throw IOException(nativeGetLastErrorStr())
         }
@@ -137,14 +160,20 @@ class VncClient(private val observer: Observer) {
      * Name of remote desktop
      */
     fun getDesktopName(): String {
-        return nativeGetDesktopName(nativePtr)
+        ifConnected {
+            return nativeGetDesktopName(nativePtr)
+        }
+        return ""
     }
 
     /**
      * Whether connected to a MacOS server
      */
     fun isConnectedToMacOS(): Boolean {
-        return nativeIsServerMacOS(nativePtr)
+        ifConnected {
+            return nativeIsServerMacOS(nativePtr)
+        }
+        return false
     }
 
     /**
@@ -183,7 +212,7 @@ class VncClient(private val observer: Observer) {
      * @param x    Horizontal pointer coordinate
      * @param y    Vertical pointer coordinate
      */
-    fun moveClientPointer(x: Int, y: Int) {
+    fun moveClientPointer(x: Int, y: Int) = ifConnected {
         pointerX = x
         pointerY = y
         observer.onPointerMoved(x, y)
@@ -233,33 +262,45 @@ class VncClient(private val observer: Observer) {
      * Puts framebuffer contents in currently active OpenGL texture.
      * Must be called from an OpenGL ES context (i.e. from renderer thread).
      */
-    fun uploadFrameTexture() = nativeUploadFrameTexture(nativePtr)
+    fun uploadFrameTexture() = ifConnected {
+        nativeUploadFrameTexture(nativePtr)
+    }
 
     /**
      * Upload cursor shape into framebuffer texture.
      */
-    fun uploadCursor() = nativeUploadCursor(nativePtr, pointerX, pointerY)
+    fun uploadCursor() = ifConnected {
+        nativeUploadCursor(nativePtr, pointerX, pointerY)
+    }
 
     /**
      * Set the interrupt flag.
      * If [connect] is executing in another thread (and not yet successful),
      * it will abandon the attempt and throw an error.
-     *
-     * TODO: avoid race with [cleanup]
      */
-    fun interrupt() = nativeInterrupt(nativePtr)
+    fun interrupt() {
+        stateLock.read {
+            if (!destroyed)
+                nativeInterrupt(nativePtr)
+        }
+    }
 
     /**
      * Release all resources allocated by the client.
      * DO NOT use this client after [cleanup].
      */
     fun cleanup() {
-        connected = false
-        nativeCleanup(nativePtr)
+        stateLock.write {
+            if (!destroyed) {
+                nativeCleanup(nativePtr)
+                connected = false
+                destroyed = true
+            }
+        }
     }
 
-    private inline fun ifConnected(block: () -> Unit) {
-        if (connected)
+    private inline fun ifConnected(block: () -> Unit) = stateLock.read {
+        if (connected && !destroyed)
             block()
     }
 
