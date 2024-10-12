@@ -45,9 +45,7 @@
 \n 
 \nAVNC는 오픈 소스 및 카피레프트 소프트웨어입니다 — 많은 기여자의 도움으로 만들어졌습니다.</string>
     <string name="msg_imported">가져옴</string>
-    <string name="tip_empty_server_list">서버 목록이 비어 있습니다. 
-\n\'<b>+</b>\'를 클릭하여 서버 추가, 또는 
-\n상단 주소 표시줄을 사용하여 직접 연결합니다.</string>
+    <string name="tip_empty_server_list">서버 목록이 비어 있습니다.\n\'<b>+</b>\'를 클릭하여 서버 추가, 또는\n상단 주소 표시줄을 사용하여 직접 연결합니다.</string>
     <string name="tip_urlbar">IP 주소, 호스트 이름 또는 \'vnc://\' URI를 입력할 수 있습니다.</string>
     <string name="tip_discovery">검색은 네트워크에서 실행 중인 지원되는 서버를 
 \n자동으로 찾을 수 있습니다.</string>
@@ -177,7 +175,7 @@
     <string name="pref_gesture_style">제스처 스타일</string>
     <string name="pref_gesture_style_touchpad">터치패드</string>
     <string name="pref_gesture_style_touchpad_summary">포인터에서 작업 수행</string>
-    <string name="pref_display_cutout">디스플레이 컷아웃 뒤에 그리기(실험용)</string>
+    <string name="pref_display_cutout">잘라낸 영역으로 확장</string>
     <string name="pref_per_orientation_zoom">각 방향에 대한 별도의 확대/축소</string>
     <string name="pref_saved_server_lock_summary">연결하려면 생체 인식/비밀번호 잠금 해제 필요</string>
     <string name="pref_invert_vertical_scrolling">세로 스크롤 반전</string>
@@ -210,4 +208,15 @@
     <string name="desc_lock_zoom_btn">잠금 줌</string>
     <string name="pref_toolbar_open_with_swipe">가장자리에서 열리도록 스와이프 인</string>
     <string name="pref_show_gesture_style_toggle">토글 스타일 표시</string>
+    <string name="title_enable_wol">원격 PC 켜기</string>
+    <string name="title_load_defaults">기본값 로드</string>
+    <string name="msg_tap_to_select_a_key">키를 선택하려면 탭하세요:</string>
+    <string name="pref_customize_virtual_keys">커스텀 키</string>
+    <string name="hint_wol_mac">MAC 주소</string>
+    <string name="msg_saved">저장됨</string>
+    <string name="msg_wake_on_lan_help">Wake-on-LAN은 원격으로 PC를 켜는 데 사용할 수 있습니다.
+\n
+\n먼저 원격 컴퓨터에서 WoL을 구성한 다음 AVNC에서 활성화합니다.
+\n활성화하면 WoL 매직 패킷이 이 서버에 연결되기 전에 자동으로 전송됩니다.</string>
+    <string name="hint_send_text_to_server">서버로 텍스트 보내기</string>
 </resources>
