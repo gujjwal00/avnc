@@ -131,10 +131,15 @@ class VncClient(private val observer: Observer) {
      * Initializes VNC connection.
      */
     fun connect(host: String, port: Int) {
+        stateLock.read {
+            if (connected || destroyed)
+                return
+            if (!nativeInit(nativePtr, host, port))
+                throw IOException(nativeGetLastErrorStr())
+        }
         stateLock.write {
-            if (connected || destroyed) return
-            connected = nativeInit(nativePtr, host, port)
-            if (!connected) throw IOException(nativeGetLastErrorStr())
+            if (!destroyed)
+                connected = true
         }
     }
 
