@@ -24,15 +24,17 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 class HostKeyFragment : DialogFragment() {
     val viewModel by activityViewModels<VncViewModel>()
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val request = viewModel.sshHostKeyVerifyRequest
-        if (savedInstanceState != null && request.value == null) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState != null && viewModel.sshHostKeyVerifyRequest.value == null) {
             Log.i(javaClass.simpleName, "Activity is being recreated and old ViewModel is gone, removing stale dialog")
             showsDialog = false
             dismiss()
-            return Dialog(requireContext()) // Can't return null
         }
+    }
 
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val request = viewModel.sshHostKeyVerifyRequest
         val hostKey = request.value!!
         val titleRes = if (hostKey.isKnownHost) R.string.title_ssh_host_key_changed else R.string.title_unknown_ssh_host
 

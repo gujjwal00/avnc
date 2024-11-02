@@ -43,14 +43,16 @@ class LoginFragment : DialogFragment() {
     private val loginType by lazy { viewModel.loginInfoRequest.value!! }
     private val loginInfo by lazy { getLoginInfoFromProfile(viewModel.profile) }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         if (savedInstanceState != null && viewModel.loginInfoRequest.value == null) {
             Log.i(javaClass.simpleName, "Activity is being recreated and old ViewModel is gone, removing stale login dialog")
             showsDialog = false
             dismiss()
-            return Dialog(requireContext()) // Can't return null
         }
+    }
 
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         check(viewModel.loginInfoRequest.value != null) { "Login fragment invoked without a login type" }
         binding = FragmentCredentialBinding.inflate(layoutInflater, null, false)
 
