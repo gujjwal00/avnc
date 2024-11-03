@@ -24,7 +24,6 @@ import com.gaurav.avnc.util.SingleShotFlag
 import com.gaurav.avnc.util.broadcastWoLPackets
 import com.gaurav.avnc.util.getClipboardText
 import com.gaurav.avnc.util.setClipboardText
-import com.gaurav.avnc.viewmodel.service.HostKey
 import com.gaurav.avnc.viewmodel.service.SshTunnel
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.UserCredential
@@ -166,9 +165,11 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
     private val sshTunnel = SshTunnel(this)
 
     /**
-     * Used to confirm unknown hosts.
+     * Used to confirm something with user before continuing.
+     * This is mostly used to warn about unknown SSH host, x509 certificates etc.
+     * This request accepts two strings: First is used as title, second contains the message.
      */
-    val sshHostKeyVerifyRequest = LiveRequest<HostKey, Boolean>(false, viewModelScope)
+    val confirmationRequest = LiveRequest<Pair<String, String>, Boolean>(false, viewModelScope)
 
     /**
      * Indicates if this view model has been cleared.

@@ -15,6 +15,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.gaurav.avnc.R
 import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.viewmodel.VncViewModel
@@ -37,25 +38,6 @@ import java.security.KeyPair
 import java.security.MessageDigest
 
 /**
- * Container for SSH Host Key
- */
-class HostKey(
-        val host: String,
-        val isKnownHost: Boolean,
-        val algo: String,
-        val key: ByteArray,
-) {
-    /**
-     * Returns SHA-256 fingerprint of the [key].
-     */
-    fun getFingerprint(): String {
-        val sha256 = MessageDigest.getInstance("SHA-256").digest(key)
-        val base64 = Base64.encodeToString(sha256, Base64.NO_PADDING)
-        return "SHA256:$base64"
-    }
-}
-
-/**
  * Implements Host Key verification.
  *
  * Known hosts & keys are stored in a file inside app's private storage.
@@ -73,10 +55,28 @@ class HostKeyVerifier(private val viewModel: VncViewModel) : ServerHostKeyVerifi
         if (verification == KnownHosts.HOSTKEY_IS_OK)
             return true
 
-        val isKnownHost = (verification == KnownHosts.HOSTKEY_HAS_CHANGED)
-        val hostKey = HostKey(hostname, isKnownHost, keyAlgorithm, key)
+        // New key, confirm with user
+        val keyDigest = MessageDigest.getInstance("SHA-256").digest(key)
+        val keyDigestStr = Base64.encodeToString(keyDigest, Base64.NO_PADDING)
 
-        if (viewModel.sshHostKeyVerifyRequest.requestResponse(hostKey)) {
+        var titleRes = R.string.title_unknown_ssh_host
+        if (verification == KnownHosts.HOSTKEY_HAS_CHANGED)
+            titleRes = R.string.title_ssh_host_key_changed
+        val title = viewModel.app.getString(titleRes)
+        val message = """
+                 |
+                 |Host:   $hostname
+                 |Key type:   ${keyAlgorithm.uppercase()}
+                 |Key fingerprint: 
+                 |  
+                 |SHA256:$keyDigestStr
+                 |
+                 |Please make sure your are connecting to the valid host.
+                 |
+                 |If you continue, this host & key will be marked as known.
+                 """.trimMargin()
+
+        if (viewModel.confirmationRequest.requestResponse(Pair(title, message))) {
             //User has confirmed the key, so remember it.
             KnownHosts.addHostkeyToFile(knownHostsFile, arrayOf(hostname), keyAlgorithm, key)
             return true

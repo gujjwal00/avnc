@@ -122,7 +122,7 @@ class VncActivity : AppCompatActivity() {
         //Observers
         binding.reconnectBtn.setOnClickListener { retryConnection() }
         viewModel.loginInfoRequest.observe(this) { showLoginDialog() }
-        viewModel.sshHostKeyVerifyRequest.observe(this) { showHostKeyDialog() }
+        viewModel.confirmationRequest.observe(this) { showConfirmationDialog() }
         viewModel.state.observe(this) { onClientStateChanged(it) }
 
         savedInstanceState?.let {
@@ -213,8 +213,8 @@ class VncActivity : AppCompatActivity() {
         LoginFragment().show(supportFragmentManager, "LoginDialog")
     }
 
-    private fun showHostKeyDialog() {
-        HostKeyFragment().show(supportFragmentManager, "HostKeyFragment")
+    private fun showConfirmationDialog() {
+        ConfirmationDialog().show(supportFragmentManager, "ConfirmationDialog")
     }
 
     fun showKeyboard() {

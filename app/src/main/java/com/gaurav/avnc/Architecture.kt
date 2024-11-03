@@ -18,7 +18,7 @@ import com.gaurav.avnc.ui.prefs.PrefsActivity
 import com.gaurav.avnc.ui.vnc.Dispatcher
 import com.gaurav.avnc.ui.vnc.FrameState
 import com.gaurav.avnc.ui.vnc.FrameView
-import com.gaurav.avnc.ui.vnc.HostKeyFragment
+import com.gaurav.avnc.ui.vnc.ConfirmationDialog
 import com.gaurav.avnc.ui.vnc.LoginFragment
 import com.gaurav.avnc.ui.vnc.VirtualKeys
 import com.gaurav.avnc.ui.vnc.VncActivity
@@ -102,7 +102,7 @@ import com.gaurav.avnc.vnc.VncClient
  *
  * - [LoginFragment] is used to ask username & password from user.
  * - [SshTunnel] is used to create a SSH tunnel, which can be used for connection.
- * - [HostKeyFragment] is used to verify unknown SSH hosts.
+ * - [ConfirmationDialog] is used to verify unknown SSH hosts and X509 certs with user.
  * -
  * - [Messenger] is used to send events to VNC server.
  *

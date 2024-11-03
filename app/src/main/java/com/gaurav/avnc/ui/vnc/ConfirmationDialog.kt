@@ -19,14 +19,14 @@ import com.gaurav.avnc.viewmodel.VncViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /**
- * This dialog is used to get user-confirmation before connecting to unknown SSH servers.
+ * This dialog is used to get user-confirmation about something before continuing.
  */
-class HostKeyFragment : DialogFragment() {
+class ConfirmationDialog : DialogFragment() {
     val viewModel by activityViewModels<VncViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState != null && viewModel.sshHostKeyVerifyRequest.value == null) {
+        if (savedInstanceState != null && viewModel.confirmationRequest.value == null) {
             Log.i(javaClass.simpleName, "Activity is being recreated and old ViewModel is gone, removing stale dialog")
             showsDialog = false
             dismiss()
@@ -34,27 +34,13 @@ class HostKeyFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val request = viewModel.sshHostKeyVerifyRequest
-        val hostKey = request.value!!
-        val titleRes = if (hostKey.isKnownHost) R.string.title_ssh_host_key_changed else R.string.title_unknown_ssh_host
-
-        val message = """
-                 |
-                 |Host:   ${hostKey.host}
-                 |Key type:   ${hostKey.algo.uppercase()}
-                 |Key fingerprint: 
-                 |  
-                 |${hostKey.getFingerprint()}
-                 |
-                 |Please make sure your are connecting to the valid host.
-                 |
-                 |If you continue, this host & key will be marked as known.
-                 """.trimMargin()
+        val data = viewModel.confirmationRequest.value
+        check(data != null) { "Confirmation dialog started without message!" }
 
         return MaterialAlertDialogBuilder(requireContext())
-                .setTitle(titleRes)
-                .setMessage(message)
-                .setPositiveButton(R.string.title_continue) { _, _ -> request.offerResponse(true) }
+                .setTitle(data.first)
+                .setMessage(data.second)
+                .setPositiveButton(R.string.title_continue) { _, _ -> viewModel.confirmationRequest.offerResponse(true) }
                 .setNegativeButton(android.R.string.cancel) { _, _ -> abortSession() }
                 .create().apply {
                     setCanceledOnTouchOutside(false)
