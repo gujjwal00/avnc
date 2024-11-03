@@ -1,9 +1,12 @@
 package com.gaurav.avnc.vnc
 
 import androidx.annotation.Keep
+import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
+import java.security.cert.CertificateFactory
+import java.security.cert.X509Certificate
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
@@ -43,6 +46,7 @@ class VncClient(private val observer: Observer) {
     interface Observer {
         fun onPasswordRequired(): String
         fun onCredentialRequired(): UserCredential
+        fun onVerifyCertificate(certificate: X509Certificate): Boolean
         fun onGotXCutText(text: String)
         fun onFramebufferUpdated()
         fun onFramebufferSizeChanged(width: Int, height: Int)
@@ -342,6 +346,14 @@ class VncClient(private val observer: Observer) {
 
     @Keep
     private fun cbGetCredential() = observer.onCredentialRequired()
+
+    @Keep
+    private fun cbVerifyServerCertificate(der: ByteArray): Boolean {
+        val cert = ByteArrayInputStream(der).use {
+            CertificateFactory.getInstance("X.509").generateCertificate(it)
+        }
+        return observer.onVerifyCertificate(cert as X509Certificate)
+    }
 
     @Keep
     private fun cbGotXCutText(bytes: ByteArray, isUTF8: Boolean) {

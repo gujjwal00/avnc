@@ -88,10 +88,11 @@ static char *onGetPassword(rfbClient *client) {
 }
 
 static rfbCredential *onGetCredential(rfbClient *client, int credentialType) {
-    if (credentialType != rfbCredentialTypeUser) {
-        //Only user credentials (i.e. username & password) are currently supported
-        rfbClientErr("Unsupported credential type requested");
-        return nullptr;
+    if (credentialType == rfbCredentialTypeX509) {
+        // Return empty credentials here, server certificate will be verified later
+        auto credential = (rfbCredential *) malloc(sizeof(rfbCredential));
+        memset(credential, 0, sizeof(rfbCredential));
+        return credential;
     }
 
     auto obj = getManagedClient(client);
@@ -120,6 +121,19 @@ static rfbCredential *onGetCredential(rfbClient *client, int credentialType) {
     credential->userCredential.password = getNativeStrCopy(env, (jstring) jPassword);
 
     return credential;
+}
+
+static rfbBool onVerifyServerCertificate(rfbClient *client, const unsigned char *der, int der_len) {
+    auto obj = getManagedClient(client);
+    auto env = context.getEnv();
+    auto cls = context.managedCls;
+
+    jmethodID mid = env->GetMethodID(cls, "cbVerifyServerCertificate", "([B)Z");
+    jbyteArray bytes = env->NewByteArray(der_len);
+    env->SetByteArrayRegion(bytes, 0, der_len, reinterpret_cast<const jbyte *>(der));
+    auto result = env->CallBooleanMethod(obj, mid, bytes);
+    env->DeleteLocalRef(bytes);
+    return result ? TRUE : FALSE;
 }
 
 static void onBell(rfbClient *client) {
@@ -244,6 +258,7 @@ static void onGotCursorShape(rfbClient *client, int xHot, int yHot, int width, i
 static void setCallbacks(rfbClient *client) {
     client->GetPassword = onGetPassword;
     client->GetCredential = onGetCredential;
+    client->VerifyServerCertificate = onVerifyServerCertificate;
     client->Bell = onBell;
     client->GotXCutText = onGotXCutTextLatin1;
     client->GotXCutTextUTF8 = onGotXCutTextUTF8;

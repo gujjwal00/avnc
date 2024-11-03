@@ -23,7 +23,10 @@ import com.gaurav.avnc.util.LiveRequest
 import com.gaurav.avnc.util.SingleShotFlag
 import com.gaurav.avnc.util.broadcastWoLPackets
 import com.gaurav.avnc.util.getClipboardText
+import com.gaurav.avnc.util.getUnknownCertificateMessage
+import com.gaurav.avnc.util.isCertificateTrusted
 import com.gaurav.avnc.util.setClipboardText
+import com.gaurav.avnc.util.trustCertificate
 import com.gaurav.avnc.viewmodel.service.SshTunnel
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.UserCredential
@@ -32,6 +35,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import java.io.IOException
 import java.lang.ref.WeakReference
+import java.security.cert.X509Certificate
 import kotlin.concurrent.thread
 
 /**
@@ -428,6 +432,19 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
 
     override fun onCredentialRequired(): UserCredential {
         return getLoginInfo(LoginInfo.Type.VNC_CREDENTIAL).let { UserCredential(it.username, it.password) }
+    }
+
+    override fun onVerifyCertificate(certificate: X509Certificate): Boolean {
+        if (isCertificateTrusted(app, certificate))
+            return true
+
+        val title = "Unknown server certificate"
+        val message = getUnknownCertificateMessage(certificate)
+        if (!confirmationRequest.requestResponse(Pair(title, message)))
+            return false
+
+        trustCertificate(app, certificate)
+        return true
     }
 
     override fun onFramebufferUpdated() {
