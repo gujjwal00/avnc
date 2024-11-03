@@ -140,6 +140,7 @@ static void onGotXCutText(rfbClient *client, const char *text, int len, bool is_
     jbyteArray bytes = env->NewByteArray(len);
     env->SetByteArrayRegion(bytes, 0, len, reinterpret_cast<const jbyte *>(text));
     env->CallVoidMethod(obj, mid, bytes, is_utf8);
+    env->DeleteLocalRef(bytes);
 }
 
 static void onGotXCutTextLatin1(rfbClient *client, const char *text, int len) {
