@@ -8,8 +8,10 @@
 
 package com.gaurav.avnc.util
 
+import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.gaurav.avnc.targetContext
+import com.gaurav.avnc.ui.prefs.PrefsActivity
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -32,10 +34,13 @@ class KnownHostsTest {
         Assert.assertTrue(isCertificateTrusted(targetContext, getTestCert()))
     }
 
-    private fun getTestCert(): X509Certificate {
 
-        // TLS certificate of example.com
-        val pem = """
+    companion object {
+
+        fun getTestCert(): X509Certificate {
+
+            // TLS certificate of example.com
+            val pem = """
             -----BEGIN CERTIFICATE-----
             MIIHbjCCBlagAwIBAgIQB1vO8waJyK3fE+Ua9K/hhzANBgkqhkiG9w0BAQsFADBZ
             MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMTMwMQYDVQQDEypE
@@ -79,8 +84,9 @@ class KnownHostsTest {
             FfnzxLutUV++3seshgefQOy5C/ayi8y1VTNmujPCxPCi6Q==
             -----END CERTIFICATE-----""".trimIndent()
 
-        return pem.byteInputStream().use {
-            CertificateFactory.getInstance("X.509").generateCertificate(it) as X509Certificate
+            return pem.byteInputStream().use {
+                CertificateFactory.getInstance("X.509").generateCertificate(it) as X509Certificate
+            }
         }
     }
 }

@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import com.gaurav.avnc.R
 import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.util.getKnownHostsFile
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.trilead.ssh2.Connection
 import com.trilead.ssh2.KnownHosts
@@ -45,7 +46,7 @@ import java.security.MessageDigest
  */
 class HostKeyVerifier(private val viewModel: VncViewModel) : ServerHostKeyVerifier {
 
-    private val knownHostsFile = File(viewModel.app.filesDir, "known-hosts")
+    private val knownHostsFile = getKnownHostsFile(viewModel.app)
 
     private val knownHosts = KnownHosts(knownHostsFile)
 

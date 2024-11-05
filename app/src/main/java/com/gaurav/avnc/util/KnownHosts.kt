@@ -18,7 +18,18 @@ import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import javax.security.auth.x500.X500Principal
 
-// Utilities related to known hosts & certificates
+private const val TAG = "KnownHosts"
+
+//-------------------- Known SSH Hosts ----------------------------
+fun getKnownHostsFile(context: Context) = File(context.filesDir, "known-hosts")
+
+fun forgetKnownHosts(context: Context): Boolean {
+    return runCatching { getKnownHostsFile(context).delete() }
+            .onFailure { Log.e(TAG, "Cannot forget known hosts", it) }
+            .isSuccess
+}
+
+//------------------ Trusted certificates -------------------------
 
 private fun getTrustedCertsDir(context: Context) = File(context.filesDir, "trusted_certs")
 
@@ -39,8 +50,14 @@ fun trustCertificate(context: Context, certificate: Certificate) {
         certDir.mkdirs()
         certFile.writeBytes(certificate.encoded)
     }.onFailure {
-        Log.e("KnownHosts", "Error trusting certificate", it)
+        Log.e(TAG, "Error trusting certificate", it)
     }
+}
+
+fun deleteTrustedCertificates(context: Context): Boolean {
+    return runCatching { getTrustedCertsDir(context).deleteRecursively() }
+            .onFailure { Log.e(TAG, "Cannot delete trusted", it) }
+            .isSuccess
 }
 
 /**
@@ -58,7 +75,7 @@ fun isCertificateTrusted(context: Context, certificate: Certificate): Boolean {
         if (trustedCert.equals(certificate))
             return true
     }.onFailure {
-        Log.w("KnownHosts", "Error checking certificate", it)
+        Log.w(TAG, "Error checking certificate", it)
     }
     return false
 }

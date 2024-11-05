@@ -158,6 +158,11 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
             } else {
                 savedServerLock.isEnabled = false
             }
+
+            findPreference<Preference>("forget_known_hosts")!!.setOnPreferenceClickListener {
+                ForgetKnownHostsDialog().show(childFragmentManager, "ForgetKnownHosts")
+                true
+            }
         }
     }
 

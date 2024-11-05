@@ -16,7 +16,12 @@ import com.gaurav.avnc.R.string.*
 import com.gaurav.avnc.checkIsDisplayed
 import com.gaurav.avnc.checkWillBeDisplayed
 import com.gaurav.avnc.doClick
+import com.gaurav.avnc.targetContext
 import com.gaurav.avnc.ui.prefs.PrefsActivity
+import com.gaurav.avnc.util.KnownHostsTest.Companion.getTestCert
+import com.gaurav.avnc.util.isCertificateTrusted
+import com.gaurav.avnc.util.trustCertificate
+import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 
@@ -52,6 +57,20 @@ class PrefsActivityTest {
     @Test
     fun toolsTest() {
         openSection(pref_tools, pref_tools_summary, pref_import_export)
+    }
+
+    @Test
+    fun forgetKnownHosts() {
+        trustCertificate(targetContext, getTestCert())
+        Assert.assertTrue(isCertificateTrusted(targetContext, getTestCert()))
+
+        openSection(pref_servers, pref_server_summary, pref_forget_known_hosts)
+        onView(withText(pref_forget_known_hosts)).doClick()
+        onView(withText(pref_forget_known_hosts_question)).checkWillBeDisplayed()
+        onView(withText(title_forget)).doClick()
+        onView(withText(msg_done)).checkWillBeDisplayed()
+
+        Assert.assertFalse(isCertificateTrusted(targetContext, getTestCert()))
     }
 
     /**

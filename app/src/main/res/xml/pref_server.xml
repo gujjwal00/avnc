@@ -26,6 +26,10 @@
         app:key="auto_reconnect"
         app:title="@string/pref_auto_reconnect" />
 
+    <Preference
+        app:key="forget_known_hosts"
+        app:title="@string/pref_forget_known_hosts" />
+
     <PreferenceCategory
         app:icon="@drawable/ic_search"
         app:title="@string/pref_discovery">
