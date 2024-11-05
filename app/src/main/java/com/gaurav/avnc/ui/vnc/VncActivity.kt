@@ -353,6 +353,16 @@ class VncActivity : AppCompatActivity() {
             toolbar.close()
             viewModel.resetZoom()
             virtualKeys.hide()
+        } else {
+            // If user taps the Close button on PiP window, Android will stop the Activity
+            // but won't destroy it. This is not a problem for singleTask activities since those
+            // are still shown in Recents screen. But AVNC doesn't use singleTask. So VncActivity
+            // in PiP mode gets detached into a separate task, which for some reason isn't shown
+            // in Recents screen. Hence the activity is effectively leaked.
+            if (lifecycle.currentState == Lifecycle.State.CREATED) {
+                Log.i(TAG, "Finishing activity on PiP Close button click")
+                finish()
+            }
         }
     }
 
