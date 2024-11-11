@@ -64,7 +64,7 @@ object Discovery {
      *
      * - Android can filter/drop multicast WiFi packets to save power. Devices, like Pixel phone, enable
      *   this feature. This can be turned off by acquiring a multicast lock, but [NsdManager] doesn't
-     *   doesn't do this automatically. So we have to acquire it manually.
+     *   do this automatically. So we have to acquire it manually.
      */
     @Suppress("DEPRECATION")  // Yeah, f**k you too Google
     private class Impl {
