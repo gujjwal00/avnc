@@ -91,14 +91,15 @@
                     style="@style/ImageButton.Toggle"
                     android:contentDescription="@string/desc_lock_zoom_btn"
                     android:drawableStart="@drawable/ic_lock"
+                    android:checked="@{viewModel.profileLive.fZoomLocked}"
                     android:padding="12dp" />
 
                 <ImageButton
                     android:id="@+id/zoom_save_btn"
                     style="@style/ImageButton"
-                    android:alpha="@{viewModel.profile.ID != 0 ? 1f : .25f}"
+                    android:alpha="@{viewModel.profileLive.ID != 0 ? 1f : .25f}"
                     android:contentDescription="@string/desc_save_zoom_btn"
-                    android:enabled="@{viewModel.profile.ID != 0}"
+                    android:enabled="@{viewModel.profileLive.ID != 0}"
                     android:src="@drawable/ic_save" />
 
             </LinearLayout>

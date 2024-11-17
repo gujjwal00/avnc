@@ -64,7 +64,6 @@ class Toolbar(private val activity: VncActivity) {
         binding.zoomOptions.setOnLongClickListener { resetZoomToDefault(); close(); true }
         binding.zoomResetBtn.setOnClickListener { resetZoomToDefault(); close() }
         binding.zoomResetBtn.setOnLongClickListener { resetZoom(); close(); true }
-        binding.zoomLockBtn.isChecked = viewModel.profile.fZoomLocked
         binding.zoomLockBtn.setOnCheckedChangeListener { _, checked -> toggleZoomLock(checked); close() }
         binding.zoomSaveBtn.setOnClickListener { saveZoom(); close() }
         binding.virtualKeysBtn.setOnClickListener { activity.virtualKeys.show(true); close() }

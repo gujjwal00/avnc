@@ -104,6 +104,11 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
         }
     }
 
+    /**
+     * Live version of [profile], allows easier access from UI layer
+     */
+    val profileLive = MutableLiveData<ServerProfile>()
+
     val client = VncClient(this)
 
     /**
@@ -204,6 +209,7 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
      */
     fun initConnection() {
         if (state.value == State.Created) {
+            profileLive.value = profile
             state.value = State.Connecting
             frameState.setZoom(profile.zoom1, profile.zoom2)
             applyProfileGestureStyle()
