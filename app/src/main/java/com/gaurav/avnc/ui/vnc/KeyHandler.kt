@@ -48,7 +48,7 @@ import com.gaurav.avnc.vnc.XTKeyCode
  *
  * a. Key code of [KeyEvent]               (may not be available, e.g. in case of [KeyEvent.ACTION_MULTIPLE])
  * b. Unicode character of [KeyEvent]      (may not be available, e.g. in case of [KeyEvent.KEYCODE_F1])
- * c. Current [cfLegacyKeysym]
+ * c. Current [emitLegacyKeysym]
  *
  *
  *-                                 [KeyEvent]
@@ -82,10 +82,11 @@ import com.gaurav.avnc.vnc.XTKeyCode
  * [X Windows System Protocol](https://www.x.org/releases/X11R7.7/doc/xproto/x11protocol.html#keysym_encoding)
  *
  */
-class KeyHandler(private val dispatcher: Dispatcher, private val cfLegacyKeysym: Boolean, prefs: AppPreferences) {
+class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
 
     var processedEventObserver: ((KeyEvent) -> Unit)? = null
     var enableMacOSCompatibility = false
+    var emitLegacyKeysym = true
     private var hasSentShiftDown = false
 
     /**
@@ -189,12 +190,12 @@ class KeyHandler(private val dispatcher: Dispatcher, private val cfLegacyKeysym:
     }
 
     /**
-     * Emits either Unicode KeySym or legacy KeySym for [uChar], depending on [cfLegacyKeysym].
+     * Emits either Unicode KeySym or legacy KeySym for [uChar], depending on [emitLegacyKeysym].
      */
     private fun emitForUnicodeChar(uChar: Int, isDown: Boolean, xtCode: Int = 0): Boolean {
         var uKeySym = 0
 
-        if (cfLegacyKeysym)
+        if (emitLegacyKeysym)
             uKeySym = XKeySymUnicode.getLegacyKeySymForUnicodeChar(uChar)
 
         if (uKeySym == 0)

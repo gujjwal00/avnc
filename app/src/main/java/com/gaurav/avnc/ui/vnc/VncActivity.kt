@@ -88,7 +88,7 @@ class VncActivity : AppCompatActivity() {
     lateinit var binding: ActivityVncBinding
     private val dispatcher by lazy { Dispatcher(this) }
     val touchHandler by lazy { TouchHandler(binding.frameView, dispatcher, viewModel.pref) }
-    val keyHandler by lazy { KeyHandler(dispatcher, viewModel.profile.fLegacyKeySym, viewModel.pref) }
+    val keyHandler by lazy { KeyHandler(dispatcher, viewModel.pref) }
     val virtualKeys by lazy { VirtualKeys(this) }
     val toolbar by lazy { Toolbar(this) }
     private val serverUnlockPrompt = DeviceAuthPrompt(this)
@@ -125,6 +125,7 @@ class VncActivity : AppCompatActivity() {
         viewModel.confirmationRequest.observe(this) { showConfirmationDialog() }
         viewModel.activeGestureStyle.observe(this) { dispatcher.onGestureStyleChanged() }
         viewModel.state.observe(this) { onClientStateChanged(it) }
+        viewModel.profileLive.observe(this) { onProfileUpdated(it) }
 
         savedInstanceState?.let {
             restoredFromBundle = true
@@ -176,6 +177,10 @@ class VncActivity : AppCompatActivity() {
         val factory = viewModelFactory { initializer { VncViewModel(profile, application) } }
         viewModel = viewModels<VncViewModel> { factory }.value
         return true
+    }
+
+    private fun onProfileUpdated(profile: ServerProfile) {
+        keyHandler.emitLegacyKeysym = profile.fLegacyKeySym
     }
 
     private fun retryConnection(seamless: Boolean = false) {

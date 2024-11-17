@@ -57,7 +57,7 @@ class KeyHandlerTest {
             dispatchedXTUps.add(secondArg())
             true
         }
-        keyHandler = KeyHandler(mockDispatcher, true, prefs)
+        keyHandler = KeyHandler(mockDispatcher, prefs)
     }
 
     @After
@@ -382,7 +382,7 @@ class KeyHandlerTest {
         val mockPrefs = mockk<AppPreferences>()
         every { mockPrefs.input.kmLanguageSwitchToSuper } returns true
         every { mockPrefs.input.kmRightAltToSuper } returns true
-        val keyHandler = KeyHandler(mockDispatcher, true, mockPrefs)
+        val keyHandler = KeyHandler(mockDispatcher, mockPrefs)
 
         keyHandler.onKey(KeyEvent.KEYCODE_LANGUAGE_SWITCH)
         keyHandler.onKey(KeyEvent.KEYCODE_ALT_RIGHT)
