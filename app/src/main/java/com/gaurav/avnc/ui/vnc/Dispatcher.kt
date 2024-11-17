@@ -52,7 +52,6 @@ import kotlin.math.abs
 class Dispatcher(private val activity: VncActivity) {
 
     private val viewModel = activity.viewModel
-    private val profile = viewModel.profile
     private val messenger = viewModel.messenger
     private val gesturePref = viewModel.pref.input.gesture
 
@@ -206,7 +205,7 @@ class Dispatcher(private val activity: VncActivity) {
         open fun doClick(button: PointerButton, p: PointF) {
             doButtonDown(button, p)
             // Some (obscure) apps seems to ignore click event if button-up is received too early
-            if (button == PointerButton.Left && profile.fButtonUpDelay)
+            if (button == PointerButton.Left && viewModel.profile.fButtonUpDelay)
                 messenger.insertButtonUpDelay()
             doButtonUp(button, p)
         }
