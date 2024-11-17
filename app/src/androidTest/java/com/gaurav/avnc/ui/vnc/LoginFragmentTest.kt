@@ -17,7 +17,6 @@
 package com.gaurav.avnc.ui.vnc
 
 import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onIdle
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -32,11 +31,14 @@ import com.gaurav.avnc.inDialog
 import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.model.db.MainDb
+import com.gaurav.avnc.pollingAssert
 import com.gaurav.avnc.runOnMainSync
+import com.gaurav.avnc.targetApp
 import com.gaurav.avnc.targetContext
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.withActivity
 import kotlinx.coroutines.runBlocking
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.io.Closeable
@@ -61,6 +63,8 @@ class LoginFragmentTest {
         }
 
         fun triggerLoginInfoRequest(type: LoginInfo.Type) {
+            // Wait for initialization
+            pollingAssert { Assert.assertNotEquals(viewModel.state.value, VncViewModel.State.Created) }
             loginInfoThread = thread { loginInfo = viewModel.getLoginInfo(type) }
         }
 
@@ -162,7 +166,8 @@ class LoginFragmentTest {
     @Test(timeout = 5000)
     fun savedLoginTest() {
         val profile = ServerProfile(username = "AB", password = "BC", sshPassword = "CD")
-        val viewModel = runOnMainSync { VncViewModel(profile, ApplicationProvider.getApplicationContext()) }
+        val viewModel = runOnMainSync { VncViewModel(profile, targetApp).apply { initConnection() } }
+        pollingAssert { Assert.assertNotEquals(viewModel.state.value, VncViewModel.State.Created) }
 
         assertEquals("AB", viewModel.getLoginInfo(LoginInfo.Type.VNC_CREDENTIAL).username)
         assertEquals("BC", viewModel.getLoginInfo(LoginInfo.Type.VNC_CREDENTIAL).password)

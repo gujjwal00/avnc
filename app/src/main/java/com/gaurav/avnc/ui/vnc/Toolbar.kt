@@ -145,8 +145,10 @@ class Toolbar(private val activity: VncActivity) {
             }
 
             group.setOnCheckedChangeListener { _, id ->
-                val newStyle = styleButtonMap.entries.first { it.value == id }.key
-                viewModel.setProfileGestureStyle(newStyle)
+                if (viewModel.state.value.isConnected) { // Make sure profile is available
+                    val newStyle = styleButtonMap.entries.first { it.value == id }.key
+                    viewModel.setProfileGestureStyle(newStyle)
+                }
                 close()
             }
         }

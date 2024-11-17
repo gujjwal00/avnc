@@ -160,7 +160,7 @@ class VncActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable(PROFILE_KEY, viewModel.profile)
+        outState.putParcelable(PROFILE_KEY, viewModel.profileLive.value)
         outState.putBoolean("wasConnectedWhenStopped", wasConnectedWhenStopped || viewModel.state.value.isConnected)
     }
 
