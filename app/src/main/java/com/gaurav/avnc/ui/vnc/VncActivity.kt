@@ -181,6 +181,7 @@ class VncActivity : AppCompatActivity() {
 
     private fun onProfileUpdated(profile: ServerProfile) {
         keyHandler.emitLegacyKeysym = profile.fLegacyKeySym
+        setupOrientation()
     }
 
     private fun retryConnection(seamless: Boolean = false) {
@@ -311,7 +312,6 @@ class VncActivity : AppCompatActivity() {
      * Layout handling.
      ************************************************************************************/
     private fun setupLayout() {
-        setupOrientation()
         layoutManager.initialize()
 
         if (Build.VERSION.SDK_INT >= 28 && viewModel.pref.viewer.drawBehindCutout) {

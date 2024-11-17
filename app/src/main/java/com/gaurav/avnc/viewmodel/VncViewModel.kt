@@ -27,6 +27,7 @@ import com.gaurav.avnc.util.getUnknownCertificateMessage
 import com.gaurav.avnc.util.isCertificateTrusted
 import com.gaurav.avnc.util.setClipboardText
 import com.gaurav.avnc.util.trustCertificate
+import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
 import com.gaurav.avnc.viewmodel.service.SshTunnel
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.UserCredential
@@ -407,7 +408,7 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
      * In portrait mode, safe area is used instead of window to exclude the keyboard.
      */
     fun resizeRemoteDesktop() {
-        if (profile.resizeRemoteDesktop) frameState.let {
+        if (state.value.isConnected && profile.resizeRemoteDesktop) frameState.let {
             if (it.windowWidth > it.windowHeight)
                 messenger.setDesktopSize(it.windowWidth.toInt(), it.windowHeight.toInt())
             else
