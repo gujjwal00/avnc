@@ -162,6 +162,11 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
     val frameScroller = FrameScroller(this)
 
     /**
+     * Currently active gesture style
+     */
+    val activeGestureStyle = MutableLiveData<String>()
+
+    /**
      * Used for sending events to remote server.
      */
     val messenger = Messenger(client)
@@ -201,6 +206,7 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
         if (state.value == State.Created) {
             state.value = State.Connecting
             frameState.setZoom(profile.zoom1, profile.zoom2)
+            applyProfileGestureStyle()
             launchConnection()
         }
     }
@@ -416,10 +422,23 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
     }
 
     /**
-     * Resolves applicable gesture style.
+     * Sets gesture style of profile to given value.
+     * Any change will be reflected in [activeGestureStyle].
      */
-    fun resolveGestureStyle(): String {
-        return if (profile.gestureStyle == "auto") pref.input.gesture.style else profile.gestureStyle
+    fun setProfileGestureStyle(newStyle: String) {
+        if (newStyle == profile.gestureStyle)
+            return
+
+        profile.gestureStyle = newStyle
+        saveProfile()
+        applyProfileGestureStyle()
+    }
+
+    private fun applyProfileGestureStyle() {
+        if (profile.gestureStyle == "auto")
+            activeGestureStyle.value = pref.input.gesture.style
+        else
+            activeGestureStyle.value = profile.gestureStyle
     }
 
     /**************************************************************************

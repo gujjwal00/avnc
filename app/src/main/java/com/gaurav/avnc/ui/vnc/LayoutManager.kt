@@ -210,7 +210,7 @@ class LayoutManager(activity: VncActivity) {
         // But in landscape mode, when touchpad gesture style is active, they cause unnecessary
         // frame movement when pointer moves around. So insets are restricted to following cases:
         return rootView.width < rootView.height || // portrait mode
-               viewModel.resolveGestureStyle() == "touchscreen"
+               viewModel.activeGestureStyle.value == "touchscreen"
     }
 
     private fun updateVirtualKeyInsets(vkRoot: View) {

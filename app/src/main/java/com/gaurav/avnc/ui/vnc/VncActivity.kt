@@ -90,7 +90,7 @@ class VncActivity : AppCompatActivity() {
     val touchHandler by lazy { TouchHandler(binding.frameView, dispatcher, viewModel.pref) }
     val keyHandler by lazy { KeyHandler(dispatcher, viewModel.profile.fLegacyKeySym, viewModel.pref) }
     val virtualKeys by lazy { VirtualKeys(this) }
-    val toolbar by lazy { Toolbar(this, dispatcher) }
+    val toolbar by lazy { Toolbar(this) }
     private val serverUnlockPrompt = DeviceAuthPrompt(this)
     private val layoutManager by lazy { LayoutManager(this) }
     private var restoredFromBundle = false
@@ -123,6 +123,7 @@ class VncActivity : AppCompatActivity() {
         binding.reconnectBtn.setOnClickListener { retryConnection() }
         viewModel.loginInfoRequest.observe(this) { showLoginDialog() }
         viewModel.confirmationRequest.observe(this) { showConfirmationDialog() }
+        viewModel.activeGestureStyle.observe(this) { dispatcher.onGestureStyleChanged() }
         viewModel.state.observe(this) { onClientStateChanged(it) }
 
         savedInstanceState?.let {
