@@ -87,7 +87,7 @@ class VncActivity : AppCompatActivity() {
     lateinit var viewModel: VncViewModel
     lateinit var binding: ActivityVncBinding
     private val dispatcher by lazy { Dispatcher(this) }
-    val touchHandler by lazy { TouchHandler(binding.frameView, dispatcher, viewModel.pref) }
+    private val touchHandler by lazy { TouchHandler(binding.frameView, dispatcher, viewModel.pref) }
     val keyHandler by lazy { KeyHandler(dispatcher, viewModel.pref) }
     val virtualKeys by lazy { VirtualKeys(this) }
     val toolbar by lazy { Toolbar(this) }
@@ -246,6 +246,7 @@ class VncActivity : AppCompatActivity() {
             ViewerHelp().onConnected(this)
             keyHandler.enableMacOSCompatibility = viewModel.client.isConnectedToMacOS()
             virtualKeys.onConnected(isInPiPMode())
+            binding.frameView.setInputHandlers(keyHandler, touchHandler)
         }
 
         if (isConnected && !restoredFromBundle) {

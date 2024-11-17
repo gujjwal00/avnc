@@ -78,9 +78,6 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
     fun initialize(activity: VncActivity) {
         val viewModel = activity.viewModel
 
-        touchHandler = activity.touchHandler
-        keyHandler = activity.keyHandler
-
         setEGLContextClientVersion(2)
         setRenderer(Renderer(viewModel))
         renderMode = RENDERMODE_WHEN_DIRTY
@@ -88,6 +85,11 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
         // Hide local cursor if requested and supported
         if (Build.VERSION.SDK_INT >= 24 && viewModel.pref.input.hideLocalCursor)
             pointerIcon = PointerIcon.getSystemIcon(context, PointerIcon.TYPE_NULL)
+    }
+
+    fun setInputHandlers(keyHandler: KeyHandler, touchHandler: TouchHandler) {
+        this.keyHandler = keyHandler
+        this.touchHandler = touchHandler
     }
 
     override fun onCreateInputConnection(outAttrs: EditorInfo): InputConnection {
