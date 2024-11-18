@@ -166,7 +166,7 @@ class LoginFragmentTest {
     @Test(timeout = 5000)
     fun savedLoginTest() {
         val profile = ServerProfile(username = "AB", password = "BC", sshPassword = "CD")
-        val viewModel = runOnMainSync { VncViewModel(profile, targetApp).apply { initConnection() } }
+        val viewModel = runOnMainSync { VncViewModel(targetApp).apply { initConnection(profile) } }
         pollingAssert { Assert.assertNotEquals(viewModel.state.value, VncViewModel.State.Created) }
 
         assertEquals("AB", viewModel.getLoginInfo(LoginInfo.Type.VNC_CREDENTIAL).username)

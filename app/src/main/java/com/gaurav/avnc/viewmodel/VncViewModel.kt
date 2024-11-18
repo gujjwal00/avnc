@@ -76,7 +76,7 @@ import kotlin.concurrent.thread
  * via OpenGL ES. [frameState] is read from this thread to decide how/where frame
  * should be drawn.
  */
-class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel(app), VncClient.Observer {
+class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
     /**
      * Connection lifecycle:
@@ -104,6 +104,8 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
             val State?.isDisconnected get() = (this == Disconnected)
         }
     }
+
+    lateinit var profile: ServerProfile
 
     /**
      * Live version of [profile], allows easier access from UI layer
@@ -208,8 +210,9 @@ class VncViewModel(val profile: ServerProfile, app: Application) : BaseViewModel
      * Initialize VNC connection.
      * It can be called multiple times due to activity restarts.
      */
-    fun initConnection() {
+    fun initConnection(profile: ServerProfile) {
         if (state.value == State.Created) {
+            this.profile = profile
             profileLive.value = profile
             state.value = State.Connecting
             frameState.setZoom(profile.zoom1, profile.zoom2)

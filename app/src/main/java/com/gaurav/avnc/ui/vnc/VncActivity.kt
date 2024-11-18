@@ -34,8 +34,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.model.ServerProfile
@@ -84,7 +82,7 @@ private fun startVncActivity(source: Activity, profile: ServerProfile, frameStat
 class VncActivity : AppCompatActivity() {
     private val TAG = "VncActivity"
 
-    lateinit var viewModel: VncViewModel
+    val viewModel by viewModels<VncViewModel>()
     lateinit var binding: ActivityVncBinding
     private val dispatcher by lazy { Dispatcher(this) }
     private val touchHandler by lazy { TouchHandler(binding.frameView, dispatcher, viewModel.pref) }
@@ -101,12 +99,10 @@ class VncActivity : AppCompatActivity() {
         DeviceAuthPrompt.applyFingerprintDialogFix(supportFragmentManager)
 
         super.onCreate(savedInstanceState)
-        if (!loadViewModel(savedInstanceState)) {
+        if (!initConnection(savedInstanceState)) {
             finish()
             return
         }
-
-        viewModel.initConnection()
 
         //Main UI
         binding = DataBindingUtil.setContentView(this, R.layout.activity_vnc)
@@ -164,7 +160,7 @@ class VncActivity : AppCompatActivity() {
         outState.putBoolean("wasConnectedWhenStopped", wasConnectedWhenStopped || viewModel.state.value.isConnected)
     }
 
-    private fun loadViewModel(savedState: Bundle?): Boolean {
+    private fun initConnection(savedState: Bundle?): Boolean {
         @Suppress("DEPRECATION")
         val profile = savedState?.getParcelable(PROFILE_KEY)
                       ?: intent.getParcelableExtra<ServerProfile?>(PROFILE_KEY)
@@ -174,8 +170,7 @@ class VncActivity : AppCompatActivity() {
             return false
         }
 
-        val factory = viewModelFactory { initializer { VncViewModel(profile, application) } }
-        viewModel = viewModels<VncViewModel> { factory }.value
+        viewModel.initConnection(profile.copy()) // Use a copy to avoid modification to intent
         return true
     }
 
