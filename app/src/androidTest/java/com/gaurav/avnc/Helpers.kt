@@ -16,13 +16,16 @@ import android.content.ClipboardManager
 import android.content.Intent
 import android.os.SystemClock
 import android.view.View
+import android.view.WindowManager.LayoutParams.TYPE_TOAST
 import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.preference.PreferenceManager
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.Root
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewAssertion
@@ -39,6 +42,9 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.viewpager2.widget.ViewPager2
 import junit.framework.AssertionFailedError
+import org.hamcrest.Description
+import org.hamcrest.Matcher
+import org.hamcrest.TypeSafeMatcher
 import org.hamcrest.core.IsNot.not
 import org.junit.Assert
 import java.io.BufferedWriter
@@ -151,6 +157,25 @@ class ProgressAssertion(private val test: (Int) -> Boolean) : ViewAssertion {
         if (view !is ProgressBar) throw AssertionFailedError("View is not a ProgressBar")
         Assert.assertTrue("Progress test failed for '${view.progress}'", test(view.progress))
     }
+}
+
+/**
+ * Matcher for Toast messages.
+ *
+ * Matching toast doesn't work on API 30+
+ * So all tests which checks toasts will only work on lower APIs.
+ */
+fun onToast(matcher: Matcher<View>): ViewInteraction {
+    class ToastRootMatcher : TypeSafeMatcher<Root>() {
+        override fun describeTo(description: Description) {
+            description.appendText("is toast")
+        }
+
+        @Suppress("DEPRECATION")
+        override fun matchesSafely(root: Root) = root.windowLayoutParams.get().type == TYPE_TOAST
+    }
+
+    return onView(matcher).noActivity().inRoot(ToastRootMatcher())
 }
 
 /**

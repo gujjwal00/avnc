@@ -11,13 +11,9 @@ package com.gaurav.avnc.ui.vnc
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.view.View
-import android.view.WindowManager.LayoutParams.TYPE_TOAST
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.Root
-import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withSubstring
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -27,11 +23,9 @@ import com.gaurav.avnc.R
 import com.gaurav.avnc.TestServer
 import com.gaurav.avnc.checkWillBeDisplayed
 import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.onToast
 import com.gaurav.avnc.targetContext
 import kotlinx.coroutines.runBlocking
-import org.hamcrest.Description
-import org.hamcrest.Matcher
-import org.hamcrest.TypeSafeMatcher
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -45,23 +39,6 @@ class IntentReceiverTest {
     @Rule
     @JvmField
     val dbRule = EmptyDatabaseRule()
-
-    /**
-     * Matching toast doesn't work on API 30+
-     * So all tests which checks toasts will only work on lower APIs.
-     */
-    private fun onToast(matcher: Matcher<View>): ViewInteraction {
-        class ToastRootMatcher : TypeSafeMatcher<Root>() {
-            override fun describeTo(description: Description) {
-                description.appendText("is toast")
-            }
-
-            @Suppress("DEPRECATION")
-            override fun matchesSafely(root: Root) = root.windowLayoutParams.get().type == TYPE_TOAST
-        }
-
-        return onView(matcher).noActivity().inRoot(ToastRootMatcher())
-    }
 
     /******************************** VNC URIs ***************************************/
 

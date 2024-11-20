@@ -9,6 +9,7 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.content.Context
+import android.content.Intent
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.edit
 import androidx.test.core.app.ActivityScenario
@@ -20,6 +21,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SdkSuppress
 import com.gaurav.avnc.EmptyDatabaseRule
 import com.gaurav.avnc.ProgressAssertion
 import com.gaurav.avnc.R
@@ -29,6 +31,7 @@ import com.gaurav.avnc.checkWillBeDisplayed
 import com.gaurav.avnc.doClick
 import com.gaurav.avnc.doTypeText
 import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.onToast
 import com.gaurav.avnc.pollingAssert
 import com.gaurav.avnc.setClipboardHtml
 import com.gaurav.avnc.setClipboardText
@@ -38,9 +41,50 @@ import com.gaurav.avnc.vnc.XKeySym
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+
+@RunWith(AndroidJUnit4::class)
+class StartupTest {
+    private fun Intent.extraList() = extras?.keySet()?.map {
+        @Suppress("DEPRECATION")
+        extras?.get(it)
+    }
+
+    @Test
+    fun savedProfilesShouldBePassedByID() {
+        val profile = ServerProfile(ID = 1234, host = "example.com")
+        val intent = createVncIntent(targetContext, profile)
+        val extras = intent.extraList()
+        assertNotNull(extras)
+        assertFalse(extras!!.contains(profile))
+        assertTrue(extras.contains(profile.ID))
+    }
+
+    @Test
+    fun unsavedProfilesShouldBePassedByValue() {
+        val profile = ServerProfile(ID = 0, host = "example.com")
+        val intent = createVncIntent(targetContext, profile)
+        val extras = intent.extraList()
+        assertNotNull(extras)
+        assertTrue(extras!!.contains(profile))
+        assertFalse(extras.contains(profile.ID))
+    }
+
+    @Test
+    @SdkSuppress(maxSdkVersion = 29)
+    fun invalidProfileID() {
+        val profile = ServerProfile(ID = 12456789123, host = "example.com")
+        val intent = createVncIntent(targetContext, profile)
+        ActivityScenario.launch<VncActivity>(intent).use {
+            onToast(withText("Error: Invalid Server ID")).checkWillBeDisplayed()
+        }
+    }
+}
 
 @RunWith(AndroidJUnit4::class)
 class VncActivityTest {

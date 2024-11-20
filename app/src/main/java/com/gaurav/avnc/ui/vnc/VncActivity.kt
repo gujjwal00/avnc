@@ -51,11 +51,15 @@ import java.lang.ref.WeakReference
 /********** [VncActivity] startup helpers *********************************/
 
 private const val PROFILE_KEY = "com.gaurav.avnc.server_profile"
+private const val PROFILE_ID_KEY = "com.gaurav.avnc.server_profile_id"
 private const val FRAME_STATE_KEY = "com.gaurav.avnc.frame_state"
 
 fun createVncIntent(context: Context, profile: ServerProfile): Intent {
     return Intent(context, VncActivity::class.java).apply {
-        putExtra(PROFILE_KEY, profile)
+        if (profile.ID != 0L)
+            putExtra(PROFILE_ID_KEY, profile.ID)
+        else
+            putExtra(PROFILE_KEY, profile)
     }
 }
 
@@ -165,13 +169,32 @@ class VncActivity : AppCompatActivity() {
         val profile = savedState?.getParcelable(PROFILE_KEY)
                       ?: intent.getParcelableExtra<ServerProfile?>(PROFILE_KEY)
 
-        if (profile == null) {
+        if (profile != null) {
+            viewModel.initConnection(profile.copy()) // Use a copy to avoid modification to intent
+            return true
+        }
+
+        val profileId = intent.getLongExtra(PROFILE_ID_KEY, 0)
+        if (profileId == 0L) {
             Toast.makeText(this, "Error: Missing Server Info", Toast.LENGTH_LONG).show()
             return false
         }
 
-        viewModel.initConnection(profile.copy()) // Use a copy to avoid modification to intent
+        initConnectionFromId(profileId)
         return true
+    }
+
+    private fun initConnectionFromId(profileId: Long) {
+        lifecycleScope.launch {
+            val profile = viewModel.getProfileById(profileId)
+            if (profile != null) {
+                viewModel.initConnection(profile)
+            } else {
+                Toast.makeText(this@VncActivity, "Error: Invalid Server ID", Toast.LENGTH_LONG).show()
+                Log.e(TAG, "Invalid profile ID passed via Intent: $profileId")
+                finish()
+            }
+        }
     }
 
     private fun onProfileUpdated(profile: ServerProfile) {

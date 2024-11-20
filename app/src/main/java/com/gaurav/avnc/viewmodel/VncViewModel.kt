@@ -301,6 +301,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
             launch { serverProfileDao.update(profile) }
     }
 
+    suspend fun getProfileById(id: Long) = serverProfileDao.getByID(id)
+
     /**************************************************************************
      * Frame management
      **************************************************************************/
