@@ -204,8 +204,9 @@ class Dispatcher(private val activity: VncActivity) {
 
         open fun doClick(button: PointerButton, p: PointF) {
             doButtonDown(button, p)
-            // Some (obscure) apps seems to ignore click event if button-up is received too early
-            if (button == PointerButton.Left && viewModel.profile.fButtonUpDelay)
+            // Some apps (mostly games) seems to ignore click event if button-up is received too early
+            if ((button == PointerButton.Left || button == PointerButton.Middle || button == PointerButton.Right)
+                && viewModel.profile.fButtonUpDelay)
                 messenger.insertButtonUpDelay()
             doButtonUp(button, p)
         }
