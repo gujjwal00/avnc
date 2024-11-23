@@ -83,7 +83,7 @@
                 android:layout_height="60dp"
                 android:indeterminate="true"
                 android:padding="@dimen/padding_small"
-                app:isVisible="@{viewModel.state == State.Connecting}"
+                app:isVisible="@{viewModel.state == State.Created || viewModel.state == State.Connecting}"
                 app:layout_constraintBottom_toTopOf="@id/client_state"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
