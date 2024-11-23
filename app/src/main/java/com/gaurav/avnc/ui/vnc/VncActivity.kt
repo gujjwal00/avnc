@@ -53,6 +53,7 @@ import java.lang.ref.WeakReference
 private const val PROFILE_KEY = "com.gaurav.avnc.server_profile"
 private const val PROFILE_ID_KEY = "com.gaurav.avnc.server_profile_id"
 private const val FRAME_STATE_KEY = "com.gaurav.avnc.frame_state"
+private const val AUTO_RECONNECT_DELAY_KEY = "com.gaurav.avnc.auto_reconnect_delay"
 
 fun createVncIntent(context: Context, profile: ServerProfile): Intent {
     return Intent(context, VncActivity::class.java).apply {
@@ -74,8 +75,11 @@ fun startVncActivity(source: Activity, uri: VncUri) {
 @Parcelize
 private data class SavedFrameState(val frameX: Float, val frameY: Float, val zoom1: Float, val zoom2: Float) : Parcelable
 
-private fun startVncActivity(source: Activity, profile: ServerProfile, frameState: SavedFrameState) {
-    source.startActivity(createVncIntent(source, profile).also { it.putExtra(FRAME_STATE_KEY, frameState) })
+private fun startVncActivity(source: Activity, profile: ServerProfile, frameState: SavedFrameState, autoReconnectDelay: Int) {
+    source.startActivity(createVncIntent(source, profile).also {
+        it.putExtra(FRAME_STATE_KEY, frameState)
+        it.putExtra(AUTO_RECONNECT_DELAY_KEY, autoReconnectDelay)
+    })
 }
 /**************************************************************************/
 
@@ -98,6 +102,7 @@ class VncActivity : AppCompatActivity() {
     private var restoredFromBundle = false
     private var wasConnectedWhenStopped = false
     private var onStartTime = 0L
+    private var autoReconnectDelay = 5
 
     override fun onCreate(savedInstanceState: Bundle?) {
         DeviceAuthPrompt.applyFingerprintDialogFix(supportFragmentManager)
@@ -127,6 +132,7 @@ class VncActivity : AppCompatActivity() {
         viewModel.state.observe(this) { onClientStateChanged(it) }
         viewModel.profileLive.observe(this) { onProfileUpdated(it) }
 
+        autoReconnectDelay = intent.getIntExtra(AUTO_RECONNECT_DELAY_KEY, 5)
         savedInstanceState?.let {
             restoredFromBundle = true
             wasConnectedWhenStopped = it.getBoolean("wasConnectedWhenStopped")
@@ -202,7 +208,7 @@ class VncActivity : AppCompatActivity() {
         setupOrientation()
     }
 
-    private fun retryConnection(seamless: Boolean = false) {
+    private fun retryConnection(seamless: Boolean = false, nextAutoReconnectDelay: Int = 0) {
         //We simply create a new activity to force creation of new ViewModel
         //which effectively restarts the connection.
         if (!isFinishing) {
@@ -210,7 +216,7 @@ class VncActivity : AppCompatActivity() {
                 SavedFrameState(frameX = it.frameX, frameY = it.frameY, zoom1 = it.zoomScale1, zoom2 = it.zoomScale2)
             }
 
-            startVncActivity(this, viewModel.profile, savedFrameState)
+            startVncActivity(this, viewModel.profile, savedFrameState, nextAutoReconnectDelay)
 
             if (seamless) {
                 @Suppress("DEPRECATION")
@@ -266,6 +272,7 @@ class VncActivity : AppCompatActivity() {
             keyHandler.enableMacOSCompatibility = viewModel.client.isConnectedToMacOS()
             virtualKeys.onConnected(isInPiPMode())
             binding.frameView.setInputHandlers(keyHandler, touchHandler)
+            autoReconnectDelay = 1
         }
 
         if (isConnected && !restoredFromBundle) {
@@ -314,13 +321,20 @@ class VncActivity : AppCompatActivity() {
         autoReconnecting = true
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                val timeout = 5 //seconds, must be >1
-                repeat(timeout) {
-                    binding.autoReconnectProgress.setProgressCompat((100 * it) / (timeout - 1), true)
+                val reconnectDelay = autoReconnectDelay.coerceIn(0, 5) //seconds
+
+                repeat(reconnectDelay) {
+                    val progress = if (reconnectDelay <= 1) 100 else (100 * it) / (reconnectDelay - 1)
+                    binding.autoReconnectProgress.setProgressCompat(progress, true)
                     delay(1000)
-                    if (it >= (timeout - 1))
-                        retryConnection()
                 }
+
+                // Automatic reconnect attempts happen every 5 seconds.
+                // But if session had reached Connected state, first attempt happens
+                // after 1 second, second attempt after 3 seconds, and then every 5 seconds.
+                val nextReconnectDelay = if (reconnectDelay < 3) 3 else 5
+                Log.d(TAG, "AutoReconnect: Retrying after $reconnectDelay seconds")
+                retryConnection(nextAutoReconnectDelay = nextReconnectDelay)
             }
         }
     }
