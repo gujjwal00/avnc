@@ -58,12 +58,22 @@
             app:layout_constraintTop_toBottomOf="@id/export_btn" />
 
         <CheckBox
-            android:id="@+id/delete_current_servers"
-            android:layout_width="wrap_content"
+            android:id="@+id/export_secrets"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/title_delete_servers_before_import"
+            android:text="@string/title_export_passwords_and_keys"
+            app:layout_constraintEnd_toEndOf="@id/options_divider"
             app:layout_constraintStart_toStartOf="@id/options_divider"
             app:layout_constraintTop_toBottomOf="@id/options_divider" />
+
+        <CheckBox
+            android:id="@+id/delete_current_servers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/title_delete_servers_before_import"
+            app:layout_constraintEnd_toEndOf="@id/options_divider"
+            app:layout_constraintStart_toStartOf="@id/options_divider"
+            app:layout_constraintTop_toBottomOf="@id/export_secrets" />
 
         <TextView
             android:layout_width="0dp"

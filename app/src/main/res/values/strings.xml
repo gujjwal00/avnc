@@ -44,6 +44,7 @@
     <string name="title_unknown_ssh_host">Unknown SSH host</string>
     <string name="title_ssh_host_key_changed">SSH host key changed</string>
     <string name="title_continue">Continue</string>
+    <string name="title_export_passwords_and_keys">Export passwords and keys</string>
     <string name="title_delete_servers_before_import">Delete current servers before import</string>
     <string name="title_password">Password</string>
     <string name="title_use_repeater">Use repeater</string>

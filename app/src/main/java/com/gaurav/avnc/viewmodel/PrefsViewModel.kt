@@ -55,11 +55,12 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
     /**
      * Exports data to given [uri].
      */
-    fun export(uri: Uri) {
+    fun export(uri: Uri, exportSecrets: Boolean) {
         launchIO {
             runCatching {
                 // Serialize
                 val profiles = serverProfileDao.getList()
+                if (!exportSecrets) scrubSecrets(profiles)
                 val data = Container(profiles = profiles)
                 val json = serializer.encodeToString(data)
 
@@ -108,6 +109,15 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
                 importExportError.postValue(it.exceptionOrNull()?.message)
                 importFinishedEvent.fireAsync(it.isSuccess)
             }
+        }
+    }
+
+    private fun scrubSecrets(profiles: List<ServerProfile>) {
+        profiles.forEach {
+            it.password = ""
+            it.sshPassword = ""
+            it.sshPrivateKey = ""
+            it.sshPrivateKeyPassword = ""
         }
     }
 }

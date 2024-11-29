@@ -18,13 +18,25 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withSubstring
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import com.gaurav.avnc.*
+import com.gaurav.avnc.R
+import com.gaurav.avnc.checkIsDisplayed
+import com.gaurav.avnc.checkIsNotDisplayed
+import com.gaurav.avnc.checkWillBeDisplayed
+import com.gaurav.avnc.doClick
+import com.gaurav.avnc.instrumentation
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.model.db.MainDb
+import com.gaurav.avnc.setupFileOpenIntent
+import com.gaurav.avnc.targetContext
 import com.gaurav.avnc.ui.prefs.PrefsActivity
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import kotlinx.coroutines.runBlocking
-import org.junit.*
+import org.junit.After
+import org.junit.Assert
+import org.junit.Assume
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import java.io.File
 
 class ImportExportTest {
@@ -48,13 +60,15 @@ class ImportExportTest {
 
 
     @Test
-    fun exportTest() {
+    fun exportWithoutSecrets() {
         // This test requires an unlocked device
         activityRule.scenario.onActivity { Assume.assumeFalse(DeviceAuthPrompt(it).canLaunch()) }
 
         // Insert sample data
         val sampleName = "Days of our Lives"
-        runBlocking { MainDb.getInstance(targetContext).serverProfileDao.insert(ServerProfile(name = sampleName)) }
+        val sampleSecret = "Drake Ramoray"
+        val profile = ServerProfile(name = sampleName, password = sampleSecret, sshPassword = sampleSecret, sshPrivateKey = sampleSecret)
+        runBlocking { MainDb.getInstance(targetContext).serverProfileDao.insert(profile) }
 
         // Setup export file
         val file = File.createTempFile("avnc", "test")
@@ -69,7 +83,38 @@ class ImportExportTest {
         // Verify exported data
         instrumentation.waitForIdleSync()
         val data = file.bufferedReader().use { it.readText() }
-        Assert.assertTrue("Exported data: `$data` contains `$sampleName`", data.contains(sampleName))
+        Assert.assertTrue("Exported data: `$data` should contain `$sampleName`", data.contains(sampleName))
+        Assert.assertFalse("Exported data: `$data` should not contain `$sampleSecret`", data.contains(sampleSecret))
+    }
+
+
+    @Test
+    fun exportWithSecrets() {
+        // This test requires an unlocked device
+        activityRule.scenario.onActivity { Assume.assumeFalse(DeviceAuthPrompt(it).canLaunch()) }
+
+        // Insert sample data
+        val sampleName = "Days of our Lives"
+        val sampleSecret = "Drake Ramoray"
+        val profile = ServerProfile(name = sampleName, password = sampleSecret, sshPassword = sampleSecret, sshPrivateKey = sampleSecret)
+        runBlocking { MainDb.getInstance(targetContext).serverProfileDao.insert(profile) }
+
+        // Setup export file
+        val file = File.createTempFile("avnc", "test")
+        Intents.intending(IntentMatchers.hasAction(Intent.ACTION_CREATE_DOCUMENT))
+                .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, Intent().setData(file.toUri())))
+
+        // Export
+        onView(withText(R.string.title_export_passwords_and_keys)).doClick() // Check
+        onView(withText(R.string.title_export)).doClick()
+        onView(withText(R.string.msg_exported)).checkWillBeDisplayed()
+        onView(withSubstring("Error")).checkIsNotDisplayed()
+
+        // Verify exported data
+        instrumentation.waitForIdleSync()
+        val data = file.bufferedReader().use { it.readText() }
+        Assert.assertTrue("Exported data: `$data` should contain `$sampleName`", data.contains(sampleName))
+        Assert.assertTrue("Exported data: `$data` should contain `$sampleSecret`", data.contains(sampleSecret))
     }
 
 
@@ -77,12 +122,7 @@ class ImportExportTest {
     fun importTest() {
         val sampleName = "Joey Tribbiani"
         val sampleJson = """{ "profiles": [{ "name": "$sampleName" }]}"""
-
-        // Setup import file
-        val file = File.createTempFile("avnc", "test")
-        file.bufferedWriter().use { it.write(sampleJson) }
-        Intents.intending(IntentMatchers.hasAction(Intent.ACTION_OPEN_DOCUMENT))
-                .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, Intent().setData(file.toUri())))
+        setupFileOpenIntent(sampleJson)
 
         // Import
         onView(withText(R.string.title_delete_servers_before_import)).doClick()

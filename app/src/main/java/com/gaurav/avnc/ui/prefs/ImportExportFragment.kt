@@ -101,6 +101,6 @@ class ImportExportFragment : Fragment() {
 
     private fun export(uri: Uri?) {
         if (uri != null)
-            viewModel.export(uri)
+            viewModel.export(uri, binding.exportSecrets.isChecked)
     }
 }
