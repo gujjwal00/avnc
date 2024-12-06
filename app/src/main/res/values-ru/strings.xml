@@ -169,7 +169,7 @@
     <string name="pref_gesture_style_touchpad">Сенсорная панель</string>
     <string name="pref_gesture_style_touchscreen_summary">Выполнять действия в точках соприкосновения</string>
     <string name="pref_per_orientation_zoom">Отдельное масштабирование для каждой ориентации</string>
-    <string name="pref_display_cutout">Показывать за вырезом дисплея (экспериментально)</string>
+    <string name="pref_display_cutout">Заполнить зону выреза экрана</string>
     <string name="msg_invalid_vnc_uri">Неверный VNC URI</string>
     <string name="msg_button_up_delay_help">Задержка событий нажатия может помочь в некоторых редких случаях, если приложение не реагирует на нажатия.</string>
     <string name="msg_shortcut_server_deleted">Этот сервер был удален</string>
@@ -217,4 +217,8 @@
 \n
 \nСначала настройте WoL на удаленном компьютере, а затем включите его на AVNC.
 \nПосле включения пакет WoL Magic будет автоматически отправлен перед подключением к этому серверу.</string>
+    <string name="msg_saved">Сохранено</string>
+    <string name="msg_tap_to_select_a_key">Нажмите, чтобы выбрать ключ:</string>
+    <string name="title_load_defaults">Загрузить по умолчанию</string>
+    <string name="pref_customize_virtual_keys">Настроить клавиши</string>
 </resources>

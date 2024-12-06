@@ -221,4 +221,8 @@
     <string name="msg_saved">已保存</string>
     <string name="pref_customize_virtual_keys">自定义密钥</string>
     <string name="msg_tap_to_select_a_key">轻按选择密钥：</string>
+    <string name="msg_done">完毕</string>
+    <string name="pref_forget_known_hosts">忘记已知主机</string>
+    <string name="title_forget">忘记</string>
+    <string name="pref_forget_known_hosts_question">忘记已知 SSH 主机和信任的服务器证书？</string>
 </resources>
