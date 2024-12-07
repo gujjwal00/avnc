@@ -23,7 +23,6 @@ import com.gaurav.avnc.checkIsDisplayed
 import com.gaurav.avnc.checkWillBeDisplayed
 import com.gaurav.avnc.doClick
 import com.gaurav.avnc.targetConfigContext
-import com.gaurav.avnc.targetContext
 import com.gaurav.avnc.targetPrefs
 import com.gaurav.avnc.ui.prefs.PrefsActivity
 import org.junit.Assert

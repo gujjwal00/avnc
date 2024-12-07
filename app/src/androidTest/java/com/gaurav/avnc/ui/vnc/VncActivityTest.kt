@@ -129,7 +129,7 @@ class VncActivityTest {
 
             val imm = targetContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
-            Assert.assertTrue(imm.isAcceptingText)
+            assertTrue(imm.isAcceptingText)
         }
     }
 

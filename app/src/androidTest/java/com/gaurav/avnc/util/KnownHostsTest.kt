@@ -8,10 +8,8 @@
 
 package com.gaurav.avnc.util
 
-import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.gaurav.avnc.targetContext
-import com.gaurav.avnc.ui.prefs.PrefsActivity
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

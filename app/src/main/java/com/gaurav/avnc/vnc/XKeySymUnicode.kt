@@ -39,9 +39,9 @@ object XKeySymUnicode {
             val midChar = UnicodeToLegacyKeysym[mid * 2]
 
             when {
-                uChar == midChar -> return UnicodeToLegacyKeysym[mid * 2 + 1]
                 uChar < midChar -> high = mid - 1
                 uChar > midChar -> low = mid + 1
+                else /* uChar == midChar */ -> return UnicodeToLegacyKeysym[mid * 2 + 1]
             }
         }
 
