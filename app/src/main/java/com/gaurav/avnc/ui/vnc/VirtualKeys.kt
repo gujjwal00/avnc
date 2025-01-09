@@ -311,7 +311,7 @@ enum class VirtualKey(
         val icon: Int? = null,
 
         /**
-         * Short description of the key, if the itself isn't sufficient.
+         * Short description of the key, if the label itself isn't sufficient.
          */
         val description: String? = null,
 
