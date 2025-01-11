@@ -148,7 +148,7 @@
     <string name="pref_gesture_action_right_click">வலது சொடுக்கு செய்யவும்</string>
     <string name="pref_gesture_action_double_click">இருமுறை சொடுக்கு செய்யவும்</string>
     <string name="pref_gesture_action_move_pointer">சுட்டிக்காட்டி நகர்த்தவும்</string>
-    <string name="pref_gesture_action_pan">உள்ளக சட்டகம்</string>
+    <string name="pref_gesture_action_pan">உள்ளக சட்டகத்தை நகர்த்து</string>
     <string name="pref_gesture_action_remote_scroll">தொலைநிலை உள்ளடக்கத்தை உருட்டவும்</string>
     <string name="pref_gesture_action_remote_drag">தொலை உள்ளடக்கத்தை இழுக்கவும்</string>
     <string name="pref_gesture_action_remote_drag_middle">நடுத்தர பொத்தானைக் கொண்டு இழுக்கவும்</string>
@@ -213,4 +213,5 @@
     <string name="pref_logs">பதிவுகள்</string>
     <string name="pref_keycode_map">விசை குறியீடு வரைபடம்</string>
     <string name="pref_key_test">முக்கிய சோதனை</string>
+    <string name="title_export_passwords_and_keys">கடவுச்சொற்கள் மற்றும் திறவுகோல்களை ஏற்றுமதி செய்</string>
 </resources>

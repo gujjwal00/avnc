@@ -180,7 +180,7 @@
     <string name="pref_vk_show_all">عرض جميع المفاتيح</string>
     <string name="pref_customize_virtual_keys">تخصيص المفاتيح</string>
     <string name="pref_vk_open_with_keyboard">فتح باستخدام لوحة المفاتيح</string>
-    <string name="pref_km">تخصيص المفاتيح</string>
+    <string name="pref_km">تعيينات المفاتيح</string>
     <string name="pref_km_back_to_escape_summary">لا تؤثر على شريط التنقل</string>
     <string name="pref_orientation">اتجاه الشاشة</string>
     <string name="pref_orientation_option_auto">تلقائي</string>
@@ -191,10 +191,10 @@
     <string name="pref_enable_pip">صورة في صورة</string>
     <string name="pref_keep_screen_on">أبقِ الشاشة قيد التشغيل</string>
     <string name="pref_toolbar">شريط الأدوات</string>
-    <string name="pref_toolbar_alignment">المحاذاة</string>
-    <string name="pref_toolbar_alignment_option_start">بداية</string>
-    <string name="pref_toolbar_alignment_option_end">نهاية</string>
-    <string name="pref_toolbar_open_with_swipe">تمرير سريع من الحافة إلى الداخل لفتحها</string>
+    <string name="pref_toolbar_alignment">التنسيق</string>
+    <string name="pref_toolbar_alignment_option_start">ابدأ</string>
+    <string name="pref_toolbar_alignment_option_end">انهي</string>
+    <string name="pref_toolbar_open_with_swipe">اسحب للداخل من الحافة للفتح</string>
     <string name="pref_show_gesture_style_toggle">إظهار زر تبديل نمط الإيماءة</string>
     <string name="pref_zoom">تكبير/تصغير</string>
     <string name="pref_zoom_min">الأدنى</string>
@@ -202,7 +202,7 @@
     <string name="pref_per_orientation_zoom">فصل التكبير/التصغير لكل اتجاه على حدة</string>
     <string name="pref_clipboard_sync">مزامنة الحافظة</string>
     <string name="pref_saved_server_lock_summary">تحتاج إلى فتح القفل بالبصمة البيومترية/كلمة المرور للاتصال</string>
-    <string name="pref_saved_server_lock">تأمين الخوادم المحفوظة</string>
+    <string name="pref_saved_server_lock">قفل الخوادم المحفوظة</string>
     <string name="pref_auto_reconnect">إعادة الاتصال تلقائيًا</string>
     <string name="pref_discovery">الاكتشاف</string>
     <string name="pref_discovery_autorun">التشغيل التلقائي</string>
@@ -214,4 +214,12 @@
     <string name="pref_keycode_map">مخطط رمز المفتاح</string>
     <string name="pref_touch_test">اختبار اللمس</string>
     <string name="pref_key_test">اختبار المفتاح</string>
+    <string name="pref_km_right_alt_to_super">زر ويندوز → Alt اليمني</string>
+    <string name="msg_done">تم</string>
+    <string name="pref_forget_known_hosts">انسى الخوادم المحفوظة</string>
+    <string name="pref_forget_known_hosts_question">هل تريد نسيان مضيفي SSH المعروفين وشهادات الخادم الموثوقة؟</string>
+    <string name="title_export_passwords_and_keys">تصدير كلمات المرور و المفاتيح</string>
+    <string name="pref_km_back_to_escape">الخروج → زر الرجوع</string>
+    <string name="pref_km_language_switch_to_super">زر الويندوز → تغير لغة الادخال</string>
+    <string name="title_forget">انسى</string>
 </resources>
