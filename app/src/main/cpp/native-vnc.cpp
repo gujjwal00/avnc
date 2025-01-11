@@ -146,6 +146,8 @@ static void onBell(rfbClient *client) {
 }
 
 static void onGotXCutText(rfbClient *client, const char *text, int len, bool is_utf8) {
+    if (!text || len <= 0) return;
+
     auto obj = getManagedClient(client);
     auto env = context.getEnv();
     auto cls = context.managedCls;
@@ -162,6 +164,8 @@ static void onGotXCutTextLatin1(rfbClient *client, const char *text, int len) {
 }
 
 static void onGotXCutTextUTF8(rfbClient *client, const char *text, int len) {
+    if (text && len > 0 && text[len - 1] == '\0')
+        --len; // LibVNCClient includes terminating NULL in length for UTF8
     onGotXCutText(client, text, len, true);
 }
 
