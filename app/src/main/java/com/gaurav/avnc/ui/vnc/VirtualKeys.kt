@@ -33,6 +33,7 @@ import android.widget.ToggleButton
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.gaurav.avnc.R
@@ -59,6 +60,7 @@ class VirtualKeys(activity: VncActivity) {
     private val lockedToggleKeys = mutableSetOf<ToggleButton>()
     private val keyCharMap by lazy { KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD) }
     private var openedWithKb = false
+    private var closedByPiPMode = false
 
     val container: View? get() = stub.root
 
@@ -91,6 +93,16 @@ class VirtualKeys(activity: VncActivity) {
     fun onConnected(inPiP: Boolean) {
         if (!inPiP && pref.runInfo.showVirtualKeys)
             show()
+    }
+
+    fun onPiPModeChanged(inPiPMode: Boolean) {
+        if (inPiPMode && container?.isVisible == true) {
+            hide()
+            closedByPiPMode = true
+        } else if (!inPiPMode && closedByPiPMode) {
+            show()
+            closedByPiPMode = false
+        }
     }
 
     fun releaseMetaKeys() {

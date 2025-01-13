@@ -388,10 +388,10 @@ class VncActivity : AppCompatActivity() {
     @RequiresApi(26)
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        virtualKeys.onPiPModeChanged(isInPictureInPictureMode)
         if (isInPictureInPictureMode) {
             toolbar.close()
             viewModel.resetZoom()
-            virtualKeys.hide()
         } else {
             // If user taps the Close button on PiP window, Android will stop the Activity
             // but won't destroy it. This is not a problem for singleTask activities since those
