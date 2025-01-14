@@ -167,7 +167,7 @@
     <string name="desc_zoom_options_btn">Параметри масштабування</string>
     <string name="desc_save_zoom_btn">Зберегти масштабування як стандартне</string>
     <string name="pref_invert_vertical_scrolling">Інвертувати вертикальне прокручування</string>
-    <string name="pref_display_cutout">Відображати під вирізом в екрані (експериментальне)</string>
+    <string name="pref_display_cutout">Розширте в область вирізу</string>
     <string name="pref_touch_test">Тест сенсору</string>
     <string name="pref_key_test">Тест клавіш</string>
     <string name="title_image_quality">Якість зображення</string>
@@ -200,6 +200,27 @@
     <string name="msg_zoom_locked">Масштаб заблоковано</string>
     <string name="msg_zoom_unlocked">Масштаб розблоковано</string>
     <string name="msg_pk_password_not_saved">AVNC більше не зберігає паролі приватних ключів для поліпшення безпеки.</string>
-    <string name="pref_keep_screen_on">Залишати екран увімкненим</string>
+    <string name="pref_keep_screen_on">Тримайте екран увімкненим</string>
     <string name="desc_lock_zoom_btn">Заблокувати масштаб</string>
+    <string name="title_next">Далі</string>
+    <string name="title_got_it">зрозумів</string>
+    <string name="msg_viewer_tips_label">Кілька порад для початку</string>
+    <string name="hint_send_text_to_server">Надіслати текст на сервер</string>
+    <string name="pref_forget_known_hosts_question">Забути відомі хости SSH і сертифікати надійного сервера?</string>
+    <string name="title_export_passwords_and_keys">Експорт паролів і ключів</string>
+    <string name="title_enable_wol">Wake-on-LAN</string>
+    <string name="tip_toolbar_usage">Проведіть пальцем від краю, щоб відкрити панель інструментів. Використовуйте його, щоб відкрити клавіатуру, змінити стиль жестів або скинути масштаб.</string>
+    <string name="pref_toolbar_open_with_swipe">Проведіть пальцем від краю, щоб відкрити</string>
+    <string name="title_load_defaults">Завантажити стандартні параметри</string>
+    <string name="msg_saved">Збережено</string>
+    <string name="msg_tap_to_select_a_key">Натисніть, щоб вибрати ключ:</string>
+    <string name="tip_session_end">Щоб завершити сеанс, торкніться навігаційної кнопки «Назад» так само, як ви повертаєтеся після відтворення відео.</string>
+    <string name="msg_wake_on_lan_help">Wake-on-LAN можна використовувати для віддаленого ввімкнення комп’ютера.\n\nСпочатку налаштуйте WoL на віддаленому комп’ютері, а потім увімкніть його в AVNC.\nПісля ввімкнення WoL магічний пакет буде автоматично надсилається перед підключенням до цього сервера.</string>
+    <string name="pref_show_gesture_style_toggle">Показати перемикач стилю жестів</string>
+    <string name="title_forget">Забути</string>
+    <string name="hint_wol_mac">MAC-адреса</string>
+    <string name="msg_done">Готово</string>
+    <string name="pref_customize_virtual_keys">Налаштувати клавіші</string>
+    <string name="pref_forget_known_hosts">Забудьте відомих хостів</string>
+    <string name="title_connect_on_app_start">Автоматичне підключення під час запуску програми</string>
 </resources>

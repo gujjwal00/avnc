@@ -221,4 +221,7 @@
     <string name="msg_tap_to_select_a_key">Нажмите, чтобы выбрать ключ:</string>
     <string name="title_load_defaults">Загрузить по умолчанию</string>
     <string name="pref_customize_virtual_keys">Настроить клавиши</string>
+    <string name="title_export_passwords_and_keys">Экспорт паролей и ключей</string>
+    <string name="title_forget">Забыть</string>
+    <string name="msg_done">Готово</string>
 </resources>
