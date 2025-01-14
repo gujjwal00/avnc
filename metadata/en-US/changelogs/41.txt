@@ -1,0 +1,4 @@
+* Fixed possible ANR during connection shutdown
+* Fixed extra blank character in copied text
+* Restored Virtual Keys visibility after exiting Picture-in-Picture mode
+* New Language: Italian by Astro Spiff
