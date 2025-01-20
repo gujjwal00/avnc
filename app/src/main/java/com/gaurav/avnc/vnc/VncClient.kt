@@ -7,6 +7,7 @@ import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
@@ -221,7 +222,7 @@ class VncClient(private val observer: Observer) {
      * @param x    Horizontal pointer coordinate
      * @param y    Vertical pointer coordinate
      */
-    fun moveClientPointer(x: Int, y: Int) {
+    fun moveClientPointer(x: Int, y: Int) = ifConnected {
         pointerX = x
         pointerY = y
         observer.onPointerMoved(x, y)
@@ -288,7 +289,7 @@ class VncClient(private val observer: Observer) {
      * it will abandon the attempt and throw an error.
      */
     fun interrupt() {
-        stateLock.read {
+        stateLock.tryRead {
             if (!destroyed)
                 nativeInterrupt(nativePtr)
         }
@@ -308,7 +309,7 @@ class VncClient(private val observer: Observer) {
         }
     }
 
-    private inline fun ifConnected(block: () -> Unit) = stateLock.read {
+    private inline fun ifConnected(block: () -> Unit) = stateLock.tryRead {
         if (connected && !destroyed)
             block()
     }
@@ -316,6 +317,33 @@ class VncClient(private val observer: Observer) {
     private inline fun ifConnectedAndInteractive(block: () -> Unit) = ifConnected {
         if (!viewOnlyMode)
             block()
+    }
+
+    /**
+     * Non-blocking variant of [ReentrantReadWriteLock.read].
+     *
+     * In normal situation, we will always be able to acquire read-lock immediately
+     * because write-lock is only used to update the state. Moreover, write-lock is
+     * only held for very small duration.
+     *
+     * But it is possible for the following situation:
+     * 1. Thread A is holding read-lock to do a long running network IO (e.g. [sendCutText])
+     * 2. Thread B want to acquire write-lock (most probably in [processServerMessage])
+     * 3. Thread C, which can be the Main thread, wants to acquire read-lock (e.g. [moveClientPointer])
+     *
+     * Thread C can't acquire read-lock until both A & B are done. This can lead to
+     * ANRs. [tryRead] can be used in such scenarios because if Thread B is waiting for
+     * write-lock that most likely means connection has been closed, and action of
+     * thread C will fail anyway.
+     */
+    private inline fun <T> ReentrantReadWriteLock.tryRead(block: () -> T) {
+        if (this.readLock().tryLock(0, TimeUnit.SECONDS)) {
+            try {
+                block()
+            } finally {
+                this.readLock().unlock()
+            }
+        }
     }
 
     private external fun nativeClientCreate(): Long
