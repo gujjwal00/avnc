@@ -20,7 +20,6 @@ import com.gaurav.avnc.ui.vnc.FrameScroller
 import com.gaurav.avnc.ui.vnc.FrameState
 import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.util.LiveRequest
-import com.gaurav.avnc.util.SingleShotFlag
 import com.gaurav.avnc.util.broadcastWoLPackets
 import com.gaurav.avnc.util.getClipboardText
 import com.gaurav.avnc.util.getUnknownCertificateMessage
@@ -34,6 +33,7 @@ import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.security.cert.X509Certificate
@@ -188,17 +188,10 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      */
     val confirmationRequest = LiveRequest<Pair<String, String>, Boolean>(false, viewModelScope)
 
-    /**
-     * Indicates if this view model has been cleared.
-     * Used by the receiver thread to control it's execution.
-     */
-    private val viewModelClearedFlag = SingleShotFlag()
-
     override fun onCleared() {
         super.onCleared()
-        if (state.value == State.Connecting)
+        if (state.value != State.Disconnected)
             client.interrupt()
-        viewModelClearedFlag.set()
     }
 
 
@@ -280,14 +273,11 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     private fun processMessages() {
-        while (viewModelClearedFlag.isNotSet)
+        while (viewModelScope.isActive)
             client.processServerMessage()
     }
 
     private fun cleanup() {
-        //Wait until activity is finished and viewmodel is cleaned up.
-        viewModelClearedFlag.await()
-
         messenger.cleanup()
         client.cleanup()
         sshTunnel.close()

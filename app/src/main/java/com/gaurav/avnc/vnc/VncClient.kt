@@ -137,8 +137,9 @@ class VncClient(private val observer: Observer) {
      */
     fun connect(host: String, port: Int) {
         stateLock.read {
-            if (connected || destroyed)
-                return
+            check(!connected) { "Already connected" }
+            check(!destroyed) { "Client has been destroyed" }
+
             if (!nativeInit(nativePtr, host, port))
                 throw IOException(nativeGetLastErrorStr())
         }
@@ -284,9 +285,12 @@ class VncClient(private val observer: Observer) {
     }
 
     /**
-     * Set the interrupt flag.
-     * If [connect] is executing in another thread (and not yet successful),
-     * it will abandon the attempt and throw an error.
+     * Try to interrupt long-running operations (e.g. [connect]) executing in other threads.
+     * This can be used to quickly finish/abandon these operations during connection shutdown,
+     * instead of waiting for the usual socket timeouts to kick in.
+     * For now, once interrupt flag is set for a client, it will remain set.
+     *
+     * Because this can be invoked from Main thread, read-lock is only tried once to avoid ANRs.
      */
     fun interrupt() {
         stateLock.tryRead {
