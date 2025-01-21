@@ -49,7 +49,7 @@ class VncClientTest {
     private fun connect() {
         server.start()
         client.connect(server.host, server.port)
-        client.processServerMessage(10000)
+        client.processServerMessage()
     }
 
 

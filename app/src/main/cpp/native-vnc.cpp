@@ -392,12 +392,10 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeCleanup(JNIEnv *env, jobject thiz,
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativeProcessServerMessage(JNIEnv *env, jobject thiz,
-                                                              jlong client_ptr,
-                                                              jint u_sec_timeout) {
+                                                              jlong client_ptr) {
     auto client = (rfbClient *) client_ptr;
 
-    auto waitResult = WaitForMessageInterruptible(client, static_cast<unsigned int>(u_sec_timeout),
-                                                  client->interruptFd);
+    auto waitResult = WaitForMessageInterruptible(client, 1000000, client->interruptFd);
 
     if (waitResult == 0) // Timeout
         return JNI_TRUE;
