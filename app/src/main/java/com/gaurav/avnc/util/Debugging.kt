@@ -15,6 +15,21 @@ import com.gaurav.avnc.BuildConfig
 /**
  * Utilities to aid in debugging
  */
+
+/**
+ * [check] variant which is only active in debug builds.
+ */
+fun debugCheck(condition: Boolean) {
+    if (BuildConfig.DEBUG)
+        check(condition)
+}
+
+fun <T : Any> debugCheckNotNull(value: T?) {
+    if (BuildConfig.DEBUG)
+        checkNotNull(value)
+}
+
+
 object Debugging {
 
     /**
