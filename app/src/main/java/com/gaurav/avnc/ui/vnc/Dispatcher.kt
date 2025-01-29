@@ -83,6 +83,7 @@ class Dispatcher(private val activity: VncActivity) {
 
         private fun selectPointAction(actionName: String): (PointF) -> Unit {
             return when (actionName) {
+                "left-press" -> { p -> defaultMode.doButtonDown(PointerButton.Left, p) }
                 "left-click" -> { p -> defaultMode.doClick(PointerButton.Left, p) }
                 "double-click" -> { p -> defaultMode.doDoubleClick(PointerButton.Left, p) }
                 "middle-click" -> { p -> defaultMode.doClick(PointerButton.Middle, p) }

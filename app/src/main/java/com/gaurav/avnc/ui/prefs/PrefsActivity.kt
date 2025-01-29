@@ -121,6 +121,8 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
                 disabledStateSummary = getString(R.string.pref_gesture_action_move_pointer)
             }
             findPreference<ListPreferenceEx>("gesture_long_press_swipe")!!.apply {
+                enableIf { it["gesture_long_press"] != "left-press" }
+                disabledStateSummary = getString(R.string.pref_gesture_action_none)
                 helpMessage = getText(R.string.msg_drag_gesture_help)
             }
 

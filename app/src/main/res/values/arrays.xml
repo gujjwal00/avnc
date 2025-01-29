@@ -77,12 +77,14 @@
         <item>@string/pref_gesture_action_double_click</item>
         <item>@string/pref_gesture_action_middle_click</item>
         <item>@string/pref_gesture_action_right_click</item>
+        <item>@string/pref_gesture_action_left_press</item>
     </string-array>
     <string-array name="long_press_action_values">
         <item>none</item>
         <item>double-click</item>
         <item>middle-click</item>
         <item>right-click</item>
+        <item>left-press</item>
     </string-array>
 
     <string-array name="swipe1_action_entries">
