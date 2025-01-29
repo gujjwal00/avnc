@@ -97,13 +97,15 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
     }
 
     @Keep class Input : PrefFragment(R.xml.pref_input) {
-        private var invertScrollingUpdater: OnSharedPreferenceChangeListener? = null
+        private val visibilityTests = mutableMapOf<Preference, (Map<String, Any?>) -> Boolean>()
+        private val enablementTests = mutableMapOf<Preference, (Map<String, Any?>) -> Boolean>()
+        private val prefChangeListener = OnSharedPreferenceChangeListener { _, _ -> applyTests() }
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
+            preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(prefChangeListener)
 
             val canChangePtrIcon = Build.VERSION.SDK_INT >= 24
-
             if (!canChangePtrIcon) {
                 findPreference<SwitchPreference>("hide_local_cursor")!!.apply {
                     isEnabled = false
@@ -111,28 +113,43 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
                 }
             }
 
-            val style = findPreference<ListPreferenceEx>("gesture_style")!!
-            val swipe1 = findPreference<ListPreferenceEx>("gesture_swipe1")!!
-            val longPressSwipe = findPreference<ListPreferenceEx>("gesture_long_press_swipe")!!
-
-            swipe1.disabledStateSummary = getString(R.string.pref_gesture_action_move_pointer)
-            longPressSwipe.helpMessage = getText(R.string.msg_drag_gesture_help)
-
-            swipe1.isEnabled = style.value != "touchpad"
-            style.setOnPreferenceChangeListener { _, value -> swipe1.isEnabled = value != "touchpad"; true }
-
-            style.helpMessage = getText(R.string.msg_gesture_style_help)
+            findPreference<ListPreferenceEx>("gesture_style")!!.apply {
+                helpMessage = getText(R.string.msg_gesture_style_help)
+            }
+            findPreference<ListPreferenceEx>("gesture_swipe1")!!.apply {
+                enableIf { it["gesture_style"] != "touchpad" }
+                disabledStateSummary = getString(R.string.pref_gesture_action_move_pointer)
+            }
+            findPreference<ListPreferenceEx>("gesture_long_press_swipe")!!.apply {
+                helpMessage = getText(R.string.msg_drag_gesture_help)
+            }
 
             // To reduce clutter & avoid 'UI overload', pref to invert vertical scrolling is
             // only visible when 'Scroll remote content' option is used.
-            invertScrollingUpdater = OnSharedPreferenceChangeListener { prefs, _ ->
-                findPreference<SwitchPreference>("invert_vertical_scrolling")!!.apply {
-                    isVisible = prefs.all.values.contains("remote-scroll")
-                }
+            findPreference<SwitchPreference>("invert_vertical_scrolling")!!.apply {
+                showIf { it.values.contains("remote-scroll") }
             }
-            invertScrollingUpdater?.onSharedPreferenceChanged(swipe1.sharedPreferences, null) //Initial update
-            swipe1.sharedPreferences?.registerOnSharedPreferenceChangeListener(invertScrollingUpdater)
+        }
 
+        override fun onDestroy() {
+            super.onDestroy()
+            preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(prefChangeListener)
+        }
+
+        private fun Preference.enableIf(test: (Map<String, Any?>) -> Boolean) {
+            enablementTests += this to test
+            applyTests()
+        }
+
+        private fun Preference.showIf(test: (Map<String, Any?>) -> Boolean) {
+            visibilityTests += this to test
+            applyTests()
+        }
+
+        private fun applyTests() {
+            val prefs = preferenceManager.sharedPreferences?.all ?: return
+            visibilityTests.forEach { it.key.isVisible = it.value(prefs) }
+            enablementTests.forEach { it.key.isEnabled = it.value(prefs) }
         }
     }
 
