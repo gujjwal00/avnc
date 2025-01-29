@@ -195,4 +195,5 @@
     <string name="title_resize_remote_desktop">Zmiana rozmiaru sesji zdalnej do okna lokalnego</string>
     <string name="pref_gesture_action_remote_drag_middle">Przeciągnij środkowym przyciskiem</string>
     <string name="title_key_compat_mode">Prześlij kluczowe zdażenia w starszym formacie</string>
+    <string name="msg_gesture_style_help"><b>Ekran dotykowy</b>\nWykonuj działania w punkcie kontaktu\n\n<b>Panel dotykowy</b>\nWykonaj działania na wskaźniku</string>
 </resources>

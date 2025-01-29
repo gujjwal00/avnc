@@ -64,6 +64,7 @@
     <string name="msg_invalid_vnc_uri">無效的 VNC URI</string>
     <string name="msg_key_compat_mode_help">一些伺服器對 Unicode 的支援有限。傳送舊鍵碼可以幫助輸入非英文字符。</string>
     <string name="msg_button_up_delay_help">如果應用程式沒有回應點擊，延遲點擊可能會解決這個問題 。</string>
+    <string name="msg_gesture_style_help"><b>觸控螢幕</b>\n於觸控處執行動作\n\n<b>觸控板</b>\n於鼠標處執行動作</string>
     <string name="msg_drag_gesture_help">分配到此手勢將改變長按檢測方式：
 \n
 \n<b>按住釋放</b> → 長按

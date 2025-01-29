@@ -14,7 +14,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.text.HtmlCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
@@ -122,12 +121,7 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
             swipe1.isEnabled = style.value != "touchpad"
             style.setOnPreferenceChangeListener { _, value -> swipe1.isEnabled = value != "touchpad"; true }
 
-            val styleHelp = "<b>${getString(R.string.pref_gesture_style_touchscreen)}</b><br/>" +
-                            getString(R.string.pref_gesture_style_touchscreen_summary) + "<br/><br/>" +
-                            "<b>${getString(R.string.pref_gesture_style_touchpad)}</b><br/>" +
-                            getString(R.string.pref_gesture_style_touchpad_summary)
-
-            style.helpMessage = HtmlCompat.fromHtml(styleHelp, 0)
+            style.helpMessage = getText(R.string.msg_gesture_style_help)
 
             // To reduce clutter & avoid 'UI overload', pref to invert vertical scrolling is
             // only visible when 'Scroll remote content' option is used.

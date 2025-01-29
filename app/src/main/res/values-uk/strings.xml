@@ -155,6 +155,7 @@
     <string name="pref_mouse_back">Кнопка назад</string>
     <string name="pref_mouse_back_action_default">Типово</string>
     <string name="pref_swipe_sensitivity">Чутливість ковзання</string>
+    <string name="msg_gesture_style_help"><b>Тачскрін</b>\nРобити дії в точці доторкання\n\n<b>Тачпад</b>\nРобити дії з вказівником</string>
     <string name="msg_drag_gesture_help">Присвоєння дії цьому жесту змінить виявлення довгого натискання:
 \n
 \n<b>Натиснути-утримувати-відпустити</b> → Довге натискання

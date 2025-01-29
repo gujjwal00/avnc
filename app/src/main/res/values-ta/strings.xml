@@ -8,6 +8,7 @@
     <string name="pref_display_cutout">கட்அவுட் பகுதிக்கு நீட்டிக்கவும்</string>
     <string name="msg_exported">ஏற்றுமதிசெய்யப்பட்டது</string>
     <string name="hint_password">கடவுச்சொல்</string>
+    <string name="msg_gesture_style_help"><b>தொடுதிரை</b>\nதொடு புள்ளியில் செயல்களைச் செய்யுங்கள்\n\n<b>டச்பேட்</b>\nசுட்டிக்காட்டி செயல்களைச் செய்யுங்கள்</string>
     <string name="msg_drag_gesture_help">இந்த சைகைக்கு ஒரு செயலை ஒதுக்குவது நீண்ட செய்தித் தாள் கண்டறிதலை மாற்றும்:\n\n <b> பத்திரிகை-வெளியீடு </b> → நீண்ட அழுத்தவும்\n <b> பிரச்-ஓல்ட்-ச்வைப் </b> → நீண்ட அழுத்தி ச்வைப்</string>
     <string name="tip_urlbar">நீங்கள் ஐபி முகவரி, ஓச்ட்பெயர் அல்லது \'VNC: //\' யூரி ஐ உள்ளிடலாம்.</string>
     <string name="pref_theme_option_light">ஒளி</string>

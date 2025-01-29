@@ -162,6 +162,7 @@
     <string name="pref_discovery_autorun_summary">Descubrir servidores enquanto estiver na página inicial</string>
     <string name="pref_rediscovery_indicator">Destacar servidores redescobertos</string>
     <string name="pref_gesture_style_touchscreen_summary">Faça ações no ponto de contato</string>
+    <string name="msg_gesture_style_help"><b>Touch screen</b>\nFaça ações no ponto de contato\n\n<b>Touch pad</b>\nFaça ações no ponteiro</string>
     <string name="msg_drag_gesture_help">Ao atribuir ação de gesto de Arrastar você mudará Detecção de toque longo:
 \n
 \n<b>Toque-segure-solte</b> → Toque longo

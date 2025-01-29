@@ -155,6 +155,7 @@
     <string name="pref_km_language_switch_to_super">语言切换 → Super （开始菜单）键</string>
     <string name="pref_km_back_to_escape">退格键 → Esc 键</string>
     <string name="pref_km_right_alt_to_super">右 Alt 键 → Super （开始菜单）键</string>
+    <string name="msg_gesture_style_help"><b>触摸屏</b>\n在接触点执行操作\n\n<b>触摸板</b>\n在指针处执行操作</string>
     <string name="msg_drag_gesture_help">分配一个动作给这个手势将改变长按检测：
 \n
 \n<b>按住释放</b> → 长按

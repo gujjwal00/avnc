@@ -222,4 +222,5 @@
     <string name="pref_km_back_to_escape">الخروج → زر الرجوع</string>
     <string name="pref_km_language_switch_to_super">زر الويندوز → تغير لغة الادخال</string>
     <string name="title_forget">انسى</string>
+    <string name="msg_gesture_style_help"><b>شاشة اللمس</b>\nتنفيذ الإجراءات عند نقطة اللمس\n\n<b>لوحة اللمس</b>\nتنفيذ الإجراءات عند المؤشر</string>
 </resources>

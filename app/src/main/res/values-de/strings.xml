@@ -159,6 +159,7 @@
     <string name="pref_orientation_option_auto">Automatisch</string>
     <string name="pref_orientation_option_portrait">Hochformat</string>
     <string name="pref_orientation_option_landscape">Querformat</string>
+    <string name="msg_gesture_style_help"><b>Tastbildschirm</b>\nAktionen am Berührungspunkt ausführen\n\n<b>Tastfeld</b>\nAktionen am Zeiger ausführen</string>
     <string name="msg_drag_gesture_help">Der Ziehgeste eine Aktion zuzuweisen, wird die Erkennung von langem Drücken ändern:
 \n
 \n<b>Drücken-Halten-Loslassen</b> → Lange drücken

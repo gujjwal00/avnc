@@ -155,6 +155,7 @@
     <string name="pref_mouse_back">«Tilbake»-knapp</string>
     <string name="pref_mouse_back_action_default">Forvalg</string>
     <string name="pref_swipe_sensitivity">Dragningssensitivitet</string>
+    <string name="msg_gesture_style_help"><b>Pekeskjerm</b>\nUtfør handlinger ved berøring\n\n<b>Pekeflate</b>\nUtfør handlinger ved peker</string>
     <string name="msg_drag_gesture_help">Tildelning av en handling til dragningshåndvending endrer lang-trykk-oppdagelse:
 \n
 \n<b>Trykk-hold-slipp</b> → Lang-trykk

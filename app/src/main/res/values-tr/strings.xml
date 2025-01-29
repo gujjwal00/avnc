@@ -155,6 +155,7 @@
     <string name="pref_mouse_back">Geri düğmesi</string>
     <string name="pref_mouse_back_action_default">Öntanımlı</string>
     <string name="pref_swipe_sensitivity">Kaydırma hassasiyeti</string>
+    <string name="msg_gesture_style_help"><b>Dokunmatik ekran</b>\nEylemleri dokunma noktasında yap\n\n<b>Dokunmatik yüzey</b>\nEylemleri işaretçinin olduğu yerde yap</string>
     <string name="msg_drag_gesture_help">Bu harekete bir eylem atamak, Uzun basma algılamasını değiştirecektir:
 \n
 \n<b>Basılı tut ve bırak</b> → Uzun bas

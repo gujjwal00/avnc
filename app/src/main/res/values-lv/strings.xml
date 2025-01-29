@@ -86,6 +86,7 @@
     <string name="msg_viewer_tips_label">Pāris padomi, kā sākt</string>
     <string name="tip_toolbar_usage">Velciet no malas, lai atvērtu rīkjoslu. Izmantojiet to, lai atvērtu tastatūru, mainītu žestu stilu vai atiestatītu tālummaiņu.</string>
     <string name="tip_session_end">Lai beigtu sesiju, noklikšķiniet uz Atpakaļ navigācijas pogu, tāpat kā jūs atgrieztos no video, kas tiek atskaņots.</string>
+    <string name="msg_gesture_style_help"><b>Skārienekrāns</b>\nIzpilda darbības saskares punktā\n\n<b>Skārienpaliktnis</b>\nIzpilda darbības ar rādītāju</string>
     <string name="msg_drag_gesture_help">Piešķirot šim žestam darbību, tiks mainīta ilgā pieskāriena noteikšana:
 \n
 \n<b>Nospiediet, turiet un atlaidiet</b> → Ilgs pieskāriens
