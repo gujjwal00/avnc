@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<resources>
+
+    <declare-styleable name="ListPreferenceEx">
+        <!--
+            Message shown in a dialog, when help button of the preference is clicked.
+            This will only work if @layout/help_btn is used as widgetLayout.
+        -->
+        <attr name="helpMessage" format="string|reference" />
+    </declare-styleable>
+
+</resources>

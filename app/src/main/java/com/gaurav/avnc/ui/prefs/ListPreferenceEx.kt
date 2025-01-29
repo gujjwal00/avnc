@@ -12,6 +12,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageButton
+import androidx.core.content.withStyledAttributes
 import androidx.fragment.app.FragmentActivity
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceViewHolder
@@ -33,7 +34,7 @@ class ListPreferenceEx(context: Context, attrs: AttributeSet) : ListPreference(c
      * Message shown in a dialog, when help button of the preference is clicked.
      * This will only work if [R.layout.help_btn] is used as widget layout.
      */
-    var helpMessage: CharSequence? = null
+    private var helpMessage: CharSequence? = null
 
     private val helpClickListener = View.OnClickListener {
         helpMessage?.let { helpMessage ->
@@ -42,6 +43,12 @@ class ListPreferenceEx(context: Context, attrs: AttributeSet) : ListPreference(c
                                fragmentActivity.getString(R.string.desc_help_btn),
                                helpMessage)
             }
+        }
+    }
+
+    init {
+        context.withStyledAttributes(attrs, R.styleable.ListPreferenceEx) {
+            helpMessage = getText(R.styleable.ListPreferenceEx_helpMessage)
         }
     }
 
