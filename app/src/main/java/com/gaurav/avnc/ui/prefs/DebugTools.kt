@@ -9,6 +9,7 @@
 package com.gaurav.avnc.ui.prefs
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.TextUtils
@@ -96,6 +97,8 @@ class LogsFragment : DebugFragment() {
     }
 
     class LogsAdapter(private val logList: List<String>) : RecyclerView.Adapter<LogsViewHolder>() {
+        private var normalTextColor = Color.GRAY
+        private var errorTextColor = Color.RED
 
         override fun getItemCount() = logList.size
 
@@ -105,11 +108,16 @@ class LogsFragment : DebugFragment() {
             tv.ellipsize = TextUtils.TruncateAt.END
             tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
             tv.setSingleLine()
+            normalTextColor = tv.currentTextColor
             return LogsViewHolder(tv)
         }
 
         override fun onBindViewHolder(holder: LogsViewHolder, position: Int) {
-            holder.tv.text = logList[position]
+            val line = logList[position]
+            val lineColor = if (line.contains(" E ")) errorTextColor else normalTextColor
+
+            holder.tv.text = line
+            holder.tv.setTextColor(lineColor)
         }
     }
 

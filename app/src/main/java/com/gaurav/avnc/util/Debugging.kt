@@ -38,7 +38,7 @@ object Debugging {
      */
     fun logcat(): String {
         try {
-            return ProcessBuilder("logcat", "-d", "*")
+            return ProcessBuilder("logcat", "-d", "-v", "threadtime", "*")
                     .redirectErrorStream(true)
                     .start()
                     .inputStream
