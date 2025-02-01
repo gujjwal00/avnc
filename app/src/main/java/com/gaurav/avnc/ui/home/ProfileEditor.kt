@@ -170,7 +170,7 @@ class AdvancedProfileEditor : Fragment() {
         binding.toolbar.setNavigationOnClickListener { dismiss() }
         binding.keyImportBtn.setOnClickListener { keyFilePicker.launch(arrayOf("*/*")) }
 
-        setupHelpButton(binding.keyCompatModeHelpBtn, R.string.title_key_compat_mode, R.string.msg_key_compat_mode_help)
+        //setupHelpButton(binding.keyCompatModeHelpBtn, R.string.title_key_compat_mode, R.string.msg_key_compat_mode_help)
         setupHelpButton(binding.buttonUpDelayHelpBtn, R.string.title_button_up_delay, R.string.msg_button_up_delay_help)
         setupHelpButton(binding.wolHelpBtn, R.string.title_enable_wol, R.string.msg_wake_on_lan_help)
 

@@ -204,7 +204,7 @@ class VncActivity : AppCompatActivity() {
     }
 
     private fun onProfileUpdated(profile: ServerProfile) {
-        keyHandler.emitLegacyKeysym = profile.fLegacyKeySym
+        keyHandler.emitLegacyKeysym = true /*profile.fLegacyKeySym*/
         setupOrientation()
     }
 
