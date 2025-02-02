@@ -41,13 +41,6 @@
                 app:navigationContentDescription="@string/desc_back_btn"
                 app:navigationIcon="@drawable/ic_arrow_back">
 
-                <Button
-                    android:id="@+id/save_btn"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:text="@string/title_save" />
             </com.google.android.material.appbar.MaterialToolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -510,5 +503,28 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentInsetEnd="15dp"
+            app:contentInsetStart="15dp"
+            app:elevation="@dimen/editor_bottom_bar_elevation"
+            tools:ignore="BottomAppBar">
+
+            <Button
+                android:id="@+id/cancel_btn"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_cancel" />
+
+            <Button
+                android:id="@+id/save_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="@string/title_save" />
+        </com.google.android.material.bottomappbar.BottomAppBar>
     </LinearLayout>
 </layout>

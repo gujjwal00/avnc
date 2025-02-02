@@ -9,6 +9,7 @@
 package com.gaurav.avnc.ui.home
 
 import android.app.Dialog
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -23,6 +24,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
@@ -36,6 +39,7 @@ import com.gaurav.avnc.util.parseMacAddress
 import com.gaurav.avnc.viewmodel.EditorViewModel
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
 import com.trilead.ssh2.crypto.PEMDecoder
 import kotlinx.coroutines.Dispatchers
@@ -167,12 +171,14 @@ class AdvancedProfileEditor : Fragment() {
 
         binding.toolbar.title = getString(getTitle(this))
         binding.saveBtn.setOnClickListener { save() }
+        binding.cancelBtn.setOnClickListener { dismiss() }
         binding.toolbar.setNavigationOnClickListener { dismiss() }
         binding.keyImportBtn.setOnClickListener { keyFilePicker.launch(arrayOf("*/*")) }
 
         //setupHelpButton(binding.keyCompatModeHelpBtn, R.string.title_key_compat_mode, R.string.msg_key_compat_mode_help)
         setupHelpButton(binding.buttonUpDelayHelpBtn, R.string.title_button_up_delay, R.string.msg_button_up_delay_help)
         setupHelpButton(binding.wolHelpBtn, R.string.title_enable_wol, R.string.msg_wake_on_lan_help)
+        setupNightModeNavBarColor()
 
         return binding.root
     }
@@ -181,6 +187,40 @@ class AdvancedProfileEditor : Fragment() {
         button.setOnClickListener {
             MsgDialog.show(parentFragmentManager, getString(title), getString(msg))
         }
+    }
+
+    /**
+     * When Dark theme is active, navigation bar background color should match
+     * with the background color of bottom app bar.
+     */
+    private fun setupNightModeNavBarColor() {
+        if ((resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) != Configuration.UI_MODE_NIGHT_YES)
+            return // Night mode is not active
+
+        @Suppress("DEPRECATION")
+        viewLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+            var originalNavBarColor: Int? = null
+
+            private fun getNewColor(): Int {
+                val elevation = resources.getDimension(R.dimen.editor_bottom_bar_elevation)
+                return ElevationOverlayProvider(requireContext())
+                        .compositeOverlayWithThemeSurfaceColorIfNeeded(elevation)
+            }
+
+            override fun onStart(owner: LifecycleOwner) {
+                requireActivity().window.let {
+                    originalNavBarColor = it.navigationBarColor
+                    it.navigationBarColor = getNewColor()
+                }
+            }
+
+            override fun onStop(owner: LifecycleOwner) {
+                originalNavBarColor?.let {
+                    requireActivity().window.navigationBarColor = it
+                    originalNavBarColor = null
+                }
+            }
+        })
     }
 
     private fun dismiss() = parentFragmentManager.popBackStack()

@@ -18,4 +18,5 @@
     <dimen name="server_card_elevation">2dp</dimen>
     <dimen name="server_card_min_height">68dp</dimen>
     <dimen name="server_card_stroke_width">0dp</dimen>
+    <dimen name="editor_bottom_bar_elevation">8dp</dimen>
 </resources>
