@@ -11,13 +11,17 @@ package com.gaurav.avnc.ui.home
 import android.app.Dialog
 import android.content.res.Configuration
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import androidx.core.os.BundleCompat
+import androidx.core.view.descendants
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -226,7 +230,10 @@ class AdvancedProfileEditor : Fragment() {
     private fun dismiss() = parentFragmentManager.popBackStack()
 
     private fun save() {
-        if (!validate()) return
+        if (!validate()) {
+            highlightFieldWithError()
+            return
+        }
         homeViewModel.saveProfile(viewModel.prepareProfileForSave())
         dismiss()
     }
@@ -250,6 +257,23 @@ class AdvancedProfileEditor : Fragment() {
 
         return result
     }
+
+    private fun highlightFieldWithError() {
+        binding.scrollView.descendants.find { it.isVisible && it is TextView && it.error != null }?.let {
+            // Try to focus the View, which would also reveal it.
+            // If View isn't focusable, manually reveal  it.
+            if (!it.requestFocus())
+                scrollToView(it)
+        }
+    }
+
+    private fun scrollToView(view: View) {
+        if (Build.VERSION.SDK_INT >= 29)
+            binding.scrollView.scrollToDescendant(view)
+        else
+            binding.scrollView.requestChildFocus(null, view) // Wierd but effective workaround
+    }
+
 
     private fun validateMACAddress(): Boolean {
         if (runCatching { parseMacAddress(binding.wolMac.text.toString()) }.isFailure) {
