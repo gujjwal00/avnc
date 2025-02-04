@@ -95,15 +95,14 @@
                     android:id="@+id/port"
                     style="@style/FormField.EditText"
                     android:layout_marginStart="0dp"
+                    android:ems="3"
                     android:hint="@string/hint_port"
                     android:importantForAutofill="no"
                     android:inputType="number"
                     android:text='@={"" +  viewModel.profile.port}'
                     app:layout_constraintBottom_toBottomOf="@id/host"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/host"
-                    app:layout_constraintTop_toTopOf="@id/host"
-                    app:layout_constraintWidth_percent=".2" />
+                    app:layout_constraintTop_toTopOf="@id/host" />
 
                 <!--Repeater-->
                 <CheckBox
@@ -426,15 +425,14 @@
                     <EditText
                         android:id="@+id/ssh_port"
                         style="@style/FormField.EditText"
+                        android:ems="3"
                         android:hint="@{@string/hint_ssh_port}"
                         android:importantForAutofill="no"
                         android:inputType="number"
                         android:text='@={"" + viewModel.profile.sshPort}'
                         app:layout_constraintBottom_toBottomOf="@id/ssh_host"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/ssh_host"
-                        app:layout_constraintTop_toTopOf="@id/ssh_host"
-                        app:layout_constraintWidth_percent=".2" />
+                        app:layout_constraintTop_toTopOf="@id/ssh_host" />
 
                     <!--Username-->
                     <EditText
