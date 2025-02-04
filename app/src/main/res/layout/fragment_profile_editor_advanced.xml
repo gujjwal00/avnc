@@ -48,14 +48,16 @@
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:fadeScrollbars="false">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
-                android:padding="@dimen/padding_normal"
-                android:paddingBottom="30dp">
+                android:paddingHorizontal="@dimen/padding_normal"
+                android:paddingTop="@dimen/padding_normal"
+                android:paddingBottom="60dp">
 
 
                 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
