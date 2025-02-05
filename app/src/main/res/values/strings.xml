@@ -94,6 +94,8 @@
     <string name="msg_saved">Saved</string>
     <string name="msg_done">Done</string>
     <string name="msg_export_auth_required">Authenticate to export servers</string>
+    <string name="msg_required">Required</string>
+    <string name="msg_invalid_mac_address">Invalid MAC address</string>
     <string name="msg_invalid_key_file">Invalid private key file</string>
     <string name="msg_invalid_vnc_uri">Invalid VNC URI</string>
     <string name="msg_copied_to_clipboard">Copied</string>

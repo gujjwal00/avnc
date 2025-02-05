@@ -109,9 +109,9 @@ private fun getTitle(f: Fragment): Int {
 /**
  * If [preCondition] is `true`, validates that [target] is not empty.
  */
-private fun validateNotEmpty(target: EditText, preCondition: Boolean = true, msg: String = "Required"): Boolean {
+private fun validateNotEmpty(target: EditText, preCondition: Boolean = true): Boolean {
     if (preCondition && target.length() == 0) {
-        target.error = msg
+        target.error = target.context.getText(R.string.msg_required)
         return false
     }
     return true
@@ -277,7 +277,7 @@ class AdvancedProfileEditor : Fragment() {
 
     private fun validateMACAddress(): Boolean {
         if (runCatching { parseMacAddress(binding.wolMac.text.toString()) }.isFailure) {
-            binding.wolMac.error = "Invalid MAC address"
+            binding.wolMac.error = getText(R.string.msg_invalid_mac_address)
             return false
         }
         return true
@@ -285,7 +285,7 @@ class AdvancedProfileEditor : Fragment() {
 
     private fun validatePrivateKey(): Boolean {
         if (binding.sshAuthTypeKey.isChecked && viewModel.hasSshPrivateKey.value != true) {
-            binding.keyImportBtn.error = "Required"
+            binding.keyImportBtn.error = getText(R.string.msg_required)
             return false
         }
         return true
