@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.db.MainDb
 import com.gaurav.avnc.util.AppPreferences
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -32,12 +33,16 @@ open class BaseViewModel(val app: Application) : AndroidViewModel(app) {
     val pref by lazy { AppPreferences(app) }
 
     /**
-     * Launches a new coroutine using [viewModelScope], and executes [block] in that coroutine.
+     * Launches [block] in [viewModelScope], on Main dispatcher.
      */
-    protected fun launch(context: CoroutineContext = EmptyCoroutineContext, block: suspend CoroutineScope.() -> Unit): Job {
-        return viewModelScope.launch(context) { this.block() }
-    }
+    protected fun launchMain(block: suspend CoroutineScope.() -> Unit) = launch(EmptyCoroutineContext, block)
 
-    protected fun launchMain(block: suspend CoroutineScope.() -> Unit) = launch(Dispatchers.Main, block)
+    /**
+     * Launches [block] in [viewModelScope], with [Dispatchers.IO].
+     */
     protected fun launchIO(block: suspend CoroutineScope.() -> Unit) = launch(Dispatchers.IO, block)
+
+    private fun launch(context: CoroutineContext, block: suspend CoroutineScope.() -> Unit): Job {
+        return viewModelScope.launch(context, CoroutineStart.DEFAULT, block)
+    }
 }

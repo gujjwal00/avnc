@@ -62,7 +62,7 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
      */
     fun startConnection(profile: ServerProfile) = newConnectionEvent.fire(profile)
 
-    fun maybeConnectOnAppStart() = launch {
+    fun maybeConnectOnAppStart() = launchMain {
         serverProfileDao.getConnectableOnAppStart().firstOrNull()?.let { startConnection(it) }
     }
 
@@ -122,16 +122,16 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
      * These operations are asynchronous.
      **************************************************************************/
 
-    fun insertProfile(profile: ServerProfile) = launch {
+    fun insertProfile(profile: ServerProfile) = launchMain {
         serverProfileDao.insert(profile)
         profileInsertedEvent.fire(profile)
     }
 
-    fun updateProfile(profile: ServerProfile) = launch {
+    fun updateProfile(profile: ServerProfile) = launchMain {
         serverProfileDao.update(profile)
     }
 
-    fun deleteProfile(profile: ServerProfile) = launch {
+    fun deleteProfile(profile: ServerProfile) = launchMain {
         serverProfileDao.delete(profile)
         profileDeletedEvent.fire(profile)
     }

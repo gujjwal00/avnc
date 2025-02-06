@@ -288,7 +288,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      */
     fun saveProfile() {
         if (profile.ID != 0L)
-            launch { serverProfileDao.update(profile) }
+            launchMain { serverProfileDao.update(profile) }
     }
 
     suspend fun getProfileById(id: Long) = serverProfileDao.getByID(id)
