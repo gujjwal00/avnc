@@ -24,7 +24,7 @@ class AppPreferences(context: Context) {
 
     inner class UI {
         val theme = StringLivePref("theme", "system")
-        val preferAdvancedEditor; get() = prefs.getBoolean("prefer_advanced_editor", false)
+        var preferAdvancedEditor by BooleanPref("prefer_advanced_editor", false)
         val sortServerList = BooleanLivePref("sort_server_list", false)
     }
 

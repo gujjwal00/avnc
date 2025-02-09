@@ -15,11 +15,15 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.core.os.BundleCompat
+import androidx.core.view.MenuProvider
 import androidx.core.view.descendants
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
@@ -183,6 +187,7 @@ class AdvancedProfileEditor : Fragment() {
         setupHelpButton(binding.buttonUpDelayHelpBtn, R.string.title_button_up_delay, R.string.msg_button_up_delay_help)
         setupHelpButton(binding.wolHelpBtn, R.string.title_enable_wol, R.string.msg_wake_on_lan_help)
         setupNightModeNavBarColor()
+        setupToolbarMenu()
 
         return binding.root
     }
@@ -225,6 +230,25 @@ class AdvancedProfileEditor : Fragment() {
                 }
             }
         })
+    }
+
+    private fun setupToolbarMenu() {
+        binding.toolbar.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menu.add(R.string.title_always_show_advanced_editor)
+                        .setCheckable(true)
+                        .setChecked(viewModel.pref.ui.preferAdvancedEditor)
+                        .setOnMenuItemClickListener {
+                            viewModel.pref.ui.apply {
+                                preferAdvancedEditor = !preferAdvancedEditor
+                                it.isChecked = preferAdvancedEditor
+                            }
+                            true
+                        }
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem) = false
+        }, viewLifecycleOwner)
     }
 
     private fun dismiss() = parentFragmentManager.popBackStack()
