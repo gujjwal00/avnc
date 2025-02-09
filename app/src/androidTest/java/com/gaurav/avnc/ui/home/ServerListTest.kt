@@ -57,7 +57,7 @@ class ServerListTest {
 
     @Before
     fun before() {
-        runBlocking { dbRule.db.serverProfileDao.insert(testProfile) }
+        runBlocking { dbRule.db.serverProfileDao.save(testProfile) }
         onView(testProfileMatcher()).checkWillBeDisplayed()
     }
 
@@ -115,8 +115,8 @@ class ServerListTest {
         with(dbRule.db.serverProfileDao) {
             runBlocking {
                 deleteAll()
-                insert(ServerProfile(name = "pqr"))
-                insert(ServerProfile(name = "abc"))
+                save(ServerProfile(name = "pqr"))
+                save(ServerProfile(name = "abc"))
             }
         }
 

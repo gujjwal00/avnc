@@ -107,7 +107,7 @@ class AutoConnectTest {
     fun autoConnectOnStartup() {
         val server = TestServer().apply { start() }
         val profile = ServerProfile(host = server.host, port = server.port).apply { fConnectOnAppStart = true }
-        runBlocking { dbRule.db.serverProfileDao.insert(profile) }
+        runBlocking { dbRule.db.serverProfileDao.save(profile) }
         ActivityScenario.launch(HomeActivity::class.java).use {
             // Starting HomeActivity should automatically launch the connection
             onView(withId(R.id.frame_view)).checkWillBeDisplayed()

@@ -68,7 +68,7 @@ class IntentReceiverTest {
     fun uriForSavedConnection() {
         val server = TestServer().apply { start() }
         runBlocking {
-            dbRule.db.serverProfileDao.insert(ServerProfile(name = "Example", host = "localhost", port = server.port))
+            dbRule.db.serverProfileDao.save(ServerProfile(name = "Example", host = "localhost", port = server.port))
         }
         ActivityScenario.launch<Activity>(newUriIntent("vnc://?ConnectionName=Example")).use {
             onView(withId(R.id.frame_view)).checkWillBeDisplayed()
@@ -91,7 +91,7 @@ class IntentReceiverTest {
     fun simpleShortcut() {
         val server = TestServer().apply { start() }
         val profile = ServerProfile(host = "localhost", port = server.port)
-        runBlocking { profile.ID = dbRule.db.serverProfileDao.insert(profile) }
+        runBlocking { profile.ID = dbRule.db.serverProfileDao.save(profile) }
 
         ActivityScenario.launch<Activity>(newShortcutIntent(profile)).use {
             onView(withId(R.id.frame_view)).checkWillBeDisplayed()

@@ -65,7 +65,7 @@ class HomeActivity : AppCompatActivity() {
 
         //Observers
         viewModel.editProfileEvent.observe(this) { showProfileEditor(it) }
-        viewModel.profileInsertedEvent.observe(this) { onProfileInserted(it) }
+        viewModel.profileSavedEvent.observe(this) { onProfileInserted(it) }
         viewModel.profileDeletedEvent.observe(this) { onProfileDeleted(it) }
         viewModel.newConnectionEvent.observe(this) { startNewConnection(it) }
         viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }
@@ -147,7 +147,7 @@ class HomeActivity : AppCompatActivity() {
      */
     private fun onProfileDeleted(profile: ServerProfile) {
         Snackbar.make(binding.root, R.string.msg_server_profile_deleted, Snackbar.LENGTH_LONG)
-                .setAction(getString(R.string.title_undo)) { viewModel.insertProfile(profile) }
+                .setAction(getString(R.string.title_undo)) { viewModel.saveProfile(profile) }
                 .show()
     }
 

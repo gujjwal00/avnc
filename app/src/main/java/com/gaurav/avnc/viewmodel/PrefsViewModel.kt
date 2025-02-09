@@ -97,12 +97,12 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
                 if (deleteCurrentServers) {
                     db.withTransaction {
                         serverProfileDao.deleteAll()
-                        serverProfileDao.insert(data.profiles)
+                        serverProfileDao.save(data.profiles)
                     }
                 } else {
                     //Reset IDs so that they don't conflict with saved profiles
                     data.profiles.forEach { it.ID = 0 }
-                    serverProfileDao.insert(data.profiles)
+                    serverProfileDao.save(data.profiles)
                 }
 
             }.let {

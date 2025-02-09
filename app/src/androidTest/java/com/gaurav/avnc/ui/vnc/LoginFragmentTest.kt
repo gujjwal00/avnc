@@ -59,7 +59,7 @@ class LoginFragmentTest {
 
         private fun setupProfile() = runBlocking {
             dao.deleteAll()
-            (profileTemplate?.copy() ?: ServerProfile()).apply { ID = dao.insert(this) }
+            (profileTemplate?.copy() ?: ServerProfile()).apply { ID = dao.save(this) }
         }
 
         fun triggerLoginInfoRequest(type: LoginInfo.Type) {

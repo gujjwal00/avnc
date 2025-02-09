@@ -68,7 +68,7 @@ class ImportExportTest {
         val sampleName = "Days of our Lives"
         val sampleSecret = "Drake Ramoray"
         val profile = ServerProfile(name = sampleName, password = sampleSecret, sshPassword = sampleSecret, sshPrivateKey = sampleSecret)
-        runBlocking { MainDb.getInstance(targetContext).serverProfileDao.insert(profile) }
+        runBlocking { MainDb.getInstance(targetContext).serverProfileDao.save(profile) }
 
         // Setup export file
         val file = File.createTempFile("avnc", "test")
@@ -97,7 +97,7 @@ class ImportExportTest {
         val sampleName = "Days of our Lives"
         val sampleSecret = "Drake Ramoray"
         val profile = ServerProfile(name = sampleName, password = sampleSecret, sshPassword = sampleSecret, sshPrivateKey = sampleSecret)
-        runBlocking { MainDb.getInstance(targetContext).serverProfileDao.insert(profile) }
+        runBlocking { MainDb.getInstance(targetContext).serverProfileDao.save(profile) }
 
         // Setup export file
         val file = File.createTempFile("avnc", "test")

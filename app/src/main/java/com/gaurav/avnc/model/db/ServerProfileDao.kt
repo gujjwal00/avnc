@@ -11,9 +11,9 @@ package com.gaurav.avnc.model.db
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import com.gaurav.avnc.model.ServerProfile
 
 @Dao
@@ -41,12 +41,19 @@ interface ServerProfileDao {
     @Query("SELECT * FROM profiles WHERE name LIKE :query OR host LIKE :query OR sshHost LIKE :query ORDER BY useCount DESC")
     fun search(query: String): LiveData<List<ServerProfile>>
 
-    @Insert
-    suspend fun insert(profile: ServerProfile): Long
+    /**
+     * Adds given [profile] to database, and returns its ID.
+     * If a profile with given ID already exits, updates it, and returns -1.
+     */
+    @Upsert
+    suspend fun save(profile: ServerProfile): Long
 
-    @Insert
-    suspend fun insert(profiles: List<ServerProfile>)
+    @Upsert
+    suspend fun save(profiles: List<ServerProfile>)
 
+    /**
+     * [save] can be used for this, but [update] makes the intent more clear.
+     */
     @Update
     suspend fun update(profile: ServerProfile)
 

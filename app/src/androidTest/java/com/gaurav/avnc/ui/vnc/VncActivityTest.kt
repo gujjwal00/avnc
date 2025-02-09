@@ -39,7 +39,6 @@ import com.gaurav.avnc.targetContext
 import com.gaurav.avnc.targetPrefs
 import com.gaurav.avnc.vnc.XKeySym
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -106,7 +105,7 @@ class VncActivityTest {
         profileModifier?.invoke(profile)
         if (useDatabase) {
             runBlocking {
-                profile.ID = dbRule.db.serverProfileDao.insert(profile)
+                profile.ID = dbRule.db.serverProfileDao.save(profile)
             }
         }
         val intent = createVncIntent(targetContext, profile)
