@@ -46,7 +46,7 @@
                 <EditText
                     android:id="@+id/host"
                     style="@style/FormField.EditText"
-                    android:layout_weight=".8"
+                    android:layout_weight="1"
                     android:drawableStart="@{profile.useRepeater ? @drawable/ic_swap :  @drawable/ic_computer}"
                     android:hint="@{profile.useRepeater ? @string/hint_repeater_host : @string/hint_host}"
                     android:importantForAutofill="no"
@@ -58,7 +58,8 @@
                     android:id="@+id/port"
                     style="@style/FormField.EditText"
                     android:layout_marginStart="0dp"
-                    android:layout_weight=".2"
+                    android:ems="3"
+                    android:layout_width="wrap_content"
                     android:hint="@string/hint_port"
                     android:importantForAutofill="no"
                     android:inputType="number"
