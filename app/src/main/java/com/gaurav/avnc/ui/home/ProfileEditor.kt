@@ -178,6 +178,7 @@ class AdvancedProfileEditor : Fragment() {
         binding.viewModel = viewModel
 
         binding.toolbar.title = getString(getTitle(this))
+        binding.tryBtn.setOnClickListener { tryConnection() }
         binding.saveBtn.setOnClickListener { save() }
         binding.cancelBtn.setOnClickListener { dismiss() }
         binding.toolbar.setNavigationOnClickListener { dismiss() }
@@ -260,6 +261,17 @@ class AdvancedProfileEditor : Fragment() {
         }
         homeViewModel.saveProfile(viewModel.prepareProfileForSave())
         dismiss()
+    }
+
+    private fun tryConnection() {
+        if (!validate()) {
+            highlightFieldWithError()
+            return
+        }
+        // Clear the ID to make sure VncActivity doesn't make any changes
+        // to profile being edited here
+        val profile = viewModel.prepareProfileForSave().copy(ID = 0)
+        homeViewModel.startConnection(profile)
     }
 
     private fun validate(): Boolean {

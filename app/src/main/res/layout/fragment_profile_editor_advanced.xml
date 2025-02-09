@@ -519,6 +519,16 @@
                 android:text="@string/title_cancel" />
 
             <Button
+                android:id="@+id/try_btn"
+                style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/title_try"
+                app:icon="@drawable/ic_launch"
+                app:iconGravity="end" />
+
+            <Button
                 android:id="@+id/save_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
