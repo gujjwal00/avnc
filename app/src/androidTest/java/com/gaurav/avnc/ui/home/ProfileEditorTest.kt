@@ -9,18 +9,38 @@
 package com.gaurav.avnc.ui.home
 
 import androidx.core.content.edit
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ScrollToAction
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.RootMatchers.isDialog
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
+import androidx.test.espresso.matcher.ViewMatchers.withHint
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withParent
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.gaurav.avnc.*
+import com.gaurav.avnc.CleanPrefsRule
+import com.gaurav.avnc.EmptyDatabaseRule
+import com.gaurav.avnc.R
+import com.gaurav.avnc.TestServer
+import com.gaurav.avnc.checkIsDisplayed
+import com.gaurav.avnc.checkIsNotDisplayed
+import com.gaurav.avnc.checkWillBeDisplayed
+import com.gaurav.avnc.doClick
+import com.gaurav.avnc.doTypeText
 import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.performWithTimeout
+import com.gaurav.avnc.setupFileOpenIntent
+import com.gaurav.avnc.targetContext
+import com.gaurav.avnc.targetPrefs
 import org.hamcrest.core.AllOf.allOf
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -38,6 +58,10 @@ class BasicEditorTest {
     @Rule
     @JvmField
     val dbRule = EmptyDatabaseRule()
+
+    @Rule
+    @JvmField
+    val prefRule = CleanPrefsRule()
 
     @Test
     fun createSimpleProfile() {
@@ -97,13 +121,42 @@ class BasicEditorTest {
 
     @Test
     fun directlyOpenAdvancedMode() {
-        try {
-            targetPrefs.edit { putBoolean("prefer_advanced_editor", true) }
-            onView(withContentDescription(R.string.desc_add_new_server_btn)).doClick()
-            checkAdvancedModeIsOpen()
-        } finally {
-            targetPrefs.edit { putBoolean("prefer_advanced_editor", false) }
-        }
+        // open advanced mode
+        onView(withContentDescription(R.string.desc_add_new_server_btn)).doClick()
+        closeSoftKeyboard()
+        onView(withText(R.string.title_advanced)).doClick()
+        checkAdvancedModeIsOpen()
+
+        // set as default
+        Espresso.openActionBarOverflowOrOptionsMenu(targetContext)
+        onView(withText(R.string.title_always_show_advanced_editor)).doClick()
+        Espresso.pressBack()
+
+        // it should now open by default
+        onView(withContentDescription(R.string.desc_add_new_server_btn)).doClick()
+        checkAdvancedModeIsOpen()
+        Assert.assertTrue(targetPrefs.getBoolean("prefer_advanced_editor", false))
+    }
+
+    @Test
+    fun tryProfileBeforeSaving() {
+        onView(withContentDescription(R.string.desc_add_new_server_btn)).doClick()
+        closeSoftKeyboard()
+        onView(withText(R.string.title_advanced)).doClick()
+        checkAdvancedModeIsOpen()
+
+        val server = TestServer()
+        server.start()
+        onView(withHint(R.string.hint_host)).doTypeText(server.host)
+        onView(withHint(R.string.hint_port)).perform(ViewActions.clearText()).doTypeText(server.port.toString())
+        onView(withText(R.string.title_try)).doClick()
+
+        onView(withId(R.id.frame_view)).checkWillBeDisplayed()
+        onView(withId(R.id.status_container)).checkIsNotDisplayed()
+
+        Espresso.pressBack()
+        onView(withText(R.string.title_try)).checkWillBeDisplayed()
+        checkAdvancedModeIsOpen()
     }
 }
 
