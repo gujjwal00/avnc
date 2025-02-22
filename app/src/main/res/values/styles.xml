@@ -39,6 +39,8 @@
     -->
     <style name="App.Theme" parent="App.BaseTheme">
         <item name="appBarLayoutStyle">@style/Widget.MaterialComponents.AppBarLayout.Surface</item>
+        <!--Temporarily opt-out of edge-to-edge on A15-->
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
     </style>
 
     <style name="AlertDialog.Dimmed" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">

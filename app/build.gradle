@@ -9,13 +9,13 @@ plugins {
 android {
     namespace 'com.gaurav.avnc'
 
-    compileSdk 34
+    compileSdk 35
     ndkVersion "26.1.10909125"
 
     defaultConfig {
         applicationId "com.gaurav.avnc"
         minSdk 21
-        targetSdk 34
+        targetSdk 35
         versionCode 42
         versionName "2.8.0"
 
