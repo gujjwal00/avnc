@@ -224,4 +224,9 @@
     <string name="pref_customize_virtual_keys">Налаштувати клавіші</string>
     <string name="pref_forget_known_hosts">Забудьте відомих хостів</string>
     <string name="title_connect_on_app_start">Автоматичне підключення під час запуску програми</string>
+    <string name="pref_gesture_action_left_press">Тривале натискання</string>
+    <string name="msg_invalid_mac_address">Недійсна MAC-адреса</string>
+    <string name="title_try">Спробуй</string>
+    <string name="title_always_show_advanced_editor">Завжди показувати додаткові параметри</string>
+    <string name="msg_required">Обов\'язковий</string>
 </resources>

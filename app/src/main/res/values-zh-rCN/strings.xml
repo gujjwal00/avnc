@@ -215,4 +215,9 @@
     <string name="title_forget">忘记</string>
     <string name="pref_forget_known_hosts_question">忘记已知 SSH 主机和信任的服务器证书？</string>
     <string name="title_export_passwords_and_keys">导出密码和密钥</string>
+    <string name="pref_gesture_action_left_press">长按</string>
+    <string name="title_try">尝试</string>
+    <string name="title_always_show_advanced_editor">始终显示高级选项</string>
+    <string name="msg_required">必需</string>
+    <string name="msg_invalid_mac_address">无效的 MAC 地址</string>
 </resources>
