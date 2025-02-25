@@ -1,0 +1,4 @@
+* Added 'Long-press' action for long press gesture
+* Added a 'Try' button to test the connection before saving a server
+* Many improvements to advanced server options
+* New language: Czech by zenobit
