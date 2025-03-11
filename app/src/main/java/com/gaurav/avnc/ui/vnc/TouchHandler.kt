@@ -199,7 +199,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         override fun onMultiFingerTap(e: MotionEvent, fingerCount: Int) {
             when (fingerCount) {
                 2 -> dispatcher.onTap2(e.point())
-                // Taps by 3+ fingers are not exposed yet
+                3 -> dispatcher.onTap3(e.point()) // TODO: only for touchpad mode
             }
         }
 

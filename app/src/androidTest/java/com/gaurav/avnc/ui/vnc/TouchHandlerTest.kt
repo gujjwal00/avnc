@@ -97,6 +97,16 @@ class TouchHandlerTest {
     }
 
     @Test
+    fun threeFingerTap() {
+        sendDown()
+        sendEvent(Factory.obtainPointerDownEvent(downEvent, testPoint, PointF(50f, 50f)))
+        sendEvent(Factory.obtainPointerUpEvent(downEvent, testPoint, PointF(50f, 50f)))
+        sendEvent(Factory.obtainPointerUpEvent(downEvent, testPoint, PointF(50f, 50f)))
+        sendUp()
+        verify { mockDispatcher.onTap3(testPoint) }
+    }
+
+    @Test
     fun longPress() {
         setupWithPref(dragEnabled = false)
         sendDown()

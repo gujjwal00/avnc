@@ -48,6 +48,14 @@
             app:title="@string/pref_two_finger_tap"
             app:useSimpleSummaryProvider="true" />
 
+        <ListPreference
+            app:defaultValue="middle-click"
+            app:entries="@array/tap3_action_entries"
+            app:entryValues="@array/tap3_action_values"
+            app:key="gesture_tap3"
+            app:title="@string/pref_three_finger_tap"
+            app:useSimpleSummaryProvider="true" />
+
         <com.gaurav.avnc.ui.prefs.ListPreferenceEx
             app:defaultValue="pan"
             app:entries="@array/swipe1_action_entries"

@@ -69,6 +69,7 @@ class Dispatcher(private val activity: VncActivity) {
 
         val tap1Action = selectPointAction(gesturePref.tap1)
         val tap2Action = selectPointAction(gesturePref.tap2)
+        val tap3Action = selectPointAction(gesturePref.tap3)
         val doubleTapAction = selectPointAction(gesturePref.doubleTap)
         val longPressAction = selectPointAction(gesturePref.longPress)
 
@@ -134,6 +135,7 @@ class Dispatcher(private val activity: VncActivity) {
 
     fun onTap1(p: PointF) = config.tap1Action(p)
     fun onTap2(p: PointF) = config.tap2Action(p)
+    fun onTap3(p: PointF) = config.tap3Action(p)
     fun onDoubleTap(p: PointF) = config.doubleTapAction(p)
     fun onLongPress(p: PointF) = config.longPressAction(p)
 
