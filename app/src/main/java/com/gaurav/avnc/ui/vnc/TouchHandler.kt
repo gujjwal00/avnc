@@ -225,6 +225,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
                 1 -> dispatcher.onSwipe1(startPoint, currentPoint, normalizedDx, normalizedDy)
                 2 -> if (swipeVsScale.shouldSwipe())
                     dispatcher.onSwipe2(startPoint, currentPoint, normalizedDx, normalizedDy)
+                3 -> dispatcher.onSwipe3(startPoint, currentPoint, normalizedDx, normalizedDy)
             }
         }
 
