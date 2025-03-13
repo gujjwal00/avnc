@@ -62,7 +62,7 @@
     <string-array name="tap3_action_entries">
         <item>@string/pref_gesture_action_none</item>
         <item>@string/pref_gesture_action_right_click</item>
-        <item>@string/pref_gesture_action_open_keyboard</item>
+        <item>@string/pref_gesture_action_middle_click</item>
     </string-array>
     <string-array name="tap3_action_values">
         <item>none</item>

@@ -72,7 +72,7 @@
             app:title="@string/pref_swipe2"
             app:useSimpleSummaryProvider="true" />
 
-        <com.gaurav.avnc.ui.prefs.ListPreferenceEx
+        <ListPreference
             app:defaultValue="pan"
             app:entries="@array/swipe3_action_entries"
             app:entryValues="@array/swipe3_action_values"
