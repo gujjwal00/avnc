@@ -117,6 +117,10 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
                 enableIf { it["gesture_style"] != "touchpad" }
                 disabledStateSummary = getString(R.string.pref_gesture_action_move_pointer)
             }
+            findPreference<ListPreferenceEx>("gesture_swipe3")!!.apply {
+                enableIf { it["gesture_style"] == "touchpad" }
+                disabledStateSummary = getString(R.string.pref_gesture_action_move_pointer)
+            }
             findPreference<ListPreferenceEx>("gesture_long_press_swipe")!!.apply {
                 enableIf { it["gesture_long_press"] != "left-press" }
                 disabledStateSummary = getString(R.string.pref_gesture_action_none)
