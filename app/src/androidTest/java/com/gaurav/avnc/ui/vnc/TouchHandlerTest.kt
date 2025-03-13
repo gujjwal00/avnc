@@ -137,6 +137,22 @@ class TouchHandlerTest {
     }
 
     @Test
+    fun swipe3Finger() {
+        val a1 = PointF(100f, 100f)
+        val a2 = PointF(200f, 200f)
+        val a3 = PointF(300f, 300f)
+        val b1 = PointF(400f, 400f)
+        val b2 = PointF(500f, 500f)
+        val b3 = PointF(600f, 600f)
+
+        sendDown(a1)
+        sendEvent(Factory.obtainPointerDownEvent(downEvent, a1, b1))
+        sendEvent(Factory.obtainMoveEvent(downEvent, a2, b2))
+        sendEvent(Factory.obtainMoveEvent(downEvent, a3, b3))
+        verify { mockDispatcher.onSwipe3(a1, a2, 100f, 100f) }
+    }
+
+    @Test
     fun scale() {
         val a1 = PointF(300f, 300f)
         val b1 = PointF(400f, 400f)
