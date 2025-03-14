@@ -49,7 +49,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:defaultValue="middle-click"
+            app:defaultValue="none"
             app:entries="@array/tap3_action_entries"
             app:entryValues="@array/tap3_action_values"
             app:key="gesture_tap3"

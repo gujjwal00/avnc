@@ -14,7 +14,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
@@ -117,9 +116,6 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
             findPreference<ListPreferenceEx>("gesture_swipe1")!!.apply {
                 enableIf { it["gesture_style"] != "touchpad" }
                 disabledStateSummary = getString(R.string.pref_gesture_action_move_pointer)
-            }
-            findPreference<ListPreference>("gesture_swipe3")!!.apply {
-                enableIf { it["gesture_style"] == "touchpad" }
             }
             findPreference<ListPreferenceEx>("gesture_long_press_swipe")!!.apply {
                 enableIf { it["gesture_long_press"] != "left-press" }
