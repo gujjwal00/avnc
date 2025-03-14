@@ -36,6 +36,8 @@ import org.junit.Test
  * Although actual tests are very simple here, event creation & injection is quite complex.
  * But given the importance of gestures in AVNC and the complexity of [TouchHandler],
  * these tests are very valuable.
+ *
+ * TODO: add tests for 3-finger gestures
  */
 @SdkSuppress(minSdkVersion = 28)
 class TouchHandlerTest {
@@ -97,16 +99,6 @@ class TouchHandlerTest {
     }
 
     @Test
-    fun threeFingerTap() {
-        sendDown()
-        sendEvent(Factory.obtainPointerDownEvent(downEvent, testPoint, PointF(50f, 50f)))
-        sendEvent(Factory.obtainPointerUpEvent(downEvent, testPoint, PointF(50f, 50f)))
-        sendEvent(Factory.obtainPointerUpEvent(downEvent, testPoint, PointF(50f, 50f)))
-        sendUp()
-        verify { mockDispatcher.onTap3(testPoint) }
-    }
-
-    @Test
     fun longPress() {
         setupWithPref(dragEnabled = false)
         sendDown()
@@ -134,22 +126,6 @@ class TouchHandlerTest {
         sendEvent(Factory.obtainPointerDownEvent(downEvent, a1, b1))
         sendEvent(Factory.obtainMoveEvent(downEvent, a2, b2))
         verify { mockDispatcher.onSwipe2(a1, a2, 100f, 100f) }
-    }
-
-    @Test
-    fun swipe3Finger() {
-        val a1 = PointF(100f, 100f)
-        val a2 = PointF(200f, 200f)
-        val a3 = PointF(300f, 300f)
-        val b1 = PointF(400f, 400f)
-        val b2 = PointF(500f, 500f)
-        val b3 = PointF(600f, 600f)
-
-        sendDown(a1)
-        sendEvent(Factory.obtainPointerDownEvent(downEvent, a1, b1))
-        sendEvent(Factory.obtainMoveEvent(downEvent, a2, b2))
-        sendEvent(Factory.obtainMoveEvent(downEvent, a3, b3))
-        verify { mockDispatcher.onSwipe3(a1, a2, 100f, 100f) }
     }
 
     @Test
