@@ -183,10 +183,12 @@
     <string name="pref_gesture_style_touchpad_summary">Do actions at pointer</string>
     <string name="pref_single_tap">Single tap</string>
     <string name="pref_two_finger_tap">Two-finger tap</string>
+    <string name="pref_three_finger_tap">Three-finger tap</string>
     <string name="pref_double_tap">Double tap</string>
     <string name="pref_long_press">Long press</string>
     <string name="pref_swipe1">One-finger swipe</string>
     <string name="pref_swipe2">Two-finger swipe</string>
+    <string name="pref_swipe3">Three-finger swipe</string>
     <string name="pref_double_tap_swipe">Double tap and swipe</string>
     <string name="pref_long_press_swipe">Long press and swipe</string>
     <string name="pref_swipe_sensitivity">Swipe sensitivity</string>

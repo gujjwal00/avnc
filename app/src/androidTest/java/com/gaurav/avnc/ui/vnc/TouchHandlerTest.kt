@@ -36,6 +36,8 @@ import org.junit.Test
  * Although actual tests are very simple here, event creation & injection is quite complex.
  * But given the importance of gestures in AVNC and the complexity of [TouchHandler],
  * these tests are very valuable.
+ *
+ * TODO: add tests for 3-finger gestures
  */
 @SdkSuppress(minSdkVersion = 28)
 class TouchHandlerTest {

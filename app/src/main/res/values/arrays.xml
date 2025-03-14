@@ -59,6 +59,17 @@
         <item>open-keyboard</item>
     </string-array>
 
+    <string-array name="tap3_action_entries">
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_right_click</item>
+        <item>@string/pref_gesture_action_middle_click</item>
+    </string-array>
+    <string-array name="tap3_action_values">
+        <item>none</item>
+        <item>right-click</item>
+        <item>middle-click</item>
+    </string-array>
+
     <string-array name="double_tap_action_entries">
         <item>@string/pref_gesture_action_none</item>
         <item>@string/pref_gesture_action_double_click</item>
@@ -106,6 +117,17 @@
         <item>@string/pref_gesture_action_remote_scroll</item>
     </string-array>
     <string-array name="swipe2_action_values">
+        <item>none</item>
+        <item>pan</item>
+        <item>remote-scroll</item>
+    </string-array>
+
+    <string-array name="swipe3_action_entries">
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_pan</item>
+        <item>@string/pref_gesture_action_remote_scroll</item>
+    </string-array>
+    <string-array name="swipe3_action_values">
         <item>none</item>
         <item>pan</item>
         <item>remote-scroll</item>

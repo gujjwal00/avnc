@@ -69,12 +69,14 @@ class Dispatcher(private val activity: VncActivity) {
 
         val tap1Action = selectPointAction(gesturePref.tap1)
         val tap2Action = selectPointAction(gesturePref.tap2)
+        val tap3Action = selectPointAction(gesturePref.tap3)
         val doubleTapAction = selectPointAction(gesturePref.doubleTap)
         val longPressAction = selectPointAction(gesturePref.longPress)
 
         val swipe1Pref = if (gestureStyle == "touchpad") "move-pointer" else gesturePref.swipe1
         val swipe1Action = selectSwipeAction(swipe1Pref)
         val swipe2Action = selectSwipeAction(gesturePref.swipe2)
+        val swipe3Action = selectSwipeAction(gesturePref.swipe3)
         val doubleTapSwipeAction = selectSwipeAction(gesturePref.doubleTapSwipe)
         val longPressSwipeAction = selectSwipeAction(gesturePref.longPressSwipe)
         val flingAction = selectFlingAction()
@@ -134,11 +136,13 @@ class Dispatcher(private val activity: VncActivity) {
 
     fun onTap1(p: PointF) = config.tap1Action(p)
     fun onTap2(p: PointF) = config.tap2Action(p)
+    fun onTap3(p: PointF) = config.tap3Action(p)
     fun onDoubleTap(p: PointF) = config.doubleTapAction(p)
     fun onLongPress(p: PointF) = config.longPressAction(p)
 
     fun onSwipe1(sp: PointF, cp: PointF, dx: Float, dy: Float) = config.swipe1Action(sp, cp, dx, dy)
     fun onSwipe2(sp: PointF, cp: PointF, dx: Float, dy: Float) = config.swipe2Action(sp, cp, dx, dy)
+    fun onSwipe3(sp: PointF, cp: PointF, dx: Float, dy: Float) = config.swipe3Action(sp, cp, dx, dy)
     fun onDoubleTapSwipe(sp: PointF, cp: PointF, dx: Float, dy: Float) = config.doubleTapSwipeAction(sp, cp, dx, dy)
     fun onLongPressSwipe(sp: PointF, cp: PointF, dx: Float, dy: Float) = config.longPressSwipeAction(sp, cp, dx, dy)
 
