@@ -36,8 +36,6 @@ import org.junit.Test
  * Although actual tests are very simple here, event creation & injection is quite complex.
  * But given the importance of gestures in AVNC and the complexity of [TouchHandler],
  * these tests are very valuable.
- *
- * TODO: add tests for 3-finger gestures
  */
 @SdkSuppress(minSdkVersion = 28)
 class TouchHandlerTest {
@@ -99,6 +97,21 @@ class TouchHandlerTest {
     }
 
     @Test
+    fun threeFingerTap() {
+        val f1 = PointF(100f, 100f)
+        val f2 = PointF(200f, 200f)
+        val f3 = PointF(300f, 300f)
+
+        sendDown(f1)
+        sendEvent(Factory.obtainPointerDownEvent(downEvent, f1, f2))
+        sendEvent(Factory.obtainPointerDownEvent(downEvent, f1, f2, f3))
+        sendEvent(Factory.obtainPointerUpEvent(downEvent, f1, f2, f3))
+        sendEvent(Factory.obtainPointerUpEvent(downEvent, f1, f2))
+        sendUp(f1)
+        verify { mockDispatcher.onTap3(f1) }
+    }
+
+    @Test
     fun longPress() {
         setupWithPref(dragEnabled = false)
         sendDown()
@@ -126,6 +139,22 @@ class TouchHandlerTest {
         sendEvent(Factory.obtainPointerDownEvent(downEvent, a1, b1))
         sendEvent(Factory.obtainMoveEvent(downEvent, a2, b2))
         verify { mockDispatcher.onSwipe2(a1, a2, 100f, 100f) }
+    }
+
+    @Test
+    fun swipe3Finger() {
+        val f1a = PointF(100f, 100f)
+        val f1b = PointF(200f, 200f)
+        val f2a = PointF(400f, 100f)
+        val f2b = PointF(500f, 200f)
+        val f3a = PointF(800f, 100f)
+        val f3b = PointF(900f, 200f)
+
+        sendDown(f1a)
+        sendEvent(Factory.obtainPointerDownEvent(downEvent, f1a, f2a))
+        sendEvent(Factory.obtainPointerDownEvent(downEvent, f1a, f2a, f3a))
+        sendEvent(Factory.obtainMoveEvent(downEvent, f1b, f2b, f3b))
+        verify { mockDispatcher.onSwipe3(f1a, f1b, any(), 100f) }
     }
 
     @Test
@@ -403,7 +432,9 @@ class TouchHandlerTest {
 
         fun obtainPointerDownEvent(downEvent: MotionEvent, vararg coords: PointF): MotionEvent {
             check(coords.size >= 2)
-            return obtainMotionEvent(downEvent.downTime, now(), MotionEvent.ACTION_POINTER_DOWN, 0, coords.toList(), downEvent.source)
+            // Last touch-point is assumed to be the one going down
+            val pointerIndex = (coords.size - 1) shl MotionEvent.ACTION_POINTER_INDEX_SHIFT
+            return obtainMotionEvent(downEvent.downTime, now(), MotionEvent.ACTION_POINTER_DOWN or pointerIndex, 0, coords.toList(), downEvent.source)
         }
 
         fun obtainMoveEvent(downEvent: MotionEvent, vararg coords: PointF): MotionEvent {
@@ -412,7 +443,8 @@ class TouchHandlerTest {
 
         fun obtainPointerUpEvent(downEvent: MotionEvent, vararg coords: PointF): MotionEvent {
             check(coords.size >= 2)
-            return obtainMotionEvent(downEvent.downTime, now(), MotionEvent.ACTION_POINTER_UP, 0, coords.toList(), downEvent.source)
+            val pointerIndex = (coords.size - 1) shl MotionEvent.ACTION_POINTER_INDEX_SHIFT
+            return obtainMotionEvent(downEvent.downTime, now(), MotionEvent.ACTION_POINTER_UP or pointerIndex, 0, coords.toList(), downEvent.source)
         }
 
         fun obtainUpEvent(downEvent: MotionEvent, coord: PointF): MotionEvent {
