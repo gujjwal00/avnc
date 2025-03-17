@@ -73,8 +73,7 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
      */
     override fun onDrawFrame(gl: GL10?) {
         glClear(GL_COLOR_BUFFER_BIT)
-
-        if (!viewModel.client.connected)
+        if (!viewModel.client.connected || viewModel.profile.disableImageUpdates)
             return
 
         val state = viewModel.frameState.getSnapshot()

@@ -89,6 +89,13 @@ data class ServerProfile(
         var useRawEncoding: Boolean = false,
 
         /**
+         * Stop rendering frame buffer.
+         * This can save battery while still allowing control of the remote device.
+         */
+        @ColumnInfo(defaultValue = "0")
+        var disableImageUpdates: Boolean = false,
+
+        /**
          * Initial zoom for the viewer.
          * This will be used in portrait orientation, or when per-orientation zooming is disabled.
          */

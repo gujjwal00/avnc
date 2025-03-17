@@ -278,6 +278,26 @@
                     app:layout_constraintStart_toEndOf="@id/image_quality"
                     app:layout_constraintTop_toTopOf="@id/image_quality" />
 
+                <CheckBox
+                    android:id="@+id/disable_image_updates"
+                    style="@style/FormField.CheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/action_btn_size"
+                    android:checked="@={viewModel.disableImageUpdates}"
+                    android:text="@string/title_disable_image_updates"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/image_quality" />
+
+                <ImageButton
+                    android:id="@+id/disable_image_updates_help_btn"
+                    style="@style/ImageButton"
+                    android:contentDescription="@string/desc_help_btn"
+                    android:src="@drawable/ic_help"
+                    app:layout_constraintBottom_toBottomOf="@id/disable_image_updates"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/disable_image_updates"
+                    app:tint="?colorControlNormal" />
+
 
                 <!--Gesture style-->
                 <TextView
@@ -297,7 +317,7 @@
                     android:minHeight="@dimen/action_btn_size"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/image_quality"
-                    app:layout_constraintTop_toBottomOf="@id/image_quality"
+                    app:layout_constraintTop_toBottomOf="@id/disable_image_updates"
                     app:value="@={viewModel.profile.gestureStyle}"
                     app:valueDescriptions="@{ @stringArray/profile_editor_gesture_style_descriptions }"
                     app:valueLabels="@{ @stringArray/profile_editor_gesture_style_labels }"

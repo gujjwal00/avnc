@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 6,
-    "identityHash": "7d25813fc2619854164fe3d395f2aa28",
+    "identityHash": "3dece850f91de0f07a5614d6c32e3557",
     "entities": [
       {
         "tableName": "profiles",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `host` TEXT NOT NULL, `port` INTEGER NOT NULL, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `securityType` INTEGER NOT NULL, `channelType` INTEGER NOT NULL, `colorLevel` INTEGER NOT NULL, `imageQuality` INTEGER NOT NULL, `useRawEncoding` INTEGER NOT NULL DEFAULT 0, `zoom1` REAL NOT NULL DEFAULT 1.0, `zoom2` REAL NOT NULL DEFAULT 1.0, `viewOnly` INTEGER NOT NULL, `useLocalCursor` INTEGER NOT NULL, `serverTypeHint` TEXT NOT NULL DEFAULT '', `flags` INTEGER NOT NULL, `gestureStyle` TEXT NOT NULL DEFAULT 'auto', `screenOrientation` TEXT NOT NULL DEFAULT 'auto', `useCount` INTEGER NOT NULL, `useRepeater` INTEGER NOT NULL, `idOnRepeater` INTEGER NOT NULL, `resizeRemoteDesktop` INTEGER NOT NULL DEFAULT 0, `enableWol` INTEGER NOT NULL DEFAULT 0, `wolMAC` TEXT NOT NULL DEFAULT '', `sshHost` TEXT NOT NULL, `sshPort` INTEGER NOT NULL, `sshUsername` TEXT NOT NULL, `sshAuthType` INTEGER NOT NULL, `sshPassword` TEXT NOT NULL, `sshPrivateKey` TEXT NOT NULL, `sshPrivateKeyPassword` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `host` TEXT NOT NULL, `port` INTEGER NOT NULL, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `securityType` INTEGER NOT NULL, `channelType` INTEGER NOT NULL, `colorLevel` INTEGER NOT NULL, `imageQuality` INTEGER NOT NULL, `useRawEncoding` INTEGER NOT NULL DEFAULT 0, `disableImageUpdates` INTEGER NOT NULL DEFAULT 0, `zoom1` REAL NOT NULL DEFAULT 1.0, `zoom2` REAL NOT NULL DEFAULT 1.0, `viewOnly` INTEGER NOT NULL, `useLocalCursor` INTEGER NOT NULL, `serverTypeHint` TEXT NOT NULL DEFAULT '', `flags` INTEGER NOT NULL, `gestureStyle` TEXT NOT NULL DEFAULT 'auto', `screenOrientation` TEXT NOT NULL DEFAULT 'auto', `useCount` INTEGER NOT NULL, `useRepeater` INTEGER NOT NULL, `idOnRepeater` INTEGER NOT NULL, `resizeRemoteDesktop` INTEGER NOT NULL DEFAULT 0, `enableWol` INTEGER NOT NULL DEFAULT 0, `wolMAC` TEXT NOT NULL DEFAULT '', `sshHost` TEXT NOT NULL, `sshPort` INTEGER NOT NULL, `sshUsername` TEXT NOT NULL, `sshAuthType` INTEGER NOT NULL, `sshPassword` TEXT NOT NULL, `sshPrivateKey` TEXT NOT NULL, `sshPrivateKeyPassword` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "ID",
@@ -71,6 +71,13 @@
           {
             "fieldPath": "useRawEncoding",
             "columnName": "useRawEncoding",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "disableImageUpdates",
+            "columnName": "disableImageUpdates",
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "0"
@@ -223,7 +230,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7d25813fc2619854164fe3d395f2aa28')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3dece850f91de0f07a5614d6c32e3557')"
     ]
   }
 }
