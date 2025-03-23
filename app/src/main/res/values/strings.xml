@@ -126,6 +126,7 @@
     <string name="desc_discovery_btn">Discover servers</string>
     <string name="desc_discovery_stop_btn">Stop discovering servers</string>
     <string name="desc_discovery_running">Discovering servers on you network</string>
+    <string name="desc_toolbar_btn">Open toolbar</string>
     <string name="desc_keyboard_btn">Open keyboard</string>
     <string name="desc_virtual_keys_btn">Show virtual keys</string>
     <string name="desc_zoom_options_btn">Zoom options</string>
@@ -222,6 +223,7 @@
     <string name="pref_toolbar_alignment_option_start">Start</string>
     <string name="pref_toolbar_alignment_option_end">End</string>
     <string name="pref_toolbar_open_with_swipe">Swipe-in from edge to open</string>
+    <string name="pref_toolbar_open_with_button">Show button to open</string>
     <string name="pref_show_gesture_style_toggle">Show gesture style toggle</string>
     <string name="pref_zoom">Zoom</string>
     <string name="pref_zoom_min">Minimum</string>

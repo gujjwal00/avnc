@@ -31,6 +31,11 @@ fun invisibilityAdapter(view: View, isInvisible: Boolean) {
     view.isInvisible = isInvisible
 }
 
+@BindingAdapter("backgroundAlpha")
+fun backgroundAlphaAdapter(view: View, alpha: Double) {
+    view.background?.alpha = (alpha * 255).toInt().coerceIn(0, 255)
+}
+
 /**************************************************************************************************
  * Spinner value binding
  * These allows the Spinner to be populated using data-binding in XMl layouts.

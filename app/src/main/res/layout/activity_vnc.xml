@@ -42,15 +42,30 @@
             android:layout_height="match_parent"
             app:scrimColor="@{0}">
 
-
-            <!--FrameView-->
-            <com.gaurav.avnc.ui.vnc.FrameView
-                android:id="@+id/frame_view"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/bg_frame_view"
-                android:focusable="true"
-                android:focusableInTouchMode="true" />
+                android:layout_height="match_parent">
+
+                <!--FrameView-->
+                <com.gaurav.avnc.ui.vnc.FrameView
+                    android:id="@+id/frame_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_frame_view"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true" />
+
+                <ImageButton
+                    android:id="@+id/open_toolbar_btn"
+                    android:layout_width="32dp"
+                    android:layout_height="36dp"
+                    android:layout_margin="@dimen/margin_small"
+                    android:background="@drawable/bg_round_rect_ripple"
+                    android:contentDescription="@string/desc_toolbar_btn"
+                    android:src="@drawable/ic_toolbar_open"
+                    android:visibility="gone"
+                    app:backgroundAlpha="@{.5}" />
+            </FrameLayout>
 
             <!--A View containing helpful tips will be dynamically inserted here for new users -->
 

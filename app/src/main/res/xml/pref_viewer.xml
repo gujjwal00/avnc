@@ -88,6 +88,11 @@
             app:title="@string/pref_toolbar_open_with_swipe" />
 
         <SwitchPreference
+            app:defaultValue="false"
+            app:key="toolbar_open_with_button"
+            app:title="@string/pref_toolbar_open_with_button" />
+
+        <SwitchPreference
             app:defaultValue="true"
             app:key="toolbar_show_gesture_style_toggle"
             app:title="@string/pref_show_gesture_style_toggle" />

@@ -22,10 +22,12 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
+import com.gaurav.avnc.CleanPrefsRule
 import com.gaurav.avnc.EmptyDatabaseRule
 import com.gaurav.avnc.ProgressAssertion
 import com.gaurav.avnc.R
 import com.gaurav.avnc.TestServer
+import com.gaurav.avnc.checkIsDisplayed
 import com.gaurav.avnc.checkIsNotDisplayed
 import com.gaurav.avnc.checkWillBeDisplayed
 import com.gaurav.avnc.doClick
@@ -94,6 +96,10 @@ class VncActivityTest {
     @Rule
     @JvmField
     val dbRule = EmptyDatabaseRule()
+
+    @Rule
+    @JvmField
+    val prefRule = CleanPrefsRule()
 
     //TODO: Simplify these tests
     private fun testWrapper(useDatabase: Boolean = false, profileModifier: ((ServerProfile) -> Unit)? = null,
@@ -228,6 +234,21 @@ class VncActivityTest {
             onView(withId(R.id.gesture_style_touchpad)).doClick()
             pollingAssert { assertEquals("touchpad", loadProfile()?.gestureStyle) }
             it.onActivity { a -> assertEquals("touchpad", a.viewModel.activeGestureStyle.value) }
+        }
+    }
+
+    @Test
+    fun openToolbarWithButton() {
+        targetPrefs.edit {
+            putBoolean("toolbar_open_with_button", true)
+            putBoolean("run_info_has_shown_viewer_help", true)
+        }
+
+        testWrapper {
+            onView(withId(R.id.open_toolbar_btn)).checkWillBeDisplayed().doClick()
+            onView(withId(R.id.keyboard_btn)).checkWillBeDisplayed()
+            onView(withId(R.id.virtual_keys_btn)).checkIsDisplayed()
+            onView(withId(R.id.zoom_options)).checkIsDisplayed()
         }
     }
 }

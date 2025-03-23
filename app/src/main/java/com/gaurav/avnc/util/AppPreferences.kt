@@ -36,6 +36,7 @@ class AppPreferences(context: Context) {
         val keepScreenOn; get() = prefs.getBoolean("keep_screen_on", true)
         val toolbarAlignment; get() = prefs.getString("toolbar_alignment", "start")
         val toolbarOpenWithSwipe; get() = prefs.getBoolean("toolbar_open_with_swipe", true)
+        val toolbarOpenWithButton; get() = prefs.getBoolean("toolbar_open_with_button", false)
         val zoomMax; get() = prefs.getInt("zoom_max", 500) / 100F
         val zoomMin; get() = prefs.getInt("zoom_min", 50) / 100F
         val perOrientationZoom; get() = prefs.getBoolean("per_orientation_zoom", true)
@@ -95,6 +96,7 @@ class AppPreferences(context: Context) {
         var hasShownViewerHelp by BooleanPref("run_info_has_shown_viewer_help", false)
         var hasShownV2WelcomeMsg by BooleanPref("run_info_has_shown_v2_welcome_msg", false)
         var showVirtualKeys by BooleanPref("run_info_show_virtual_keys", false)
+        var toolbarOpenerBtnVerticalBias by FloatPref("run_info_toolbar_opener_vertical_bias", .5f)
     }
 
     val ui = UI()
@@ -111,6 +113,7 @@ class AppPreferences(context: Context) {
 
     inner class BooleanPref(val key: String, default: Boolean) : Pref<Boolean>({ getBoolean(key, default) }, { putBoolean(key, it) })
     inner class StringPref(val key: String, default: String?) : Pref<String?>({ getString(key, default) }, { putString(key, it) })
+    inner class FloatPref(val key: String, default: Float) : Pref<Float>({ getFloat(key, default) }, { putFloat(key, it) })
 
     /**
      * For some preference changes we want to provide live feedback to user.
