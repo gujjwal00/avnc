@@ -41,17 +41,18 @@ class ConfirmationDialog : DialogFragment() {
                 .setTitle(data.first)
                 .setMessage(data.second)
                 .setPositiveButton(R.string.title_continue) { _, _ -> viewModel.confirmationRequest.offerResponse(true) }
-                .setNegativeButton(android.R.string.cancel) { _, _ -> abortSession() }
+                .setNegativeButton(android.R.string.cancel) { _, _ -> doCancel() }
                 .create().apply {
                     setCanceledOnTouchOutside(false)
                 }
     }
 
     override fun onCancel(dialog: DialogInterface) {
-        abortSession()
+        doCancel()
     }
 
-    private fun abortSession() {
+    private fun doCancel() {
+        viewModel.confirmationRequest.offerResponse(false)
         requireActivity().finish()
     }
 }
