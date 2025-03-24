@@ -119,7 +119,7 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
             }
             findPreference<ListPreferenceEx>("gesture_long_press_swipe")!!.apply {
                 enableIf { it["gesture_long_press"] != "left-press" }
-                disabledStateSummary = getString(R.string.pref_gesture_action_none)
+                disabledStateSummary = getText(R.string.pref_long_press_swipe_disabled_summary)
             }
 
             // To reduce clutter & avoid 'UI overload', pref to invert vertical scrolling is
