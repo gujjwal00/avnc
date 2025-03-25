@@ -428,7 +428,7 @@ object VirtualKeyLayoutConfig {
 object VirtualKeyViewFactory {
 
     /**
-     * There are three types of Views tht are generated:
+     * There are three types of Views that are generated:
      *
      * [ToggleButton] - if [key] is a toggle
      * [ImageButton]  - if [key] has an icon (label will be ignored)
