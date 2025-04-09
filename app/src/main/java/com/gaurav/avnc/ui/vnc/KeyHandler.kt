@@ -88,6 +88,7 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
     var enableMacOSCompatibility = false
     var emitLegacyKeysym = true
     private var hasSentShiftDown = false
+    private val inputPref = prefs.input
 
     /**
      * Shortcut to send both up & down events. Useful for Virtual Keys.
@@ -106,119 +107,272 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
         if (shouldIgnoreEvent(event))
             return false
 
-        val handled = handleKeyEvent(overrideKeyEvent(event))
+        val handled = handleKeyEvent(event)
 
         postProcessEvent(event)
         return handled
     }
 
+    /************************************************************************************
+     * Event Handling
+     ***********************************************************************************/
+    /**
+     * Each incoming [KeyEvent] is broken down into one or more [InEvent]s.
+     * This representation simplifies filtering & mapping of events.
+     */
+    data class InEvent(
+            var isDown: Boolean,
+            var keyCode: Int = 0,
+            var uChar: Int = 0,
+            var scanCode: Int = 0
+    )
 
     /**
-     * This will parse the [event] and call [emitForKeyEvent] appropriately.
+     * [OutEvent] represents a key event in terms of RFB protocol.
+     * Unless filtered, each [InEvent] maps to an [OutEvent].
+     */
+    data class OutEvent(
+            var isDown: Boolean,
+            var keySym: Int = 0,
+            var xtCode: Int = 0
+    )
+
+    /**
+     * Event processing model
+     */
+    data class EventModel(
+            val source: KeyEvent,
+            val inEvents: ArrayList<InEvent> = arrayListOf(),
+            val outEvents: ArrayList<OutEvent> = arrayListOf()
+    )
+
+    /**
+     * Parses given [event] and sends corresponding key events to server.
+     *
+     * Returns true if sent successfully.
+     *         false if not sent. Can happen if client is disconnected,
+     *         or if event could not be mapped to a suitable XKeySym
      */
     private fun handleKeyEvent(event: KeyEvent): Boolean {
+        val model = EventModel(event)
+
+        generateInEvents(model)
+        remapInEvents(model)
+        composeDiacritics(model)
+        generateFakeShifts(model)
+        generateOutEvents(model)
+        remapOutEvents(model)
+
+        return emit(model)
+    }
+
+    private fun generateInEvents(model: EventModel) {
+        val event = model.source
 
         //Deprecated action types are still received for non-ASCII characters
         @Suppress("DEPRECATION")
         when (event.action) {
 
-            KeyEvent.ACTION_DOWN -> return emitForKeyEvent(event.keyCode, getUnicodeChar(event), true, event.scanCode)
-            KeyEvent.ACTION_UP -> return emitForKeyEvent(event.keyCode, getUnicodeChar(event), false, event.scanCode)
+            KeyEvent.ACTION_DOWN -> model.inEvents += InEvent(true, event.keyCode, getUnicodeChar(event), event.scanCode)
+            KeyEvent.ACTION_UP -> model.inEvents += InEvent(false, event.keyCode, getUnicodeChar(event), event.scanCode)
 
             KeyEvent.ACTION_MULTIPLE -> {
                 if (event.keyCode == KeyEvent.KEYCODE_UNKNOWN) {
 
                     // Here, only Unicode characters are available.
-                    for (uChar in toCodePoints(event.characters)) {
-                        emitForKeyEvent(0, uChar, true)
-                        emitForKeyEvent(0, uChar, false)
+                    forEachCodePointOf(event.characters) {
+                        model.inEvents += InEvent(true, uChar = it)
+                        model.inEvents += InEvent(false, uChar = it)
                     }
 
                 } else {
 
                     // Here, only keyCode is available.
                     // According to Android docs, this case doesn't happen anymore.
-                    for (i in 1..event.repeatCount) {
-                        emitForKeyEvent(event.keyCode, 0, true)
-                        emitForKeyEvent(event.keyCode, 0, false)
+                    repeat(event.repeatCount) {
+                        model.inEvents += InEvent(true, event.keyCode)
+                        model.inEvents += InEvent(false, event.keyCode)
                     }
                 }
-                return true
             }
         }
-        return false
+    }
+
+    private fun generateOutEvents(model: EventModel) {
+        model.inEvents.forEach { event ->
+            var keySym = 0
+            val xtCode = if (event.scanCode == 0) 0 else XTKeyCode.fromAndroidScancode(event.scanCode)
+
+            // We prefer to use unicodeChar even when keyCode is available because
+            // most servers ignore previously sent SHIFT/CAPS_LOCK keys.
+            // As Android takes meta keys into account when calculating unicodeChar,
+            // it works well with these servers.
+            var useUChar = (event.uChar != 0)
+
+            // Always emit using keyCode for these because Android returns a Unicode char
+            // for these but most servers don't handle their Unicode characters.
+            when (event.keyCode) {
+                KeyEvent.KEYCODE_ENTER,
+                KeyEvent.KEYCODE_NUMPAD_ENTER,
+                KeyEvent.KEYCODE_SPACE,
+                KeyEvent.KEYCODE_TAB ->
+                    useUChar = false
+            }
+
+            if (useUChar) {
+                if (emitLegacyKeysym)
+                    keySym = XKeySymUnicode.getLegacyKeySymForUnicodeChar(event.uChar)
+
+                if (keySym == 0)
+                    keySym = XKeySymUnicode.getKeySymForUnicodeChar(event.uChar)
+            } else {
+                keySym = XKeySymAndroid.getKeySymForAndroidKeyCode(event.keyCode)
+            }
+
+            model.outEvents += OutEvent(event.isDown, keySym, xtCode)
+        }
     }
 
     /**
-     * Emits an event for given details.
-     * It will call [emitForAndroidKeyCode] or [emitForUnicodeChar] depending on arguments.
+     * Diacritics (Accents) Support
+     *
+     * Instead of sending diacritics directly to server, we handle their composition here.
+     * This is done because:
+     *
+     * - Android does not report real 'combining' accents to us. Instead we get the
+     *   corresponding 'printing' characters, with the `COMBINING_ACCENT` flag set.
+     *   See the source code of [KeyCharacterMap] for more details.
+     *
+     * - Although most servers don't support diacritics directly, some of them can
+     *   handle the final composed characters (e.g. TightVNC).
+     *
+     *
+     * Behaviour:
+     *
+     * - Until an accent is received, all events are ignored by [composeDiacritics].
+     * - When first accent is received, we start tracking by adding it to [accentSequence].
+     * - When next key is received (can be another accent), we add it to [accentSequence].
+     * - Then we try to compose a printable character from [accentSequence], and if successful,
+     *   the composed character is sent to the server.
+     * - If composition was successful, or we received non-accent key, we stop tracking
+     *   by clearing [accentSequence].
+     *
      */
-    private fun emitForKeyEvent(keyCode: Int, unicodeChar: Int, isDown: Boolean, scanCode: Int = 0): Boolean {
-        val xtCode = if (scanCode == 0) 0 else XTKeyCode.fromAndroidScancode(scanCode)
+    private var accentSequence = ArrayList<Int>()
 
-        if (handleDiacritics(keyCode, unicodeChar, isDown))
-            return true
+    private fun composeDiacritics(model: EventModel) {
+        var i = 0
+        while (i < model.inEvents.size) {
 
-        // Always emit using keyCode for these because Android returns a unicodeChar
-        // for these but most servers don't handle their Unicode characters.
-        when (keyCode) {
-            KeyEvent.KEYCODE_ENTER,
-            KeyEvent.KEYCODE_NUMPAD_ENTER,
-            KeyEvent.KEYCODE_SPACE,
-            KeyEvent.KEYCODE_TAB ->
-                return emitForAndroidKeyCode(keyCode, isDown, xtCode)
+            val (isDown, keyCode, uChar) = model.inEvents[i]
+            val isUp = !isDown
+            val isAccent = uChar and KeyCharacterMap.COMBINING_ACCENT != 0
+            val maskedChar = uChar and KeyCharacterMap.COMBINING_ACCENT_MASK
+
+            if ((!isAccent && accentSequence.size == 0) ||  // No tracking yet (most common case)
+                (!isAccent && isUp && !accentSequence.contains(maskedChar)) || // Spurious key-ups
+                (KeyEvent.isModifierKey(keyCode))) { // Modifier keys are passed-on to the server
+                ++i
+                continue
+            }
+
+            // Consume this event. When composed character is available, it will be inserted in event stream.
+            // This also has the effect of "incrementing" i as later events are moved up one place
+            model.inEvents.removeAt(i)
+
+            if (isDown)
+                accentSequence.add(maskedChar)
+
+            if (accentSequence.size <= 1) // Nothing to compose yet
+                continue
+
+            var composed = accentSequence.last()
+            for (j in 0 until accentSequence.lastIndex)
+                composed = KeyEvent.getDeadChar(accentSequence[j], composed)
+
+            if (composed != 0)
+                model.inEvents.add(i++, InEvent(isDown, uChar = composed))
+
+            if (isUp && (composed != 0 || !isAccent))
+                accentSequence.clear()
+        }
+    }
+
+    /**
+     * In some cases we need to simulate Shift key presses to ensure proper handling of
+     * uppercase/lowercase letters by VNC servers.
+     */
+    private fun generateFakeShifts(model: EventModel) {
+        if (hasSentShiftDown)
+            return // Shift is already down, nothing to do here
+
+        // Some keyboard apps don't generate Shift events properly.
+        // So we generate fake Shift press if current event says Shift is down but we have
+        // not yet received a Shift ACTION_DOWN or already received a Shift ACTION_UP.
+        //
+        // (Yep, that's what Gboard does. For uppercase letters, it sends a Shift ACTION_DOWN,
+        // then *inexplicably* a Shift ACTION_UP, and finally the character event with meta state
+        // set to 'Shift pressed'. One would think at least Google won't fuck this up, but here we are)
+        model.source.let {
+            if (it.action == KeyEvent.ACTION_DOWN && it.isShiftPressed && !isShiftKey(it.keyCode)) {
+                model.inEvents.add(0, InEvent(true, KeyEvent.KEYCODE_SHIFT_LEFT))
+                model.inEvents.add(model.inEvents.size, InEvent(false, KeyEvent.KEYCODE_SHIFT_LEFT))
+            }
         }
 
-        // We prefer to use unicodeChar even when keyCode is available because
-        // most servers ignore previously sent SHIFT/CAPS_LOCK keys.
-        // As Android takes meta keys into account when calculating unicodeChar,
-        // it works well with these servers.
+        // Primary target here is non-ASCII characters delivered as KeyEvent.ACTION_MULTIPLE.
+        // We don't usually receive Shift presses for such events in Android, but many VNC servers expect it.
+        var shiftPressed = false
+        var i = 0
+        while (i < model.inEvents.size) {
+            val event = model.inEvents[i]
+            shiftPressed = (isShiftKey(event.keyCode) && event.isDown) ||
+                           (!isShiftKey(event.keyCode) && shiftPressed)
 
-        if (unicodeChar != 0)
-            return emitForUnicodeChar(unicodeChar, isDown, xtCode)
-        else
-            return emitForAndroidKeyCode(keyCode, isDown, xtCode)
+            if (!shiftPressed && event.isDown && event.uChar > 0) {
+                if ((Character.isUpperCase(event.uChar) && !model.source.isCapsLockOn) ||
+                    (Character.isLowerCase(event.uChar) && model.source.isCapsLockOn)) {
+
+                    model.inEvents.add(i, InEvent(true, KeyEvent.KEYCODE_SHIFT_LEFT))
+                    i += 2 // Inserted Shift event + Current event
+                    model.inEvents.add(i, InEvent(false, KeyEvent.KEYCODE_SHIFT_LEFT))
+                }
+            }
+            ++i
+        }
     }
 
-    /**
-     * Emits X KeySym corresponding to [keyCode]
-     */
-    private fun emitForAndroidKeyCode(keyCode: Int, isDown: Boolean, xtCode: Int = 0): Boolean {
-        var keySym = XKeySymAndroid.getKeySymForAndroidKeyCode(keyCode)
-        keySym = overrideXKeySym(keySym)
-        return emit(keySym, isDown, xtCode)
+    private fun remapInEvents(model: EventModel) {
+        // Apply user's preferences
+        model.inEvents.forEach {
+            if ((it.keyCode == KeyEvent.KEYCODE_LANGUAGE_SWITCH && inputPref.kmLanguageSwitchToSuper) ||
+                (it.keyCode == KeyEvent.KEYCODE_ALT_RIGHT && inputPref.kmRightAltToSuper))
+                it.keyCode = KeyEvent.KEYCODE_META_LEFT
+
+            // Back key mapping doesn't affect the events generated by Back button in Navigation bar
+            if (it.keyCode == KeyEvent.KEYCODE_BACK && (model.source.flags and KeyEvent.FLAG_VIRTUAL_HARD_KEY == 0)
+                && inputPref.kmBackToEscape)
+                it.keyCode = KeyEvent.KEYCODE_ESCAPE
+        }
     }
 
-    /**
-     * Emits either Unicode KeySym or legacy KeySym for [uChar], depending on [emitLegacyKeysym].
-     */
-    private fun emitForUnicodeChar(uChar: Int, isDown: Boolean, xtCode: Int = 0): Boolean {
-        var uKeySym = 0
-
-        if (emitLegacyKeysym)
-            uKeySym = XKeySymUnicode.getLegacyKeySymForUnicodeChar(uChar)
-
-        if (uKeySym == 0)
-            uKeySym = XKeySymUnicode.getKeySymForUnicodeChar(uChar)
-
-
-        // If we are generating legacy KeySym and the character is uppercase,
-        // we need to fake press the Shift key. Otherwise, most servers can't
-        // handle them. It also helps with Android Keyboard apps which don't
-        // generates Shift key events correctly for uppercase letters. The
-        // CCedilla workaround in FrameView also relies on this feature.
-        val shouldFakeShift = uKeySym in 0x80..0xfffe && uChar.toChar().isUpperCase() && !hasSentShiftDown
-        if (shouldFakeShift)
-            emitForAndroidKeyCode(KeyEvent.KEYCODE_SHIFT_LEFT, true)
-
-        emit(uKeySym, isDown, xtCode)
-
-        if (shouldFakeShift)
-            emitForAndroidKeyCode(KeyEvent.KEYCODE_SHIFT_LEFT, false)
-
-        return true
+    private fun remapOutEvents(model: EventModel) {
+        if (enableMacOSCompatibility) {
+            model.outEvents.forEach {
+                if (it.keySym == XKeySym.XK_Alt_L) it.keySym = XKeySym.XK_Meta_L
+                if (it.keySym == XKeySym.XK_Alt_R) it.keySym = XKeySym.XK_Meta_R
+            }
+        }
     }
 
+    private fun emit(model: EventModel): Boolean {
+        var result = true
+        model.outEvents.forEach {
+            if (!emit(it.keySym, it.isDown, it.xtCode))
+                result = false
+        }
+        return result
+    }
 
     /**
      * Sends given X key to [dispatcher].
@@ -230,6 +384,9 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
         return dispatcher.onXKey(keySym, xtCode, isDown)
     }
 
+    /************************************************************************************
+     * Utilities
+     ***********************************************************************************/
 
     /**
      * Returns unicode character for given event.
@@ -251,6 +408,10 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
         return event.getUnicodeChar(event.metaState and altCtrl.inv())
     }
 
+    private fun isShiftKey(keyCode: Int): Boolean {
+        return (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT)
+    }
+
     /**
      * Some cases where we want to ignore events.
      */
@@ -268,108 +429,26 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
     }
 
     private fun postProcessEvent(event: KeyEvent) {
-        if (event.keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || event.keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT)
+        if (isShiftKey(event.keyCode))
             hasSentShiftDown = event.action == KeyEvent.ACTION_DOWN
 
         processedEventObserver?.invoke(event)
     }
 
-    /************************************************************************************
-     * Diacritics (Accents) Support
-     *
-     * Instead of sending diacritics directly to server, we handle their composition here.
-     * This is done because:
-     *
-     * - Android does not report real 'combining' accents to us. Instead we get the
-     *   corresponding 'printing' characters, with the `COMBINING_ACCENT` flag set.
-     *   See the source code of [KeyCharacterMap] for more details.
-     *
-     * - Although most servers don't support diacritics directly, some of them can
-     *   handle the final composed characters (e.g. TightVNC).
-     *
-     *
-     * Behaviour:
-     *
-     * - Until an accent is received, all events are ignored by [handleDiacritics].
-     * - When first accent is received, we start tracking by adding it to [accentSequence].
-     * - When next key is received (can be another accent), we add it to [accentSequence].
-     * - Then we try to compose a printable character from [accentSequence], and if successful,
-     *   the composed character is sent to the server.
-     * - If composition was successful, or we received non-accent key, we stop tracking
-     *   by clearing [accentSequence].
-     *
-     ************************************************************************************/
-    private var accentSequence = ArrayList<Int>(2)
-
-    private fun handleDiacritics(keyCode: Int, uChar: Int, isDown: Boolean): Boolean {
-        val isUp = !isDown
-        val isAccent = uChar and KeyCharacterMap.COMBINING_ACCENT != 0
-        val maskedChar = uChar and KeyCharacterMap.COMBINING_ACCENT_MASK
-
-        if (!isAccent && accentSequence.size == 0) return false  // No tracking yet (most common case)
-        if (!isAccent && isUp && !accentSequence.contains(maskedChar)) return false  // Spurious key-ups
-        if (KeyEvent.isModifierKey(keyCode)) return false // Modifier keys are passed-on to the server
-
-        if (isDown)
-            accentSequence.add(maskedChar)
-
-        if (accentSequence.size <= 1) // Nothing to compose yet
-            return true
-
-        var composed = accentSequence.last()
-        for (i in 0 until accentSequence.lastIndex)
-            composed = KeyEvent.getDeadChar(accentSequence[i], composed)
-
-        if (composed != 0)
-            emitForUnicodeChar(composed, isDown)
-
-        if (isUp && (composed != 0 || !isAccent))
-            accentSequence.clear()
-
-        return true
-    }
-
-    /************************************************************************************
-     * Custom key-mappings
-     ***********************************************************************************/
-    private val inputPref = prefs.input
-
-    private fun overrideKeyEvent(event: KeyEvent): KeyEvent {
-        if ((event.keyCode == KeyEvent.KEYCODE_LANGUAGE_SWITCH && inputPref.kmLanguageSwitchToSuper) ||
-            (event.keyCode == KeyEvent.KEYCODE_ALT_RIGHT && inputPref.kmRightAltToSuper))
-            return KeyEvent(event.action, KeyEvent.KEYCODE_META_LEFT)
-
-        // Back key mapping doesn't affect the events generated by Back button in Navigation bar
-        if (event.keyCode == KeyEvent.KEYCODE_BACK && (event.flags and KeyEvent.FLAG_VIRTUAL_HARD_KEY == 0)
-            && inputPref.kmBackToEscape)
-            return KeyEvent(event.action, KeyEvent.KEYCODE_ESCAPE)
-
-        return event
-    }
-
-    private fun overrideXKeySym(keySym: Int): Int {
-        if (enableMacOSCompatibility) {
-            if (keySym == XKeySym.XK_Alt_L) return XKeySym.XK_Meta_L
-            if (keySym == XKeySym.XK_Alt_R) return XKeySym.XK_Meta_R
+    /**
+     * Converts [string] to Unicode code points, and calls [block] for each one.
+     */
+    private inline fun forEachCodePointOf(string: String, block: (Int) -> Unit) {
+        if (string.length == 1) {
+            // Simple & most frequent case
+            block(string[0].code)
+        } else if (Build.VERSION.SDK_INT >= 24) {
+            for (cp in string.codePoints())
+                block(cp)
+        } else {
+            // Fallback to simple conversion (will be incorrect for non-MBP code points)
+            for (c in string)
+                block(c.code)
         }
-        return keySym
-    }
-
-    /************************************************************************************
-     * Convert String to Array of Unicode code-points
-     ***********************************************************************************/
-
-    private val cpCache = intArrayOf(0)
-
-    private fun toCodePoints(string: String): IntArray {
-        //Handle simple & most probable case
-        if (string.length == 1)
-            return cpCache.apply { this[0] = string[0].code }
-
-        if (Build.VERSION.SDK_INT >= 24)
-            return string.codePoints().toArray()
-
-        //Otherwise, do simple conversion (will be incorrect for non-MBP code points)
-        return string.map { it.code }.toIntArray()
     }
 }

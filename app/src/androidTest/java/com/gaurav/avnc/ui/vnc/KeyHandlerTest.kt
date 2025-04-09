@@ -19,8 +19,9 @@ import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.vnc.XKeySym
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -58,11 +59,6 @@ class KeyHandlerTest {
             true
         }
         keyHandler = KeyHandler(mockDispatcher, prefs)
-    }
-
-    @After
-    fun after() {
-        assertEquals(dispatchedKeyDowns, dispatchedKeyUps)
     }
 
     /**
@@ -117,20 +113,27 @@ class KeyHandlerTest {
 
     @Test
     fun charWithShift() {
+        sendDown(KeyEvent.KEYCODE_SHIFT_LEFT)
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_SHIFT_ON)
-        assertEquals('A'.code, dispatchedKeyDowns.firstOrNull())
+        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[0])
+        assertEquals('A'.code, dispatchedKeyDowns[1])
     }
 
     @Test
     fun charWithShiftCtrl() {
+        sendDown(KeyEvent.KEYCODE_SHIFT_LEFT)
+        sendDown(KeyEvent.KEYCODE_CTRL_LEFT)
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_SHIFT_ON or KeyEvent.META_CTRL_ON)
-        assertEquals('A'.code, dispatchedKeyDowns.firstOrNull())
+
+        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[0])
+        assertEquals(XKeySym.XK_Control_L, dispatchedKeyDowns[1])
+        assertEquals('A'.code, dispatchedKeyDowns[2])
     }
 
     @Test
     fun charWithShiftCtrlAlt() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_SHIFT_ON or KeyEvent.META_CTRL_ON or KeyEvent.META_ALT_ON)
-        assertEquals('A'.code, dispatchedKeyDowns.firstOrNull())
+        assertEquals('A'.code, dispatchedKeyDowns[1])
     }
 
     @Test
@@ -139,11 +142,26 @@ class KeyHandlerTest {
         assertEquals('A'.code, dispatchedKeyDowns.firstOrNull())
     }
 
-    /*@Test  // Android itself is broken on CapsLock + Shift
+
+    @Test
+    @SdkSuppress(minSdkVersion = 31) // CapsLock + Shift is broken on older Android versions
     fun charWithCapslockShift() {
+        sendDown(KeyEvent.KEYCODE_SHIFT_LEFT)
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON or KeyEvent.META_SHIFT_ON)
-        assertEquals('a'.code, dispatchedKeys.firstOrNull())
-    }*/
+        sendUp(KeyEvent.KEYCODE_SHIFT_LEFT)
+
+        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[0])
+        assertEquals('a'.code, dispatchedKeyDowns[1])
+        dispatchedKeyUps.reverse()
+    }
+
+    @Test
+    @SdkSuppress(minSdkVersion = 31)
+    fun charWithCapslockShift_withMissingShiftPress() {
+        sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON or KeyEvent.META_SHIFT_ON)
+        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[0]) // This should be fake-pressed by KeyHandler
+        assertEquals('a'.code, dispatchedKeyDowns[1])
+    }
 
     @Test
     fun charWithCapslockCtrl() {
@@ -163,6 +181,18 @@ class KeyHandlerTest {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_META_ON)
         assertEquals(XKeySym.XK_Super_L, dispatchedKeyDowns[0])
         assertEquals('a'.code, dispatchedKeyDowns[1])
+    }
+
+    @Test
+    fun multipleChars() {
+        keyHandler.onKeyEvent(KeyEvent(0, "abCde", 0, 0))
+
+        assertEquals('a'.code, dispatchedKeyDowns[0])
+        assertEquals('b'.code, dispatchedKeyDowns[1])
+        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[2]) // Fake Shift press is expected
+        assertEquals('C'.code, dispatchedKeyDowns[3])
+        assertEquals('d'.code, dispatchedKeyDowns[4])
+        assertEquals('e'.code, dispatchedKeyDowns[5])
     }
 
     @Test
@@ -199,6 +229,48 @@ class KeyHandlerTest {
         sendKeyWithScancode(KeyEvent.KEYCODE_META_LEFT, scLeft)
         assertEquals(xtLeft, dispatchedXTDowns.first())
         assertEquals(xtLeft, dispatchedXTUps.first())
+    }
+
+    @Test
+    fun unhandledKeys() {
+        // These keys should not be consumed by KeyHandler
+        // because these are intended to be handled by Android
+        assertFalse(keyHandler.onKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_HOME)))
+        assertFalse(keyHandler.onKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK)))
+        assertFalse(keyHandler.onKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_POWER)))
+        assertFalse(keyHandler.onKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_CALL)))
+    }
+
+    @Test
+    fun unmappedKeys() {
+        // Keys without X KeySym should not be consumed by KeyHandler
+        // Few examples of unmapped keys:
+        assertFalse(keyHandler.onKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_TV)))
+        assertFalse(keyHandler.onKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY)))
+        assertFalse(keyHandler.onKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_FUNCTION)))
+        assertFalse(keyHandler.onKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BUTTON_1)))
+    }
+
+    @Test
+    fun specialKeysWithPreferredKeyCode() {
+        // Some keys for which Android keyCode should be used instead of their Unicode character
+        sendDown(KeyEvent.KEYCODE_SPACE, ' '.code)
+        sendDown(KeyEvent.KEYCODE_TAB, '\t'.code)
+        sendDown(KeyEvent.KEYCODE_ENTER, '\n'.code)
+
+        assertEquals(XKeySym.XK_space, dispatchedKeyDowns[0])
+        assertEquals(XKeySym.XK_Tab, dispatchedKeyDowns[1])
+        assertEquals(XKeySym.XK_Return, dispatchedKeyDowns[2])
+    }
+
+    @Test
+    fun observerTest() {
+        var observedEvent: KeyEvent? = null
+        keyHandler.processedEventObserver = { observedEvent = it }
+        keyHandler.onKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_F1))
+
+        assertNotNull(observedEvent)
+        assertEquals(KeyEvent.KEYCODE_F1, observedEvent?.keyCode)
     }
 
     /**************************************************************************/
