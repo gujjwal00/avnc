@@ -59,6 +59,7 @@ class VirtualKeys(activity: VncActivity) {
     private val toggleKeys = mutableSetOf<ToggleButton>()
     private val lockedToggleKeys = mutableSetOf<ToggleButton>()
     private val keyCharMap by lazy { KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD) }
+    private var activeMetaState = 0
     private var openedWithKb = false
     private var closedByPiPMode = false
 
@@ -237,7 +238,7 @@ class VirtualKeys(activity: VncActivity) {
 
     private fun initToggleKey(key: ToggleButton, keyCode: Int) {
         key.setOnCheckedChangeListener { _, isChecked ->
-            keyHandler.onKeyEvent(keyCode, isChecked)
+            sendKey(keyCode, isChecked)
             if (!isChecked) lockedToggleKeys.remove(key)
         }
         key.setOnLongClickListener {
@@ -250,7 +251,7 @@ class VirtualKeys(activity: VncActivity) {
 
     private fun initNormalKey(key: View, keyCode: Int) {
         check(key !is ToggleButton) { "use initToggleKey()" }
-        key.setOnClickListener { keyHandler.onKey(keyCode) }
+        key.setOnClickListener { sendKey(keyCode) }
         makeKeyRepeatable(key)
     }
 
@@ -298,6 +299,36 @@ class VirtualKeys(activity: VncActivity) {
             events.forEach { keyHandler.onKeyEvent(it) }
 
         textBox.setText("")
+    }
+
+    private fun updateMetaState(keyCode: Int, isDown: Boolean) {
+        val metaKeyFlag = when (keyCode) {
+            KeyEvent.KEYCODE_SHIFT_LEFT -> KeyEvent.META_SHIFT_ON or KeyEvent.META_SHIFT_LEFT_ON
+            KeyEvent.KEYCODE_SHIFT_RIGHT -> KeyEvent.META_SHIFT_ON or KeyEvent.META_SHIFT_RIGHT_ON
+            KeyEvent.KEYCODE_CTRL_LEFT -> KeyEvent.META_CTRL_ON or KeyEvent.META_CTRL_LEFT_ON
+            KeyEvent.KEYCODE_CTRL_RIGHT -> KeyEvent.META_CTRL_ON or KeyEvent.META_CTRL_RIGHT_ON
+            KeyEvent.KEYCODE_ALT_LEFT -> KeyEvent.META_ALT_ON or KeyEvent.META_ALT_LEFT_ON
+            KeyEvent.KEYCODE_ALT_RIGHT -> KeyEvent.META_ALT_ON or KeyEvent.META_ALT_RIGHT_ON
+            KeyEvent.KEYCODE_META_LEFT -> KeyEvent.META_META_ON or KeyEvent.META_META_LEFT_ON
+            KeyEvent.KEYCODE_META_RIGHT -> KeyEvent.META_META_ON or KeyEvent.META_META_RIGHT_ON
+            else -> return
+        }
+
+        if (isDown)
+            activeMetaState = activeMetaState or metaKeyFlag
+        else
+            activeMetaState = activeMetaState and metaKeyFlag.inv()
+    }
+
+    private fun sendKey(keyCode: Int) {
+        sendKey(keyCode, true)
+        sendKey(keyCode, false)
+    }
+
+    private fun sendKey(keyCode: Int, isDown: Boolean) {
+        val action = if (isDown) KeyEvent.ACTION_DOWN else KeyEvent.ACTION_UP
+        updateMetaState(keyCode, isDown)
+        keyHandler.onKeyEvent(KeyEvent(0, 0, action, keyCode, 0, activeMetaState))
     }
 }
 
