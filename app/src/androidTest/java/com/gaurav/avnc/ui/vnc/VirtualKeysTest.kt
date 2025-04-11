@@ -179,6 +179,17 @@ class VirtualKeysTest {
         Assert.assertEquals(sentByClient, receivedOnServer)
     }
 
+    @Test
+    fun vkModifierKeysShouldApplyToKeyPressedOnKeyboard() {
+        testWrapper {
+            onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+            onView(withId(R.id.virtual_keys_btn)).doClick()
+
+            onView(withText("Shift")).checkWillBeDisplayed().doClick()
+            onView(withId(R.id.frame_view)).doTypeText("a") // Should be sent as uppercase A to server
+        }
+        Assert.assertEquals(listOf(XKeySym.XK_Shift_R, XKeySym.XK_A), testServer.receivedKeySyms)
+    }
 
     @Test
     fun unlockedToggleKeysShouldBeReleasedWithNextKey() {

@@ -328,7 +328,7 @@ class VirtualKeys(activity: VncActivity) {
     private fun sendKey(keyCode: Int, isDown: Boolean) {
         val action = if (isDown) KeyEvent.ACTION_DOWN else KeyEvent.ACTION_UP
         updateMetaState(keyCode, isDown)
-        keyHandler.onKeyEvent(KeyEvent(0, 0, action, keyCode, 0, activeMetaState))
+        keyHandler.onVkKeyEvent(KeyEvent(0, 0, action, keyCode, 0, activeMetaState))
     }
 }
 

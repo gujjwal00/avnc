@@ -87,20 +87,21 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
     var processedEventObserver: ((KeyEvent) -> Unit)? = null
     var enableMacOSCompatibility = false
     var emitLegacyKeysym = true
+    private var vkMetaState = 0
     private var hasSentShiftDown = false
     private val inputPref = prefs.input
 
     /**
-     * Shortcut to send both up & down events. Useful for Virtual Keys.
+     * Shortcut to send both up & down events
      */
     fun onKey(keyCode: Int) {
-        onKeyEvent(keyCode, true)
-        onKeyEvent(keyCode, false)
+        onKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, keyCode))
+        onKeyEvent(KeyEvent(KeyEvent.ACTION_UP, keyCode))
     }
 
-    fun onKeyEvent(keyCode: Int, isDown: Boolean) {
-        val action = if (isDown) KeyEvent.ACTION_DOWN else KeyEvent.ACTION_UP
-        onKeyEvent(KeyEvent(action, keyCode))
+    fun onVkKeyEvent(event: KeyEvent) {
+        vkMetaState = event.metaState
+        onKeyEvent(event)
     }
 
     fun onKeyEvent(event: KeyEvent): Boolean {
@@ -399,13 +400,14 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
      * This ensures proper working of keyboard shortcuts.
      */
     private fun getUnicodeChar(event: KeyEvent): Int {
-        val uChar = event.unicodeChar
-        if (uChar != 0 || event.metaState == 0)
+        var metaState = event.metaState or vkMetaState
+        val uChar = event.getUnicodeChar(metaState)
+        if (uChar != 0 || metaState == 0)
             return uChar
 
         // Try without Alt/Ctrl
-        val altCtrl = KeyEvent.META_ALT_MASK or KeyEvent.META_CTRL_MASK
-        return event.getUnicodeChar(event.metaState and altCtrl.inv())
+        metaState = metaState and (KeyEvent.META_ALT_MASK or KeyEvent.META_CTRL_MASK).inv()
+        return event.getUnicodeChar(metaState)
     }
 
     private fun isShiftKey(keyCode: Int): Boolean {
