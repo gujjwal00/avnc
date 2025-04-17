@@ -304,8 +304,9 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
      * uppercase/lowercase letters by VNC servers.
      */
     private fun generateFakeShifts(model: EventModel) {
-        if (hasSentShiftDown)
-            return // Shift is already down, nothing to do here
+        // Nothing to do if Shift key event is properly received, or a key is being released
+        if (hasSentShiftDown || isShiftKey(model.source.keyCode) || model.source.action == KeyEvent.ACTION_UP)
+            return
 
         // Some keyboard apps don't generate Shift events properly.
         // So we generate fake Shift press if current event says Shift is down but we have
@@ -314,25 +315,24 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
         // (Yep, that's what Gboard does. For uppercase letters, it sends a Shift ACTION_DOWN,
         // then *inexplicably* a Shift ACTION_UP, and finally the character event with meta state
         // set to 'Shift pressed'. One would think at least Google won't fuck this up, but here we are)
-        model.source.let {
-            if (it.action == KeyEvent.ACTION_DOWN && it.isShiftPressed && !isShiftKey(it.keyCode)) {
-                model.inEvents.add(0, InEvent(true, KeyEvent.KEYCODE_SHIFT_LEFT))
-                model.inEvents.add(model.inEvents.size, InEvent(false, KeyEvent.KEYCODE_SHIFT_LEFT))
-            }
+        var wrapWithShiftKey = model.source.isShiftPressed
+
+        if (wrapWithShiftKey) {
+            model.inEvents.add(0, InEvent(true, KeyEvent.KEYCODE_SHIFT_LEFT))
+            model.inEvents.add(model.inEvents.size, InEvent(false, KeyEvent.KEYCODE_SHIFT_LEFT))
+            return
         }
 
-        // Primary target here is non-ASCII characters delivered as KeyEvent.ACTION_MULTIPLE.
-        // We don't usually receive Shift presses for such events in Android, but many VNC servers expect it.
-        var shiftPressed = false
+        // Primary target here is non-ASCII uppercase characters delivered as KeyEvent.ACTION_MULTIPLE.
+        // We don't usually receive Shift presses for such events in Android, but most VNC servers expect
+        // a Shift key press before an uppercase letter is pressed.
+        val isCapsLockOn = model.source.isCapsLockOn
         var i = 0
         while (i < model.inEvents.size) {
             val event = model.inEvents[i]
-            shiftPressed = (isShiftKey(event.keyCode) && event.isDown) ||
-                           (!isShiftKey(event.keyCode) && shiftPressed)
-
-            if (!shiftPressed && event.isDown && event.uChar > 0) {
-                if ((Character.isUpperCase(event.uChar) && !model.source.isCapsLockOn) ||
-                    (Character.isLowerCase(event.uChar) && model.source.isCapsLockOn)) {
+            if (event.isDown && event.uChar > 0) {
+                if ((Character.isUpperCase(event.uChar) && !isCapsLockOn) ||
+                    (Character.isLowerCase(event.uChar) && isCapsLockOn)) {
 
                     model.inEvents.add(i, InEvent(true, KeyEvent.KEYCODE_SHIFT_LEFT))
                     i += 2 // Inserted Shift event + Current event
