@@ -90,6 +90,7 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
     private var vkMetaState = 0
     private var hasSentShiftDown = false
     private val inputPref = prefs.input
+    private val kcm by lazy { KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD) }
 
     /**
      * Shortcut to send both up & down events
@@ -316,6 +317,24 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
         // then *inexplicably* a Shift ACTION_UP, and finally the character event with meta state
         // set to 'Shift pressed'. One would think at least Google won't fuck this up, but here we are)
         var wrapWithShiftKey = model.source.isShiftPressed
+
+
+        // Keys like '@', '#', '%' etc. can be generated in multiple ways (e.g single KeyEvent.KEYCODE_AT
+        // vs KeyEvent.KEYCODE_SHIFT + KeyEvent.KEYCODE_2). If single-keycode variant of such keys is
+        // received, we need to fake the Shift press.
+        //
+        // Gboard sends single-keycode variant for some of these, but sends Shift+Number for others.
+        // I can't find a pattern to this madness, so just check if Android would normally generate
+        // a Shift press for this character.
+        if (!wrapWithShiftKey && model.inEvents.size == 1) model.inEvents[0].let {
+            if (it.scanCode == 0 && it.keyCode != 0 && it.uChar != 0 && !Character.isLetterOrDigit(it.uChar)) {
+                kcm.getEvents(charArrayOf(it.uChar.toChar()))?.let { keyEvents ->
+                    if (keyEvents.size == 4 &&  // Shift Down + Char Down + Char Up + Shift Up
+                        isShiftKey(keyEvents[0].keyCode))
+                        wrapWithShiftKey = true
+                }
+            }
+        }
 
         if (wrapWithShiftKey) {
             model.inEvents.add(0, InEvent(true, KeyEvent.KEYCODE_SHIFT_LEFT))

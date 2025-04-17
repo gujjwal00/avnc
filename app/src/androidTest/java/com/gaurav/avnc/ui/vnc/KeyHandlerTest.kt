@@ -264,6 +264,15 @@ class KeyHandlerTest {
     }
 
     @Test
+    fun fakeShiftBeforeSingleVariantKeys() {
+        // If KEYCODE_AT is received directly (and not Shift + 2), fake Shift should be generated
+        sendDown(KeyEvent.KEYCODE_AT, '@'.code)
+
+        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[0])
+        assertEquals(XKeySym.XK_at, dispatchedKeyDowns[1])
+    }
+
+    @Test
     fun observerTest() {
         var observedEvent: KeyEvent? = null
         keyHandler.processedEventObserver = { observedEvent = it }
