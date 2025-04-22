@@ -33,6 +33,8 @@ import android.widget.ToggleButton
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat.Type
 import androidx.core.view.isVisible
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
@@ -89,6 +91,13 @@ class VirtualKeys(activity: VncActivity) {
             hide()
             openedWithKb = false
         }
+
+        // Scenario: User uses the TextBox to send text to server, and hides the keyboard. User
+        // wants to end the session now, so he swipes-up from bottom to bring up the nav bar, but
+        // the TextBox also sees that swipe-up and it shows the keyboard. Now tap on Back navigation
+        // button will hide the keyboard instead of ending the session. User must switch away from
+        // text-page to break this loop. So we clear the focus here to avoid this issue.
+        (stub.binding as? VirtualKeysBinding)?.textBox?.let { if (it.isFocused) it.clearFocus() }
     }
 
     fun onConnected(inPiP: Boolean) {
@@ -172,8 +181,10 @@ class VirtualKeys(activity: VncActivity) {
         pager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             val textPageIndex = pages.indexOf(binding.textPage)
             override fun onPageSelected(position: Int) {
-                if (position == textPageIndex) binding.textBox.requestFocus()
-                else frameView.requestFocus()
+                if (ViewCompat.getRootWindowInsets(root)?.isVisible(Type.ime()) == true) {
+                    if (position == textPageIndex) binding.textBox.requestFocus()
+                    else frameView.requestFocus()
+                }
             }
         })
 
