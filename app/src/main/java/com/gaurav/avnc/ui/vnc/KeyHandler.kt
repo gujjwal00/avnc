@@ -162,6 +162,7 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
         remapInEvents(model)
         composeDiacritics(model)
         generateFakeShifts(model)
+        releaseSoftAlt(model)
         generateOutEvents(model)
         remapOutEvents(model)
 
@@ -359,6 +360,30 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
                 }
             }
             ++i
+        }
+    }
+
+    /**
+     * Some characters in Android can generate events with Alt-key combination:
+     * Ç  => Alt + C  ; ß => Alt + S
+     *
+     * But Sending Alt press in most cases breaks typing these characters on server
+     * because that's not their usual key combination. To fix this, we artificially
+     * release the Alt key before sending these characters.
+     */
+    private fun releaseSoftAlt(model: EventModel) {
+        model.source.let {
+            // Only apply the workaround to events coming from software keyboards to avoid
+            // interfering with shortcuts on external keyboards
+            if (it.action == KeyEvent.ACTION_DOWN && it.deviceId == KeyCharacterMap.VIRTUAL_KEYBOARD &&
+                it.scanCode == 0 && it.isAltPressed && it.unicodeChar != 0) {
+                var keyCode = KeyEvent.KEYCODE_ALT_LEFT
+                if (it.metaState and KeyEvent.META_ALT_RIGHT_ON != 0)
+                    keyCode = KeyEvent.KEYCODE_ALT_RIGHT
+
+                if (model.inEvents.isNotEmpty()) // Can be empty if InEvent was used for diacritics
+                    model.inEvents.add(0, InEvent(false, keyCode))
+            }
         }
     }
 

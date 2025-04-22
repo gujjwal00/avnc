@@ -293,7 +293,7 @@ class VirtualKeys(activity: VncActivity) {
         val text = textBox.text?.ifEmpty { "\n" }?.toString() ?: return
         val events = keyCharMap.getEvents(text.toCharArray())
 
-        if (events == null || text.contains('ç', true))
+        if (events == null)
             keyHandler.onKeyEvent(KeyEvent(SystemClock.uptimeMillis(), text, 0, 0))
         else
             events.forEach { keyHandler.onKeyEvent(it) }

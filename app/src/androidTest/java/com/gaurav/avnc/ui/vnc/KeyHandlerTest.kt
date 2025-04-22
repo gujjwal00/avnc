@@ -34,26 +34,31 @@ class KeyHandlerTest {
     private lateinit var keyHandler: KeyHandler
     private lateinit var prefs: AppPreferences
     private lateinit var mockDispatcher: Dispatcher
+    private lateinit var dispatchedKeys: ArrayList<Pair<Int, Boolean>>
     private lateinit var dispatchedKeyDowns: ArrayList<Int>
     private lateinit var dispatchedKeyUps: ArrayList<Int>
     private lateinit var dispatchedXTDowns: ArrayList<Int>
     private lateinit var dispatchedXTUps: ArrayList<Int>
+    private val kcm by lazy { KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD) }
 
     @Before
     fun before() {
         instrumentation.runOnMainSync { prefs = AppPreferences(targetContext) }
 
+        dispatchedKeys = arrayListOf()
         dispatchedKeyDowns = arrayListOf()
         dispatchedKeyUps = arrayListOf()
         dispatchedXTDowns = arrayListOf()
         dispatchedXTUps = arrayListOf()
         mockDispatcher = mockk()
         every { mockDispatcher.onXKey(any(), any(), true) } answers {
+            dispatchedKeys.add(Pair(firstArg(), true))
             dispatchedKeyDowns.add(firstArg())
             dispatchedXTDowns.add(secondArg())
             true
         }
         every { mockDispatcher.onXKey(any(), any(), false) } answers {
+            dispatchedKeys.add(Pair(firstArg(), false))
             dispatchedKeyUps.add(firstArg())
             dispatchedXTUps.add(secondArg())
             true
@@ -445,15 +450,21 @@ class KeyHandlerTest {
 
     @Test
     fun cCedilla() {
-        keyHandler.onKeyEvent(KeyEvent(0, "ç", 0, 0))
-        assertEquals('ç'.code, dispatchedKeyDowns.firstOrNull())
+        kcm.getEvents(charArrayOf('ç')).forEach { keyHandler.onKeyEvent(it) }
+
+        assertEquals(XKeySym.XK_Alt_L to true, dispatchedKeys[0])
+        assertEquals(XKeySym.XK_Alt_L to false, dispatchedKeys[1]) // expected fake release of Alt
+        assertEquals('ç'.code to true, dispatchedKeys[2])
     }
 
     @Test
     fun cCedillaUppercase() {
-        keyHandler.onKeyEvent(KeyEvent(0, "Ç", 0, 0))
-        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[0])
-        assertEquals('Ç'.code, dispatchedKeyDowns[1])
+        kcm.getEvents(charArrayOf('Ç')).forEach { keyHandler.onKeyEvent(it) }
+
+        assertEquals(XKeySym.XK_Shift_L to true, dispatchedKeys[0])
+        assertEquals(XKeySym.XK_Alt_L to true, dispatchedKeys[1])
+        assertEquals(XKeySym.XK_Alt_L to false, dispatchedKeys[2]) // expected fake release of Alt
+        assertEquals('Ç'.code to true, dispatchedKeys[3])
     }
 
     /**************************************************************************/
