@@ -36,9 +36,9 @@ object SamsungDex {
      * Enables/disables meta-key event capturing.
      */
     fun setMetaKeyCapture(activity: Activity, isEnabled: Boolean) {
-        if (!isInDexMode(activity))
+        /*if (!isInDexMode(activity))
             return
-
+        */
         runCatching {
             val managerClass = Class.forName("com.samsung.android.view.SemWindowManager")
             val instanceMethod = managerClass.getMethod("getInstance")
