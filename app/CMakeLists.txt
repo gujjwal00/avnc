@@ -1,6 +1,8 @@
 
 cmake_minimum_required(VERSION 3.10)
 
+add_link_options("LINKER:--build-id=none")
+
 project(NativeVNC C CXX ASM)
 
 set(AVNC_EXTERN_DIR ${PROJECT_SOURCE_DIR}/../extern)
