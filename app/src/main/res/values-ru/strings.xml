@@ -225,4 +225,16 @@
     <string name="title_export_passwords_and_keys">Экспорт паролей и ключей</string>
     <string name="title_forget">Забыть</string>
     <string name="msg_done">Готово</string>
+    <string name="pref_swipe3">Четырёхпальцевый смах</string>
+    <string name="pref_three_finger_tap">Трёхпальцевое нажатие</string>
+    <string name="msg_invalid_mac_address">Неправильные MAC-адрес</string>
+    <string name="pref_forget_known_hosts">Сбросить знакомые хосты</string>
+    <string name="title_try">Пробовать</string>
+    <string name="title_always_show_advanced_editor">Всегда показывать расширеные настройки</string>
+    <string name="msg_required">Обязательно</string>
+    <string name="pref_gesture_action_left_press">Длинное нажатие</string>
+    <string name="pref_forget_known_hosts_question">Забыть знакомые SSH хосты и доверенные сервеные сертификаты?</string>
+    <string name="pref_toolbar_open_with_button">Показать кнопку, чтобы открыть</string>
+    <string name="desc_toolbar_btn">Открыть панель инструментов</string>
+    <string name="pref_long_press_swipe_disabled_summary">Отключено текущим значением жеста <b>Длительное нажатие</b></string>
 </resources>

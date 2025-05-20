@@ -212,4 +212,7 @@
     <string name="msg_zoom_locked">縮放鎖定</string>
     <string name="title_connect_on_app_start">當軟體啟動時自動連線</string>
     <string name="hint_send_text_to_server">傳送文本到伺服器上</string>
+    <string name="msg_saved">已儲存</string>
+    <string name="title_enable_wol">局域網路喚醒</string>
+    <string name="title_export_passwords_and_keys">匯出密碼和金鑰</string>
 </resources>

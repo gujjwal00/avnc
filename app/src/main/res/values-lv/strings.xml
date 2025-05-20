@@ -14,9 +14,9 @@
     <string name="title_ssh_login">SSH autorizācija</string>
     <string name="title_unlock_private_key">Atbloķēt privāto atslēgu</string>
     <string name="title_remember">Atcerēties</string>
-    <string name="title_export">Eksportēt</string>
-    <string name="title_import">Importēt</string>
-    <string name="title_enable_wol">Pamodināt, kas atrodas vietējā tīkla zonā (Wake-on-LAN)</string>
+    <string name="title_export">Izgūt</string>
+    <string name="title_import">Ievietot</string>
+    <string name="title_enable_wol">Pamodināt, kas atrodas vietējā tīklā (Wake-on-LAN)</string>
     <string name="title_key_compat_mode">Sūtīt mantoto taustiņu notikumus</string>
     <string name="title_button_up_delay">Sūtīt aizkavētu klikšķu notikumus</string>
     <string name="title_resize_remote_desktop">Mainiet attālās sesijas izmērus, lai tie atbilstu vietējā loga izmēriem</string>
@@ -27,14 +27,14 @@
     <string name="title_unknown_ssh_host">Nezināms SSH resursdatora nosaukums</string>
     <string name="title_ssh_host_key_changed">SSH resursdatora publiskā atslēga ir mainīta</string>
     <string name="title_continue">Turpināt</string>
-    <string name="title_delete_servers_before_import">Pirms importēšanas izdzēst pašlaik saglabātos serverus</string>
+    <string name="title_delete_servers_before_import">Pirms ievietošanas izdzēst pašlaik saglabātos serverus</string>
     <string name="title_password">Parole</string>
     <string name="title_use_repeater">Izmantot retranslatoru</string>
     <string name="title_private_key">Privātā atslēga</string>
     <string name="title_change">Mainīt</string>
     <string name="title_about">Par lietotni</string>
     <string name="title_license">Licences noteikumi</string>
-    <string name="title_open_source_libraries">Atvērtā koda bibliotēkas</string>
+    <string name="title_open_source_libraries">Atvērtā pirmkoda bibliotēkas</string>
     <string name="title_report_bug">Ziņot par kļūdu</string>
     <string name="title_add_server_profile">Pievienot serveri</string>
     <string name="title_delete">Dzēst</string>
@@ -43,7 +43,7 @@
     <string name="title_connect_on_app_start">Automātiski izveidot savienojumu, kad tiek startēta lietotne</string>
     <string name="title_hide_remote_cursor">Paslēpt attālā servera kursoru</string>
     <string name="title_use_ssh_tunnel">Izmantot SSH tuneli</string>
-    <string name="title_source_code">Izejkods</string>
+    <string name="title_source_code">Pirmkods</string>
     <string name="title_automatic">Automātiski</string>
     <string name="title_none">Nav</string>
     <string name="title_next">Nākamais</string>
@@ -63,16 +63,16 @@
     <string name="hint_send_text_to_server">Nosūtīt tekstu uz serveri</string>
     <string name="msg_server_profile_added">Serveris pievienots</string>
     <string name="msg_server_profile_deleted">Serveris izdzēsts</string>
-    <string name="msg_zoom_locked">Tālummaiņa ir bloķēta</string>
-    <string name="msg_zoom_unlocked">Tālummaiņa ir atbloķēta</string>
-    <string name="msg_zoom_reset">Tālummaiņa ir atiestatīta uz 100%</string>
-    <string name="msg_zoom_reset_default">Tālummaiņa ir atiestatīta uz noklusējuma vērtību</string>
+    <string name="msg_zoom_locked">Tālummaiņa bloķēta</string>
+    <string name="msg_zoom_unlocked">Tālummaiņa atbloķēta</string>
+    <string name="msg_zoom_reset">Tālummaiņa atiestatīta uz 100%</string>
+    <string name="msg_zoom_reset_default">Tālummaiņa atiestatīta uz noklusējuma vērtību</string>
     <string name="msg_zoom_saved">Pašreizējā tālummaiņa tika saglabāta kā noklusējuma vērtība</string>
     <string name="msg_ptr_hiding_not_supported">Netiek atbalstīts šajā ierīcē</string>
     <string name="msg_loading">Ielādē…</string>
-    <string name="msg_imported">Importēts</string>
-    <string name="msg_exported">Eksportēts</string>
-    <string name="msg_export_auth_required">Autentificējieties, lai eksportētu serverus</string>
+    <string name="msg_imported">Ievietots</string>
+    <string name="msg_exported">Izgūts</string>
+    <string name="msg_export_auth_required">Autentificējieties, lai izgūtu serverus</string>
     <string name="msg_invalid_vnc_uri">Nederīgs VNC URI</string>
     <string name="msg_copied_to_clipboard">Nokopēts</string>
     <string name="msg_key_compat_mode_help">Daži serveri tikai daļēji atbalsta unikoda rakstzīmes. Mantotie taustiņu notikumi var ļaut ievadīt tekstu, kas nav angļu valodā.</string>
@@ -113,7 +113,7 @@
     <string name="pref_servers">Serveri</string>
     <string name="pref_server_summary">Pieslēgšanās, atklāšana</string>
     <string name="pref_tools">Rīki</string>
-    <string name="pref_tools_summary">Importēšana/eksportēšana, atkļūdošana</string>
+    <string name="pref_tools_summary">Ievietošana/Izgūšana, atkļūdošana</string>
     <string name="pref_experimental">Eksperimentāls</string>
     <string name="pref_experimental_summary">Eksperimentālās funkcijas, papildus labumi</string>
     <string name="pref_gesture_action_middle_click">Vidējā peles poga</string>
@@ -152,12 +152,9 @@
     <string name="pref_zoom_max">Maksimums</string>
     <string name="pref_per_orientation_zoom">Katrai orientācijai sava tālummaiņa</string>
     <string name="title_unlock_dialog">Atbloķējiet, lai turpinātu</string>
-    <string name="msg_about_app">Ātrs un drošs VNC klients. Pārraugiet un kontrolējiet jebkuru attālo ierīci, kurā darbojas VNC serveris.
-\n
-\n
-\nAVNC ir atvērtā koda un kopēttieši lietotne, kas izstrādāta ar daudzu dalībnieku palīdzību.</string>
+    <string name="msg_about_app">Ātrs un drošs VNC klients. Pārraugiet un kontrolējiet jebkuru attālo ierīci, kurā darbojas VNC serveris.\n\n\nAVNC ir atvērtā koda un kopēttieši lietotne, kas izstrādāta ar daudzu dalībnieku palīdzību.</string>
     <string name="msg_pip_not_supported">Netiek atbalstīts šajā ierīcē</string>
-    <string name="msg_invalid_key_file">Nederīgs privātās atslēgas fails</string>
+    <string name="msg_invalid_key_file">Nederīga privātās atslēgas datne</string>
     <string name="msg_pk_password_not_saved">AVNC vairs neuzglabā privāto atslēgu paroles, lai uzlabotu drošību.</string>
     <string name="msg_button_up_delay_help">Klikšķu notikumu aizkavēšana var palīdzēt dažos retos gadījumos, kad lietotne nereaģē uz klikšķiem.</string>
     <string name="msg_wake_on_lan_help">Pamodināt, kas atrodas vietējā tīkla zonā - Wake-on-LAN (WoL), var izmantot, lai attālināti ieslēgtu datoru.
@@ -197,7 +194,7 @@
     <string name="pref_km_language_switch_to_super">Valodas maiņa → Super</string>
     <string name="pref_orientation_option_auto">Automātiski</string>
     <string name="pref_orientation_option_portrait">Portreta (Vertikāli)</string>
-    <string name="pref_keep_screen_on">Atstāt ekrānu ieslēgtu</string>
+    <string name="pref_keep_screen_on">Atstāt ekrānu IESLĒGTU</string>
     <string name="pref_toolbar_alignment">Izlīdzināšana</string>
     <string name="pref_toolbar_alignment_option_end">No beigām</string>
     <string name="pref_toolbar_open_with_swipe">Vilkt no malas, lai atvērtu</string>
@@ -208,7 +205,7 @@
     <string name="pref_auto_reconnect">Automātiski atkārtoti izveidot savienojumu</string>
     <string name="pref_discovery">Atklāšana</string>
     <string name="pref_discovery_autorun">Automātiskā atklāšana</string>
-    <string name="pref_import_export">Importēt/eksportēt serverus</string>
+    <string name="pref_import_export">Ievietot/Izgūt serverus</string>
     <string name="pref_logs">Žurnāli</string>
     <string name="pref_keycode_map">Taustiņu koda karte</string>
     <string name="pref_touch_test">Pieskāriena pārbaude</string>
@@ -218,4 +215,18 @@
     <string name="pref_rediscovery_indicator">Izcelt atkārtoti atklātos serverus</string>
     <string name="pref_debugging">Atkļūdošana</string>
     <string name="pref_discovery_autorun_summary">Atklāt serverus, kamēr atrodoties mājaslapā</string>
+    <string name="title_try">Izmēģināt</string>
+    <string name="title_always_show_advanced_editor">Vienmēr rādīt papildu iestatījumus</string>
+    <string name="msg_required">Obligāti nepieciešams</string>
+    <string name="msg_invalid_mac_address">Nederīga MAC adrese</string>
+    <string name="title_load_defaults">Ielādēt noklusējuma iestatījumus</string>
+    <string name="msg_saved">Saglabāts</string>
+    <string name="pref_customize_virtual_keys">Pielāgot taustiņus</string>
+    <string name="title_forget">Aizmirst</string>
+    <string name="title_export_passwords_and_keys">Izgūt paroles un atslēgas</string>
+    <string name="msg_done">Pabeigts</string>
+    <string name="pref_gesture_action_left_press">Ilgs-pieskāriens</string>
+    <string name="desc_toolbar_btn">Atvērt rīkjoslu</string>
+    <string name="pref_three_finger_tap">Trīs pirkstu pieskāriens</string>
+    <string name="pref_swipe3">Trīs pirkstu vilkšana</string>
 </resources>

@@ -220,4 +220,9 @@
     <string name="title_always_show_advanced_editor">始终显示高级选项</string>
     <string name="msg_required">必需</string>
     <string name="msg_invalid_mac_address">无效的 MAC 地址</string>
+    <string name="pref_three_finger_tap">三指轻按</string>
+    <string name="pref_swipe3">三指滑动</string>
+    <string name="desc_toolbar_btn">打开工具栏</string>
+    <string name="pref_long_press_swipe_disabled_summary">被<b>长按</b>手势的当前值停用</string>
+    <string name="pref_toolbar_open_with_button">显示打开按钮</string>
 </resources>

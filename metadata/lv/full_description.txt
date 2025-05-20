@@ -1,0 +1,16 @@
+AVNC - atvērtā pirmkoda Android VNC klients. Tas ļauj attālināti vadīt jebkuru ierīci, kurā darbojas VNC serveris.
+
+Funkcijas:
+
+- Material dizains (ar tumšo motīvu)
+- Konfigurējami (pielāgoti) žesti
+- Spēcīga kodēšana
+- Virtuālie papildu taustiņi (piemēram, Ctrl, Alt, Tab, Esc, bultiņas…)
+- Attēls attēlā (PiP) režīms
+- Tikai skatīšanas režīms
+- Automātiska Zeroconf servera atklāšana LAN tīklā
+- TLS atbalsts (AnonTLS, VeNCrypt)
+- SSH tunelis (VNC izmanto SSH tunelēšanu)
+- Ievietot/Izgūt saglabātos serverus
+- VNC retranslatora atbalsts
+- Starpliktuves sinhronizācija ar serveri

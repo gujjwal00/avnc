@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title_automatic">Automat</string>
+    <string name="title_automatic">Automatický</string>
     <string name="title_delete">Smazat</string>
     <string name="title_button_up_delay">Odeslat události zpožděně</string>
     <string name="title_edit_server_profile">Upravit server</string>
@@ -16,11 +16,11 @@
     <string name="title_settings">Nastavení</string>
     <string name="title_vnc_login">VNC přihlášení</string>
     <string name="title_ssh_login">SSH přihlášení</string>
-    <string name="title_unlock_private_key">Odemknout privární klíč</string>
+    <string name="title_unlock_private_key">Odemknout osobní klíč</string>
     <string name="title_remember">Pamatovat</string>
     <string name="title_export">Export</string>
     <string name="title_import">Import</string>
-    <string name="title_view_only_mode">Jen-obraz</string>
+    <string name="title_view_only_mode">Jen obraz</string>
     <string name="title_connect_on_app_start">Automatické připojení při spuštění</string>
     <string name="title_enable_wol">Wake-on-LAN</string>
     <string name="title_hide_remote_cursor">Skrýt vzdálený kurzor</string>
@@ -37,14 +37,14 @@
     <string name="title_export_passwords_and_keys">Export hesel a klíčů</string>
     <string name="title_delete_servers_before_import">Odstranit stávající servery před importem</string>
     <string name="title_use_repeater">Použít opakovač</string>
-    <string name="title_private_key">Privátní klíč</string>
+    <string name="title_private_key">Osobní klíč</string>
     <string name="title_change">Změnit</string>
-    <string name="title_about">O nás</string>
+    <string name="title_about">O aplikaci</string>
     <string name="title_license">Licence</string>
-    <string name="title_open_source_libraries">Zdrojové kódy nihoven</string>
+    <string name="title_open_source_libraries">Zdrojové kódy knihoven</string>
     <string name="title_report_bug">Nahlásit problém</string>
     <string name="title_source_code">Zdrojový kód</string>
-    <string name="title_unlock_dialog">Odemknout k pokračování</string>
+    <string name="title_unlock_dialog">Odemknout pro pokračování</string>
     <string name="hint_server_id">ID serveru</string>
     <string name="hint_send_text_to_server">Poslat text na server</string>
     <string name="title_next">Další</string>
@@ -54,7 +54,7 @@
     <string name="hint_ssh_host">SSH hostitel</string>
     <string name="hint_ssh_port">SSH port</string>
     <string name="hint_key_password">Klíč</string>
-    <string name="msg_about_app">Rychlý a bezpečný VNC klient. Vzdáleně zobrazte a ovládejte libovolné zařízení s běžícím serverem VNC.\n\n\nAVNC je open source a copyleft software — vyrobený s pomocí mnoha přispěvatelů.</string>
+    <string name="msg_about_app">Rychlý a bezpečný VNC klient. Vzdáleně zobrazte a ovládejte libovolné zařízení s běžícím serverem VNC.\n\n\nAVNC je open source a copyleft program — vyrobený s pomocí mnoha přispěvatelů.</string>
     <string name="msg_server_profile_added">Server přidán</string>
     <string name="msg_server_profile_deleted">Server smazán</string>
     <string name="msg_zoom_reset_default">Zoom do výchozího nastavení</string>
@@ -72,9 +72,9 @@
     <string name="msg_required">Vyžadováno</string>
     <string name="msg_invalid_mac_address">Neplatná MAC adresa</string>
     <string name="msg_invalid_vnc_uri">Neplatné VNC URI</string>
-    <string name="msg_pk_password_not_saved">Pro zlepšení bezpečnosti už AVNC neukládá privátní klíč.</string>
+    <string name="msg_pk_password_not_saved">Pro zlepšení bezpečnosti už AVNC neukládá osobní klíč.</string>
     <string name="msg_button_up_delay_help">Zpoždění události může pomoci v některých vzácných případech, pokud aplikace nereaguje na kliknutí.</string>
-    <string name="msg_tap_to_select_a_key">Klepněte na tlačítko pro výběr klíče:</string>
+    <string name="msg_tap_to_select_a_key">Klepněte pro výběr klíče:</string>
     <string name="msg_gesture_style_help"><b>Dotyková obrazovka</b>\nAkce v bodu dotyku\n\n<b>Dotyková plocha</b>\nAkce na pozici ukazatele</string>
     <string name="msg_drag_gesture_help">Přiřazením akce k tomuto gestu se změní detekce dlouhého tisku:\n\n<b>Press-hold-release</b> → Dlouhý stisk\n<b>Press-hold-swipe</b> → dlouhý stisk a posun</string>
     <string name="msg_shortcut_server_deleted">Tento server byl odstraněn</string>
@@ -90,7 +90,7 @@
     <string name="desc_discovery_btn">Objevit servery</string>
     <string name="desc_discovery_stop_btn">Zastavit objevování serverů</string>
     <string name="desc_discovery_running">Objevuji servery v síti</string>
-    <string name="desc_keyboard_btn">Otevře klávesnici</string>
+    <string name="desc_keyboard_btn">Otevřít klávesnici</string>
     <string name="desc_virtual_keys_btn">Zobrazit virtuální klávesy</string>
     <string name="desc_save_zoom_btn">Aktuální zoom jako výchozí</string>
     <string name="desc_lock_zoom_btn">Zamknout zoom</string>
@@ -109,7 +109,7 @@
     <string name="hint_repeater_host">Opakovač hostitele</string>
     <string name="hint_port">Port</string>
     <string name="msg_copied_to_clipboard">Zkopírováno</string>
-    <string name="msg_invalid_key_file">Neplatný privátní klíč soubor</string>
+    <string name="msg_invalid_key_file">Neplatný soubor osobního klíče</string>
     <string name="pref_tools_summary">Import / Export, ladění</string>
     <string name="pref_tools">Nástroje</string>
     <string name="msg_key_compat_mode_help">Některé servery mají omezenou podporu Unicode. Zastaralé události mohou pomoci s neanglickým textem.</string>
@@ -119,7 +119,7 @@
     <string name="tip_discovery">Objevování může automaticky najít podporované servery\nběžící na vaší síti.</string>
     <string name="desc_reset_zoom_btn">Resetovat zoom</string>
     <string name="msg_zoom_saved">Aktuální zoom uložen jako výchozí</string>
-    <string name="desc_retry_connection_btn">Připojit znovu</string>
+    <string name="desc_retry_connection_btn">Znovu připojit</string>
     <string name="desc_back_btn">Zpět</string>
     <string name="desc_clear_url_btn">Vyčistit</string>
     <string name="desc_server_url">Adresa serveru</string>
@@ -127,7 +127,7 @@
     <string name="desc_discovered_list">Seznam automaticky objevených serverů</string>
     <string name="desc_saved_servers_list">Seznam uložených serverů</string>
     <string name="pref_ui">Rozhranní</string>
-    <string name="pref_viewer_summary">Obraz-v-obraze, zoom</string>
+    <string name="pref_viewer_summary">Obraz v obrazu, zoom</string>
     <string name="pref_input">Vstup</string>
     <string name="pref_input_summary">Gesta, myš, virtuální klávesy</string>
     <string name="pref_servers">Servery</string>
@@ -145,10 +145,10 @@
     <string name="pref_gesture_action_remote_drag_middle">Přetáhnout středním tlačítkem</string>
     <string name="pref_gesture_action_open_keyboard">Otevřít klávesnici</string>
     <string name="pref_theme">Téma</string>
-    <string name="pref_theme_option_system">Systém</string>
-    <string name="pref_theme_option_dark">Tmavý</string>
-    <string name="pref_theme_option_light">Světlý</string>
-    <string name="pref_prefer_advanced_editor">Přímo otevřít pokročilé možnosti serveru</string>
+    <string name="pref_theme_option_system">Dle systému</string>
+    <string name="pref_theme_option_dark">Tmavé</string>
+    <string name="pref_theme_option_light">Světlé</string>
+    <string name="pref_prefer_advanced_editor">Rovnou otevřít pokročilé možnosti serveru</string>
     <string name="pref_sort_server_list">Seřadit uložené servery podle jména</string>
     <string name="pref_gesture_style">Styl gest</string>
     <string name="pref_gesture_style_auto_summary">Na základě nastavení aplikace</string>
@@ -179,22 +179,22 @@
     <string name="pref_km_language_switch_to_super">Přepínač jazyků → Super</string>
     <string name="pref_km_back_to_escape">Zpět → ESCape</string>
     <string name="pref_orientation">Orientace obrazovky</string>
-    <string name="pref_orientation_option_auto">Automat</string>
+    <string name="pref_orientation_option_auto">Automatická</string>
     <string name="pref_orientation_option_portrait">Portrét</string>
     <string name="pref_orientation_option_landscape">Na šířku</string>
     <string name="pref_fullscreen">Celá obrazovka</string>
     <string name="pref_display_cutout">Rozšířit do výřezu</string>
-    <string name="pref_enable_pip">Obraz-v-obraze</string>
-    <string name="pref_keep_screen_on">Udržet obrazovku zaplou</string>
+    <string name="pref_enable_pip">Obraz v obrazu</string>
+    <string name="pref_keep_screen_on">Obrazovka vždy zapnuta</string>
     <string name="pref_toolbar_alignment_option_start">Začátek</string>
     <string name="pref_show_gesture_style_toggle">Zobrazit přepínač stylů gest</string>
     <string name="pref_zoom">Zoom</string>
     <string name="pref_zoom_min">Minimální</string>
     <string name="pref_zoom_max">Maximální</string>
     <string name="pref_per_orientation_zoom">Samostatný zoom pro každou orientaci</string>
-    <string name="pref_clipboard_sync">Synchronizace schránky</string>
+    <string name="pref_clipboard_sync">Synchronizovat schránku</string>
     <string name="pref_toolbar">Panel nástrojů</string>
-    <string name="pref_toolbar_alignment">Zarovnání</string>
+    <string name="pref_toolbar_alignment">Zarovnat</string>
     <string name="pref_toolbar_open_with_swipe">Posuňte od okraje k otevření</string>
     <string name="pref_auto_reconnect">Připojovat automaticky</string>
     <string name="pref_forget_known_hosts">Zapomenout známé hostitele</string>
@@ -219,4 +219,5 @@
     <string name="pref_saved_server_lock">Zamknout uložené servery</string>
     <string name="pref_debugging">Ladění</string>
     <string name="pref_ui_summary">Vzhled a chování</string>
+    <string name="pref_gesture_action_pan">Zvětšit rám dle obsahu</string>
 </resources>
