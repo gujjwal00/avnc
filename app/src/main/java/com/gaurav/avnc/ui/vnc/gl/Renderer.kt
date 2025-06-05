@@ -226,7 +226,7 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
         }
 
         // Ensure program and frame are initialized (they should be from onSurfaceCreated)
-        if (surfaceNeedsBinding && this::program.isInitialized && this::frame.isInitialized) {
+        if (this::program.isInitialized && this::frame.isInitialized) {
             frame.bind(program, surface)
         }
 
