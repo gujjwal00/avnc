@@ -8,101 +8,104 @@
 
 package com.gaurav.avnc.ui.vnc.gl
 
-import android.opengl.GLES20.GL_FLOAT
-import android.opengl.GLES20.GL_TRIANGLES
-import android.opengl.GLES20.glDrawArrays
-import android.opengl.GLES20.glEnableVertexAttribArray
-import android.opengl.GLES20.glVertexAttribPointer
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
-import java.nio.FloatBuffer
+import android.opengl.GLES20
+import java.nio.ShortBuffer
 
 /**
- * Frame is represented as two triangles:
- *
- *     [0, fbHeight]  +-----------+  [fbWidth, fbHeight]
- *                    |          /|
- *                    |       /   |
- *                    |    /      |
- *                    | /         |
- *            [0, 0]  +-----------+  [fbWidth, 0]
- *
- * Frame texture is mapped onto these triangles.
+ * Frame represents geometry that can be drawn.
+ * It now sources its geometry data from a ProjectedSurface
+ * and manages VBOs and an optional EBO.
  */
 class Frame {
 
-    companion object {
-        const val FLOAT_SIZE = 4
-        const val TRIANGLE_COMPONENT = 2    //[x,y]
-        const val TEXTURE_COMPONENT = 2     //[x,y]
-        const val STRIDE = (TRIANGLE_COMPONENT + TEXTURE_COMPONENT) * FLOAT_SIZE
-    }
-
-    private var fbWidth = 0F
-    private var fbHeight = 0F
-    private var vertexData: FloatArray
-    private var vertexBuffer: FloatBuffer
+    // VBO IDs: 0 for vertices, 1 for texture coordinates, 2 for normals
+    private val vboIds = IntArray(3)
+    private var eboId: Int = 0
+    private var indexCount: Int = 0
+    private var vertexCount: Int = 0 // For glDrawArrays
+    private var drawMode: Int = GLES20.GL_TRIANGLE_STRIP // Default, can be changed by ProjectedSurface
 
     init {
-        vertexData = generateVertexData()
-        vertexBuffer = ByteBuffer.allocateDirect(vertexData.size * 4)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer()
-                .put(vertexData)
+        // Initialize buffer IDs to 0 (invalid in OpenGL context until generated)
+        vboIds.fill(0)
     }
 
     /**
-     * Generates vertex data for frame.
+     * Binds vertex data from the ProjectedSurface to VBOs and EBO (if applicable).
+     * Enables vertex attributes.
      */
-    private fun generateVertexData(): FloatArray {
+    fun bind(program: FrameProgram, surface: ProjectedSurface) {
+        // Clean up old buffers if they exist
+        if (vboIds[0] != 0) GLES20.glDeleteBuffers(vboIds.size, vboIds, 0)
+        if (eboId != 0) GLES20.glDeleteBuffers(1, intArrayOf(eboId), 0)
 
-        //Note: Textures have their own coordinate system. [0,0] represents bottom-left
-        //      and [1,1] represents upper-right corner.
+        GLES20.glGenBuffers(3, vboIds, 0)
 
-        return floatArrayOf(
-                //@formatter:off
-                //Triangle coordinates     //Texture coordinates
-                0F, 0F,                    0F, 0F,
-                fbWidth, 0F,               1F, 0F,
-                fbWidth, fbHeight,         1F, 1F,
+        // Vertex Buffer
+        val vertices = surface.getVertices()
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vboIds[0])
+        GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, vertices.capacity() * 4, vertices, GLES20.GL_STATIC_DRAW)
+        program.enablePosition(vboIds[0])
 
-                0F, 0F,                    0F, 0F,
-                fbWidth, fbHeight,         1F, 1F,
-                0F, fbHeight,              0F, 1F
-                //@formatter:on
-        )
-    }
+        // Texture Coordinates Buffer
+        val texCoords = surface.getTextureCoordinates()
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vboIds[1])
+        GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, texCoords.capacity() * 4, texCoords, GLES20.GL_STATIC_DRAW)
+        program.enableTexCoord(vboIds[1])
 
+        // Normals Buffer
+        val normals = surface.getNormals()
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, vboIds[2])
+        GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, normals.capacity() * 4, normals, GLES20.GL_STATIC_DRAW)
+        program.enableNormal(vboIds[2])
 
-    fun bind(program: FrameProgram) {
-        setVertexAttributePointer(0, program.aPositionLocation, TRIANGLE_COMPONENT, STRIDE)
-        setVertexAttributePointer(TRIANGLE_COMPONENT, program.aTextureCoordinatesLocation, TEXTURE_COMPONENT, STRIDE)
-    }
-
-    private fun setVertexAttributePointer(dataOffset: Int, attributeLocation: Int, componentCount: Int, stride: Int) {
-        vertexBuffer.position(dataOffset)
-        glVertexAttribPointer(attributeLocation, componentCount, GL_FLOAT, false, stride, vertexBuffer)
-        glEnableVertexAttribArray(attributeLocation)
-        vertexBuffer.position(0)
+        // Index Buffer (EBO)
+        val indices = surface.getIndices()
+        if (indices != null) {
+            val eboArray = IntArray(1)
+            GLES20.glGenBuffers(1, eboArray, 0)
+            eboId = eboArray[0]
+            GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, eboId)
+            GLES20.glBufferData(GLES20.GL_ELEMENT_ARRAY_BUFFER, indices.size * 2, ShortBuffer.wrap(indices), GLES20.GL_STATIC_DRAW)
+            indexCount = indices.size
+            drawMode = GLES20.GL_TRIANGLES // Typically use GL_TRIANGLES with indices
+        } else {
+            eboId = 0 // Ensure eboId is 0 if no indices
+            indexCount = 0
+            // Vertex count for glDrawArrays (assuming 3 components X,Y,Z per vertex)
+            vertexCount = surface.getVertices().capacity() / 3
+            // Set drawMode based on surface type, or surface could expose this
+            if (surface is FlatSurface) {
+                drawMode = GLES20.GL_TRIANGLE_STRIP // FlatSurface (4 vertices) is suitable for TRIANGLE_STRIP
+                vertexCount = 4 // FlatSurface has 4 vertices
+            } else {
+                // Default for non-indexed, non-FlatSurface cases, might need adjustment
+                drawMode = GLES20.GL_TRIANGLES // Or some other default
+            }
+        }
+        // Unbind ARRAY_BUFFER and ELEMENT_ARRAY_BUFFER after setup
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
+        if (eboId != 0) {
+            GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0)
+        }
     }
 
     /**
-     * Should be called whenever the size of framebuffer is changed.
-     * This size will be used to calculate frame vertices.
+     * Draws the frame using either glDrawElements (if EBO is used) or glDrawArrays.
+     * Assumes that the correct shader program is already in use and uniforms are set.
+     * Also assumes that necessary buffers were bound in the bind() call.
      */
-    fun updateFbSize(width: Float, height: Float) {
-        if (width == fbWidth && height == fbHeight)
-            return //Nothing to do
-
-        fbWidth = width
-        fbHeight = height
-
-        vertexData = generateVertexData()
-        vertexBuffer.position(0)
-        vertexBuffer.put(vertexData)
-    }
-
     fun draw() {
-        glDrawArrays(GL_TRIANGLES, 0, 6)
+        if (eboId != 0) {
+            // Bind the EBO before drawing elements
+            GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, eboId)
+            GLES20.glDrawElements(drawMode, indexCount, GLES20.GL_UNSIGNED_SHORT, 0)
+            // Unbind EBO after drawing
+            GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0)
+        } else {
+            GLES20.glDrawArrays(drawMode, 0, vertexCount)
+        }
     }
+
+    // updateFbSize method is removed as geometry is now from ProjectedSurface
 }

@@ -9,6 +9,7 @@
 package com.gaurav.avnc.ui.vnc
 
 import android.graphics.PointF
+import android.widget.Toast // Import Toast
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.PointerButton
@@ -55,6 +56,10 @@ class Dispatcher(private val activity: VncActivity) {
     private val messenger = viewModel.messenger
     private val gesturePref = viewModel.pref.input.gesture
 
+    // Sensitivity factor for converting swipe dx/dy to camera yaw/pitch.
+    // This could also be sourced from AppPreferences if it needs to be user-configurable.
+    private val cameraPanSensitivity = 0.1f
+
 
     /**************************************************************************
      * Action configuration
@@ -84,6 +89,9 @@ class Dispatcher(private val activity: VncActivity) {
         val mouseBackAction = selectPointAction(viewModel.pref.input.mouseBack)
 
         private fun selectPointAction(actionName: String): (PointF) -> Unit {
+            if (actionName == "center_xr_view") {
+                Toast.makeText(activity, "Dispatcher: 'center_xr_view' resolved by selectPointAction", Toast.LENGTH_SHORT).show() // DEBUG
+            }
             return when (actionName) {
                 "left-press" -> { p -> defaultMode.doButtonDown(PointerButton.Left, p) }
                 "left-click" -> { p -> defaultMode.doClick(PointerButton.Left, p) }
@@ -91,6 +99,10 @@ class Dispatcher(private val activity: VncActivity) {
                 "middle-click" -> { p -> defaultMode.doClick(PointerButton.Middle, p) }
                 "right-click" -> { p -> defaultMode.doClick(PointerButton.Right, p) }
                 "open-keyboard" -> { _ -> doOpenKeyboard() }
+                "center_xr_view" -> { _ ->
+                    Toast.makeText(activity, "Dispatcher: Executing 'center_xr_view' action", Toast.LENGTH_SHORT).show() // DEBUG
+                    viewModel.requestViewReset()
+                } // New action
                 else -> { _ -> } //Nothing
             }
         }
@@ -105,7 +117,7 @@ class Dispatcher(private val activity: VncActivity) {
          */
         private fun selectSwipeAction(actionName: String): (PointF, PointF, Float, Float) -> Unit {
             return when (actionName) {
-                "pan" -> { _, _, dx, dy -> doPan(dx, dy) }
+                "pan" -> { _, _, dx, dy -> doCameraPan(dx, dy) } // Changed from doPan to doCameraPan
                 "move-pointer" -> { _, cp, dx, dy -> defaultMode.doMovePointer(cp, dx, dy) }
                 "remote-scroll" -> { sp, _, dx, dy -> defaultMode.doRemoteScroll(sp, dx, dy) }
                 "remote-drag" -> { _, cp, dx, dy -> defaultMode.doRemoteDrag(PointerButton.Left, cp, dx, dy) }
@@ -136,7 +148,10 @@ class Dispatcher(private val activity: VncActivity) {
 
     fun onTap1(p: PointF) = config.tap1Action(p)
     fun onTap2(p: PointF) = config.tap2Action(p)
-    fun onTap3(p: PointF) = config.tap3Action(p)
+    fun onTap3(p: PointF) {
+        Toast.makeText(activity, "Dispatcher.onTap3 called", Toast.LENGTH_SHORT).show() // DEBUG
+        config.tap3Action(p)
+    }
     fun onDoubleTap(p: PointF) = config.doubleTapAction(p)
     fun onLongPress(p: PointF) = config.longPressAction(p)
 
@@ -166,13 +181,34 @@ class Dispatcher(private val activity: VncActivity) {
         config = Config()
     }
 
+    /**
+     * Re-initializes the action configuration.
+     * This should be called if underlying preferences that affect action mapping have changed.
+     */
+    fun reinitializeConfig() {
+        config = Config()
+    }
+
     /**************************************************************************
      * Available actions
      **************************************************************************/
 
     private fun doOpenKeyboard() = activity.showKeyboard()
     private fun doScale(scaleFactor: Float, fx: Float, fy: Float) = viewModel.updateZoom(scaleFactor, fx, fy)
+    // This is the original 2D pan for the VNC frame. Keep it for other input types if needed,
+    // or if "pan" action from non-swipe sources should still do 2D pan.
     private fun doPan(dx: Float, dy: Float) = viewModel.panFrame(dx, dy)
+
+    /**
+     * New method to handle 3D camera panning based on swipe deltas.
+     */
+    private fun doCameraPan(dx: Float, dy: Float) {
+        val deltaYaw = dx * cameraPanSensitivity
+        // Y-axis on screen is often inverted compared to typical camera pitch controls.
+        val deltaPitch = dy * cameraPanSensitivity * -1f
+        viewModel.panCamera(deltaYaw, deltaPitch)
+    }
+
     private fun startFrameFling(vx: Float, vy: Float) = viewModel.frameScroller.fling(vx, vy)
     private fun stopFrameFling() = viewModel.frameScroller.stop()
 

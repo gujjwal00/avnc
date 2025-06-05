@@ -104,6 +104,7 @@ class AppPreferences(context: Context) {
     val input = Input()
     val server = Server()
     val runInfo = RunInfo()
+    val xr = XR() // Add instance of XR preferences
 
     /****************************** Helpers *******************************/
     open inner class Pref<T>(private val getter: SharedPreferences.() -> T, private val setter: SharedPreferences.Editor.(T) -> Unit) {
@@ -114,6 +115,7 @@ class AppPreferences(context: Context) {
     inner class BooleanPref(val key: String, default: Boolean) : Pref<Boolean>({ getBoolean(key, default) }, { putBoolean(key, it) })
     inner class StringPref(val key: String, default: String?) : Pref<String?>({ getString(key, default) }, { putString(key, it) })
     inner class FloatPref(val key: String, default: Float) : Pref<Float>({ getFloat(key, default) }, { putFloat(key, it) })
+    inner class IntPref(val key: String, default: Int) : Pref<Int>({ getInt(key, default) }, { putInt(key, it) })
 
     /**
      * For some preference changes we want to provide live feedback to user.
@@ -137,6 +139,28 @@ class AppPreferences(context: Context) {
     inner class BooleanLivePref(key: String, default: Boolean) : LivePref<Boolean>(key, { getBoolean(key, default) })
     inner class StringLivePref(key: String, default: String) : LivePref<String>(key, { getString(key, default)!! })
 
+    fun registerOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+    }
+
+    fun unregisterOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        prefs.unregisterOnSharedPreferenceChangeListener(listener)
+    }
+
+    // Inner class for XR-specific preferences
+    inner class XR {
+        // Default "flat", values "flat", "cylindrical"
+        var displayMode by StringPref("xr_display_mode", "flat")
+
+        // Stored as Int (10-50), interpret as Float (1.0-5.0)
+        // Default 20 (for 2.0f)
+        val cylinderRadiusInt by IntPref("xr_cylinder_radius", 20)
+        val cylinderRadius: Float
+            get() = (cylinderRadiusInt / 10f).coerceIn(1.0f, 5.0f)
+
+        // Default "rotation", values "rotation", "offset_surface"
+        var panningMode by StringPref("xr_panning_mode", "rotation")
+    }
 
     /****************************** Migrations *******************************/
     init {

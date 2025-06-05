@@ -12,6 +12,8 @@ import android.app.Application
 import android.graphics.RectF
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import android.content.SharedPreferences
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.model.LoginInfo
@@ -76,7 +78,7 @@ import kotlin.concurrent.thread
  * via OpenGL ES. [frameState] is read from this thread to decide how/where frame
  * should be drawn.
  */
-class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
+class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer, SharedPreferences.OnSharedPreferenceChangeListener {
 
     /**
      * Connection lifecycle:
@@ -188,12 +190,49 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      */
     val confirmationRequest = LiveRequest<Pair<String, String>, Boolean>(false, viewModelScope)
 
+    // LiveEvent for camera panning requests
+    // Using MutableLiveData for simplicity; a SingleLiveEvent pattern might be better for events.
+    val panRequest = MutableLiveData<Pair<Float, Float>>()
+
+    // LiveEvent for camera zoom requests
+    val zoomRequest = MutableLiveData<Float>()
+
+    // LiveEvent to signal VncActivity to reset the Renderer's camera and surface
+    val triggerViewReset = MutableLiveData<Unit?>()
+
+    // LiveEvent to signal VncActivity to reinitialize the Dispatcher's config
+    val reinitializeDispatcherRequest = MutableLiveData<Unit?>()
+
+    init {
+        pref.registerOnSharedPreferenceChangeListener(this)
+    }
+
     override fun onCleared() {
         super.onCleared()
+        pref.unregisterOnSharedPreferenceChangeListener(this)
         if (state.value != State.Disconnected)
             client.interrupt()
     }
 
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        when {
+            key == "xr_display_mode" || key == "xr_cylinder_radius" || key == "xr_panning_mode" -> {
+                requestViewReset()
+            }
+            // Check if it's any gesture or mouse mapping preference
+            key?.startsWith("gesture_") == true || key?.startsWith("mouse_") == true -> {
+                reinitializeDispatcherRequest.postValue(null)
+            }
+            // Potentially other specific keys for gesture_style if not covered by startsWith("gesture_")
+            // For example, if gesture_style itself needs to trigger reinitializeDispatcherRequest
+            // key == "gesture_style" -> { reinitializeDispatcherRequest.postValue(null) }
+            // However, onGestureStyleChanged() in Dispatcher is already called by an observer on activeGestureStyle
+            // which is updated when gesture_style or profile.gestureStyle changes.
+            // So, explicit handling for "gesture_style" here might be redundant if activeGestureStyle covers it.
+            // The current setup for activeGestureStyle seems to handle "gesture_style" changes for Dispatcher.
+            // This new check is for other gesture_tapN, gesture_swipeN, etc.
+        }
+    }
 
     /**************************************************************************
      * Connection management
@@ -441,6 +480,30 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
             activeGestureStyle.value = pref.input.gesture.style
         else
             activeGestureStyle.value = profile.gestureStyle
+    }
+
+    /**
+     * Called by TouchHandler to request camera panning.
+     * This posts an event that VncActivity can observe.
+     */
+    fun panCamera(deltaYaw: Float, deltaPitch: Float) {
+        panRequest.postValue(Pair(deltaYaw, deltaPitch))
+    }
+
+    /**
+     * Called by TouchHandler to request camera zooming.
+     * This posts an event that VncActivity can observe.
+     * @param deltaZ The change in Z position (or distance along view vector).
+     */
+    fun zoomCamera(deltaZ: Float) {
+        zoomRequest.postValue(deltaZ)
+    }
+
+    /**
+     * Signals the VncActivity to trigger a reset of the camera and surface in the Renderer.
+     */
+    fun requestViewReset() {
+        triggerViewReset.postValue(null) // Post null or Unit
     }
 
     /**************************************************************************

@@ -48,6 +48,7 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
 
     private lateinit var touchHandler: TouchHandler
     private lateinit var keyHandler: KeyHandler
+    private var mRenderer: com.gaurav.avnc.ui.vnc.gl.Renderer? = null // Field to store renderer
 
     /**
      * Input connection used for intercepting key events
@@ -65,7 +66,9 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
         val viewModel = activity.viewModel
 
         setEGLContextClientVersion(2)
-        setRenderer(Renderer(viewModel))
+        val rendererInstance = com.gaurav.avnc.ui.vnc.gl.Renderer(viewModel)
+        setRenderer(rendererInstance)
+        mRenderer = rendererInstance // Store the instance
         renderMode = RENDERMODE_WHEN_DIRTY
 
         // Hide local cursor if requested and supported
@@ -100,5 +103,34 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
 
     override fun onHoverEvent(event: MotionEvent): Boolean {
         return touchHandler.onHoverEvent(event)
+    }
+
+    /**
+     * Called by VncActivity to pan the camera in the renderer.
+     */
+    fun panFrameRenderer(deltaYaw: Float, deltaPitch: Float) {
+        // Ensure renderer is of the correct type, though it should be by construction
+        mRenderer?.panCamera(deltaYaw, deltaPitch)
+    }
+
+    /**
+     * Called by VncActivity to zoom the camera in the renderer.
+     */
+    fun zoomFrameRenderer(deltaZ: Float) {
+        mRenderer?.zoomCamera(deltaZ)
+    }
+
+    /**
+     * Called by VncActivity to reset the camera and surface in the renderer.
+     * This typically happens when display-related XR preferences change.
+     */
+    fun resetRendererCameraAndSurface() {
+        // The mRenderer is of type com.gaurav.avnc.ui.vnc.gl.Renderer
+        // as set in initialize().
+        // Queue the event to run on the GL thread, as resetCameraAndSurface might
+        // make GL calls (e.g., frame.bind).
+        queueEvent {
+            mRenderer?.resetCameraAndSurface()
+        }
     }
 }

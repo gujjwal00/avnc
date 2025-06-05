@@ -54,7 +54,6 @@
                     android:contentDescription="@string/pref_gesture_style"
                     android:drawableStart="@drawable/ic_gesture"
                     android:drawableEnd="@drawable/ic_toggle_more"
-                    android:onCheckedChanged="@{(v,checked) -> checked ? zoomOptions.setChecked(false) : void}"
                     android:paddingStart="12dp"
                     android:paddingEnd="0dp"
                     app:isVisible="@{viewModel.pref.viewer.toolbarShowGestureStyleToggle}"
@@ -66,7 +65,28 @@
                     android:contentDescription="@string/desc_zoom_options_btn"
                     android:drawableStart="@drawable/ic_zoom_options"
                     android:drawableEnd="@drawable/ic_toggle_more"
-                    android:onCheckedChanged="@{(v,checked) -> checked ? gestureStyleToggle.setChecked(false) : void}"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="0dp"
+                    tools:ignore="UnusedAttribute" />
+
+                <ImageButton
+                    android:id="@+id/settings_btn"
+                    style="@style/ImageButton"
+                    android:contentDescription="@string/desc_settings_btn"
+                    android:src="@drawable/ic_settings_cog" />
+
+                <ImageButton
+                    android:id="@+id/toolbar_center_view_btn"
+                    style="@style/ImageButton"
+                    android:contentDescription="@string/desc_center_view_btn"
+                    android:src="@drawable/ic_center_focus" />
+
+                <ToggleButton
+                    android:id="@+id/xrSettingsToggleBtn"
+                    style="@style/ImageButton.Toggle"
+                    android:contentDescription="@string/desc_xr_settings_toggle_btn"
+                    android:drawableStart="@drawable/ic_vr"
+                    android:drawableEnd="@drawable/ic_toggle_more"
                     android:paddingStart="12dp"
                     android:paddingEnd="0dp"
                     tools:ignore="UnusedAttribute" />
@@ -133,6 +153,33 @@
                     android:layout_height="wrap_content"
                     android:text="@string/pref_gesture_style_touchpad" />
             </RadioGroup>
+
+            <LinearLayout
+                android:id="@+id/xr_settings_flyout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:background="@drawable/bg_round_rect"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_small"
+                app:isVisible="@{xrSettingsToggleBtn.checked}">
+
+                <Button
+                    android:id="@+id/xr_display_mode_btn"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_toggle_display_mode_formatted" />
+
+                <Button
+                    android:id="@+id/xr_panning_mode_btn"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/btn_toggle_panning_mode_formatted" />
+            </LinearLayout>
 
         </LinearLayout>
 

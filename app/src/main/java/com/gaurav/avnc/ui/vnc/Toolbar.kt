@@ -75,6 +75,63 @@ class Toolbar(private val activity: VncActivity) {
         binding.zoomSaveBtn.setOnClickListener { saveZoom(); close() }
         binding.virtualKeysBtn.setOnClickListener { activity.virtualKeys.show(true); close() }
 
+        binding.settingsBtn.setOnClickListener {
+            val intent = android.content.Intent(activity, com.gaurav.avnc.ui.prefs.PrefsActivity::class.java)
+            activity.startActivity(intent)
+            close() // Close the toolbar drawer
+        }
+
+        binding.toolbarCenterViewBtn.setOnClickListener {
+            viewModel.requestViewReset() // This triggers the reset logic
+            // Toast.makeText(activity, "Centering view...", Toast.LENGTH_SHORT).show() // Optional feedback
+            close() // Close the toolbar drawer
+        }
+
+        // Mutual exclusivity for ToggleButtons
+        binding.xrSettingsToggleBtn.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.zoomOptions.isChecked = false
+                binding.gestureStyleToggle.isChecked = false
+            }
+        }
+        binding.gestureStyleToggle.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.zoomOptions.isChecked = false
+                binding.xrSettingsToggleBtn.isChecked = false
+            }
+        }
+        binding.zoomOptions.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                binding.gestureStyleToggle.isChecked = false
+                binding.xrSettingsToggleBtn.isChecked = false
+            }
+        }
+
+        // XR Flyout Button Listeners
+        binding.xrDisplayModeBtn.setOnClickListener {
+            val currentMode = viewModel.pref.xr.displayMode
+            val newMode = if (currentMode == "flat") "cylindrical" else "flat"
+            viewModel.pref.xr.displayMode = newMode // Assumes displayMode is 'var' in AppPreferences.XR
+
+            updateXRButtonLabels() // Update text immediately
+            val newModeString = if (newMode == "flat") activity.getString(R.string.display_mode_flat) else activity.getString(R.string.display_mode_cylindrical)
+            Toast.makeText(activity, activity.getString(R.string.toast_display_mode, newModeString), Toast.LENGTH_SHORT).show()
+            viewModel.requestViewReset() // Signal VncViewModel to trigger Renderer reset
+            // close() // Optional: Do not close, let user make multiple changes
+        }
+
+        binding.xrPanningModeBtn.setOnClickListener {
+            val currentMode = viewModel.pref.xr.panningMode
+            val newMode = if (currentMode == "rotation") "offset_surface" else "rotation"
+            viewModel.pref.xr.panningMode = newMode // Assumes panningMode is 'var' in AppPreferences.XR
+
+            updateXRButtonLabels() // Update text immediately
+            val newModeString = if (newMode == "rotation") activity.getString(R.string.panning_mode_rotation) else activity.getString(R.string.panning_mode_offset_surface)
+            Toast.makeText(activity, activity.getString(R.string.toast_panning_mode, newModeString), Toast.LENGTH_SHORT).show()
+            viewModel.requestViewReset() // Signal VncViewModel to trigger Renderer reset
+            // close() // Optional
+        }
+
         // Root view is transparent. Click on it should work just like a click in scrim area
         drawerView.setOnClickListener { close() }
 
@@ -86,6 +143,7 @@ class Toolbar(private val activity: VncActivity) {
         setupGestureStyleSelection()
         setupGestureExclusionRect()
         setupDrawerCloseOnScrimSwipe()
+        updateXRButtonLabels() // Set initial text for XR buttons
     }
 
     fun open() {
@@ -271,6 +329,7 @@ class Toolbar(private val activity: VncActivity) {
                 if (closedView == drawerView) {
                     binding.zoomOptions.isChecked = false
                     binding.gestureStyleToggle.isChecked = false
+                    binding.xrSettingsToggleBtn.isChecked = false // Also close XR flyout
                 }
             }
         })
@@ -364,5 +423,15 @@ class Toolbar(private val activity: VncActivity) {
         val maxY = parentHeight - btn.height - btn.marginBottom
         val y = (parentHeight * verticalBias).toInt().coerceAtMost(maxY).coerceAtLeast(minY)
         btn.y = y.toFloat()
+    }
+
+    private fun updateXRButtonLabels() {
+        val displayMode = viewModel.pref.xr.displayMode
+        val displayModeStringRes = if (displayMode == "flat") R.string.display_mode_flat else R.string.display_mode_cylindrical
+        binding.xrDisplayModeBtn.text = activity.getString(R.string.btn_toggle_display_mode_formatted, activity.getString(displayModeStringRes))
+
+        val panningMode = viewModel.pref.xr.panningMode
+        val panningModeStringRes = if (panningMode == "rotation") R.string.panning_mode_rotation else R.string.panning_mode_offset_surface
+        binding.xrPanningModeBtn.text = activity.getString(R.string.btn_toggle_panning_mode_formatted, activity.getString(panningModeStringRes))
     }
 }

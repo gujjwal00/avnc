@@ -18,7 +18,10 @@ import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ViewConfiguration
+import android.widget.Toast // Import Toast
+// import com.gaurav.avnc.model.InputActions // No longer strictly needed for "pan" string comparison
 import com.gaurav.avnc.util.AppPreferences
+import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.PointerButton
 import kotlin.math.PI
 import kotlin.math.abs
@@ -28,11 +31,20 @@ import kotlin.math.max
 /**
  * Handler for touch events. It detects various gestures and notifies [dispatcher].
  */
-class TouchHandler(private val frameView: FrameView, private val dispatcher: Dispatcher, private val pref: AppPreferences)
-    : ScaleGestureDetector.OnScaleGestureListener {
+class TouchHandler(
+    private val frameView: FrameView,
+    private val dispatcher: Dispatcher,
+    private val viewModel: VncViewModel, // Added VncViewModel
+    private val pref: AppPreferences
+) : ScaleGestureDetector.OnScaleGestureListener {
 
     //Extension to easily access touch position
     private fun MotionEvent.point() = PointF(x, y)
+
+    // Removed: lastX, lastY, isPanningCamera, cameraPanSensitivity
+    // These were related to direct 3D pan handling in TouchHandler, which is now moved to Dispatcher.
+
+    private val cameraZoomSensitivity = 2f // Adjust as needed. Larger means faster zoom.
 
     /****************************************************************************************
      * Touch Event receivers
@@ -43,9 +55,15 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
      ****************************************************************************************/
 
     fun onTouchEvent(event: MotionEvent): Boolean {
-        val handled = handleStylusEvent(event) || handleMouseEvent(event) || handleGestureEvent(event)
+        // Removed direct 3D camera panning logic for ACTION_DOWN/ACTION_MOVE/ACTION_UP.
+        // This will now be handled by GestureDetectorEx -> Dispatcher -> viewModel.panCamera()
+        // when the swipe action is configured to "pan".
+
+        // Existing gesture detection logic:
+        val handledByOthers = handleStylusEvent(event) || handleMouseEvent(event) || handleGestureEvent(event)
+
         handleGestureStartStop(event)
-        return handled
+        return handledByOthers
     }
 
     fun onGenericMotionEvent(event: MotionEvent): Boolean {
@@ -183,12 +201,20 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         return gestureDetector.onTouchEvent(event)
     }
 
-    override fun onScaleBegin(detector: ScaleGestureDetector) = true
-    override fun onScaleEnd(detector: ScaleGestureDetector) {}
+    override fun onScaleBegin(detector: ScaleGestureDetector) = true // Always start scale, decision in onScale
+    override fun onScaleEnd(detector: ScaleGestureDetector) { /* No specific action needed on end for now */ }
     override fun onScale(detector: ScaleGestureDetector): Boolean {
-        if (swipeVsScale.shouldScale())
-            dispatcher.onScale(detector.scaleFactor, detector.focusX, detector.focusY)
-        return true
+        // detector.scaleFactor > 1 means pinch-out (zoom in for camera)
+        // detector.scaleFactor < 1 means pinch-in (zoom out for camera)
+
+        // The change in Z position or distance along view vector.
+        // (1 - detector.scaleFactor) makes pinch-out (factor > 1) result in negative deltaZ (move closer/zoom in)
+        // and pinch-in (factor < 1) result in positive deltaZ (move further/zoom out).
+        val deltaZ = (1 - detector.scaleFactor) * cameraZoomSensitivity
+
+        viewModel.zoomCamera(deltaZ) // Call new method in VncViewModel
+
+        return true // Event handled
     }
 
     private inner class FingerGestureListener : GestureDetectorEx.GestureListenerEx {
@@ -199,7 +225,10 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         override fun onMultiFingerTap(e: MotionEvent, fingerCount: Int) {
             when (fingerCount) {
                 2 -> dispatcher.onTap2(e.point())
-                3 -> dispatcher.onTap3(e.point())
+                3 -> {
+                    Toast.makeText(frameView.context, "3-finger tap in TouchHandler", Toast.LENGTH_SHORT).show() // DEBUG
+                    dispatcher.onTap3(e.point())
+                }
             }
         }
 

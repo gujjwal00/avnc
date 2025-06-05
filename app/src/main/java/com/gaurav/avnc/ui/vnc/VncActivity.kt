@@ -93,7 +93,8 @@ class VncActivity : AppCompatActivity() {
     val viewModel by viewModels<VncViewModel>()
     lateinit var binding: ActivityVncBinding
     private val dispatcher by lazy { Dispatcher(this) }
-    private val touchHandler by lazy { TouchHandler(binding.frameView, dispatcher, viewModel.pref) }
+    // Updated TouchHandler instantiation to include viewModel
+    private val touchHandler by lazy { TouchHandler(binding.frameView, dispatcher, viewModel, viewModel.pref) }
     val keyHandler by lazy { KeyHandler(dispatcher, viewModel.pref) }
     val virtualKeys by lazy { VirtualKeys(this) }
     val toolbar by lazy { Toolbar(this) }
@@ -131,6 +132,28 @@ class VncActivity : AppCompatActivity() {
         viewModel.activeGestureStyle.observe(this) { dispatcher.onGestureStyleChanged() }
         viewModel.state.observe(this) { onClientStateChanged(it) }
         viewModel.profileLive.observe(this) { onProfileUpdated(it) }
+        viewModel.panRequest.observe(this) { panData ->
+            // Pair<Float, Float> where first is deltaYaw, second is deltaPitch
+            panData?.let {
+                binding.frameView.panFrameRenderer(it.first, it.second)
+                binding.frameView.requestRender() // Add this line
+            }
+        }
+        viewModel.zoomRequest.observe(this) { deltaZ ->
+            deltaZ?.let {
+                binding.frameView.zoomFrameRenderer(it)
+                binding.frameView.requestRender()
+            }
+        }
+        viewModel.reinitializeDispatcherRequest.observe(this) {
+            // Parameter is not used, it's just a trigger
+            dispatcher.reinitializeConfig()
+        }
+        viewModel.triggerViewReset.observe(this) {
+            // Parameter 'it' is not used as it's a Unit event (or null)
+            binding.frameView.resetRendererCameraAndSurface()
+            binding.frameView.requestRender()
+        }
 
         autoReconnectDelay = intent.getIntExtra(AUTO_RECONNECT_DELAY_KEY, 5)
         savedInstanceState?.let {

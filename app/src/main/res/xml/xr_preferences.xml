@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        app:key="xr_display_mode"
+        app:title="Display Mode"
+        app:summary="Select the shape of the projection surface."
+        app:entries="@array/xr_display_mode_entries"
+        app:entryValues="@array/xr_display_mode_values"
+        app:defaultValue="flat" />
+
+    <SeekBarPreference
+        app:key="xr_cylinder_radius"
+        app:title="Cylinder Radius"
+        app:summary="Radius of the cylindrical surface (world units)."
+        android:defaultValue="20"
+        android:min="10"
+        android:max="50"
+        app:showSeekBarValue="true"
+        app:dependency="xr_display_mode" /> <!-- Only enabled if xr_display_mode allows -->
+        <!-- Note: SeekBarPreference stores integers. We'll treat these as value*0.1f.
+             So, default 20 -> 2.0f. Min 10 -> 1.0f. Max 50 -> 5.0f.
+             The dependency will be handled by making it enabled/disabled based on
+             xr_display_mode having the value "cylindrical". This might need programmatic handling
+             if direct XML dependency on a specific ListPreference *value* isn't supported.
+             For now, define it; we can adjust enabling logic in code if needed.
+             A common pattern for conditional enablement with ListPreference is to handle it
+             in the PreferenceFragmentCompat.
+        -->
+
+    <ListPreference
+        app:key="xr_panning_mode"
+        app:title="Panning Mode"
+        app:summary="Select how touch panning moves the camera."
+        app:entries="@array/xr_panning_mode_entries"
+        app:entryValues="@array/xr_panning_mode_values"
+        app:defaultValue="rotation" />
+
+</PreferenceScreen>

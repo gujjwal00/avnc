@@ -52,22 +52,26 @@
         <item>@string/pref_gesture_action_none</item>
         <item>@string/pref_gesture_action_right_click</item>
         <item>@string/pref_gesture_action_open_keyboard</item>
+        <item>Center XR View</item>
     </string-array>
     <string-array name="tap2_action_values">
         <item>none</item>
         <item>right-click</item>
         <item>open-keyboard</item>
+        <item>center_xr_view</item>
     </string-array>
 
     <string-array name="tap3_action_entries">
         <item>@string/pref_gesture_action_none</item>
         <item>@string/pref_gesture_action_right_click</item>
         <item>@string/pref_gesture_action_middle_click</item>
+        <item>Center XR View</item>
     </string-array>
     <string-array name="tap3_action_values">
         <item>none</item>
         <item>right-click</item>
         <item>middle-click</item>
+        <item>center_xr_view</item>
     </string-array>
 
     <string-array name="double_tap_action_entries">
@@ -75,12 +79,14 @@
         <item>@string/pref_gesture_action_double_click</item>
         <item>@string/pref_gesture_action_middle_click</item>
         <item>@string/pref_gesture_action_right_click</item>
+        <item>Center XR View</item>
     </string-array>
     <string-array name="double_tap_action_values">
         <item>none</item>
         <item>double-click</item>
         <item>middle-click</item>
         <item>right-click</item>
+        <item>center_xr_view</item>
     </string-array>
 
     <string-array name="long_press_action_entries">
@@ -89,6 +95,7 @@
         <item>@string/pref_gesture_action_middle_click</item>
         <item>@string/pref_gesture_action_right_click</item>
         <item>@string/pref_gesture_action_left_press</item>
+        <item>Center XR View</item>
     </string-array>
     <string-array name="long_press_action_values">
         <item>none</item>
@@ -96,6 +103,7 @@
         <item>middle-click</item>
         <item>right-click</item>
         <item>left-press</item>
+        <item>center_xr_view</item>
     </string-array>
 
     <string-array name="swipe1_action_entries">
@@ -217,5 +225,24 @@
         <item>Item 1</item>
         <item>Item 2</item>
         <item>Item 3</item>
+    </string-array>
+    <!-- XR Display Mode -->
+    <string-array name="xr_display_mode_entries">
+        <item>Flat</item>
+        <item>Cylindrical</item>
+    </string-array>
+    <string-array name="xr_display_mode_values">
+        <item>flat</item>
+        <item>cylindrical</item>
+    </string-array>
+
+    <!-- XR Panning Mode -->
+    <string-array name="xr_panning_mode_entries">
+        <item>Rotation Panning</item>
+        <item>Offset Surface Panning</item>
+    </string-array>
+    <string-array name="xr_panning_mode_values">
+        <item>rotation</item>
+        <item>offset_surface</item>
     </string-array>
 </resources>

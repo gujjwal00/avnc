@@ -246,4 +246,15 @@
     <string name="pref_keycode_map">Keycode map</string>
     <string name="pref_touch_test">Touch test</string>
     <string name="pref_key_test">Key test</string>
+
+    <string name="desc_xr_settings_toggle_btn">XR Settings</string>
+    <string name="btn_toggle_display_mode_formatted">Display: %s</string>
+    <string name="btn_toggle_panning_mode_formatted">Panning: %s</string>
+    <string name="toast_display_mode">Display: %s</string>
+    <string name="toast_panning_mode">Panning: %s</string>
+    <string name="display_mode_flat">Flat</string>
+    <string name="display_mode_cylindrical">Cylindrical</string>
+    <string name="panning_mode_rotation">Rotation</string>
+    <string name="panning_mode_offset_surface">Offset Surface</string>
+    <string name="desc_center_view_btn">Center XR View</string>
 </resources>

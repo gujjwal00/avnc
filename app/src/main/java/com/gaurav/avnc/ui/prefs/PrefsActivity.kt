@@ -10,12 +10,15 @@ package com.gaurav.avnc.ui.prefs
 
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreference
 import com.gaurav.avnc.R
 import com.gaurav.avnc.util.DeviceAuthPrompt
@@ -176,4 +179,40 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
     }
 
     @Keep class Tools : PrefFragment(R.xml.pref_tools)
+
+    @Keep
+    class XRSettingsFragment : PrefFragment(R.xml.xr_preferences), SharedPreferences.OnSharedPreferenceChangeListener {
+        // This fragment will load preferences from R.xml.xr_preferences.
+        // Logic for conditional enablement of settings (e.g., cylinder radius)
+        // can be added here, for example, in onViewCreated or by observing preference changes.
+
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            super.onCreatePreferences(savedInstanceState, rootKey)
+            // Initial check to set enablement state based on current preference value
+            updateCylinderRadiusEnablement()
+        }
+
+        override fun onResume() {
+            super.onResume()
+            preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
+        }
+
+        override fun onPause() {
+            super.onPause()
+            preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
+        }
+
+        override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+            if (key == "xr_display_mode") {
+                updateCylinderRadiusEnablement()
+            }
+        }
+
+        private fun updateCylinderRadiusEnablement() {
+            val displayModePref = findPreference<ListPreference>("xr_display_mode")
+            val cylinderRadiusPref = findPreference<SeekBarPreference>("xr_cylinder_radius")
+            // Enable cylinderRadiusPref only if displayMode is "cylindrical"
+            cylinderRadiusPref?.isEnabled = displayModePref?.value == "cylindrical"
+        }
+    }
 }

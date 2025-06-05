@@ -39,4 +39,11 @@
         app:summary="@string/pref_tools_summary"
         app:title="@string/pref_tools" />
 
+    <Preference
+        app:key="xr_settings"
+        app:title="XR Settings"
+        app:summary="Configure eXtended Reality display and interaction"
+        app:icon="@drawable/ic_vr"
+        app:fragment="com.gaurav.avnc.ui.prefs.PrefsActivity$XRSettingsFragment" /> <!-- Link to the new fragment -->
+
 </PreferenceScreen>
