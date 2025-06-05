@@ -181,7 +181,14 @@ class VncActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         virtualKeys.releaseMetaKeys()
-        binding.frameView.onPause()
+        binding.frameView.onPause() // This is GLSurfaceView's onPause
+
+        // Save state here as well, as onStop is guaranteed before destruction for many cases
+        // This might be more reliable than onPause for this specific state saving.
+        if (this::binding.isInitialized && binding.frameView.mRenderer != null) {
+             viewModel.saveXrViewState(binding.frameView.mRenderer)
+        }
+
         if (viewModel.pref.viewer.pauseUpdatesInBackground)
             viewModel.pauseFrameBufferUpdates()
         wasConnectedWhenStopped = viewModel.state.value.isConnected

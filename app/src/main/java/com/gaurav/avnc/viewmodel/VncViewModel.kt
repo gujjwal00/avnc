@@ -31,6 +31,8 @@ import com.gaurav.avnc.util.trustCertificate
 import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
 import com.gaurav.avnc.viewmodel.service.SshTunnel
 import com.gaurav.avnc.vnc.Messenger
+import com.gaurav.avnc.ui.vnc.gl.CameraStateData
+import com.gaurav.avnc.ui.vnc.gl.PanningStrategyStateData
 import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
 import kotlinx.coroutines.Job
@@ -203,12 +205,31 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer, S
     // LiveEvent to signal VncActivity to reinitialize the Dispatcher's config
     val reinitializeDispatcherRequest = MutableLiveData<Unit?>()
 
+    var savedCameraState: CameraStateData? = null
+    var savedPanningState: PanningStrategyStateData? = null
+
+    fun saveXrViewState(renderer: com.gaurav.avnc.ui.vnc.gl.Renderer?) {
+        renderer ?: return
+        savedCameraState = renderer.getCurrentCameraState()
+        savedPanningState = renderer.getCurrentPanningStrategyState()
+        // Log that state has been saved for debugging
+        android.util.Log.d("VncViewModel", "XR View State Saved: CameraState: $savedCameraState, PanningState: $savedPanningState")
+    }
+
+    // Method to clear saved state, e.g., when connection is fully closed or profile changes
+    fun clearSavedXrViewState() {
+        savedCameraState = null
+        savedPanningState = null
+        android.util.Log.d("VncViewModel", "XR View State Cleared")
+    }
+
     init {
         pref.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onCleared() {
         super.onCleared()
+        clearSavedXrViewState() // Clear state when ViewModel is cleared
         pref.unregisterOnSharedPreferenceChangeListener(this)
         if (state.value != State.Disconnected)
             client.interrupt()
@@ -244,6 +265,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer, S
      */
     fun initConnection(profile: ServerProfile) {
         if (state.value == State.Created) {
+            clearSavedXrViewState() // Clear previous state for a new connection
             this.profile = profile
             profileLive.value = profile
             state.value = State.Connecting
