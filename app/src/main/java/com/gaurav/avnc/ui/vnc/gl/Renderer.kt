@@ -15,6 +15,7 @@ import android.opengl.GLES20.glViewport
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix // Import Matrix for length calculation
 // import android.opengl.Matrix // Matrix operations are now primarily handled by Camera and PanningStrategy classes
+import android.util.Log
 import com.gaurav.avnc.viewmodel.VncViewModel
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -226,7 +227,7 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
         }
 
         // Ensure program and frame are initialized (they should be from onSurfaceCreated)
-        if (surfaceNeedsBinding && this::program.isInitialized && this::frame.isInitialized) {
+        if (this::program.isInitialized && this::frame.isInitialized) {
             frame.bind(program, surface)
         }
 
@@ -241,56 +242,139 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
         panningController.setStrategy(newStrategyInstance) // Sets the new strategy
         panningController.setSurface(this.surface) // Crucially, re-initializes the strategy with the current surface & camera state
 
-        // Part 3: Reset Camera Position and Orientation
-        // Part 3: Reset Camera Position and Orientation
-        camera.zoomLevel = 1.0f // Reset zoom level first
+        // Part 3: Try to restore state. If not, set default camera position/orientation.
+        val stateRestored = applySavedXrViewStateIfAvailable()
 
-        val surfaceToResetFor = this.surface
-        var newCamX = 0f
-        var newCamY = 0f
-        var newCamZ = 5f // Default for flat
-        var newLookAtX = 0f
-        var newLookAtY = 0f
-        var newLookAtZ = 0f
+        if (!stateRestored) {
+            Log.d("Renderer", "No state restored, setting default camera position.")
+            // Original Part 3: Reset Camera Position and Orientation
+            camera.zoomLevel = 1.0f // Reset zoom level first for default setup
 
-        if (surfaceToResetFor is CylindricalSurface) {
-            val actualCylinderRadius = surfaceToResetFor.radius.coerceAtLeast(0.1f)
-            // Use a fixed initial offset for reset, consistent with OffsetSurfacePanningStrategy's initialOffsetConstant
-            val defaultInitialOffset = 1.0f
+            val surfaceToResetFor = this.surface
+            var newCamX = 0f
+            var newCamY = 0f
+            var newCamZ = 5f // Default for flat
+            var newLookAtX = 0f
+            var newLookAtY = 0f
+            var newLookAtZ = 0f
 
-            // Since camera.zoomLevel is 1.0f, dynamicOffset inside strategy would be initialOffsetConstant.
-            // So, effectiveRadius calculation here should match what strategy would do with zoomLevel 1.0.
-            val offsetToUse = defaultInitialOffset.coerceIn(0.1f, actualCylinderRadius - 0.05f)
-            val effectiveRadius = (actualCylinderRadius - offsetToUse).coerceAtLeast(0.1f)
+            if (surfaceToResetFor is CylindricalSurface) {
+                val actualCylinderRadius = surfaceToResetFor.radius.coerceAtLeast(0.1f)
+                val defaultInitialOffset = 1.0f
+                val offsetToUse = defaultInitialOffset.coerceIn(0.1f, actualCylinderRadius - 0.05f)
+                val effectiveRadius = (actualCylinderRadius - offsetToUse).coerceAtLeast(0.1f)
+                val angle = 0f
+                newCamX = effectiveRadius * kotlin.math.cos(angle)
+                newCamY = 0f
+                newCamZ = effectiveRadius * kotlin.math.sin(angle)
+                newLookAtX = actualCylinderRadius * kotlin.math.cos(angle)
+                newLookAtY = 0f
+                newLookAtZ = actualCylinderRadius * kotlin.math.sin(angle)
+            }
 
-            val angle = 0f // Camera at (effectiveRadius, 0, 0) looking at (cylinderRadius,0,0)
-            newCamX = effectiveRadius * kotlin.math.cos(angle)
-            newCamY = 0f // Center height
-            newCamZ = effectiveRadius * kotlin.math.sin(angle)
-            newLookAtX = actualCylinderRadius * kotlin.math.cos(angle)
-            newLookAtY = 0f
-            newLookAtZ = actualCylinderRadius * kotlin.math.sin(angle)
+            camera.positionX = newCamX
+            camera.positionY = newCamY
+            camera.positionZ = newCamZ
+            camera.lookAtX = newLookAtX
+            camera.lookAtY = newLookAtY
+            camera.lookAtZ = newLookAtZ
+            camera.upX = 0f
+            camera.upY = 1f
+            camera.upZ = 0f
+            camera.updateViewMatrix()
+
+            // Sync strategy state for default setup
+            val currentStrategy = panningController.getCurrentStrategy()
+            if (currentStrategy is OffsetSurfacePanningStrategy) {
+                currentStrategy.syncStateFromCamera(this.camera)
+            }
+        } else {
+            Log.d("Renderer", "State was restored, default camera setup skipped.")
+            // If state was restored, camera.updateViewMatrix() was already called in applySavedXrViewStateIfAvailable.
+            // Panning strategy state (like cameraAngleY for OffsetSurfacePanningStrategy) was also handled there.
         }
-        // Else, for FlatSurface, defaults (0,0,5 looking at 0,0,0) are fine.
+    }
 
-        camera.positionX = newCamX
-        camera.positionY = newCamY
-        camera.positionZ = newCamZ
-        camera.lookAtX = newLookAtX
-        camera.lookAtY = newLookAtY
-        camera.lookAtZ = newLookAtZ
-        camera.upX = 0f
-        camera.upY = 1f
-        camera.upZ = 0f
-        camera.updateViewMatrix()
+    private fun applySavedXrViewStateIfAvailable(): Boolean {
+        val cameraState = viewModel.savedCameraState
+        val panningState = viewModel.savedPanningState
 
-        // Panning strategy state (like cameraAngleY for OffsetSurfacePanningStrategy)
-        // is now re-initialized by the call to panningController.setSurface() above,
-        // which calls strategy.initialize().
-        // An additional explicit sync ensures the strategy is perfectly aligned with the final camera state.
+        if (cameraState != null && panningState != null) {
+            Log.d("Renderer", "Attempting to restore XR View State.")
+            // Restore camera properties
+            camera.positionX = cameraState.position[0]
+            camera.positionY = cameraState.position[1]
+            camera.positionZ = cameraState.position[2]
+
+            camera.lookAtX = cameraState.lookAt[0]
+            camera.lookAtY = cameraState.lookAt[1]
+            camera.lookAtZ = cameraState.lookAt[2]
+
+            camera.upX = cameraState.up[0]
+            camera.upY = cameraState.up[1]
+            camera.upZ = cameraState.up[2]
+
+            camera.zoomLevel = cameraState.zoomLevel
+
+            // Restore panning strategy state
+            val currentStrategy = panningController.getCurrentStrategy()
+            val currentStrategyMode = if (currentStrategy is OffsetSurfacePanningStrategy) "offset_surface" else "rotation"
+
+            if (panningState.panningMode == currentStrategyMode) {
+                if (currentStrategy is OffsetSurfacePanningStrategy) {
+                    panningState.offsetStrategyAngleY?.let { currentStrategy.cameraAngleY = it }
+                    panningState.offsetStrategyHeightY?.let { currentStrategy.cameraHeightY = it }
+                    // After setting strategy state, call pan with no deltas to update camera position
+                    // based on the restored strategy state, current surface, and zoom.
+                    currentStrategy.pan(camera, 0f, 0f, 0f)
+                    Log.d("Renderer", "Restored OffsetSurfacePanningStrategy state and called pan.")
+                } else {
+                    // For RotationPanningStrategy, just updating camera matrices is enough
+                    // as it's stateless beyond the camera itself.
+                    Log.d("Renderer", "Restored state for RotationPanningStrategy (camera only).")
+                }
+            } else {
+                Log.w("Renderer", "Mismatch in panning strategy mode during restore. Saved: ${panningState.panningMode}, Current: $currentStrategyMode. Skipping strategy state restore.")
+                // If modes mismatch, we've restored camera, but strategy state might be off.
+                // The subsequent default camera setup might partially override this.
+                // Or, we could choose to not restore camera either if strategy is critical and mismatched.
+                // For now, camera is restored, strategy specific state is skipped on mismatch.
+            }
+
+            camera.updateViewMatrix() // Ensure view matrix is updated with all restored properties
+            Log.d("Renderer", "XR View State Restored. Camera: $cameraState, Panning: $panningState")
+
+            viewModel.clearSavedXrViewState() // Consume the state
+            return true
+        }
+        Log.d("Renderer", "No XR View State to restore.")
+        return false
+    }
+
+    fun getCurrentCameraState(): CameraStateData {
+        return CameraStateData(
+            position = floatArrayOf(camera.positionX, camera.positionY, camera.positionZ),
+            lookAt = floatArrayOf(camera.lookAtX, camera.lookAtY, camera.lookAtZ),
+            up = floatArrayOf(camera.upX, camera.upY, camera.upZ),
+            zoomLevel = camera.zoomLevel
+        )
+    }
+
+    fun getCurrentPanningStrategyState(): PanningStrategyStateData {
         val currentStrategy = panningController.getCurrentStrategy()
+        val mode = if (currentStrategy is OffsetSurfacePanningStrategy) "offset_surface" else "rotation"
+        var angleY: Float? = null
+        var heightY: Float? = null
         if (currentStrategy is OffsetSurfacePanningStrategy) {
-            currentStrategy.syncStateFromCamera(this.camera)
+            // Need to expose these from OffsetSurfacePanningStrategy or have methods to get them
+            // For now, assume OffsetSurfacePanningStrategy has public getters or properties for these
+            angleY = currentStrategy.cameraAngleY // Assuming public access
+            heightY = currentStrategy.cameraHeightY // Assuming public access
         }
+        return PanningStrategyStateData(
+            panningMode = mode,
+            offsetStrategyAngleY = angleY,
+            offsetStrategyHeightY = heightY
+        )
     }
 }

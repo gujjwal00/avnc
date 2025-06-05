@@ -48,7 +48,7 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
 
     private lateinit var touchHandler: TouchHandler
     private lateinit var keyHandler: KeyHandler
-    private var mRenderer: com.gaurav.avnc.ui.vnc.gl.Renderer? = null // Field to store renderer
+    internal var mRenderer: com.gaurav.avnc.ui.vnc.gl.Renderer? = null // Field to store renderer
 
     /**
      * Input connection used for intercepting key events

@@ -28,8 +28,8 @@ class OffsetSurfacePanningStrategy : PanningStrategy {
     private val initialOffsetConstant = 1.0f // Renamed from cameraMovementSurfaceOffset
 
     // State for cylindrical panning
-    private var cameraAngleY: Float = 0f // Angle around Y-axis for camera on its movement cylinder (radians)
-    private var cameraHeightY: Float = 0f // Y position of camera
+    internal var cameraAngleY: Float = 0f // Angle around Y-axis for camera on its movement cylinder (radians)
+    internal var cameraHeightY: Float = 0f // Y position of camera
 
     // New base sensitivity, to be tuned. This factor aims to make panning speed
     // proportional to the camera's distance from the surface (dynamicOffset).
