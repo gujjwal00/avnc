@@ -11,6 +11,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.Surface
 import android.view.WindowManager
+import com.gaurav.avnc.util.AppPreferences // Added import
 import com.gaurav.avnc.ui.vnc.PanningInputDevice
 import com.gaurav.avnc.ui.vnc.PanningListener
 import kotlin.math.abs // Keep this for potential jitter filtering later
@@ -46,8 +47,10 @@ class PhoneRotationPanningInputDevice(private val activity: Activity) : PanningI
     // This effectively defines the "zoom" level of the magic window.
     private val ROTATION_TO_PAN_SCALE_FACTOR = 1200f // Approx maps +/- 45deg rotation to +/- screen_dimension_units (e.g. 1200px)
 
+    private lateinit var prefs: AppPreferences // Added field
 
     init {
+        prefs = AppPreferences(activity.applicationContext) // Initialize prefs
         try {
             sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
             rotationVectorSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
@@ -220,6 +223,14 @@ class PhoneRotationPanningInputDevice(private val activity: Activity) : PanningI
         if (relativeYaw < -Math.PI) relativeYaw += (2 * Math.PI).toFloat()
         // Pitch is typically -PI/2 to PI/2, less likely to wrap around dramatically.
 
+        // Fetch sensitivities from AppPreferences
+        val sensitivityX = prefs.xr.phoneRotationPanSensitivityX
+        val sensitivityY = prefs.xr.phoneRotationPanSensitivityY
+
+        // Apply sensitivities
+        val effectiveRelativeYaw = relativeYaw * sensitivityX
+        val effectiveRelativePitch = relativePitch * sensitivityY
+
         // Convert radians of relative rotation to desired absolute pan offset.
         // The ROTATION_TO_PAN_SCALE_FACTOR determines how much the view pans for a given rotation (sensitivity).
         // A larger value means more panning for the same rotation (feels "zoomed in").
@@ -228,13 +239,15 @@ class PhoneRotationPanningInputDevice(private val activity: Activity) : PanningI
         // SensorManager.getOrientation angles[0] (azimuth/yaw) typically increases as the device rotates counter-clockwise (left) from its reference.
         // If `relativeYaw` is positive (phone rotated left from neutral), we want a negative pan offset (pan left).
         // Thus, `desiredTotalOffsetX = -relativeYaw * ROTATION_TO_PAN_SCALE_FACTOR`.
-        val desiredTotalOffsetX = -relativeYaw * ROTATION_TO_PAN_SCALE_FACTOR
+        // Apply sensitivity here using effectiveRelativeYaw
+        val desiredTotalOffsetX = -effectiveRelativeYaw * ROTATION_TO_PAN_SCALE_FACTOR
 
         // desiredTotalOffsetY:
         // SensorManager.getOrientation angles[1] (pitch) typically increases as the device's top tilts upwards (or front tilts up).
         // If `relativePitch` is positive (phone tilted up from neutral), we want a positive pan offset (pan up).
         // Thus, `desiredTotalOffsetY = relativePitch * ROTATION_TO_PAN_SCALE_FACTOR`.
-        val desiredTotalOffsetY = relativePitch * ROTATION_TO_PAN_SCALE_FACTOR
+        // Apply sensitivity here using effectiveRelativePitch
+        val desiredTotalOffsetY = effectiveRelativePitch * ROTATION_TO_PAN_SCALE_FACTOR
 
         // Calculate the delta from the last sent absolute offsets to provide smooth incremental panning.
         val deltaX = desiredTotalOffsetX - lastSentOffsetX
