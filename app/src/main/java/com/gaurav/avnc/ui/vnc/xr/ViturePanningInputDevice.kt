@@ -128,6 +128,16 @@ class ViturePanningInputDevice(private val activity: Activity) : PanningInputDev
             mLastYaw = null
             mLastPitch = null
             Log.i(TAG, "Viture IMU enabled successfully via setImuOn(true).")
+
+           val set3DResult = mArManager?.set3D(false)
+           Log.i(TAG, "mArManager.set3D(false) called. Return code: $set3DResult")
+           if (set3DResult != Constants.ERR_SET_SUCCESS) {
+               Log.e(TAG, "Failed to set 3D mode to false. Error code: $set3DResult. This might affect IMU data.")
+               // Optional: Consider if we should disable IMU or revert 'enabled' state if set3D(false) is critical
+               // For now, just logging the error.
+           } else {
+               Log.i(TAG, "Successfully set 3D mode to false.")
+           }
         } else {
             Log.e(TAG, "Failed to enable Viture IMU via setImuOn(true). Error code: $result. Unregistering callback.")
             mArManager?.unregisterCallback(mCallback)
