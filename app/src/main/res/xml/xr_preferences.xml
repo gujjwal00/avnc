@@ -37,4 +37,34 @@
         app:entryValues="@array/xr_panning_mode_values"
         app:defaultValue="rotation" />
 
+    <PreferenceCategory
+        app:key="xr_panning_devices_category"
+        app:title="Panning Input Devices">
+
+        <SwitchPreferenceCompat
+            app:key="xr_enable_touch_panning"
+            app:title="Enable Touch Panning"
+            app:summary="Enable panning using touch screen gestures"
+            app:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            app:key="xr_enable_viture_panning"
+            app:title="Enable Viture XR Glasses Panning"
+            app:summary="Enable panning using Viture XR glasses head tracking"
+            app:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            app:key="xr_enable_phone_imu_delta_panning"
+            app:title="Enable Phone IMU Panning (Translate)"
+            app:summary="Pan by moving phone (like dragging screen)"
+            app:defaultValue="false" />
+
+        <SwitchPreferenceCompat
+            app:key="xr_enable_phone_rotation_panning"
+            app:title="Enable Phone Rotation Panning (Magic Window)"
+            app:summary="Pan by rotating phone (like looking through a window)"
+            app:defaultValue="false" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

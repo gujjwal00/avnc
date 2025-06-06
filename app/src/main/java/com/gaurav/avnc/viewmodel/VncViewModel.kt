@@ -33,6 +33,12 @@ import com.gaurav.avnc.viewmodel.service.SshTunnel
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.ui.vnc.gl.CameraStateData
 import com.gaurav.avnc.ui.vnc.gl.PanningStrategyStateData
+import com.gaurav.avnc.ui.vnc.PanningInputDevice
+import com.gaurav.avnc.ui.vnc.PanningListener
+import com.gaurav.avnc.ui.vnc.xr.ViturePanningInputDevice
+import com.gaurav.avnc.ui.vnc.xr.PhoneImuPanningInputDevice
+import com.gaurav.avnc.ui.vnc.xr.PhoneRotationPanningInputDevice
+import com.gaurav.avnc.ui.vnc.TouchPanningInputDevice
 import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
 import kotlinx.coroutines.Job
@@ -80,7 +86,11 @@ import kotlin.concurrent.thread
  * via OpenGL ES. [frameState] is read from this thread to decide how/where frame
  * should be drawn.
  */
-class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer, SharedPreferences.OnSharedPreferenceChangeListener {
+class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer, SharedPreferences.OnSharedPreferenceChangeListener, PanningListener {
+
+    private companion object {
+        private const val TAG = "VncViewModel"
+    }
 
     /**
      * Connection lifecycle:
@@ -208,19 +218,22 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer, S
     var savedCameraState: CameraStateData? = null
     var savedPanningState: PanningStrategyStateData? = null
 
+    // Panning Input Device Management
+    private val panningInputDevices = mutableListOf<PanningInputDevice>()
+
     fun saveXrViewState(renderer: com.gaurav.avnc.ui.vnc.gl.Renderer?) {
         renderer ?: return
         savedCameraState = renderer.getCurrentCameraState()
         savedPanningState = renderer.getCurrentPanningStrategyState()
         // Log that state has been saved for debugging
-        android.util.Log.d("VncViewModel", "XR View State Saved: CameraState: $savedCameraState, PanningState: $savedPanningState")
+        Log.d(TAG, "XR View State Saved: CameraState: $savedCameraState, PanningState: $savedPanningState")
     }
 
     // Method to clear saved state, e.g., when connection is fully closed or profile changes
     fun clearSavedXrViewState() {
         savedCameraState = null
         savedPanningState = null
-        android.util.Log.d("VncViewModel", "XR View State Cleared")
+        Log.d(TAG, "XR View State Cleared")
     }
 
     init {
@@ -229,29 +242,78 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer, S
 
     override fun onCleared() {
         super.onCleared()
+        clearAndDisableAllPanningDevices() // Clear panning devices
         clearSavedXrViewState() // Clear state when ViewModel is cleared
         pref.unregisterOnSharedPreferenceChangeListener(this)
-        if (state.value != State.Disconnected)
+        if (state.value != State.Disconnected) { // Check if client needs interruption
             client.interrupt()
+        }
+        // Explicitly call client.close() and other cleanup that might have been in original onCleared
+        // or ensure they are covered by clearAndDisableAllPanningDevices or other logic.
+        // client.close() // This was in the example, ensure it's covered. client.cleanup() is called later.
+        // sshTunnel?.stop() // sshTunnel.close() is called in cleanup()
+        // frameStateUpdaterJob?.cancel() // Not present in original, but good practice if such a job existed.
+        // _frameStateFlow.value = FrameState.EMPTY // Not present in original.
+        Log.d(TAG, "VncViewModel cleared.")
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        when {
-            key == "xr_display_mode" || key == "xr_cylinder_radius" || key == "xr_panning_mode" -> {
+        when (key) {
+            "xr_display_mode", "xr_cylinder_radius", "xr_panning_mode" -> {
                 requestViewReset()
             }
-            // Check if it's any gesture or mouse mapping preference
-            key?.startsWith("gesture_") == true || key?.startsWith("mouse_") == true -> {
+            "xr_enable_touch_panning" -> {
+                val enabled = pref.xr.enableTouchPanning
+                if (enabled) enablePanningDevice(TouchPanningInputDevice::class.java)
+                else disablePanningDevice(TouchPanningInputDevice::class.java)
+                Log.d(TAG, "Touch Panning preference changed to: $enabled")
+            }
+            "xr_enable_viture_panning" -> {
+                val enabled = pref.xr.enableViturePanning
+                if (enabled) enablePanningDevice(ViturePanningInputDevice::class.java)
+                else disablePanningDevice(ViturePanningInputDevice::class.java)
+                Log.d(TAG, "Viture Panning preference changed to: $enabled")
+            }
+            "xr_enable_phone_imu_delta_panning" -> {
+                val enabled = pref.xr.enablePhoneImuDeltaPanning
+                Log.d(TAG, "Phone IMU Delta Panning preference changed to: $enabled by user or program.")
+                if (enabled) {
+                    enablePanningDevice(PhoneImuPanningInputDevice::class.java)
+                    // Mutual exclusivity: disable the other phone IMU mode
+                    if (pref.xr.enablePhoneRotationPanning) {
+                        Log.d(TAG, "Disabling Phone Rotation Panning due to Delta Panning being enabled.")
+                        // Update AppPreferences directly, which will trigger its own SharedPreferences write
+                        // and subsequently this listener for "xr_enable_phone_rotation_panning".
+                        pref.xr.enablePhoneRotationPanning = false
+                        // Explicitly disable to ensure immediate effect on device state,
+                        // though the reactive call from pref change should also do it.
+                        disablePanningDevice(PhoneRotationPanningInputDevice::class.java)
+                    }
+                } else {
+                    disablePanningDevice(PhoneImuPanningInputDevice::class.java)
+                }
+            }
+            "xr_enable_phone_rotation_panning" -> {
+                val enabled = pref.xr.enablePhoneRotationPanning
+                Log.d(TAG, "Phone Rotation Panning preference changed to: $enabled by user or program.")
+                if (enabled) {
+                    enablePanningDevice(PhoneRotationPanningInputDevice::class.java)
+                    // Mutual exclusivity: disable the other phone IMU mode
+                    if (pref.xr.enablePhoneImuDeltaPanning) {
+                        Log.d(TAG, "Disabling Phone IMU Delta Panning due to Rotation Panning being enabled.")
+                        // Update AppPreferences directly
+                        pref.xr.enablePhoneImuDeltaPanning = false
+                        // Explicitly disable to ensure immediate effect on device state.
+                        disablePanningDevice(PhoneImuPanningInputDevice::class.java)
+                    }
+                } else {
+                    disablePanningDevice(PhoneRotationPanningInputDevice::class.java)
+                }
+            }
+            // Check if it's any gesture or mouse mapping preference (original else condition)
+            else -> if (key != null && (key.startsWith("gesture_") || key.startsWith("mouse_"))) {
                 reinitializeDispatcherRequest.postValue(null)
             }
-            // Potentially other specific keys for gesture_style if not covered by startsWith("gesture_")
-            // For example, if gesture_style itself needs to trigger reinitializeDispatcherRequest
-            // key == "gesture_style" -> { reinitializeDispatcherRequest.postValue(null) }
-            // However, onGestureStyleChanged() in Dispatcher is already called by an observer on activeGestureStyle
-            // which is updated when gesture_style or profile.gestureStyle changes.
-            // So, explicit handling for "gesture_style" here might be redundant if activeGestureStyle covers it.
-            // The current setup for activeGestureStyle seems to handle "gesture_style" changes for Dispatcher.
-            // This new check is for other gesture_tapN, gesture_swipeN, etc.
         }
     }
 
@@ -527,6 +589,71 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer, S
     fun requestViewReset() {
         triggerViewReset.postValue(null) // Post null or Unit
     }
+
+    // PanningListener Implementation
+    override fun onPan(deltaYaw: Float, deltaPitch: Float) {
+        // Existing panCamera method already posts to panRequest LiveData
+        if (deltaYaw != 0f || deltaPitch != 0f) {
+            panCamera(deltaYaw, deltaPitch) // Re-use existing logic
+        }
+    }
+
+    // Panning Input Device Management Methods
+    fun registerPanningInputDevice(device: PanningInputDevice) {
+        if (!panningInputDevices.contains(device)) {
+            panningInputDevices.add(device)
+            device.setPanningListener(this)
+            Log.d(TAG, "Registered panning input device: ${device::class.java.simpleName}")
+        }
+    }
+
+    fun unregisterPanningInputDevice(device: PanningInputDevice) {
+        device.disable()
+        device.setPanningListener(null)
+        panningInputDevices.remove(device)
+        Log.d(TAG, "Unregistered panning input device: ${device::class.java.simpleName}")
+    }
+
+    fun <T : PanningInputDevice> enablePanningDevice(deviceClass: Class<T>) {
+        panningInputDevices.filterIsInstance(deviceClass).forEach {
+            it.enable()
+            Log.i(TAG, "Enabled panning device: ${it::class.java.simpleName}")
+        }
+    }
+
+    fun <T : PanningInputDevice> disablePanningDevice(deviceClass: Class<T>) {
+        panningInputDevices.filterIsInstance(deviceClass).forEach {
+            it.disable()
+            Log.i(TAG, "Disabled panning device: ${it::class.java.simpleName}")
+        }
+    }
+
+    fun setAllPanningDevicesEnabled(shouldEnable: Boolean) {
+        panningInputDevices.forEach { device ->
+            if (shouldEnable) device.enable() else device.disable()
+        }
+        Log.i(TAG, "All panning devices set to enabled: $shouldEnable")
+    }
+
+    fun clearAndDisableAllPanningDevices() {
+        panningInputDevices.forEach { device ->
+            device.disable()
+            device.setPanningListener(null)
+            // Add type check for ViturePanningInputDevice
+            if (device is com.gaurav.avnc.ui.vnc.xr.ViturePanningInputDevice) {
+                try {
+                    device.releaseSdk()
+                    Log.i(TAG, "Called releaseSdk() on ViturePanningInputDevice.")
+                } catch (e: Exception) {
+                    Log.e(TAG, "Exception while calling releaseSdk() on ViturePanningInputDevice", e)
+                }
+            }
+            // Add similar checks if other devices have specific release methods
+        }
+        panningInputDevices.clear()
+        Log.i(TAG, "Cleared and disabled all panning input devices.")
+    }
+
 
     /**************************************************************************
      * [VncClient.Observer] Implementation

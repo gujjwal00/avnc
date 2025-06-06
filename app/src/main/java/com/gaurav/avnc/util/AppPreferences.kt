@@ -160,6 +160,12 @@ class AppPreferences(context: Context) {
 
         // Default "rotation", values "rotation", "offset_surface"
         var panningMode by StringPref("xr_panning_mode", "rotation")
+
+        // Panning input device enables
+        var enableViturePanning by BooleanPref("xr_enable_viture_panning", true)
+        var enableTouchPanning by BooleanPref("xr_enable_touch_panning", true) // Touch panning is often a primary input
+        var enablePhoneImuDeltaPanning by BooleanPref("xr_enable_phone_imu_delta_panning", false) // Default to off to avoid conflict if rotation is preferred
+        var enablePhoneRotationPanning by BooleanPref("xr_enable_phone_rotation_panning", false) // Default to off
     }
 
     /****************************** Migrations *******************************/

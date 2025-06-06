@@ -15,6 +15,7 @@ import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.HapticFeedbackConstants
 import android.view.InputDevice
+import android.util.Log
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ViewConfiguration
@@ -23,6 +24,9 @@ import android.widget.Toast // Import Toast
 import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.PointerButton
+// Add PanningTouchHandlerCallback if not auto-imported, and TouchPanningInputDevice
+import com.gaurav.avnc.ui.vnc.PanningTouchHandlerCallback
+import com.gaurav.avnc.ui.vnc.TouchPanningInputDevice
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -32,19 +36,36 @@ import kotlin.math.max
  * Handler for touch events. It detects various gestures and notifies [dispatcher].
  */
 class TouchHandler(
-    private val frameView: FrameView,
-    private val dispatcher: Dispatcher,
-    private val viewModel: VncViewModel, // Added VncViewModel
-    private val pref: AppPreferences
-) : ScaleGestureDetector.OnScaleGestureListener {
+        private val frameView: FrameView,
+        private val dispatcher: Dispatcher,
+        private val viewModel: VncViewModel, // Added VncViewModel
+        private val pref: AppPreferences
+) : ScaleGestureDetector.OnScaleGestureListener, PanningTouchHandlerCallback { // Add PanningTouchHandlerCallback
+
+    private companion object {
+        private const val TAG = "TouchHandler"
+    }
+
+    private enum class GestureMode {
+        NONE,
+        PAN,
+        SCALE // Added for completeness, might be set in onScale
+    }
+    private var mGestureMode: GestureMode = GestureMode.NONE
 
     //Extension to easily access touch position
     private fun MotionEvent.point() = PointF(x, y)
+
+    private val touchPanningInputDevice: TouchPanningInputDevice
 
     // Removed: lastX, lastY, isPanningCamera, cameraPanSensitivity
     // These were related to direct 3D pan handling in TouchHandler, which is now moved to Dispatcher.
 
     private val cameraZoomSensitivity = 2f // Adjust as needed. Larger means faster zoom.
+
+    init {
+        touchPanningInputDevice = TouchPanningInputDevice(pref, this)
+    }
 
     /****************************************************************************************
      * Touch Event receivers
@@ -112,6 +133,11 @@ class TouchHandler(
             MotionEvent.ACTION_SCROLL -> {
                 val hs = e.getAxisValue(MotionEvent.AXIS_HSCROLL)
                 val vs = e.getAxisValue(MotionEvent.AXIS_VSCROLL)
+                // Attempt to process with TouchPanningInputDevice first
+                if (touchPanningInputDevice.processDiscreteScroll(hs, vs)) {
+                    return true // Handled by TouchPanningInputDevice
+                }
+                // If not handled by TouchPanningInputDevice, dispatch normally
                 dispatcher.onMouseScroll(p, hs, vs)
             }
         }
@@ -201,8 +227,17 @@ class TouchHandler(
         return gestureDetector.onTouchEvent(event)
     }
 
-    override fun onScaleBegin(detector: ScaleGestureDetector) = true // Always start scale, decision in onScale
-    override fun onScaleEnd(detector: ScaleGestureDetector) { /* No specific action needed on end for now */ }
+    override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
+        mGestureMode = GestureMode.SCALE
+        Log.d(TAG, "Scale gesture began, mGestureMode set to SCALE")
+        return true // Always start scale, decision in onScale
+    }
+    override fun onScaleEnd(detector: ScaleGestureDetector) {
+        if (mGestureMode == GestureMode.SCALE) {
+            mGestureMode = GestureMode.NONE
+            Log.d(TAG, "Scale gesture ended, mGestureMode reset to NONE")
+        }
+    }
     override fun onScale(detector: ScaleGestureDetector): Boolean {
         // detector.scaleFactor > 1 means pinch-out (zoom in for camera)
         // detector.scaleFactor < 1 means pinch-in (zoom out for camera)
@@ -217,7 +252,7 @@ class TouchHandler(
         return true // Event handled
     }
 
-    private inner class FingerGestureListener : GestureDetectorEx.GestureListenerEx {
+    private inner class FingerGestureListener : GestureListenerEx {
 
         override fun onSingleTapConfirmed(e: MotionEvent) = dispatcher.onTap1(e.point())
         override fun onDoubleTapConfirmed(e: MotionEvent) = dispatcher.onDoubleTap(e.point())
@@ -245,8 +280,29 @@ class TouchHandler(
 
 
         override fun onScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float) {
+            // dx and dy from GestureDetector are total scroll distances, not deltas.
+            // However, TouchPanningInputDevice expects deltas (distanceX, distanceY from SimpleOnGestureListener.onScroll).
+            // The parameters dx, dy here are actually distanceX, distanceY for this specific call.
+            // distanceX: The distance along the X axis that has been scrolled since the last call to onScroll. This is NOT the distance between e1 and e2.
+            // distanceY: The distance along the Y axis that has been scrolled since the last call to onScroll. This is NOT the distance between e1 and e2.
+            // So, dx and dy in this context are appropriate for TouchPanningInputDevice's distanceX, distanceY.
+
+            if (touchPanningInputDevice.onScroll(e1, e2, dx, dy)) {
+                // If touchPanningInputDevice handles it (i.e., it's enabled and a pan occurred),
+                // it will call onPanInitiated, which sets mGestureMode = GestureMode.PAN in TouchHandler.
+                // So, we return true as it's handled.
+                return
+            }
+
+            // If not handled by touchPanningInputDevice, proceed with existing swipe logic.
+            // This implies that touchPanningInputDevice.onScroll returned false,
+            // meaning it's disabled or didn't consider this scroll a pan.
             val startPoint = e1.point()
             val currentPoint = e2.point()
+            // dx/dy from this listener are deltas, but dispatcher.onSwipe expects total delta from start.
+            // The original code used dx/dy as normalizedDx/normalizedDy which are deltas for the swipe action.
+            // This part might need careful review if swipe actions are mixed with panning.
+            // For now, assume dx, dy are instantaneous deltas for swipe actions.
             val normalizedDx = dx * swipeSensitivity
             val normalizedDy = dy * swipeSensitivity
 
@@ -278,51 +334,22 @@ class TouchHandler(
      * [GestureDetectorEx] is used to for this purpose. It internally uses stock
      * [GestureDetector], and some custom event processing to detect more gestures.
      */
-    private class GestureDetectorEx(context: Context, val listener: GestureListenerEx, val enableLongPress: Boolean) {
+    interface GestureListenerEx { // <-- Moved here
+        fun onSingleTapConfirmed(e: MotionEvent)
+        fun onDoubleTapConfirmed(e: MotionEvent)
+        fun onMultiFingerTap(e: MotionEvent, fingerCount: Int)
 
-        /**
-         * Detected gestures. Some of these come directly from stock [GestureDetector],
-         * while the following are custom detected:
-         *
-         * [onDoubleTapConfirmed]
-         * To support double-tap-swipe gesture, double-tap is not immediately triggered on
-         * ACTION_DOWN of second tap. Instead, [doubleTapDetected] flag is set, and when
-         * final ACTION_UP is received (within timeout), [onDoubleTapConfirmed] is called.
-         *
-         * [onMultiFingerTap]
-         * Maximum number of fingers that went down is tracked in [maxFingerDown]. If
-         * ACTION_UP is received within a timeout, and more than one finger went down
-         * without any scrolling, [onMultiFingerTap] is called.
-         *
-         * [onLongPressConfirmed]
-         * Similar to [onDoubleTapConfirmed], to support long-press-swipe, we wait for
-         * ACTION_UP to confirm long-press.
-         * Note: [onLongPress] is always called immediately. It enables haptic feedback
-         * and supports cases where waiting for [onLongPressConfirmed] is not necessary.
-         *
-         * [onScrollAfterDoubleTap]
-         * This is the double-tap-swipe gesture. If scrolling after [doubleTapDetected] flag
-         * is set, [onScrollAfterDoubleTap] is called.
-         *
-         * [onScrollAfterLongPress]
-         * This is the long-press-swipe gesture. If scrolling after [longPressDetected] flag
-         * is set, [onScrollAfterLongPress] is called.
-         */
-        interface GestureListenerEx {
-            fun onSingleTapConfirmed(e: MotionEvent)
-            fun onDoubleTapConfirmed(e: MotionEvent)
-            fun onMultiFingerTap(e: MotionEvent, fingerCount: Int)
+        fun onLongPress(e: MotionEvent)
+        fun onLongPressConfirmed(e: MotionEvent)
 
-            fun onLongPress(e: MotionEvent)
-            fun onLongPressConfirmed(e: MotionEvent)
+        fun onScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float)
+        fun onScrollAfterLongPress(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float)
+        fun onScrollAfterDoubleTap(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float)
 
-            fun onScroll(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float)
-            fun onScrollAfterLongPress(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float)
-            fun onScrollAfterDoubleTap(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float)
+        fun onFling(velocityX: Float, velocityY: Float)
+    }
 
-            fun onFling(velocityX: Float, velocityY: Float)
-        }
-
+    private inner class GestureDetectorEx(context: Context, val listener: GestureListenerEx, val enableLongPress: Boolean) {
 
         /**
          * Stock [GestureDetector] has two unwanted behaviours:
@@ -464,6 +491,8 @@ class TouchHandler(
         }
 
         private fun reset() {
+            touchPanningInputDevice.onGestureEnded() // Notify panning device gesture ended
+
             longPressDetected = false
             doubleTapDetected = false
             scrolling = false
@@ -473,6 +502,28 @@ class TouchHandler(
             cumulatedX = 0f
             cumulatedY = 0f
         }
+    }
+
+
+    // Implementation of PanningTouchHandlerCallback
+    override fun onPanInitiated() {
+        mGestureMode = GestureMode.PAN
+        Log.d(TAG, "Panning initiated by TouchPanningInputDevice, mGestureMode set to PAN")
+    }
+
+    override fun onPanEnded() {
+        // Only reset mode if it's currently PAN. Avoids interfering with other gesture modes
+        // that might have been set by other logic (e.g., scale, specific button press modes).
+        if (mGestureMode == GestureMode.PAN) {
+            mGestureMode = GestureMode.NONE
+            Log.d(TAG, "Panning ended by TouchPanningInputDevice, mGestureMode reset to NONE")
+        } else {
+            Log.d(TAG, "Panning ended by TouchPanningInputDevice, but mGestureMode was $mGestureMode (not PAN), so not changing it.")
+        }
+    }
+
+    fun getTouchPanningInputDevice(): TouchPanningInputDevice {
+        return touchPanningInputDevice
     }
 
 

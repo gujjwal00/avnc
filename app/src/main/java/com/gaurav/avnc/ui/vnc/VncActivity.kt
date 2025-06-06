@@ -43,6 +43,9 @@ import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
 import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isDisconnected
 import com.gaurav.avnc.vnc.VncUri
+import com.gaurav.avnc.ui.vnc.xr.ViturePanningInputDevice
+import com.gaurav.avnc.ui.vnc.xr.PhoneImuPanningInputDevice
+import com.gaurav.avnc.ui.vnc.xr.PhoneRotationPanningInputDevice // Add this new import
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -105,6 +108,10 @@ class VncActivity : AppCompatActivity() {
     private var onStartTime = 0L
     private var autoReconnectDelay = 5
 
+    private var viturePanningDevice: ViturePanningInputDevice? = null
+    private var phoneImuPanningDevice: PhoneImuPanningInputDevice? = null
+    private var phoneRotationPanningDevice: PhoneRotationPanningInputDevice? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         DeviceAuthPrompt.applyFingerprintDialogFix(supportFragmentManager)
 
@@ -160,6 +167,63 @@ class VncActivity : AppCompatActivity() {
             restoredFromBundle = true
             wasConnectedWhenStopped = it.getBoolean("wasConnectedWhenStopped")
         }
+
+        // Initialize and register Panning Input Devices
+        initializeAndRegisterPanningDevices()
+        viewModel.registerPanningInputDevice(touchHandler.getTouchPanningInputDevice())
+
+        // Setup initial state of panning devices based on preferences
+        val xrPrefs = viewModel.pref.xr // Convenience accessor
+
+        if (xrPrefs.enableTouchPanning) viewModel.enablePanningDevice(com.gaurav.avnc.ui.vnc.TouchPanningInputDevice::class.java)
+        else viewModel.disablePanningDevice(com.gaurav.avnc.ui.vnc.TouchPanningInputDevice::class.java)
+
+        viturePanningDevice?.let { // Only if device was successfully initialized
+            if (xrPrefs.enableViturePanning) viewModel.enablePanningDevice(ViturePanningInputDevice::class.java)
+            else viewModel.disablePanningDevice(ViturePanningInputDevice::class.java)
+        }
+
+        phoneImuPanningDevice?.let { // Only if device was successfully initialized
+            if (xrPrefs.enablePhoneImuDeltaPanning) viewModel.enablePanningDevice(PhoneImuPanningInputDevice::class.java)
+            else viewModel.disablePanningDevice(PhoneImuPanningInputDevice::class.java)
+        }
+
+        phoneRotationPanningDevice?.let { // Only if device was successfully initialized
+            if (xrPrefs.enablePhoneRotationPanning) viewModel.enablePanningDevice(PhoneRotationPanningInputDevice::class.java)
+            else viewModel.disablePanningDevice(PhoneRotationPanningInputDevice::class.java)
+        }
+    }
+
+    private fun initializeAndRegisterPanningDevices() {
+        // Viture Panning Device
+        try {
+            viturePanningDevice = ViturePanningInputDevice(this)
+            viewModel.registerPanningInputDevice(viturePanningDevice!!)
+            Log.i(TAG, "ViturePanningInputDevice initialized and registered.")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize or register ViturePanningInputDevice", e)
+            viturePanningDevice = null
+        }
+
+        // Phone IMU Panning Device
+        try {
+            phoneImuPanningDevice = PhoneImuPanningInputDevice(this)
+            viewModel.registerPanningInputDevice(phoneImuPanningDevice!!)
+            Log.i(TAG, "PhoneImuPanningInputDevice initialized and registered.")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize or register PhoneImuPanningInputDevice", e)
+            phoneImuPanningDevice = null
+        }
+
+        // Phone Rotation Panning Device (Magic Window Style)
+        try {
+            phoneRotationPanningDevice = PhoneRotationPanningInputDevice(this) // Pass Activity context
+            viewModel.registerPanningInputDevice(phoneRotationPanningDevice!!)
+            Log.i(TAG, "PhoneRotationPanningInputDevice initialized and registered.")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize or register PhoneRotationPanningInputDevice", e)
+            phoneRotationPanningDevice = null
+        }
     }
 
     override fun onStart() {
@@ -186,7 +250,7 @@ class VncActivity : AppCompatActivity() {
         // Save state here as well, as onStop is guaranteed before destruction for many cases
         // This might be more reliable than onPause for this specific state saving.
         if (this::binding.isInitialized && binding.frameView.mRenderer != null) {
-             viewModel.saveXrViewState(binding.frameView.mRenderer)
+            viewModel.saveXrViewState(binding.frameView.mRenderer)
         }
 
         if (viewModel.pref.viewer.pauseUpdatesInBackground)
@@ -433,6 +497,22 @@ class VncActivity : AppCompatActivity() {
                 finish()
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Most cleanup is handled by VncViewModel.onCleared(), which calls
+        // clearAndDisableAllPanningDevices().
+        // If specific devices need Activity context for release and VncViewModel can't do it,
+        // it would be done here. For ViturePanningInputDevice, its releaseSdk()
+        // should ideally be called from VncViewModel.clearAndDisableAllPanningDevices()
+        // after checking instance type.
+
+        // Example if explicit call from Activity was needed for some reason:
+        // viturePanningDevice?.releaseSdk()
+        // phoneImuPanningDevice has no explicit release method.
+        // TouchPanningInputDevice has no explicit release method.
+        Log.d(TAG, "VncActivity onDestroy.")
     }
 
     private fun enterPiPMode() {
