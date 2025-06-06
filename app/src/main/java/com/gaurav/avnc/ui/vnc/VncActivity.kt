@@ -170,13 +170,17 @@ class VncActivity : AppCompatActivity() {
 
         // Initialize and register Panning Input Devices
         initializeAndRegisterPanningDevices()
-        viewModel.registerPanningInputDevice(touchHandler.getTouchPanningInputDevice())
 
-        // Setup initial state of panning devices based on preferences
+        // Ensure dispatcher and touchHandler are initialized by accessing them, then link them.
+        // Dispatcher needs the TouchPanningInputDevice from TouchHandler.
+        dispatcher.setTouchPanningInputDevice(touchHandler.getTouchPanningInputDevice())
+
+        // Enable the TouchPanningInputDevice by default. Its use is now governed by
+        // Dispatcher's gesture mapping and its internal enabled flag.
+        touchHandler.getTouchPanningInputDevice().enable()
+
+        // Setup initial state of other panning devices based on preferences
         val xrPrefs = viewModel.pref.xr // Convenience accessor
-
-        if (xrPrefs.enableTouchPanning) viewModel.enablePanningDevice(com.gaurav.avnc.ui.vnc.TouchPanningInputDevice::class.java)
-        else viewModel.disablePanningDevice(com.gaurav.avnc.ui.vnc.TouchPanningInputDevice::class.java)
 
         viturePanningDevice?.let { // Only if device was successfully initialized
             if (xrPrefs.enableViturePanning) viewModel.enablePanningDevice(ViturePanningInputDevice::class.java)

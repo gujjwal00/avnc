@@ -10,6 +10,7 @@ package com.gaurav.avnc.ui.vnc
 
 import android.graphics.PointF
 import android.widget.Toast // Import Toast
+import com.gaurav.avnc.ui.vnc.TouchPanningInputDevice // Added import
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.PointerButton
@@ -60,6 +61,7 @@ class Dispatcher(private val activity: VncActivity) {
     // This could also be sourced from AppPreferences if it needs to be user-configurable.
     private val cameraPanSensitivity = 0.1f
 
+    private var touchPanningInputDevice: TouchPanningInputDevice? = null
 
     /**************************************************************************
      * Action configuration
@@ -117,7 +119,12 @@ class Dispatcher(private val activity: VncActivity) {
          */
         private fun selectSwipeAction(actionName: String): (PointF, PointF, Float, Float) -> Unit {
             return when (actionName) {
-                "pan" -> { _, _, dx, dy -> doCameraPan(dx, dy) } // Changed from doPan to doCameraPan
+                "pan" -> { _, _, dx, dy ->
+                    // Apply the same sensitivity and inversion as the original doCameraPan
+                    val deltaYaw = dx * cameraPanSensitivity
+                    val deltaPitch = dy * cameraPanSensitivity * -1f // Ensure consistent Y inversion for panning up
+                    this@Dispatcher.touchPanningInputDevice?.processPan(deltaYaw, deltaPitch)
+                }
                 "move-pointer" -> { _, cp, dx, dy -> defaultMode.doMovePointer(cp, dx, dy) }
                 "remote-scroll" -> { sp, _, dx, dy -> defaultMode.doRemoteScroll(sp, dx, dy) }
                 "remote-drag" -> { _, cp, dx, dy -> defaultMode.doRemoteDrag(PointerButton.Left, cp, dx, dy) }
@@ -187,6 +194,10 @@ class Dispatcher(private val activity: VncActivity) {
      */
     fun reinitializeConfig() {
         config = Config()
+    }
+
+    fun setTouchPanningInputDevice(device: TouchPanningInputDevice) {
+        this.touchPanningInputDevice = device
     }
 
     /**************************************************************************

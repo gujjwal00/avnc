@@ -24,8 +24,11 @@ import android.widget.Toast // Import Toast
 import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.PointerButton
-// Add PanningTouchHandlerCallback if not auto-imported, and TouchPanningInputDevice
-import com.gaurav.avnc.ui.vnc.PanningTouchHandlerCallback
+// import com.gaurav.avnc.model.InputActions // No longer strictly needed for "pan" string comparison
+import com.gaurav.avnc.util.AppPreferences
+import com.gaurav.avnc.viewmodel.VncViewModel
+import com.gaurav.avnc.vnc.PointerButton
+// Add TouchPanningInputDevice
 import com.gaurav.avnc.ui.vnc.TouchPanningInputDevice
 import kotlin.math.PI
 import kotlin.math.abs
@@ -40,7 +43,7 @@ class TouchHandler(
         private val dispatcher: Dispatcher,
         private val viewModel: VncViewModel, // Added VncViewModel
         private val pref: AppPreferences
-) : ScaleGestureDetector.OnScaleGestureListener, PanningTouchHandlerCallback { // Add PanningTouchHandlerCallback
+) : ScaleGestureDetector.OnScaleGestureListener { // Removed PanningTouchHandlerCallback
 
     private companion object {
         private const val TAG = "TouchHandler"
@@ -64,7 +67,7 @@ class TouchHandler(
     private val cameraZoomSensitivity = 2f // Adjust as needed. Larger means faster zoom.
 
     init {
-        touchPanningInputDevice = TouchPanningInputDevice(pref, this)
+        touchPanningInputDevice = TouchPanningInputDevice()
     }
 
     /****************************************************************************************
@@ -133,11 +136,7 @@ class TouchHandler(
             MotionEvent.ACTION_SCROLL -> {
                 val hs = e.getAxisValue(MotionEvent.AXIS_HSCROLL)
                 val vs = e.getAxisValue(MotionEvent.AXIS_VSCROLL)
-                // Attempt to process with TouchPanningInputDevice first
-                if (touchPanningInputDevice.processDiscreteScroll(hs, vs)) {
-                    return true // Handled by TouchPanningInputDevice
-                }
-                // If not handled by TouchPanningInputDevice, dispatch normally
+                // Directly dispatch, TouchPanningInputDevice no longer handles discrete scroll
                 dispatcher.onMouseScroll(p, hs, vs)
             }
         }
@@ -287,16 +286,8 @@ class TouchHandler(
             // distanceY: The distance along the Y axis that has been scrolled since the last call to onScroll. This is NOT the distance between e1 and e2.
             // So, dx and dy in this context are appropriate for TouchPanningInputDevice's distanceX, distanceY.
 
-            if (touchPanningInputDevice.onScroll(e1, e2, dx, dy)) {
-                // If touchPanningInputDevice handles it (i.e., it's enabled and a pan occurred),
-                // it will call onPanInitiated, which sets mGestureMode = GestureMode.PAN in TouchHandler.
-                // So, we return true as it's handled.
-                return
-            }
-
-            // If not handled by touchPanningInputDevice, proceed with existing swipe logic.
-            // This implies that touchPanningInputDevice.onScroll returned false,
-            // meaning it's disabled or didn't consider this scroll a pan.
+            // TouchPanningInputDevice.onScroll call removed.
+            // Directly proceed with existing swipe logic.
             val startPoint = e1.point()
             val currentPoint = e2.point()
             // dx/dy from this listener are deltas, but dispatcher.onSwipe expects total delta from start.
@@ -491,7 +482,7 @@ class TouchHandler(
         }
 
         private fun reset() {
-            touchPanningInputDevice.onGestureEnded() // Notify panning device gesture ended
+            // touchPanningInputDevice.onGestureEnded() call removed
 
             longPressDetected = false
             doubleTapDetected = false
@@ -501,24 +492,6 @@ class TouchHandler(
             currentDownEvent = null
             cumulatedX = 0f
             cumulatedY = 0f
-        }
-    }
-
-
-    // Implementation of PanningTouchHandlerCallback
-    override fun onPanInitiated() {
-        mGestureMode = GestureMode.PAN
-        Log.d(TAG, "Panning initiated by TouchPanningInputDevice, mGestureMode set to PAN")
-    }
-
-    override fun onPanEnded() {
-        // Only reset mode if it's currently PAN. Avoids interfering with other gesture modes
-        // that might have been set by other logic (e.g., scale, specific button press modes).
-        if (mGestureMode == GestureMode.PAN) {
-            mGestureMode = GestureMode.NONE
-            Log.d(TAG, "Panning ended by TouchPanningInputDevice, mGestureMode reset to NONE")
-        } else {
-            Log.d(TAG, "Panning ended by TouchPanningInputDevice, but mGestureMode was $mGestureMode (not PAN), so not changing it.")
         }
     }
 
