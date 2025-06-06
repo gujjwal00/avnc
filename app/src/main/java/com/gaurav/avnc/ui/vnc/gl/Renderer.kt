@@ -123,6 +123,10 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
      * @param deltaRoll Change in roll (rotation around the camera's Z-axis/view direction).
      */
     fun panCamera(deltaYaw: Float, deltaPitch: Float, deltaRoll: Float = 0f) {
+        if (!this::panningController.isInitialized) {
+            Log.w("Renderer", "panCamera called before panningController is initialized. Ignoring pan event.")
+            return
+        }
         panningController.onPan(deltaYaw, deltaPitch, deltaRoll)
         // After panning, request a new render to display the updated view.
         // GLSurfaceView.requestRender() should be called if renderMode is RENDERMODE_WHEN_DIRTY.
@@ -137,6 +141,10 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
      *               a positive value (from pinch-in) moves it further away (zooms out).
      */
     fun zoomCamera(deltaZ: Float) { // deltaZ from (1-scaleFactor)*sensitivity, negative means zoom IN
+        if (!this::panningController.isInitialized) {
+            Log.w("Renderer", "zoomCamera called before panningController is initialized. Ignoring zoom event.")
+            return
+        }
         val strategy = panningController.getCurrentStrategy()
         // Tunable factor for how much deltaZ affects zoomLevel.
         // Smaller = less sensitive zoom.
