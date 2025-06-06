@@ -11,6 +11,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.Surface
 import android.view.WindowManager
+import com.gaurav.avnc.util.AppPreferences // Added import
 import com.gaurav.avnc.ui.vnc.PanningInputDevice
 import com.gaurav.avnc.ui.vnc.PanningListener
 import kotlin.math.abs
@@ -38,9 +39,11 @@ class PhoneImuPanningInputDevice(private val activity: Activity) : PanningInputD
     // private val NS2S = 1.0f / 1000_000_000.0f // nanoseconds to seconds
 
     // Sensitivity factor - adjust as needed
-    private val SENSITIVITY = 0.5f
+    // private val SENSITIVITY = 0.5f // Remove this line
+    private lateinit var prefs: AppPreferences // Added field
 
     init {
+        prefs = AppPreferences(activity.applicationContext) // Initialize prefs
         try {
             sensorManager = activity.getSystemService(Context.SENSOR_SERVICE) as SensorManager
             // Prefer ROTATION_VECTOR sensor as it's usually more stable and already fused
@@ -204,10 +207,15 @@ class PhoneImuPanningInputDevice(private val activity: Activity) : PanningInputD
         // Let's assume 1 radian = N pixels of pan.
         // The Viture example used xStep = 1920f / 64.0f. This means 64 degrees FOV maps to 1920 pixels.
         // 1 degree = (1920/64) pixels. 1 radian = (180/PI) * (1920/64) pixels.
+
+        // Fetch sensitivities from AppPreferences
+        val sensitivityX = prefs.xr.phoneImuDeltaPanSensitivityX
+        val sensitivityY = prefs.xr.phoneImuDeltaPanSensitivityY
+
         val radToPanScale = (180.0f / Math.PI.toFloat()) * (1920f / 90f) // Assume 90 deg FOV for phone panning sensitivity
 
-        val panX = -deltaYaw * radToPanScale * SENSITIVITY
-        val panY = deltaPitch * radToPanScale * SENSITIVITY // Positive pitch up, so positive Y to pan up.
+        val panX = -deltaYaw * radToPanScale * sensitivityX // Apply sensitivityX
+        val panY = deltaPitch * radToPanScale * sensitivityY  // Apply sensitivityY
 
         // Filter out very small movements (jitter)
         if (abs(panX) < 0.1f && abs(panY) < 0.1f) {

@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import com.gaurav.avnc.util.AppPreferences // Added import
 import com.gaurav.avnc.ui.vnc.PanningInputDevice
 import com.gaurav.avnc.ui.vnc.PanningListener
 import com.viture.sdk.ArCallback
@@ -20,11 +21,13 @@ class ViturePanningInputDevice(private val activity: Activity) : PanningInputDev
     private var listener: PanningListener? = null
     private var enabled = false
     private val uiHandler = Handler(Looper.getMainLooper())
+    private lateinit var prefs: AppPreferences // Added field
 
     private var mLastYaw: Float? = null
     private var mLastPitch: Float? = null
 
     init {
+        prefs = AppPreferences(activity.applicationContext) // Initialize prefs
         try {
             mArManager = ArManager.getInstance(activity)
             val initReturnCode = mArManager?.init() ?: -1 // Store return code
@@ -89,6 +92,12 @@ class ViturePanningInputDevice(private val activity: Activity) : PanningInputDev
             mLastYaw = eulerYaw
             mLastPitch = eulerPitch
 
+            val sensitivityX = prefs.xr.viturePanSensitivityX
+            val sensitivityY = prefs.xr.viturePanSensitivityY
+
+            val adjustedDeltaYaw = deltaYaw * sensitivityX
+            val adjustedDeltaPitch = deltaPitch * sensitivityY
+
             // Positive yaw from SDK is typically right, positive pitch is typically up.
             // Adjust signs if needed based on how PanningController expects input.
             // Assuming PanningController expects:
@@ -105,7 +114,7 @@ class ViturePanningInputDevice(private val activity: Activity) : PanningInputDev
             // deltaYaw > 0 means pan right, deltaPitch > 0 means pan up.
             // The Viture example implies `deltaX` (yaw change) is negated for `moveX`.
             // So, we should probably negate `deltaYaw`.
-            listener?.onPan(-deltaYaw, deltaPitch)
+            listener?.onPan(-adjustedDeltaYaw, adjustedDeltaPitch)
         }
     }
 

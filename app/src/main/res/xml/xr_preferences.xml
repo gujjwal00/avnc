@@ -52,18 +52,54 @@
             app:title="Enable Viture XR Glasses Panning"
             app:summary="Enable panning using Viture XR glasses head tracking"
             app:defaultValue="true" />
+        <EditTextPreference
+            android:key="xr_viture_sensitivity_x"
+            android:title="Viture X Sensitivity"
+            android:summary="Horizontal sensitivity (default: 1.0)"
+            android:defaultValue="1.0"
+            android:inputType="numberDecimal|numberSigned" />
+        <EditTextPreference
+            android:key="xr_viture_sensitivity_y"
+            android:title="Viture Y Sensitivity"
+            android:summary="Vertical sensitivity (default: 1.0)"
+            android:defaultValue="1.0"
+            android:inputType="numberDecimal|numberSigned" />
 
         <SwitchPreferenceCompat
             app:key="xr_enable_phone_imu_delta_panning"
             app:title="Enable Phone IMU Panning (Translate)"
             app:summary="Pan by moving phone (like dragging screen)"
             app:defaultValue="false" />
+        <EditTextPreference
+            android:key="xr_phone_imu_delta_sensitivity_x"
+            android:title="Phone IMU Delta X Sensitivity"
+            android:summary="Horizontal sensitivity (default: 1.0)"
+            android:defaultValue="1.0"
+            android:inputType="numberDecimal|numberSigned" />
+        <EditTextPreference
+            android:key="xr_phone_imu_delta_sensitivity_y"
+            android:title="Phone IMU Delta Y Sensitivity"
+            android:summary="Vertical sensitivity (default: 1.0)"
+            android:defaultValue="1.0"
+            android:inputType="numberDecimal|numberSigned" />
 
         <SwitchPreferenceCompat
             app:key="xr_enable_phone_rotation_panning"
             app:title="Enable Phone Rotation Panning (Magic Window)"
             app:summary="Pan by rotating phone (like looking through a window)"
             app:defaultValue="false" />
+        <EditTextPreference
+            android:key="xr_phone_rotation_sensitivity_x"
+            android:title="Phone Rotation X Sensitivity"
+            android:summary="Horizontal sensitivity (default: 1.0)"
+            android:defaultValue="1.0"
+            android:inputType="numberDecimal|numberSigned" />
+        <EditTextPreference
+            android:key="xr_phone_rotation_sensitivity_y"
+            android:title="Phone Rotation Y Sensitivity"
+            android:summary="Vertical sensitivity (default: 1.0)"
+            android:defaultValue="1.0"
+            android:inputType="numberDecimal|numberSigned" />
 
     </PreferenceCategory>
 

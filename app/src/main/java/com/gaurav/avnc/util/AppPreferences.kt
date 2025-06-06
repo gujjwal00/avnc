@@ -166,6 +166,18 @@ class AppPreferences(context: Context) {
         var enableTouchPanning by BooleanPref("xr_enable_touch_panning", true) // Touch panning is often a primary input
         var enablePhoneImuDeltaPanning by BooleanPref("xr_enable_phone_imu_delta_panning", false) // Default to off to avoid conflict if rotation is preferred
         var enablePhoneRotationPanning by BooleanPref("xr_enable_phone_rotation_panning", false) // Default to off
+
+        // Viture Panning Sensitivities
+        var viturePanSensitivityX by FloatPref("xr_viture_sensitivity_x", 1.0f)
+        var viturePanSensitivityY by FloatPref("xr_viture_sensitivity_y", 1.0f)
+
+        // Phone IMU Delta Panning Sensitivities
+        var phoneImuDeltaPanSensitivityX by FloatPref("xr_phone_imu_delta_sensitivity_x", 1.0f)
+        var phoneImuDeltaPanSensitivityY by FloatPref("xr_phone_imu_delta_sensitivity_y", 1.0f)
+
+        // Phone Rotation Panning Sensitivities
+        var phoneRotationPanSensitivityX by FloatPref("xr_phone_rotation_sensitivity_x", 1.0f)
+        var phoneRotationPanSensitivityY by FloatPref("xr_phone_rotation_sensitivity_y", 1.0f)
     }
 
     /****************************** Migrations *******************************/
