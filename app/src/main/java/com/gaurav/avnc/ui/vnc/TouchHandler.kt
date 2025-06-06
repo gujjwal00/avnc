@@ -11,25 +11,18 @@ package com.gaurav.avnc.ui.vnc
 import android.content.Context
 import android.graphics.PointF
 import android.os.Build
+import android.util.Log
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.HapticFeedbackConstants
 import android.view.InputDevice
-import android.util.Log
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ViewConfiguration
-import android.widget.Toast // Import Toast
-// import com.gaurav.avnc.model.InputActions // No longer strictly needed for "pan" string comparison
+import android.widget.Toast
 import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.PointerButton
-// import com.gaurav.avnc.model.InputActions // No longer strictly needed for "pan" string comparison
-import com.gaurav.avnc.util.AppPreferences
-import com.gaurav.avnc.viewmodel.VncViewModel
-import com.gaurav.avnc.vnc.PointerButton
-// Add TouchPanningInputDevice
-import com.gaurav.avnc.ui.vnc.TouchPanningInputDevice
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2

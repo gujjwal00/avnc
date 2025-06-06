@@ -95,7 +95,7 @@ class VncActivity : AppCompatActivity() {
 
     val viewModel by viewModels<VncViewModel>()
     lateinit var binding: ActivityVncBinding
-    private val dispatcher by lazy { Dispatcher(this) }
+    public val dispatcher by lazy { Dispatcher(this) }
     // Updated TouchHandler instantiation to include viewModel
     private val touchHandler by lazy { TouchHandler(binding.frameView, dispatcher, viewModel, viewModel.pref) }
     val keyHandler by lazy { KeyHandler(dispatcher, viewModel.pref) }
