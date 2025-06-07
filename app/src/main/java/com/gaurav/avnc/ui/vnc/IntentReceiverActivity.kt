@@ -58,13 +58,13 @@ class IntentReceiverActivity : AppCompatActivity() {
     }
 
     private suspend fun launchFromVncUri(uri: VncUri) {
-        if (uri.connectionName.isNotBlank()) launchFromProfileName(uri.connectionName)
-        else launchVncUri(uri)
+        if (uri.connectionName.isNullOrBlank()) launchVncUri(uri)
+        else launchFromProfileName(uri.connectionName)
     }
 
     private fun launchVncUri(uri: VncUri) {
-        if (uri.host.isEmpty()) toast(getString(R.string.msg_invalid_vnc_uri))
-        else startVncActivity(this, uri)
+        if (uri.isValidUri) startVncActivity(this, uri)
+        else toast(getString(R.string.msg_invalid_vnc_uri))
     }
 
     private suspend fun launchFromProfileName(name: String) {

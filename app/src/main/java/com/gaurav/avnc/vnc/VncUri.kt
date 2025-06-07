@@ -39,41 +39,53 @@ class VncUri(str: String) {
     private val javaUri = runCatching { URI(uriString) }.getOrNull()
 
 
-    val host = javaUri?.host?.trim('[', ']') ?: ""
-    val port = if (javaUri?.port == -1) 5900 else javaUri?.port ?: 5900
-    val connectionName = uri.getQueryParameter("ConnectionName") ?: ""
-    val username = uri.getQueryParameter("VncUsername") ?: ""
-    val password = uri.getQueryParameter("VncPassword") ?: ""
-    val securityType = uri.getQueryParameter("SecurityType")?.toIntOrNull() ?: 0
-    val channelType = uri.getQueryParameter("ChannelType")?.toIntOrNull() ?: ServerProfile.CHANNEL_TCP
-    val colorLevel = uri.getQueryParameter("ColorLevel")?.toIntOrNull() ?: 7
+    val host = javaUri?.host?.trim('[', ']')
+    val port = if (javaUri?.port == -1) null else javaUri?.port
+    val connectionName = uri.getQueryParameter("ConnectionName")
+    val saveConnection = uri.getBooleanQueryParameter("SaveConnection", false)
+    val isValidUri = !host.isNullOrBlank()
+
+    val username = uri.getQueryParameter("VncUsername")
+    val password = uri.getQueryParameter("VncPassword")
+    val securityType = uri.getQueryParameter("SecurityType")?.toIntOrNull()
+    val channelType = uri.getQueryParameter("ChannelType")?.toIntOrNull()
+    val colorLevel = uri.getQueryParameter("ColorLevel")?.toIntOrNull()
     val viewOnly = uri.getBooleanQueryParameter("ViewOnly", false)
 
-    //val saveConnection = uri.getBooleanQueryParameter("SaveConnection", false)
     val sshHost = uri.getQueryParameter("SshHost") ?: host
-    val sshPort = uri.getQueryParameter("SshPort")?.toIntOrNull() ?: 22
-    val sshUsername = uri.getQueryParameter("SshUsername") ?: ""
-    val sshPassword = uri.getQueryParameter("SshPassword") ?: ""
+    val sshPort = uri.getQueryParameter("SshPort")?.toIntOrNull()
+    val sshUsername = uri.getQueryParameter("SshUsername")
+    val sshPassword = uri.getQueryParameter("SshPassword")
+
+    /**
+     *  Applies this URI to given profile. Any parameter present in this URI will
+     *  overwrite corresponding member of [profile]. Returns the same profile [profile].
+     */
+    fun applyToProfile(profile: ServerProfile): ServerProfile {
+        check(isValidUri)
+
+        connectionName?.let { profile.name = it }
+        host?.let { profile.host = it }
+        port?.let { profile.port = it }
+        username?.let { profile.username = it }
+        password?.let { profile.password = it }
+        securityType?.let { profile.securityType = it }
+        channelType?.let { profile.channelType = it }
+        colorLevel?.let { profile.colorLevel = it }
+        sshHost?.let { profile.sshHost = it }
+        sshPort?.let { profile.sshPort = it }
+        sshUsername?.let { profile.sshUsername = it }
+        sshPassword?.let { profile.sshPassword = it }
+        profile.sshAuthType = ServerProfile.SSH_AUTH_PASSWORD
+        profile.viewOnly = viewOnly
+
+        return profile
+    }
 
     /**
      * Generates a [ServerProfile] using this instance.
      */
-    fun toServerProfile() = ServerProfile(
-            name = connectionName,
-            host = host,
-            port = port,
-            username = username,
-            password = password,
-            securityType = securityType,
-            channelType = channelType,
-            colorLevel = colorLevel,
-            viewOnly = viewOnly,
-            sshHost = sshHost,
-            sshPort = sshPort,
-            sshUsername = sshUsername,
-            sshAuthType = ServerProfile.SSH_AUTH_PASSWORD,
-            sshPassword = sshPassword
-    )
+    fun toServerProfile() = applyToProfile(ServerProfile())
 
     override fun toString() = uriString
 }

@@ -10,6 +10,9 @@ package com.gaurav.avnc.vnc
 
 import com.gaurav.avnc.model.ServerProfile
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class VncUriTest {
@@ -17,43 +20,49 @@ class VncUriTest {
     @Test
     fun blankTest() {
         val uri = VncUri("")
-        assertEquals("", uri.host)
-    }
-
-    @Test
-    fun basicHostTest() {
-        val uri = VncUri("host")
-        assertEquals("host", uri.host)
-        assertEquals(5900, uri.port)
-        assertEquals("", uri.username)
-        assertEquals("", uri.password)
+        assertFalse(uri.isValidUri)
+        assertNull(uri.host)
+        assertNull(uri.port)
+        assertNull(uri.connectionName)
+        assertNull(uri.sshHost)
     }
 
     @Test
     fun simpleUriTest() {
         val uri = VncUri("vnc://10.0.0.1:5901/?VncPassword=foo&SecurityType=2&ViewOnly=true")
+        assertTrue(uri.isValidUri)
         assertEquals("10.0.0.1", uri.host)
         assertEquals(5901, uri.port)
-        assertEquals("", uri.username)
         assertEquals("foo", uri.password)
         assertEquals(2, uri.securityType)
         assertEquals(true, uri.viewOnly)
-        assertEquals(ServerProfile.CHANNEL_TCP, uri.channelType)
+    }
+
+    @Test
+    fun sshUriTest() {
+        val uri = VncUri("vnc://10.0.0.1/?ChannelType=24&SshHost=10.0.0.2&SshPort=222&SshPassword=foo&SshUsername=bar")
+        assertTrue(uri.isValidUri)
+        assertEquals("10.0.0.1", uri.host)
+        assertEquals("10.0.0.2", uri.sshHost)
+        assertEquals(222, uri.sshPort)
+        assertEquals("foo", uri.sshPassword)
+        assertEquals("bar", uri.sshUsername)
+        assertEquals(ServerProfile.CHANNEL_SSH_TUNNEL, uri.channelType)
     }
 
     @Test
     fun ipv6Test1() {
         val uri = VncUri("[fe80::2a10:8d70:b54:b62b]")
+        assertTrue(uri.isValidUri)
         assertEquals("fe80::2a10:8d70:b54:b62b", uri.host)
-        assertEquals(5900, uri.port)
     }
 
     @Test
     fun ipv6Test2() {
         val uri = VncUri("vnc://[fe80::2a10:8d70:b54:b62b]:123/?VncPassword=foo&SecurityType=2&ViewOnly=true")
+        assertTrue(uri.isValidUri)
         assertEquals("fe80::2a10:8d70:b54:b62b", uri.host)
         assertEquals(123, uri.port)
-        assertEquals("", uri.username)
         assertEquals("foo", uri.password)
         assertEquals(2, uri.securityType)
         assertEquals(true, uri.viewOnly)
@@ -63,7 +72,8 @@ class VncUriTest {
     fun ipv6InvalidAddressTest() {
         //Parsing should fail for this address because it is invalid.
         val uri = VncUri("[fe80:2a10:b62b]")
-        assertEquals("", uri.host)
+        assertFalse(uri.isValidUri)
+        assertNull(uri.host)
     }
 
     @Test
@@ -76,5 +86,25 @@ class VncUriTest {
 
         // Make sure only start of URI is checked for variations
         assertEquals("vnc://avnc://host", VncUri("avnc://host").toString())
+    }
+
+    @Test
+    fun applyToProfileTest() {
+        val profile = ServerProfile(name = "Name1", host = "10.0.0.1", username = "User1")
+        val uri = VncUri("vnc://10.0.0.2:5901/?VncPassword=foo&ViewOnly=true")
+        assertTrue(uri.isValidUri)
+
+        uri.applyToProfile(profile)
+        assertEquals("10.0.0.2", profile.host)
+        assertEquals(5901, profile.port)
+        assertEquals("foo", profile.password)
+        assertEquals(true, profile.viewOnly)
+
+        // These were not given in URI, so should remain unchanged
+        assertEquals("Name1", profile.name)
+        assertEquals("User1", profile.username)
+
+        // Only SSH password type is supported in URIs
+        assertEquals(ServerProfile.SSH_AUTH_PASSWORD, profile.sshAuthType)
     }
 }
