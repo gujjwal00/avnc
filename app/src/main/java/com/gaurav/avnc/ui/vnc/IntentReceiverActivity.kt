@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.gaurav.avnc.R
+import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.model.db.MainDb
 import com.gaurav.avnc.vnc.VncUri
 import kotlinx.coroutines.launch
@@ -58,6 +59,14 @@ class IntentReceiverActivity : AppCompatActivity() {
     }
 
     private suspend fun launchFromVncUri(uri: VncUri) {
+        if (!validateUri(uri))
+            return
+
+        maybeSaveUri(uri)?.let {
+            launchFromProfileId(it.ID)
+            return
+        }
+
         if (uri.connectionName.isNullOrBlank()) launchVncUri(uri)
         else launchFromProfileName(uri.connectionName)
     }
@@ -77,6 +86,54 @@ class IntentReceiverActivity : AppCompatActivity() {
         val profile = profileDao.getByID(profileId)
         if (profile == null) toast(getString(R.string.msg_shortcut_server_deleted))
         else startVncActivity(this, profile)
+    }
+
+    private suspend fun maybeSaveUri(uri: VncUri): ServerProfile? {
+        if (!uri.isValidUri || !uri.saveConnection)
+            return null
+
+        val existingProfile = uri.connectionName?.let { profileDao.getByName(it).firstOrNull() }
+        val profile = existingProfile ?: ServerProfile()
+
+        uri.applyToProfile(profile)
+        val id = profileDao.save(profile)
+
+        if (profile.ID == 0L) {
+            check(id > 0)
+            profile.ID = id
+            toast("New server saved")
+        }
+        return profile
+    }
+
+    private fun validateUri(uri: VncUri): Boolean {
+        if (!uri.isValidUri) {
+            toast(getString(R.string.msg_invalid_vnc_uri))
+            return false
+        }
+
+        if (uri.channelType !in listOf(null, ServerProfile.CHANNEL_TCP, ServerProfile.CHANNEL_SSH_TUNNEL)) {
+            toast("Unknown channel type: ${uri.channelType}")
+            return false
+        }
+
+        val supportedSecurityTypes = resources.getStringArray(R.array.profile_editor_security_values)
+        if (uri.securityType != null && uri.securityType.toString() !in supportedSecurityTypes) {
+            toast("Unknown security type: ${uri.securityType}")
+            return false
+        }
+
+        if (uri.channelType == ServerProfile.CHANNEL_SSH_TUNNEL && uri.sshHost.isNullOrBlank()) {
+            toast("Missing SSH host in URI")
+            return false
+        }
+
+        if (uri.channelType == ServerProfile.CHANNEL_SSH_TUNNEL && uri.sshUsername.isNullOrBlank()) {
+            toast("Missing SSH username in URI")
+            return false
+        }
+
+        return true
     }
 
     private fun toast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()

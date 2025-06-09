@@ -41,7 +41,7 @@ class VncUri(str: String) {
 
     val host = javaUri?.host?.trim('[', ']')
     val port = if (javaUri?.port == -1) null else javaUri?.port
-    val connectionName = uri.getQueryParameter("ConnectionName")
+    val connectionName = uri.getQueryParameter("ConnectionName") ?: host?.let { "vnc://$it" }
     val saveConnection = uri.getBooleanQueryParameter("SaveConnection", false)
     val isValidUri = !host.isNullOrBlank()
 
