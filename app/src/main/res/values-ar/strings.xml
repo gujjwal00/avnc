@@ -223,4 +223,14 @@
     <string name="pref_km_language_switch_to_super">زر الويندوز → تغير لغة الادخال</string>
     <string name="title_forget">انسى</string>
     <string name="msg_gesture_style_help"><b>شاشة اللمس</b>\nتنفيذ الإجراءات عند نقطة اللمس\n\n<b>لوحة اللمس</b>\nتنفيذ الإجراءات عند المؤشر</string>
+    <string name="title_try">جرب</string>
+    <string name="msg_required">مطلوب</string>
+    <string name="msg_invalid_mac_address">عنوان MAC غير صالح</string>
+    <string name="title_always_show_advanced_editor">إظهار الخيارات المتقدمة دائمًا</string>
+    <string name="pref_gesture_action_left_press">الضغط المطول</string>
+    <string name="pref_swipe3">تمرير ثلاثي الأصابع</string>
+    <string name="desc_toolbar_btn">فتح شريط الأدوات</string>
+    <string name="pref_long_press_swipe_disabled_summary">معطلة بالقيمة الحالية لإيماءة <b>الضغط لفترة طويلة</b></string>
+    <string name="pref_three_finger_tap">نقرة بثلاثة أصابع</string>
+    <string name="pref_toolbar_open_with_button">زر الإظهار لفتح</string>
 </resources>

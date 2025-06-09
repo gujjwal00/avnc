@@ -98,7 +98,7 @@
     <string name="title_change">Змінити</string>
     <string name="title_about">Про застосунок</string>
     <string name="title_undo">Відмінити</string>
-    <string name="title_vnc_login">Вхід</string>
+    <string name="title_vnc_login">Вхід VNC</string>
     <string name="title_key_compat_mode">Надсилати успадковані події клавіш</string>
     <string name="title_report_bug">Звіт про ваду</string>
     <string name="title_source_code">Вихідний код</string>
@@ -229,4 +229,9 @@
     <string name="title_try">Спробуй</string>
     <string name="title_always_show_advanced_editor">Завжди показувати додаткові параметри</string>
     <string name="msg_required">Обов\'язковий</string>
+    <string name="pref_swipe3">Проведіть трьома пальцями</string>
+    <string name="pref_three_finger_tap">Натискання трьома пальцями</string>
+    <string name="desc_toolbar_btn">Відкрити панель інструментів</string>
+    <string name="pref_long_press_swipe_disabled_summary">Вимкнено поточним значенням жесту <b>Довге натискання</b></string>
+    <string name="pref_toolbar_open_with_button">Показати кнопку для відкриття</string>
 </resources>

@@ -1,0 +1,16 @@
+AVNC je open source VNC klient pro Android. Umožňuje vzdáleně ovládat jakékoli zařízení s běžícím serverem VNC.
+
+Funkce:
+
+- Material Design (s tmavým motivem)
+- Konfigurovatelná gesta
+- Těsné kódování
+- Virtuální klávesy
+- Režim obraz v obraze
+- Režim pouze zobrazení
+- Nalezení serverů Zeroconf
+- Podpora TLS (AnonTLS, VeNCrypt)
+- Tunel SSH (VNC přes SSH)
+- Import/export serverů
+- Podpora VNC opakovačů
+- Synchronizace schránky se serverem

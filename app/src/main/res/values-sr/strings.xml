@@ -92,7 +92,7 @@
     <string name="title_save">Сачувај</string>
     <string name="title_undo">Опозови</string>
     <string name="title_settings">Поставке</string>
-    <string name="title_vnc_login">Пријава</string>
+    <string name="title_vnc_login">Пријава ВНЦ-а</string>
     <string name="title_remember">Запамти</string>
     <string name="title_export">Извези</string>
     <string name="title_import">Увези</string>
