@@ -87,7 +87,7 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
     var processedEventObserver: ((KeyEvent) -> Unit)? = null
     var enableMacOSCompatibility = false
     var emitLegacyKeysym = true
-    private var vkMetaState = 0
+    var vkMetaState = 0
     private var hasSentShiftDown = false
     private val inputPref = prefs.input
     private val kcm by lazy { KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD) }
@@ -98,11 +98,6 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
     fun onKey(keyCode: Int) {
         onKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, keyCode))
         onKeyEvent(KeyEvent(KeyEvent.ACTION_UP, keyCode))
-    }
-
-    fun onVkKeyEvent(event: KeyEvent) {
-        vkMetaState = event.metaState
-        onKeyEvent(event)
     }
 
     fun onKeyEvent(event: KeyEvent): Boolean {

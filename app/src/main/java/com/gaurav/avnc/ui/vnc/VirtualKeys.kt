@@ -61,7 +61,6 @@ class VirtualKeys(activity: VncActivity) {
     private val toggleKeys = mutableSetOf<ToggleButton>()
     private val lockedToggleKeys = mutableSetOf<ToggleButton>()
     private val keyCharMap by lazy { KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD) }
-    private var activeMetaState = 0
     private var openedWithKb = false
     private var closedByPiPMode = false
 
@@ -304,11 +303,16 @@ class VirtualKeys(activity: VncActivity) {
         val text = textBox.text?.ifEmpty { "\n" }?.toString() ?: return
         val events = keyCharMap.getEvents(text.toCharArray())
 
+        // Temporarily clear vkMetaState, so it doesn't affect the following events
+        val vkMetaState = keyHandler.vkMetaState
+        keyHandler.vkMetaState = 0
+
         if (events == null)
             keyHandler.onKeyEvent(KeyEvent(SystemClock.uptimeMillis(), text, 0, 0))
         else
             events.forEach { keyHandler.onKeyEvent(it) }
 
+        keyHandler.vkMetaState = vkMetaState
         textBox.setText("")
     }
 
@@ -325,10 +329,13 @@ class VirtualKeys(activity: VncActivity) {
             else -> return
         }
 
+        var metaState = keyHandler.vkMetaState
         if (isDown)
-            activeMetaState = activeMetaState or metaKeyFlag
+            metaState = metaState or metaKeyFlag
         else
-            activeMetaState = activeMetaState and metaKeyFlag.inv()
+            metaState = metaState and metaKeyFlag.inv()
+
+        keyHandler.vkMetaState = metaState
     }
 
     private fun sendKey(keyCode: Int) {
@@ -339,7 +346,7 @@ class VirtualKeys(activity: VncActivity) {
     private fun sendKey(keyCode: Int, isDown: Boolean) {
         val action = if (isDown) KeyEvent.ACTION_DOWN else KeyEvent.ACTION_UP
         updateMetaState(keyCode, isDown)
-        keyHandler.onVkKeyEvent(KeyEvent(0, 0, action, keyCode, 0, activeMetaState))
+        keyHandler.onKeyEvent(KeyEvent(action, keyCode))
     }
 }
 
