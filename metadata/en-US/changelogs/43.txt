@@ -1,0 +1,4 @@
+* Added support for three-finger tap & swipe gestures
+* Added option to open Viewer toolbar with a button
+* Enable meta key capture on Samsung devices in non-DeX mode
+* Added workarounds for keyboard apps which don't generate events correctly
