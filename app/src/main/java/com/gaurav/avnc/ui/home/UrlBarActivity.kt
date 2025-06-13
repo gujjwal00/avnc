@@ -73,7 +73,7 @@ class UrlBarActivity : AppCompatActivity() {
         val processed = processIPv6(url)
         val uri = VncUri(processed)
 
-        if (uri.host.isEmpty()) {
+        if (uri.host.isNullOrBlank()) {
             Toast.makeText(this, R.string.msg_invalid_vnc_uri, Toast.LENGTH_SHORT).show()
             return false
         }

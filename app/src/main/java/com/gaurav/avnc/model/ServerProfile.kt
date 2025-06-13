@@ -72,8 +72,9 @@ data class ServerProfile(
         /**
          * Specifies the color level of received frames.
          * This value determines the pixel-format used for framebuffer.
+         * Not used yet.
          */
-        var colorLevel: Int = 0,
+        var colorLevel: Int = 7,
 
         /**
          * Specifies the image quality of the frames.
