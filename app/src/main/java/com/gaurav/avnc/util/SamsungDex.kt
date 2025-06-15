@@ -17,6 +17,7 @@ import android.util.Log
  * Utilities related to Samsung DeX
  */
 object SamsungDex {
+    private const val TAG = "DeX Support"
 
     /**
      * Returns true, if DeX mode is enabled.
@@ -36,11 +37,12 @@ object SamsungDex {
      * Enables/disables meta-key event capturing.
      */
     fun setMetaKeyCapture(activity: Activity, isEnabled: Boolean) {
-        /*if (!isInDexMode(activity))
-            return
-        */
+        val managerClass = runCatching { Class.forName("com.samsung.android.view.SemWindowManager") }
+                                   .onSuccess { Log.d(TAG, "Samsung device detected, setting meta key capture to: $isEnabled") }
+                                   .onFailure { Log.d(TAG, "Samsung device not detected, skipping meta key capture") }
+                                   .getOrNull() ?: return
+
         runCatching {
-            val managerClass = Class.forName("com.samsung.android.view.SemWindowManager")
             val instanceMethod = managerClass.getMethod("getInstance")
             val manager = instanceMethod.invoke(null)
 
@@ -48,6 +50,6 @@ object SamsungDex {
                                                                ComponentName::class.java,
                                                                Boolean::class.java)
             requestMethod.invoke(manager, activity.componentName, isEnabled)
-        }.onFailure { Log.e("DeX Support", "Meta key capture error", it) }
+        }.onFailure { Log.e(TAG, "Meta key capture error", it) }
     }
 }
