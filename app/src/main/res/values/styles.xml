@@ -157,4 +157,10 @@
         <item name="android:textOff" />
         <item name="android:textOn" />
     </style>
+
+    <style name="ToolbarFlyoutToggle" parent="ImageButton.Toggle">
+        <item name="android:drawableEnd">@drawable/ic_toggle_more</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">0dp</item>
+    </style>
 </resources>

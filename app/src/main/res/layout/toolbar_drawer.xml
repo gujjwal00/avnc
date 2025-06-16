@@ -50,35 +50,25 @@
 
                 <ToggleButton
                     android:id="@+id/gesture_style_toggle"
-                    style="@style/ImageButton.Toggle"
+                    style="@style/ToolbarFlyoutToggle"
                     android:contentDescription="@string/pref_gesture_style"
                     android:drawableStart="@drawable/ic_gesture"
-                    android:drawableEnd="@drawable/ic_toggle_more"
-                    android:onCheckedChanged="@{(v,checked) -> checked ? zoomOptions.setChecked(false) : void}"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="0dp"
-                    app:isVisible="@{viewModel.pref.viewer.toolbarShowGestureStyleToggle}"
-                    tools:ignore="UnusedAttribute" />
+                    app:isVisible="@{viewModel.pref.viewer.toolbarShowGestureStyleToggle}" />
 
                 <ToggleButton
-                    android:id="@+id/zoom_options"
-                    style="@style/ImageButton.Toggle"
+                    android:id="@+id/zoom_options_toggle"
+                    style="@style/ToolbarFlyoutToggle"
                     android:contentDescription="@string/desc_zoom_options_btn"
-                    android:drawableStart="@drawable/ic_zoom_options"
-                    android:drawableEnd="@drawable/ic_toggle_more"
-                    android:onCheckedChanged="@{(v,checked) -> checked ? gestureStyleToggle.setChecked(false) : void}"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="0dp"
-                    tools:ignore="UnusedAttribute" />
+                    android:drawableStart="@drawable/ic_zoom_options" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/zoom_options_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginHorizontal="@dimen/margin_small"
-                android:background="@drawable/bg_round_rect"
-                app:isVisible="@{zoomOptions.checked}">
+                android:background="@drawable/bg_round_rect">
 
                 <ImageButton
                     android:id="@+id/zoom_reset_btn"
@@ -89,9 +79,9 @@
                 <ToggleButton
                     android:id="@+id/zoom_lock_btn"
                     style="@style/ImageButton.Toggle"
+                    android:checked="@{viewModel.profileLive.fZoomLocked}"
                     android:contentDescription="@string/desc_lock_zoom_btn"
                     android:drawableStart="@drawable/ic_lock"
-                    android:checked="@{viewModel.profileLive.fZoomLocked}"
                     android:padding="12dp" />
 
                 <ImageButton
@@ -112,8 +102,7 @@
                 android:layout_marginHorizontal="@dimen/margin_small"
                 android:background="@drawable/bg_round_rect"
                 android:paddingStart="@dimen/padding_small"
-                android:paddingEnd="@dimen/padding_normal"
-                app:isVisible="@{gestureStyleToggle.checked}">
+                android:paddingEnd="@dimen/padding_normal">
 
                 <RadioButton
                     android:id="@+id/gesture_style_auto"

@@ -18,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.Toast
+import android.widget.ToggleButton
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.view.GravityCompat
@@ -45,7 +46,7 @@ import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
  *   || B |              |              |
  *   || t |              |              |
  *   || n |+------------+|    Scrim     |
- *   || s ||   Flyout   ||              |
+ *   || s ||  Flyouts   ||              |
  *   |+---++------------+|              |
  *   |                   |              |
  *   |                   |              |
@@ -65,10 +66,11 @@ class Toolbar(private val activity: VncActivity) {
     private val openWithSwipe = viewModel.pref.viewer.toolbarOpenWithSwipe
     private val openWithButton = viewModel.pref.viewer.toolbarOpenWithButton
     private val openerButton = activity.binding.openToolbarBtn
+    private val flyouts = mutableMapOf<ToggleButton, View>()
 
     fun initialize() {
         binding.keyboardBtn.setOnClickListener { activity.showKeyboard(); close() }
-        binding.zoomOptions.setOnLongClickListener { resetZoomToDefault(); close(); true }
+        binding.zoomOptionsToggle.setOnLongClickListener { resetZoomToDefault(); close(); true }
         binding.zoomResetBtn.setOnClickListener { resetZoomToDefault(); close() }
         binding.zoomResetBtn.setOnLongClickListener { resetZoom(); close(); true }
         binding.zoomLockBtn.setOnCheckedChangeListener { _, checked -> toggleZoomLock(checked); close() }
@@ -81,6 +83,7 @@ class Toolbar(private val activity: VncActivity) {
         viewModel.state.observe(activity) { onStateChange(it) }
 
         setupAlignment()
+        setupFlyouts()
         setupFlyoutClose()
         setupOpenerButton()
         setupGestureStyleSelection()
@@ -258,6 +261,22 @@ class Toolbar(private val activity: VncActivity) {
         }
     }
 
+    private fun setupFlyouts() {
+        flyouts += binding.gestureStyleToggle to binding.gestureStyleGroup
+        flyouts += binding.zoomOptionsToggle to binding.zoomOptionsGroup
+
+        flyouts.values.forEach { it.isVisible = false }
+
+        flyouts.keys.forEach { toggle ->
+            toggle.setOnCheckedChangeListener { _, isChecked ->
+                flyouts[toggle]?.isVisible = isChecked
+
+                if (isChecked) // Close others
+                    flyouts.keys.forEach { if (it != toggle) it.isChecked = false }
+            }
+        }
+    }
+
     /**
      * Close flyouts after drawer is closed.
      *
@@ -269,8 +288,7 @@ class Toolbar(private val activity: VncActivity) {
         drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
             override fun onDrawerClosed(closedView: View) {
                 if (closedView == drawerView) {
-                    binding.zoomOptions.isChecked = false
-                    binding.gestureStyleToggle.isChecked = false
+                    flyouts.keys.forEach { it.isChecked = false }
                 }
             }
         })

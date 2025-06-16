@@ -248,7 +248,7 @@ class VncActivityTest {
             onView(withId(R.id.open_toolbar_btn)).checkWillBeDisplayed().doClick()
             onView(withId(R.id.keyboard_btn)).checkWillBeDisplayed()
             onView(withId(R.id.virtual_keys_btn)).checkIsDisplayed()
-            onView(withId(R.id.zoom_options)).checkIsDisplayed()
+            onView(withId(R.id.zoom_options_toggle)).checkIsDisplayed()
         }
     }
 }
