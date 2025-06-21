@@ -101,7 +101,6 @@
     <string name="hint_server_name">Název (např. Pracovní Počítač)</string>
     <string name="title_password">Heslo</string>
     <string name="title_none">Žádný</string>
-    <string name="title_key_compat_mode">Odeslat zastaralé události</string>
     <string name="title_got_it">Mám to</string>
     <string name="hint_urlbar">Připojit k serveru</string>
     <string name="hint_host">Hostitel</string>
@@ -112,7 +111,6 @@
     <string name="msg_invalid_key_file">Neplatný soubor osobního klíče</string>
     <string name="pref_tools_summary">Import / Export, ladění</string>
     <string name="pref_tools">Nástroje</string>
-    <string name="msg_key_compat_mode_help">Některé servery mají omezenou podporu Unicode. Zastaralé události mohou pomoci s neanglickým textem.</string>
     <string name="msg_wake_on_lan_help">Wake-on-LAN lze použít ke vzdálenému zapnutí počítače.\n\nNejprve nakonfigurujte WoL na vzdáleném počítači a poté jej povolte v AVNC.\nPoté, co je povoleno, WoL kouzelný paket bude automaticky odeslán před připojením k tomuto serveru.</string>
     <string name="tip_session_end">Chcete-li ukončit relaci, klepněte na tlačítko Zpět, stejně jako byste se vráceli z přehrávání videa.</string>
     <string name="tip_toolbar_usage">Posunutím od okraje otevřete panel nástrojů. Použijte jej k otevření klávesnice, změnu stylu gesta, nebo obnovení zoomu.</string>

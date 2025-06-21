@@ -124,9 +124,9 @@ data class ServerProfile(
 
         /**
          * Composite field for various flags.
-         * This is accessed via individual members like [fLegacyKeySym].
+         * This is accessed via individual members like [fZoomLocked].
          */
-        var flags: Long = FLAG_LEGACY_KEYSYM,
+        var flags: Long = 0,
 
         /**
          * Preferred style to use for gesture handling.
@@ -201,7 +201,7 @@ data class ServerProfile(
         const val SSH_AUTH_PASSWORD = 2
 
         // Flag masks
-        private const val FLAG_LEGACY_KEYSYM = 0x01L
+        // private const val FLAG_LEGACY_KEYSYM = 0x01L
         private const val FLAG_BUTTON_UP_DELAY = 0x02L
         private const val FLAG_ZOOM_LOCKED = 0x04L
         const val FLAG_CONNECT_ON_APP_START = 0x08L
@@ -216,12 +216,6 @@ data class ServerProfile(
             p.flags = if (value) p.flags or flag else p.flags and flag.inv()
         }
     }
-
-    /**
-     * Flag to emit legacy X KeySym events in certain cases.
-     */
-    @IgnoredOnParcel
-    var fLegacyKeySym by Flag(FLAG_LEGACY_KEYSYM)
 
     /**
      * Flag to insert artificial delay before UP event of left-click.

@@ -115,7 +115,6 @@
     <string name="title_advanced">高级</string>
     <string name="title_settings">设置</string>
     <string name="title_export">导出</string>
-    <string name="title_key_compat_mode">发送传统按键事件</string>
     <string name="title_unknown_ssh_host">未知 SSH 主机</string>
     <string name="title_source_code">源代码</string>
     <string name="msg_loading">正在加载…</string>
@@ -126,7 +125,6 @@
     <string name="title_report_bug">报告问题</string>
     <string name="msg_about_app">一个快速且安全的 VNC 客户端。远程查看和控制任何运行着 VNC 服务器的设备。 \n \n \nAVNC 是一个开源和非盈利版权软件 — 在众多贡献者的帮助下制作。</string>
     <string name="msg_pip_not_supported">此设备不支持</string>
-    <string name="msg_key_compat_mode_help">一些服务器对 Unicode 的支持有限。旧式按键事件可以帮助输入非英语文本。</string>
     <string name="tip_empty_server_list">服务器列表为空。 \n单击“<b>+</b>”添加服务器，或 \n使用顶部的地址栏直接连接。</string>
     <string name="desc_discovered_list">自动发现的服务器的列表</string>
     <string name="desc_saved_servers_list">已经保存的服务器的列表</string>

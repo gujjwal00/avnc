@@ -29,7 +29,6 @@
     <string name="title_connect_on_app_start">الاتصال التلقائي عند تشغيل التطبيق</string>
     <string name="title_enable_wol">التشغيل عبر شبكة LAN</string>
     <string name="title_hide_remote_cursor">إخفاء المؤشر البعيد</string>
-    <string name="title_key_compat_mode">إرسال أحداث المفاتيح القديمة</string>
     <string name="title_button_up_delay">إرسال عمليات النقر المتأخرة</string>
     <string name="title_resize_remote_desktop">تحجيم الجلسة البعيدة لتناسب النافذة المحلية</string>
     <string name="title_image_quality">جودة الصورة</string>
@@ -89,7 +88,6 @@
     <string name="msg_copied_to_clipboard">تم النسخ</string>
     <string name="msg_tap_to_select_a_key">انقر لتحديد مفتاح:</string>
     <string name="msg_pk_password_not_saved">لقد توقف AVNC عن حفظ كلمات مرور المفاتيح الخاصة لتحسين الأمان.</string>
-    <string name="msg_key_compat_mode_help">بعض الخوادم لديها دعم محدود ل Unicode. يمكن أن تساعد أحداث المفاتيح القديمة في إدخال نص غير إنجليزي.</string>
     <string name="msg_button_up_delay_help">يمكن أن يساعد تأخير عمليات النقر في بعض الحالات النادرة إذا كان التطبيق لا يستجيب للنقرات.</string>
     <string name="msg_wake_on_lan_help">يمكن استخدام التشغيل عبر شبكة LAN لتشغيل الكمبيوتر عن بُعد.\n\nقم أولاً بتكوين WoL على الكمبيوتر البعيد، ثم قم بتفعيلها في AVNC.\nبمجرد تفعيلها، سيتم إرسال حزمة WoL السحرية تلقائيًا قبل الاتصال بهذا الخادم.</string>
     <string name="msg_drag_gesture_help">تعيين إجراء لهذه الإيماءة سيؤدي إلى تغيير التعرف على الضغط المطول: \n\n<b>اضغط مع الاستمرار ثم حرر</b> → الضغط المطول\n<b>الضغط المطول والتمرير</b> → اضغط مع الاستمرار ثم مرر</string>

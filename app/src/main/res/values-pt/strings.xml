@@ -58,7 +58,6 @@
     <string name="title_undo">Desfazer</string>
     <string name="title_settings">Configurações</string>
     <string name="title_vnc_login">Autenticação</string>
-    <string name="title_key_compat_mode">Enviar eventos de teclado compatíveis</string>
     <string name="title_image_quality">Qualidade de imagem</string>
     <string name="title_unknown_ssh_host">Host SSH desconhecido</string>
     <string name="title_ssh_host_key_changed">Chave do host de SSH mudou</string>
@@ -104,7 +103,6 @@
     <string name="msg_invalid_key_file">Ficheiro de chave privada inválido</string>
     <string name="msg_invalid_vnc_uri">A URI do VNC inválida</string>
     <string name="msg_copied_to_clipboard">Copiado</string>
-    <string name="msg_key_compat_mode_help">Alguns servidores têm suporte limitado ao Unicode. Os eventos de teclado legado podem ajudar a inserir texto não-inglês.</string>
     <string name="tip_empty_server_list">A lista de servidores está vazia.
 \nUse o botão \'<b>+</b>\' para adicionar um servidor, ou
 \nuse a barra de endereço na área superior para conectar diretamente.</string>

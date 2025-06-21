@@ -13,7 +13,6 @@
     <string name="title_export">Exportieren</string>
     <string name="title_import">Importieren</string>
     <string name="title_view_only_mode">Nur anzeigen</string>
-    <string name="title_key_compat_mode">Legacy key events senden</string>
     <string name="title_use_ssh_tunnel">Durch SSH tunneln</string>
     <string name="title_password">Passwort</string>
     <string name="title_use_repeater">Repeater nutzen</string>
@@ -32,7 +31,6 @@
     <string name="msg_invalid_key_file">Ungültiger private key</string>
     <string name="msg_invalid_vnc_uri">Ungültige VNC-URI</string>
     <string name="msg_copied_to_clipboard">Kopiert</string>
-    <string name="msg_key_compat_mode_help">Einige Server unterstützen Unicode-Zeichen nur teilweise. Legacy key events kann die Eingabe von nicht-englischem Text ermöglichen.</string>
     <string name="tip_empty_server_list">Die Serverliste ist leer.
 \nDrücke \'<b>+</b>\', um einen Server hinzuzufügen, oder
 \nnutze die Adresszeile oben, um direkt eine Verbindung aufzubauen.</string>

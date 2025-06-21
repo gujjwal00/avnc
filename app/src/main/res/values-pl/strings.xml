@@ -3,7 +3,6 @@
     <string name="title_cancel">Anuluj</string>
     <string name="title_password">Hasło</string>
     <string name="title_add_server_profile">Dodaj serwer</string>
-    <string name="msg_key_compat_mode_help">Niektóre serwery mają ograniczoną obsługę Unicode. Kluczowe zdarzenia starszego typu mogą pomóc w wprowadzaniu tekstu w języku innym niż angielski.</string>
     <string name="title_delete">Usuń</string>
     <string name="title_clear">Wyczyść</string>
     <string name="title_copy_name">Nazwa kopii</string>
@@ -194,6 +193,5 @@
     <string name="msg_zoom_reset_default">Przywrócenie domyślnych ustawień widoku</string>
     <string name="title_resize_remote_desktop">Zmiana rozmiaru sesji zdalnej do okna lokalnego</string>
     <string name="pref_gesture_action_remote_drag_middle">Przeciągnij środkowym przyciskiem</string>
-    <string name="title_key_compat_mode">Prześlij kluczowe zdażenia w starszym formacie</string>
     <string name="msg_gesture_style_help"><b>Ekran dotykowy</b>\nWykonuj działania w punkcie kontaktu\n\n<b>Panel dotykowy</b>\nWykonaj działania na wskaźniku</string>
 </resources>

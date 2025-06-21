@@ -19,7 +19,6 @@
     <string name="title_hide_remote_cursor">隱藏遠端鼠標</string>
     <string name="title_button_up_delay">傳送已延遲的點擊</string>
     <string name="title_image_quality">畫面質量</string>
-    <string name="title_key_compat_mode">傳送舊鍵碼</string>
     <string name="title_orientation">轉向</string>
     <string name="title_vnc_security">安全性</string>
     <string name="title_use_ssh_tunnel">使用 SSH 隧道</string>
@@ -62,7 +61,6 @@
     <string name="msg_export_auth_required">請驗證以匯出伺服器</string>
     <string name="msg_copied_to_clipboard">已複製</string>
     <string name="msg_invalid_vnc_uri">無效的 VNC URI</string>
-    <string name="msg_key_compat_mode_help">一些伺服器對 Unicode 的支援有限。傳送舊鍵碼可以幫助輸入非英文字符。</string>
     <string name="msg_button_up_delay_help">如果應用程式沒有回應點擊，延遲點擊可能會解決這個問題 。</string>
     <string name="msg_gesture_style_help"><b>觸控螢幕</b>\n於觸控處執行動作\n\n<b>觸控板</b>\n於鼠標處執行動作</string>
     <string name="msg_drag_gesture_help">分配到此手勢將改變長按檢測方式：

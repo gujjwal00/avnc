@@ -34,7 +34,6 @@
     <string name="title_connect_on_app_start">Auto-connect when app starts</string>
     <string name="title_enable_wol">Wake-on-LAN</string>
     <string name="title_hide_remote_cursor">Hide remote pointer</string>
-    <string name="title_key_compat_mode">Send legacy key events</string>
     <string name="title_button_up_delay">Send delayed click events</string>
     <string name="title_resize_remote_desktop">Resize remote session to local window</string>
     <string name="title_image_quality">Image quality</string>
@@ -103,7 +102,6 @@
     <string name="msg_copied_to_clipboard">Copied</string>
     <string name="msg_tap_to_select_a_key">Tap to select a key:</string>
     <string name="msg_pk_password_not_saved">AVNC no longer saves private key passwords to improve security.</string>
-    <string name="msg_key_compat_mode_help">Some servers have limited Unicode support. Legacy key events can help input non-English text.</string>
     <string name="msg_button_up_delay_help">Delaying click events can help in some rare cases if an app is not responding to clicks.</string>
     <string name="msg_wake_on_lan_help">Wake-on-LAN can be used to remotely power-on a computer.\n\nFirst, configure WoL on remote computer, then enable it in AVNC.\nOnce enabled, WoL magic packet will be automatically sent before connecting to this server.</string>
     <string name="msg_gesture_style_help"><b>Touchscreen</b>\nDo actions at touch-point \n\n<b>Touchpad</b>\nDo actions at pointer</string>

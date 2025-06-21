@@ -16,7 +16,6 @@
     <string name="title_view_only_mode">Visualisation uniquement</string>
     <string name="title_remember">Mémoriser</string>
     <string name="title_hide_remote_cursor">Masquer le curseur distant</string>
-    <string name="title_key_compat_mode">Envoyer des événements claviers rétrocompatibles</string>
     <string name="title_unknown_ssh_host">Hôte SSH inconnu</string>
     <string name="title_ssh_host_key_changed">La clé de l\'hôte SSH a été modifiée</string>
     <string name="title_continue">Continuer</string>
@@ -78,7 +77,6 @@
     <string name="hint_server_id">Identifiant du serveur</string>
     <string name="msg_pip_not_supported">Non pris en charge sur cet appareil</string>
     <string name="msg_server_profile_deleted">Serveur supprimé</string>
-    <string name="msg_key_compat_mode_help">Certains serveurs ont une prise en charge limitée du format Unicode. Les événements de saisie rétrocompatibles peuvent aider à saisir du texte non anglais.</string>
     <string name="desc_server_url">Adresse du serveur</string>
     <string name="desc_help_btn">Aide</string>
     <string name="desc_discovered_list">Liste des serveurs découverts automatiquement</string>

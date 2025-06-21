@@ -178,14 +178,12 @@
     <string name="pref_saved_server_lock_summary">Требовать биометрическую разблокировку/пароль для подключения</string>
     <string name="pref_saved_server_lock">Блокировка сохраненных серверов</string>
     <string name="title_ssh_login">SSH-вход</string>
-    <string name="title_key_compat_mode">Отправка унаследованных ключевых событий</string>
     <string name="title_unlock_private_key">Разблокировать закрытый ключ</string>
     <string name="pref_gesture_style_auto_summary">На основе настроек приложения</string>
     <string name="pref_gesture_style_touchscreen">Сенсорный экран</string>
     <string name="title_use_repeater">Использовать повторитель</string>
     <string name="title_unlock_dialog">Разблокировать для продолжения</string>
     <string name="msg_export_auth_required">Аутентификация на серверах экспорта</string>
-    <string name="msg_key_compat_mode_help">Некоторые серверы имеют ограниченную поддержку Юникода. Устаревшие ключевые события могут помочь ввести неанглийский текст.</string>
     <string name="msg_gesture_style_help"><b>Сенсорный экран</b>\nВыполнять действия в точках соприкосновения\n\n<b>Сенсорная панель</b>\nВыполнять действия по указателю</string>
     <string name="msg_drag_gesture_help">Назначение действия для этого жеста изменит определение длительного нажатия:
 \n

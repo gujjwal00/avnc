@@ -99,7 +99,6 @@
     <string name="title_about">Про застосунок</string>
     <string name="title_undo">Відмінити</string>
     <string name="title_vnc_login">Вхід VNC</string>
-    <string name="title_key_compat_mode">Надсилати успадковані події клавіш</string>
     <string name="title_report_bug">Звіт про ваду</string>
     <string name="title_source_code">Вихідний код</string>
     <string name="hint_server_name">Назва (напр., Робочий ПК)</string>
@@ -137,7 +136,6 @@
     <string name="pref_gesture_action_right_click">Праве клацання</string>
     <string name="pref_two_finger_tap">Торкання двома пальцями</string>
     <string name="title_remember">Памʼятати</string>
-    <string name="msg_key_compat_mode_help">Деякі сервери мають обмежену підтримку Unicode. Успадковані події клавіш допоможуть вводити не-англійський текст.</string>
     <string name="desc_retry_connection_btn">Перепідключитися</string>
     <string name="tip_discovery">Виявлення може автоматично знаходити підтримувані сервери,
 \nщо працюють у Вашій мережі.</string>

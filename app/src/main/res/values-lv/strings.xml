@@ -17,7 +17,6 @@
     <string name="title_export">Izgūt</string>
     <string name="title_import">Ievietot</string>
     <string name="title_enable_wol">Pamodināt, kas atrodas vietējā tīklā (Wake-on-LAN)</string>
-    <string name="title_key_compat_mode">Sūtīt mantoto taustiņu notikumus</string>
     <string name="title_button_up_delay">Sūtīt aizkavētu klikšķu notikumus</string>
     <string name="title_resize_remote_desktop">Mainiet attālās sesijas izmērus, lai tie atbilstu vietējā loga izmēriem</string>
     <string name="title_image_quality">Attēla kvalitāte</string>
@@ -75,7 +74,6 @@
     <string name="msg_export_auth_required">Autentificējieties, lai izgūtu serverus</string>
     <string name="msg_invalid_vnc_uri">Nederīgs VNC URI</string>
     <string name="msg_copied_to_clipboard">Nokopēts</string>
-    <string name="msg_key_compat_mode_help">Daži serveri tikai daļēji atbalsta unikoda rakstzīmes. Mantotie taustiņu notikumi var ļaut ievadīt tekstu, kas nav angļu valodā.</string>
     <string name="msg_shortcut_server_deleted">Šis serveris ir izdzēsts</string>
     <string name="tip_empty_server_list">Serveru saraksts ir tukšs.
 \nNoklikšķiniet uz \'<b>+</b>\', lai pievienotu serveri, vai

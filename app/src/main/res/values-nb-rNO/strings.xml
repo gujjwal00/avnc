@@ -18,7 +18,6 @@
     <string name="title_unknown_ssh_host">Ukjent SSH-vert</string>
     <string name="title_password">Passord</string>
     <string name="title_private_key">Privat nøkkel</string>
-    <string name="title_key_compat_mode">Kompatibilitetsmodus for tastatur</string>
     <string name="title_delete_servers_before_import">Slett nåværende tjenere før import</string>
     <string name="title_source_code">Kildekode</string>
     <string name="hint_urlbar">Koble til en tjener</string>
@@ -137,7 +136,6 @@
     <string name="pref_toolbar_alignment_option_end">Slutt</string>
     <string name="pref_keycode_map">Tastaturtilknytninger</string>
     <string name="hint_key_password">Nøkkelpassord</string>
-    <string name="msg_key_compat_mode_help">Foreldet modus for tjenere som ikke støtter inntasting av alle tegn.</string>
     <string name="pref_input">Inndata</string>
     <string name="tip_empty_server_list">Tjenerlisten er tom.
 \nKlikk på «<b>+</b>»-knappen for å legge til en tjener,

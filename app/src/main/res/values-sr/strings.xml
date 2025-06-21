@@ -98,7 +98,6 @@
     <string name="title_import">Увези</string>
     <string name="title_view_only_mode">Само за читање</string>
     <string name="title_hide_remote_cursor">Сакриј удаљеног показивача</string>
-    <string name="title_key_compat_mode">Пошаљи старинске догађаје дугмади</string>
     <string name="title_unknown_ssh_host">Непознати домаћин ССХ-а</string>
     <string name="title_use_ssh_tunnel">Користи тунел ССХ-а</string>
     <string name="title_ssh_host_key_changed">Кључ домаћина ССХ-а је промењен</string>
@@ -130,7 +129,6 @@
     <string name="msg_export_auth_required">Пријавите се ради извоза служитеља</string>
     <string name="msg_invalid_key_file">Датотека личног кључа није исправна</string>
     <string name="msg_copied_to_clipboard">Умножено</string>
-    <string name="msg_key_compat_mode_help">Неки служитељи имају ограничену подршку уникода. Застарели догађаји дугмади могу помоћи за неенглеско писмо.</string>
     <string name="tip_empty_server_list">Списак служитеља је празан.
 \nКликните на „<b>+</b>“ ради додавања служитеља, или
 \nупотребите горњу траку уноса ради непосредног повезивања.</string>

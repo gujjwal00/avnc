@@ -24,7 +24,6 @@
     <string name="title_import">درون‌ریزی</string>
     <string name="title_view_only_mode">فقط مشاهده</string>
     <string name="title_hide_remote_cursor">پنهان کردن اشاره‌گر دوردست</string>
-    <string name="title_key_compat_mode">فرستادن رویدادهای کلید قدیمی</string>
     <string name="title_use_ssh_tunnel">استفاده از تونل پوستهٔ امن</string>
     <string name="title_unknown_ssh_host">میزبان ناشناختهٔ پوستهٔ امن</string>
     <string name="title_ssh_host_key_changed">کلید میزبان پوستهٔ امن تغییر کرد</string>
@@ -63,7 +62,6 @@
     <string name="msg_invalid_key_file">پروندهٔ کلید خصوصی نامعتبر</string>
     <string name="msg_invalid_vnc_uri">VNC URI نامعتبر</string>
     <string name="msg_copied_to_clipboard">رونویسی شد</string>
-    <string name="msg_key_compat_mode_help">برخی از کارسازها پشتیبانی یونیکد محدودی دارند. رویدادهای کلید قدیمی می‌تواند به وارد کردن متن غیر انگلیسی کمک کند.</string>
     <string name="tip_empty_server_list">فهرست کارسازها خالی است.
 \nبرای افزودن کارساز بر روی «<b>+</b>» کلیک کنید، یا
 \nاز نوار نشانی بالا برای اتّصال مستقیم استفاده کنید.</string>
