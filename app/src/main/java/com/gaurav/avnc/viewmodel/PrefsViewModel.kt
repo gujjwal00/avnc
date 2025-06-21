@@ -117,7 +117,6 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
             it.password = ""
             it.sshPassword = ""
             it.sshPrivateKey = ""
-            it.sshPrivateKeyPassword = ""
         }
     }
 }

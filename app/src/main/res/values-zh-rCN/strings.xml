@@ -194,7 +194,6 @@
     <string name="hint_ssh_port">SSH 端口</string>
     <string name="msg_zoom_locked">缩放已锁定</string>
     <string name="msg_zoom_unlocked">缩放已解锁</string>
-    <string name="msg_pk_password_not_saved">AVNC 不再保存私钥以改进安全性。</string>
     <string name="msg_viewer_tips_label">从几则小提示开始吧</string>
     <string name="desc_lock_zoom_btn">锁定缩放</string>
     <string name="tip_session_end">要结束会话，轻按返回导航按钮，就像你退出视频播放所做的那样。</string>

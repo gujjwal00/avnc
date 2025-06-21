@@ -153,7 +153,6 @@
     <string name="msg_about_app">Ātrs un drošs VNC klients. Pārraugiet un kontrolējiet jebkuru attālo ierīci, kurā darbojas VNC serveris.\n\n\nAVNC ir atvērtā koda un kopēttieši lietotne, kas izstrādāta ar daudzu dalībnieku palīdzību.</string>
     <string name="msg_pip_not_supported">Netiek atbalstīts šajā ierīcē</string>
     <string name="msg_invalid_key_file">Nederīga privātās atslēgas datne</string>
-    <string name="msg_pk_password_not_saved">AVNC vairs neuzglabā privāto atslēgu paroles, lai uzlabotu drošību.</string>
     <string name="msg_button_up_delay_help">Klikšķu notikumu aizkavēšana var palīdzēt dažos retos gadījumos, kad lietotne nereaģē uz klikšķiem.</string>
     <string name="msg_wake_on_lan_help">Pamodināt, kas atrodas vietējā tīkla zonā - Wake-on-LAN (WoL), var izmantot, lai attālināti ieslēgtu datoru.
 \n

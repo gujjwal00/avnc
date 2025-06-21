@@ -188,7 +188,6 @@
     <string name="hint_ssh_port">Прикључник ССХ-а</string>
     <string name="msg_zoom_locked">Увећавање је закључано</string>
     <string name="msg_zoom_unlocked">Увећавање је откључано</string>
-    <string name="msg_pk_password_not_saved">АВНЦ више не чува личне кључеве лозинки ради побољшања безбедности.</string>
     <string name="desc_lock_zoom_btn">Закључај увећање</string>
     <string name="msg_gesture_style_help"><b>Додирни заслон</b>\nИзвршавај радње на тачци додира\n\n<b>Додирна плочица</b>\nИзвршавај радње на показивачу</string>
     <string name="msg_drag_gesture_help">Додељивање дејстава овом покрету ће променити препознавање дугог притиска:

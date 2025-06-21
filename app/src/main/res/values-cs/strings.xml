@@ -72,7 +72,6 @@
     <string name="msg_required">Vyžadováno</string>
     <string name="msg_invalid_mac_address">Neplatná MAC adresa</string>
     <string name="msg_invalid_vnc_uri">Neplatné VNC URI</string>
-    <string name="msg_pk_password_not_saved">Pro zlepšení bezpečnosti už AVNC neukládá osobní klíč.</string>
     <string name="msg_button_up_delay_help">Zpoždění události může pomoci v některých vzácných případech, pokud aplikace nereaguje na kliknutí.</string>
     <string name="msg_tap_to_select_a_key">Klepněte pro výběr klíče:</string>
     <string name="msg_gesture_style_help"><b>Dotyková obrazovka</b>\nAkce v bodu dotyku\n\n<b>Dotyková plocha</b>\nAkce na pozici ukazatele</string>

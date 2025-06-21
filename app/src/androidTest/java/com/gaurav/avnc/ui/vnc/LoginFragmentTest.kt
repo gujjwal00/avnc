@@ -143,22 +143,6 @@ class LoginFragmentTest {
         assertEquals(SAMPLE_PASSWORD, p.sshPassword)
     }
 
-    // We no longer save Private Key password. It is always asked from user and a message is shown to users
-    // who have previously saved key password.
-    @Test
-    fun sshKeyPasswordMigrationMessage() = Scenario(ServerProfile(sshPrivateKeyPassword = "foo")).use { scenario ->
-        scenario.triggerLoginInfoRequest(LoginInfo.Type.SSH_KEY_PASSWORD)
-        onView(withId(R.id.password)).inDialog().checkWillBeDisplayed().doTypeText(SAMPLE_PASSWORD)
-        onView(withId(R.id.remember)).inDialog().checkIsNotDisplayed()
-        onView(withId(R.id.pk_password_msg)).inDialog().checkIsDisplayed()
-        onView(withText(android.R.string.ok)).inDialog().checkIsDisplayed().doClick()
-
-        val l = scenario.waitForLoginInfo()
-        val p = scenario.triggerLoginSave()
-        assertEquals(SAMPLE_PASSWORD, l.password)
-        assertEquals("", p.sshPrivateKeyPassword) // Saved password should have been cleared
-    }
-
     /**
      * If login information is already available in profile,
      * [VncViewModel] should provide it without triggering login dialog.

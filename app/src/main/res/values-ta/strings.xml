@@ -99,7 +99,6 @@
     <string name="msg_invalid_vnc_uri">தவறான வி.என்.சி யூரி</string>
     <string name="msg_copied_to_clipboard">நகலெடுக்கப்பட்டது</string>
     <string name="msg_tap_to_select_a_key">ஒரு விசையைத் தேர்ந்தெடுக்க தட்டவும்:</string>
-    <string name="msg_pk_password_not_saved">பாதுகாப்பை மேம்படுத்த AVNC இனி தனிப்பட்ட விசை கடவுச்சொற்களை சேமிக்காது.</string>
     <string name="msg_button_up_delay_help">சொடுக்கு நிகழ்வுகளை தாமதப்படுத்துவது ஒரு பயன்பாடு கிளிக்குகளுக்கு பதிலளிக்கவில்லை என்றால் சில அரிய நிகழ்வுகளுக்கு உதவும்.</string>
     <string name="msg_wake_on_lan_help">ஒரு கணினியை தொலைதூர ஆற்றல் பெற வேக்-ஆன்-லான் பயன்படுத்தப்படலாம்.\n\n முதலில், ரிமோட் கம்ப்யூட்டரில் WOL ஐ உள்ளமைத்து, பின்னர் அதை AVNC இல் இயக்கவும்.\n இயக்கப்பட்டதும், இந்த சேவையகத்துடன் இணைப்பதற்கு முன்பு WOL மேசிக் பாக்கெட் தானாக அனுப்பப்படும்.</string>
     <string name="msg_shortcut_server_deleted">இந்த சேவையகம் நீக்கப்பட்டது</string>

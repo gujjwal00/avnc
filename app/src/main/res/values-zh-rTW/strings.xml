@@ -194,7 +194,6 @@
     <string name="title_got_it">瞭解</string>
     <string name="hint_ssh_port">SSH連接埠</string>
     <string name="msg_zoom_unlocked">縮放已解鎖</string>
-    <string name="msg_pk_password_not_saved">為確保安全，AVNC不再保存私有密鑰之密碼。</string>
     <string name="tip_session_end">要中斷連線，只需按返回按鈕，就像你在從影片返回一樣。</string>
     <string name="desc_lock_zoom_btn">鎖定縮放</string>
     <string name="pref_gesture_action_remote_drag_middle">用中鍵拖放</string>

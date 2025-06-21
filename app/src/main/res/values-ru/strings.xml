@@ -198,7 +198,6 @@
     <string name="hint_ssh_port">SSH порт</string>
     <string name="msg_zoom_locked">Масштаб заблокирован</string>
     <string name="msg_zoom_unlocked">Масштаб разблокирован</string>
-    <string name="msg_pk_password_not_saved">AVNC больше не сохраняет частные ключевые пароли для улучшения безопасности.</string>
     <string name="desc_lock_zoom_btn">Заблокировать масштаб</string>
     <string name="pref_keep_screen_on">Держать экран включенным</string>
     <string name="tip_session_end">Чтобы закончить сеанс, нажмите на кнопку Назад навигации, так же, как вы возвращаетесь с игрового видео.</string>

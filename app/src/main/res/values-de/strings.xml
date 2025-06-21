@@ -198,7 +198,6 @@
     <string name="msg_zoom_locked">Zoom gesperrt</string>
     <string name="msg_zoom_unlocked">Zoom entsperrt</string>
     <string name="hint_send_text_to_server">Text an den Server senden</string>
-    <string name="msg_pk_password_not_saved">Zur Verbesserung der Sicherheit speichert AVNC keine privaten Schlüsselpasswörter mehr.</string>
     <string name="tip_toolbar_usage">Wischen Sie vom Rand nach innen, um die Symbolleiste zu öffnen. Verwenden Sie sie, um die Tastatur zu öffnen, den Gestenstil zu ändern oder den Zoom zurückzusetzen.</string>
     <string name="tip_session_end">Um eine Sitzung zu beenden, tippen Sie auf die Navigationsschaltfläche „Zurück“, so als würden Sie von einem laufenden Video zurückgehen.</string>
     <string name="msg_viewer_tips_label">Ein paar Tipps für den Anfang</string>

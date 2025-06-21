@@ -69,7 +69,6 @@ class LoginFragment : DialogFragment() {
 
         if (loginType == LoginInfo.Type.SSH_KEY_PASSWORD) {
             binding.passwordLayout.setHint(R.string.hint_key_password)
-            binding.pkPasswordMsg.isVisible = viewModel.profile.sshPrivateKeyPassword.isNotBlank()
         }
 
         setupAutoComplete()
@@ -112,14 +111,14 @@ class LoginFragment : DialogFragment() {
                 p.password = l.password
             }
             LoginInfo.Type.SSH_PASSWORD -> p.sshPassword = l.password
-            LoginInfo.Type.SSH_KEY_PASSWORD -> p.sshPrivateKeyPassword = "" /* key password is not saved anymore */
+            LoginInfo.Type.SSH_KEY_PASSWORD -> Unit /* Key password is not saved in profile */
         }
     }
 
     private fun onOk() {
         loginInfo.password = getRealPassword(loginInfo.password)
         viewModel.loginInfoRequest.offerResponse(loginInfo)
-        if (binding.remember.isChecked || binding.pkPasswordMsg.isVisible /* to forget saved password */)
+        if (binding.remember.isChecked)
             saveLoginInfo(loginInfo)
     }
 

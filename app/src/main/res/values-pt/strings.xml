@@ -210,7 +210,6 @@
     <string name="title_always_show_advanced_editor">Sempre mostrar opções avançadas</string>
     <string name="hint_send_text_to_server">Enviar texto ao servidor</string>
     <string name="msg_saved">Gravado</string>
-    <string name="msg_pk_password_not_saved">AVNC já não grava palavras-passe de chaves privadas para melhorar a segurança.</string>
     <string name="msg_wake_on_lan_help">Wake-on-LAN pode ser usado para ligar remotamente um computador. \n \nPrimeiro, configure o WoL no computador remoto e, em seguida, ative-o no AVNC. \nUma vez ativado, o pacote mágico WoL será enviado automaticamente antes da conexão com este servidor.</string>
     <string name="msg_drag_gesture_help">Ao atribuir ação de gesto de Arrastar mudará Detecção de toque longo: \n \n<b>Toque-segure-solte</b> → Toque longo \n<b>Toque-segure-deslize</b> → Arrastar</string>
     <string name="desc_lock_zoom_btn">Bloquear zoom</string>

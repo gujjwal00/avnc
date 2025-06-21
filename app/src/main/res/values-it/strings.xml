@@ -104,7 +104,6 @@
     <string name="title_source_code">Codice sorgente</string>
     <string name="msg_about_app">Un client VNC veloce e sicuro. Visualizza e controlla da remoto qualsiasi dispositivo che esegue un server VNC.\n\n\nAVNC è un software open source e copyleft —realizzato con l\'aiuto di molti collaboratori.</string>
     <string name="msg_server_profile_added">Server aggiunto</string>
-    <string name="msg_pk_password_not_saved">AVNC non salva la password della chiave privata per migliorare la sicurezza.</string>
     <string name="msg_copied_to_clipboard">Copiato</string>
     <string name="title_unknown_ssh_host">Host SSH sconosciuto</string>
     <string name="title_continue">Continua</string>

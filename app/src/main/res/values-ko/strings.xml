@@ -202,7 +202,6 @@
     <string name="hint_ssh_port">SSH 호스트</string>
     <string name="msg_zoom_locked">줌 잠금</string>
     <string name="msg_viewer_tips_label">시작할 수 있는 몇 가지 팁</string>
-    <string name="msg_pk_password_not_saved">AVNC는 보안 향상을 위해 더 이상 개인 키 비밀번호를 저장하지 않습니다.</string>
     <string name="tip_toolbar_usage">가장자리에서 스와이프 인하여 도구 모음을 엽니다. 키보드를 열거나 제스처 스타일을 변경하거나 줌을 재설정하는 데 사용합니다.</string>
     <string name="desc_lock_zoom_btn">잠금 줌</string>
     <string name="pref_toolbar_open_with_swipe">가장자리에서 열리도록 스와이프 인</string>

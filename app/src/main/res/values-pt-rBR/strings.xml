@@ -206,7 +206,6 @@
     <string name="msg_zoom_locked">Zoom bloqueado</string>
     <string name="msg_zoom_unlocked">Zoom desbloqueado</string>
     <string name="msg_zoom_reset_default">Zoom redefinido para o padrão</string>
-    <string name="msg_pk_password_not_saved">AVNC não salva mais senhas de chaves privadas para melhorar a segurança.</string>
     <string name="desc_lock_zoom_btn">Bloquear zoom</string>
     <string name="pref_gesture_action_remote_drag_middle">Arraste com o botão do meio</string>
     <string name="hint_ssh_port">Porta SSH</string>
