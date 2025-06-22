@@ -150,7 +150,7 @@ class VncActivity : AppCompatActivity() {
         // - It also attempts to fix some unusual cases of old updates requests being lost while AVNC
         //   was frozen by the system
         if (viewModel.pref.viewer.pauseUpdatesInBackground)
-            viewModel.resumeFrameBufferUpdates()
+            viewModel.setFrameBufferUpdatesPaused(false)
         else if (wasConnectedWhenStopped)
             viewModel.refreshFrameBuffer()
     }
@@ -160,7 +160,7 @@ class VncActivity : AppCompatActivity() {
         virtualKeys.releaseMetaKeys()
         binding.frameView.onPause()
         if (viewModel.pref.viewer.pauseUpdatesInBackground)
-            viewModel.pauseFrameBufferUpdates()
+            viewModel.setFrameBufferUpdatesPaused(true)
         wasConnectedWhenStopped = viewModel.state.value.isConnected
     }
 

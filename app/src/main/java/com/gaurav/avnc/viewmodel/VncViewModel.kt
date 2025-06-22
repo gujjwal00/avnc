@@ -411,12 +411,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         }
     }
 
-    fun pauseFrameBufferUpdates() {
-        messenger.pauseFramebufferUpdates(true)
-    }
-
-    fun resumeFrameBufferUpdates() {
-        messenger.pauseFramebufferUpdates(false)
+    fun setFrameBufferUpdatesPaused(paused: Boolean) {
+        messenger.setFrameBufferUpdatesPaused(paused)
     }
 
     fun refreshFrameBuffer() {
