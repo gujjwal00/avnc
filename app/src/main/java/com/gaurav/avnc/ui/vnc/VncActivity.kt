@@ -130,7 +130,7 @@ class VncActivity : AppCompatActivity() {
         viewModel.confirmationRequest.observe(this) { showConfirmationDialog() }
         viewModel.activeGestureStyle.observe(this) { dispatcher.onGestureStyleChanged() }
         viewModel.state.observe(this) { onClientStateChanged(it) }
-        viewModel.profileLive.observe(this) { onProfileUpdated(it) }
+        viewModel.profileLive.observe(this) { onProfileUpdated() }
 
         autoReconnectDelay = intent.getIntExtra(AUTO_RECONNECT_DELAY_KEY, 5)
         savedInstanceState?.let {
@@ -203,7 +203,7 @@ class VncActivity : AppCompatActivity() {
         }
     }
 
-    private fun onProfileUpdated(profile: ServerProfile) {
+    private fun onProfileUpdated() {
         setupOrientation()
     }
 
