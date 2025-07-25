@@ -371,7 +371,7 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
             // Only apply the workaround to events coming from software keyboards to avoid
             // interfering with shortcuts on external keyboards
             if (it.action == KeyEvent.ACTION_DOWN && it.deviceId == KeyCharacterMap.VIRTUAL_KEYBOARD &&
-                it.scanCode == 0 && it.isAltPressed && it.unicodeChar != 0) {
+                it.scanCode == 0 && it.isAltPressed && it.unicodeChar.toChar() in "Ççß") {
                 var keyCode = KeyEvent.KEYCODE_ALT_LEFT
                 if (it.metaState and KeyEvent.META_ALT_RIGHT_ON != 0)
                     keyCode = KeyEvent.KEYCODE_ALT_RIGHT
