@@ -164,7 +164,7 @@
 \n
 \n<b>Drücken-Halten-Loslassen</b> → Lange drücken
 \n<b>Drücken-Halten-Wischen</b> → Drücken und ziehen (Drag and Drop)</string>
-    <string name="pref_display_cutout">Hinter Bildschirmausschnitt zeichnen (experimentell)</string>
+    <string name="pref_display_cutout">In den Ausschnittbereich hinein verlängern</string>
     <string name="pref_key_test">Tastentest</string>
     <string name="pref_gesture_style">Gestenstil</string>
     <string name="pref_invert_vertical_scrolling">Vertikalen Bildlauf umkehren</string>
@@ -218,4 +218,23 @@
 \nKonfigurieren Sie WoL zunächst auf dem Remotecomputer und aktivieren Sie es dann in AVNC.
 \nNach der Aktivierung wird vor der Verbindung mit diesem Server automatisch ein WoL-Magic-Packet gesendet.</string>
     <string name="pref_keep_screen_on">Bildschirm eingeschaltet lassen</string>
+    <string name="title_try">Versuchen</string>
+    <string name="title_forget">Vergessen</string>
+    <string name="title_always_show_advanced_editor">Erweiterte Optionen immer anzeigen</string>
+    <string name="title_export_passwords_and_keys">Passwörter und Schlüssel exportieren</string>
+    <string name="title_load_defaults">Standardwerte laden</string>
+    <string name="msg_saved">Gespeichert</string>
+    <string name="msg_done">Erledigt</string>
+    <string name="msg_required">Erforderlich</string>
+    <string name="msg_invalid_mac_address">Ungültige MAC-Adresse</string>
+    <string name="msg_tap_to_select_a_key">Tippen Sie, um eine Taste auszuwählen:</string>
+    <string name="desc_toolbar_btn">Symbolleiste öffnen</string>
+    <string name="pref_gesture_action_left_press">Lange drücken</string>
+    <string name="pref_three_finger_tap">Drei-Finger-Tippen</string>
+    <string name="pref_swipe3">Wischen mit drei Fingern</string>
+    <string name="pref_long_press_swipe_disabled_summary">Deaktiviert durch den aktuellen Wert der Geste <b>Langes Drücken</b></string>
+    <string name="pref_customize_virtual_keys">Tasten anpassen</string>
+    <string name="pref_toolbar_open_with_button">Schaltfläche zum Öffnen anzeigen</string>
+    <string name="pref_forget_known_hosts">Bekannte Hosts vergessen</string>
+    <string name="pref_forget_known_hosts_question">Bekannte SSH-Hosts und vertrauenswürdige Serverzertifikate vergessen?</string>
 </resources>
