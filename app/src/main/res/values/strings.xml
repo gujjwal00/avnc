@@ -196,6 +196,7 @@
     <string name="pref_mouse_passthrough">Mouse passthrough</string>
     <string name="pref_mouse_passthrough_summary_off">Use mouse events for local gestures</string>
     <string name="pref_mouse_passthrough_summary_on">Send mouse events directly to server</string>
+    <string name="pref_capture_pointer">Capture pointer</string>
     <string name="pref_hide_local_cursor">Hide local pointer</string>
     <string name="pref_mouse_back">Back button</string>
     <string name="pref_mouse_back_action_default">Default</string>

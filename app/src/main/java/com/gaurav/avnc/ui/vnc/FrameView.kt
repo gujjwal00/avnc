@@ -101,4 +101,8 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
     override fun onHoverEvent(event: MotionEvent): Boolean {
         return touchHandler.onHoverEvent(event)
     }
+
+    override fun onCapturedPointerEvent(event: MotionEvent): Boolean {
+        return touchHandler.onCapturedPointerEvent(event)
+    }
 }

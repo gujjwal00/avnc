@@ -124,6 +124,12 @@
 
         <SwitchPreference
             app:defaultValue="false"
+            app:dependency="mouse_passthrough"
+            app:key="capture_pointer"
+            app:title="@string/pref_capture_pointer" />
+
+        <SwitchPreference
+            app:defaultValue="false"
             app:key="hide_local_cursor"
             app:title="@string/pref_hide_local_cursor" />
 

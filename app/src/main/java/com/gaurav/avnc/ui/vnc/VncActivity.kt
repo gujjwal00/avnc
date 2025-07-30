@@ -264,6 +264,7 @@ class VncActivity : AppCompatActivity() {
         SamsungDex.setMetaKeyCapture(this, isConnected)
         layoutManager.onConnectionStateChanged()
         updateStatusContainerVisibility(isConnected)
+        updatePointerCapture()
         autoReconnect(newState)
 
         if (isConnected) {
@@ -283,6 +284,17 @@ class VncActivity : AppCompatActivity() {
     private fun incrementUseCount() {
         viewModel.profile.useCount += 1
         viewModel.saveProfile()
+    }
+
+    private fun updatePointerCapture() {
+        if (Build.VERSION.SDK_INT < 26 || !viewModel.pref.input.capturePointer)
+            return
+
+        if (viewModel.state.value.isConnected) {
+            binding.frameView.requestFocus()
+            binding.frameView.requestPointerCapture()
+        } else
+            binding.frameView.releasePointerCapture()
     }
 
     private fun updateStatusContainerVisibility(isConnected: Boolean) {
@@ -367,7 +379,10 @@ class VncActivity : AppCompatActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         layoutManager.onWindowFocusChanged(hasFocus)
-        if (hasFocus) viewModel.sendClipboardText()
+        if (hasFocus) {
+            viewModel.sendClipboardText()
+            updatePointerCapture()
+        }
     }
 
 

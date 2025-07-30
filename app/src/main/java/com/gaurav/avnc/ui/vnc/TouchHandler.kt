@@ -52,6 +52,10 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         return onHoverEvent(event) || handleStylusEvent(event) || handleMouseEvent(event)
     }
 
+    fun onCapturedPointerEvent(event: MotionEvent): Boolean {
+        return handleCapturedPointerEvent(event)
+    }
+
     fun onHoverEvent(event: MotionEvent): Boolean {
         if (event.actionMasked == MotionEvent.ACTION_HOVER_MOVE) {
             lastHoverPoint = event.point()
@@ -102,6 +106,37 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         return !(e.buttonState == 0 && e.getToolType(0) != MotionEvent.TOOL_TYPE_MOUSE)
     }
 
+    private fun handleCapturedPointerEvent(e: MotionEvent): Boolean {
+        if (Build.VERSION.SDK_INT < 26)
+            return false
+
+        val screenDensity = frameView.context.resources.displayMetrics.density
+        val dx: Float
+        val dy: Float
+
+        if (e.isFromSource(InputDevice.SOURCE_MOUSE_RELATIVE)) {
+            dx = getTotalAxisValue(e, MotionEvent.AXIS_X) * screenDensity
+            dy = getTotalAxisValue(e, MotionEvent.AXIS_Y) * screenDensity
+        } else if (e.isFromSource(InputDevice.SOURCE_TOUCHPAD)) {
+            dx = getTotalAxisValue(e, MotionEvent.AXIS_RELATIVE_X)
+            dy = getTotalAxisValue(e, MotionEvent.AXIS_RELATIVE_Y)
+        } else
+            return false
+
+        when (e.actionMasked) {
+            MotionEvent.ACTION_BUTTON_PRESS -> dispatcher.onCapturedMouseButtonDown(convertButton(e.actionButton))
+            MotionEvent.ACTION_BUTTON_RELEASE -> dispatcher.onCapturedMouseButtonUp(convertButton(e.actionButton))
+            MotionEvent.ACTION_MOVE -> dispatcher.onCapturedMouseMove(dx, dy)
+            MotionEvent.ACTION_SCROLL -> {
+                val hs = e.getAxisValue(MotionEvent.AXIS_HSCROLL)
+                val vs = e.getAxisValue(MotionEvent.AXIS_VSCROLL)
+                dispatcher.onCapturedMouseScroll(hs, vs)
+            }
+            else -> return false
+        }
+        return true
+    }
+
     /**
      * Convert from [MotionEvent] button to [PointerButton]
      */
@@ -110,6 +145,17 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         MotionEvent.BUTTON_SECONDARY -> PointerButton.Right
         MotionEvent.BUTTON_TERTIARY -> PointerButton.Middle
         else -> PointerButton.None
+    }
+
+    /**
+     * Returns value of given axis, added with historical values of the axis
+     */
+    private fun getTotalAxisValue(e: MotionEvent, axis: Int): Float {
+        var v = e.getAxisValue(axis)
+        repeat(e.historySize) {
+            v += e.getHistoricalAxisValue(axis, it)
+        }
+        return v
     }
 
 
