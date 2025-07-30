@@ -113,6 +113,10 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
                 }
             }
 
+            findPreference<SwitchPreference>("capture_pointer")!!.apply {
+                showIf { Build.VERSION.SDK_INT >= 26 }
+            }
+
             findPreference<ListPreferenceEx>("gesture_swipe1")!!.apply {
                 enableIf { it["gesture_style"] != "touchpad" }
                 disabledStateSummary = getString(R.string.pref_gesture_action_move_pointer)
