@@ -225,4 +225,9 @@
     <string name="title_connect_on_app_start">Conexão automática quando a app for iniciada</string>
     <string name="pref_toolbar_open_with_swipe">Deslize na borda para abrir</string>
     <string name="pref_forget_known_hosts_question">Esquecer os hosts SSH conhecidos e certificados de servidor confiáveis?</string>
+    <string name="desc_toolbar_btn">Abrir barra de ferramentas</string>
+    <string name="pref_three_finger_tap">Tocar com três dedos</string>
+    <string name="pref_toolbar_open_with_button">Mostrar botão para abrir</string>
+    <string name="pref_forget_known_hosts">Esquecer hosts conhecidos</string>
+    <string name="pref_swipe3">Deslizar com três dedos</string>
 </resources>

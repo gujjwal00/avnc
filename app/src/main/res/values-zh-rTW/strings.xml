@@ -208,11 +208,20 @@
     <string name="tip_toolbar_usage">從螢幕邊緣滑入以打開工具欄。用它來呼出鍵盤、變換手勢或者重設縮放。</string>
     <string name="pref_toolbar_open_with_swipe">從螢幕邊緣滑入以開啟</string>
     <string name="msg_zoom_reset_default">還原至默認縮放</string>
-    <string name="pref_keep_screen_on">螢幕長亮</string>
+    <string name="pref_keep_screen_on">保持螢幕常亮</string>
     <string name="msg_zoom_locked">縮放鎖定</string>
     <string name="title_connect_on_app_start">當軟體啟動時自動連線</string>
     <string name="hint_send_text_to_server">傳送文本到伺服器上</string>
     <string name="msg_saved">已儲存</string>
     <string name="title_enable_wol">局域網路喚醒</string>
     <string name="title_export_passwords_and_keys">匯出密碼和金鑰</string>
+    <string name="title_try">嘗試</string>
+    <string name="title_always_show_advanced_editor">始終顯示進階選項</string>
+    <string name="msg_invalid_mac_address">無效的 MAC 位址</string>
+    <string name="title_load_defaults">加載預設值</string>
+    <string name="hint_wol_mac">MAC 位址</string>
+    <string name="msg_tap_to_select_a_key">點按以選擇密鑰:</string>
+    <string name="desc_toolbar_btn">打開工具列</string>
+    <string name="pref_forget_known_hosts_question">忘記已知的 SSH 主機和信任的伺服器證書？</string>
+    <string name="pref_forget_known_hosts">忘記已知的主機</string>
 </resources>
