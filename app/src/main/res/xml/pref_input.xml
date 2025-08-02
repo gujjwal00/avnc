@@ -149,13 +149,14 @@
             app:defaultValue="false"
             app:key="vk_open_with_keyboard"
             app:title="@string/pref_vk_open_with_keyboard" />
-        <!--
 
-                <SwitchPreference
-                    app:defaultValue="false"
-                    app:key="vk_show_all"
-                    app:title="@string/pref_vk_show_all" />
-        -->
+        <ListPreference
+            android:entries="@array/vk_row_count_values"
+            android:entryValues="@array/vk_row_count_values"
+            app:defaultValue="2"
+            app:key="vk_row_count"
+            app:title="@string/pref_vk_row_count"
+            app:useSimpleSummaryProvider="true" />
 
         <Preference
             app:fragment="com.gaurav.avnc.ui.prefs.VirtualKeysEditor"

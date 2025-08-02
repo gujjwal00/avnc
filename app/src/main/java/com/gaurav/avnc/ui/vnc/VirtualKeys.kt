@@ -224,6 +224,7 @@ class VirtualKeys(activity: VncActivity) {
     }
 
     private fun initKeys(binding: VirtualKeysBinding) {
+        binding.keys.rowCount = pref.input.vkRowCount
         VirtualKeyLayoutConfig.getLayout(pref).forEach { vk ->
             val view = VirtualKeyViewFactory.create(binding.root.context, vk)
             binding.keys.addView(view)

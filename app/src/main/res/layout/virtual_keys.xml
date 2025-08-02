@@ -72,6 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_weight="1"
+                    android:paddingTop="0dp"
                     android:hint="@string/hint_send_text_to_server"
                     android:imeOptions="actionSend|flagNoFullscreen|flagNoExtractUi"
                     android:importantForAutofill="no"

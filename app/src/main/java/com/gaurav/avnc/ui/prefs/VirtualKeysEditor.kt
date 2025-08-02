@@ -61,7 +61,7 @@ class VirtualKeysEditor : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentVirtualKeysEditorBinding.inflate(inflater, container, false)
 
-        binding.keyGrid.rowCount = 2
+        binding.keyGrid.rowCount = prefs.input.vkRowCount
         binding.keyGrid.orientation = GridLayout.VERTICAL
         binding.keyGrid.layoutTransition.apply {
             setDuration(150)
