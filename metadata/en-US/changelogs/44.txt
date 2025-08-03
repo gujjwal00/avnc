@@ -1,0 +1,1 @@
+* Fixed Alt key shortcuts not working in some cases
