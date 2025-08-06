@@ -481,6 +481,12 @@ class KeyHandlerTest {
 
         assertEquals(XKeySym.XK_Super_L, dispatchedKeyDowns[0])
         assertEquals(XKeySym.XK_Super_L, dispatchedKeyDowns[1])
+
+        // Alt press with scan code (from hardware keyboard)
+        val altScanCode = 100
+        keyHandler.onKeyEvent(KeyEvent(0L, 0L, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ALT_RIGHT, 0, KeyEvent.META_ALT_ON or KeyEvent.META_ALT_LEFT_ON, 123, altScanCode))
+        assertEquals(XKeySym.XK_Super_L, dispatchedKeyDowns[2])
+        assertEquals(0, dispatchedXTDowns.count { it != 0 })
     }
 
 
