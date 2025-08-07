@@ -444,7 +444,12 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
      */
     private fun getUnicodeChar(event: KeyEvent): Int {
         var metaState = event.metaState or vkMetaState
-        val uChar = event.getUnicodeChar(metaState)
+        var uChar = event.getUnicodeChar(metaState)
+
+        // Fix for Alt+Shift+6 (Android generates ACCENT_CIRCUMFLEX, but we want '^')
+        if (event.keyCode == KeyEvent.KEYCODE_6 && metaState != 0 && (uChar and KeyCharacterMap.COMBINING_ACCENT) != 0)
+            uChar = '^'.code
+
         if (uChar != 0 || metaState == 0)
             return uChar
 
