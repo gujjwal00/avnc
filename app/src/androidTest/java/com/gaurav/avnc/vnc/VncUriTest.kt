@@ -91,7 +91,7 @@ class VncUriTest {
         assertEquals("10.0.0.2", profile.host)
         assertEquals(5901, profile.port)
         assertEquals("foo", profile.password)
-        assertEquals(true, profile.viewOnly)
+        assertEquals(ServerProfile.VIEW_MODE_NO_INPUT, profile.viewMode)
         assertEquals("Name2", profile.name)
 
         // These were not given in URI, so should remain unchanged

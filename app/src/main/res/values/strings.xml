@@ -82,6 +82,12 @@
     <string name="msg_about_app">A fast and secure VNC client. Remotely view and control any device running a VNC server.\n\n\nAVNC is an open source and copyleft software — made with help from many contributors.</string>
     <string name="msg_server_profile_added">Server added</string>
     <string name="msg_server_profile_deleted">Server deleted</string>
+    <string name="msg_normal_view_mode">Normal mode enabled</string>
+    <string name="msg_input_disabled">Input disabled</string>
+    <string name="msg_video_disabled">Video disabled</string>
+    <string name="msg_gesture_style_locked_to_touchpad">\'Touchpad\' gesture style is active</string>
+    <!--Temporary message for view mode migration -->
+    <string name="msg_view_only_checkbox_migration">You can now disable input live in a session</string>
     <string name="msg_zoom_locked">Zoom locked</string>
     <string name="msg_zoom_unlocked">Zoom unlocked</string>
     <string name="msg_zoom_reset">Zoom reset to 100%</string>
@@ -126,6 +132,10 @@
     <string name="desc_toolbar_btn">Open toolbar</string>
     <string name="desc_keyboard_btn">Open keyboard</string>
     <string name="desc_virtual_keys_btn">Show virtual keys</string>
+    <string name="desc_view_modes_toggle">View modes</string>
+    <string name="desc_view_mode_normal">Normal mode</string>
+    <string name="desc_view_mode_no_input">Disable all inputs</string>
+    <string name="desc_view_mode_no_video">Disable video</string>
     <string name="desc_zoom_options_btn">Zoom options</string>
     <string name="desc_reset_zoom_btn">Reset zoom</string>
     <string name="desc_lock_zoom_btn">Lock zoom</string>

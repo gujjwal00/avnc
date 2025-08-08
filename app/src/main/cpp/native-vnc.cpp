@@ -477,11 +477,7 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativePauseFramebufferUpdates(JNIEnv *env, jobject thiz, jlong client_ptr,
                                                                  jboolean pause) {
-    auto client = ((rfbClient *) client_ptr);
-    auto wasPaused = client->pauseFramebufferUpdates;
-    client->pauseFramebufferUpdates = pause;
-    if (wasPaused && !pause)
-        SendFramebufferUpdateRequest(client, 0, 0, client->width, client->height, FALSE);
+    ((rfbClient *) client_ptr)->pauseFramebufferUpdates = pause;
 }
 
 extern "C"

@@ -174,6 +174,9 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      */
     val activeGestureStyle = MutableLiveData<String>()
 
+    val activeViewMode = MutableLiveData<Int>()
+    val videoDisabled get() = (activeViewMode.value == ServerProfile.VIEW_MODE_NO_VIDEO)
+
     /**
      * Used for sending events to remote server.
      */
@@ -209,7 +212,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
             profileLive.value = profile
             state.value = State.Connecting
             frameState.setZoom(profile.zoom1, profile.zoom2)
-            applyProfileGestureStyle()
+            setViewMode(profile.viewMode)
+            resolveGestureStyle()
             launchConnection()
         }
     }
@@ -237,7 +241,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
             if (!serverUnlockRequest.requestResponse(null))
                 throw IOException("Could not unlock server")
 
-        client.configure(profile.viewOnly, profile.securityType, true  /* Hardcoded to true */,
+        client.configure(profile.securityType, true  /* Hardcoded to true */,
                          profile.imageQuality, profile.useRawEncoding)
 
         if (profile.useRepeater)
@@ -298,7 +302,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      **************************************************************************/
 
     fun updateZoom(scaleFactor: Float, fx: Float, fy: Float) {
-        if (profile.fZoomLocked) return
+        if (profile.fZoomLocked || videoDisabled) return
 
         val appliedScaleFactor = frameState.updateZoom(scaleFactor)
 
@@ -403,12 +407,13 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      * In portrait mode, safe area is used instead of window to exclude the keyboard.
      */
     fun resizeRemoteDesktop() {
-        if (state.value.isConnected && profile.resizeRemoteDesktop) frameState.let {
-            if (it.windowWidth > it.windowHeight)
-                messenger.setDesktopSize(it.windowWidth.toInt(), it.windowHeight.toInt())
-            else
-                messenger.setDesktopSize(it.safeArea.width().toInt(), it.safeArea.height().toInt())
-        }
+        if (state.value.isConnected && profile.resizeRemoteDesktop && !videoDisabled)
+            frameState.let {
+                if (it.windowWidth > it.windowHeight)
+                    messenger.setDesktopSize(it.windowWidth.toInt(), it.windowHeight.toInt())
+                else
+                    messenger.setDesktopSize(it.safeArea.width().toInt(), it.safeArea.height().toInt())
+            }
     }
 
     fun setFrameBufferUpdatesPaused(paused: Boolean) {
@@ -423,20 +428,41 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      * Sets gesture style of profile to given value.
      * Any change will be reflected in [activeGestureStyle].
      */
-    fun setProfileGestureStyle(newStyle: String) {
-        if (newStyle == profile.gestureStyle)
-            return
+    fun setGestureStyle(newStyle: String) {
+        if (profile.gestureStyle != newStyle) {
+            profile.gestureStyle = newStyle
+            saveProfile()
+        }
 
-        profile.gestureStyle = newStyle
-        saveProfile()
-        applyProfileGestureStyle()
+        resolveGestureStyle()
     }
 
-    private fun applyProfileGestureStyle() {
-        if (profile.gestureStyle == "auto")
-            activeGestureStyle.value = pref.input.gesture.style
-        else
-            activeGestureStyle.value = profile.gestureStyle
+    private fun resolveGestureStyle() {
+        var gestureStyle = profile.gestureStyle
+
+        if (gestureStyle == "auto")
+            gestureStyle = pref.input.gesture.style
+
+        if (videoDisabled)
+            gestureStyle = "touchpad"
+
+        check(gestureStyle.isNotBlank())
+        if (activeGestureStyle.value != gestureStyle)
+            activeGestureStyle.value = gestureStyle
+    }
+
+    fun setViewMode(newMode: Int) {
+        if (profile.viewMode != newMode) {
+            profile.viewMode = newMode
+            saveProfile()
+        }
+
+        if (activeViewMode.value != newMode) {
+            activeViewMode.value = newMode
+            client.setInputDisabled(newMode == ServerProfile.VIEW_MODE_NO_INPUT)
+            setFrameBufferUpdatesPaused(newMode == ServerProfile.VIEW_MODE_NO_VIDEO)
+            resolveGestureStyle()
+        }
     }
 
     /**************************************************************************

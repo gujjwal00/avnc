@@ -43,6 +43,7 @@ class TestServer(name: String = "Friends") {
     val port = ss.localPort
     var receivedKeySyms = arrayListOf<Int>()
     var receivedCutText = ""
+    var receivedIncrementalUpdateRequests = 0
 
 
     fun start() {
@@ -114,8 +115,10 @@ class TestServer(name: String = "Friends") {
 
                     val incremental = (input.read() == 1)
                     input.skip(8)    //Discard rest of the msg as we always send the whole framebuffer
-                    if (incremental)   //Nothing to send in incremental updates
-                        continue
+                    if (incremental) {
+                        ++receivedIncrementalUpdateRequests
+                        continue //Nothing to send in incremental updates
+                    }
 
                     //Header
                     output.write(toByteArray(1)) //Equivalent to 1 rectangle

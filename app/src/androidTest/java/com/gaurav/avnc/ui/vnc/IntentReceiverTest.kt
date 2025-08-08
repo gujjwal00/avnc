@@ -137,15 +137,15 @@ class IntentReceiverTest {
 
     @Test
     fun updateProfileWithUri() {
-        runBlocking { dbRule.db.serverProfileDao.save(ServerProfile(name = "Test", host = "10.0.0.1").apply { viewOnly = true }) }
-        ActivityScenario.launch<Activity>(newUriIntent("vnc://localhost?SaveConnection=true&ConnectionName=Test&ViewOnly=false"))
+        runBlocking { dbRule.db.serverProfileDao.save(ServerProfile(name = "Test", host = "10.0.0.1", password = "Hello")) }
+        ActivityScenario.launch<Activity>(newUriIntent("vnc://localhost?SaveConnection=true&ConnectionName=Test&VncPassword=World"))
                 .use { }
 
         val profiles = runBlocking { dbRule.db.serverProfileDao.getList() }
         assertEquals(1, profiles.size)
         assertEquals("Test", profiles.first().name)
         assertEquals("localhost", profiles.first().host)
-        assertEquals(false, profiles.first().viewOnly)
+        assertEquals("World", profiles.first().password)
     }
 
     @Test

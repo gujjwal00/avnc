@@ -77,7 +77,7 @@
 
     <style name="FormField.LabelWithIcon">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:drawablePadding">15dp</item>
+        <item name="android:drawablePadding">14dp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingStart">@dimen/padding_small</item>
         <item name="android:drawableTint" tools:ignore="NewApi">@color/control_icon</item>
@@ -163,4 +163,20 @@
         <item name="android:paddingStart">12dp</item>
         <item name="android:paddingEnd">0dp</item>
     </style>
+
+    <style name="Button.IconOnly" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="iconPadding">0dp</item>
+        <item name="iconTint">@color/checkable_button_icon_color_simple</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:layout_width">@dimen/action_btn_size</item>
+        <item name="android:layout_height">@dimen/action_btn_size</item>
+    </style>
+
+    <style name="AppThemeOverlay.SecondaryIsPrimary" parent="">
+        <item name="colorPrimary">?colorSecondary</item>
+    </style>
+
 </resources>

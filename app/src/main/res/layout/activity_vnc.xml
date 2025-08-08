@@ -44,7 +44,8 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:animateLayoutChanges="true">
 
                 <!--FrameView-->
                 <com.gaurav.avnc.ui.vnc.FrameView
@@ -54,6 +55,12 @@
                     android:background="@drawable/bg_frame_view"
                     android:focusable="true"
                     android:focusableInTouchMode="true" />
+
+                <ViewStub
+                    android:id="@+id/no_video_overlay_stub"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout="@layout/no_video_overlay" />
 
                 <ImageButton
                     android:id="@+id/open_toolbar_btn"

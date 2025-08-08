@@ -8,6 +8,8 @@
 
 package com.gaurav.avnc.ui.vnc
 
+import android.animation.LayoutTransition
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.PictureInPictureParams
 import android.content.Context
@@ -22,6 +24,7 @@ import android.util.Log
 import android.util.Rational
 import android.view.InputDevice
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -36,6 +39,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
+import com.gaurav.avnc.databinding.NoVideoOverlayBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.SamsungDex
@@ -123,6 +127,7 @@ class VncActivity : AppCompatActivity() {
 
         setupLayout()
         setupServerUnlock()
+        setupNoVideoOverlay()
 
         //Observers
         binding.reconnectBtn.setOnClickListener { retryConnection() }
@@ -149,7 +154,7 @@ class VncActivity : AppCompatActivity() {
         //   been closed by the server while app process was frozen in background
         // - It also attempts to fix some unusual cases of old updates requests being lost while AVNC
         //   was frozen by the system
-        if (viewModel.pref.viewer.pauseUpdatesInBackground)
+        if (viewModel.pref.viewer.pauseUpdatesInBackground && !viewModel.videoDisabled)
             viewModel.setFrameBufferUpdatesPaused(false)
         else if (wasConnectedWhenStopped)
             viewModel.refreshFrameBuffer()
@@ -236,6 +241,45 @@ class VncActivity : AppCompatActivity() {
                 serverUnlockPrompt.launch(getString(R.string.title_unlock_dialog))
             else
                 viewModel.serverUnlockRequest.offerResponse(true)
+        }
+    }
+
+    private fun setupNoVideoOverlay() {
+        viewModel.activeViewMode.observe(this) {
+            if (viewModel.videoDisabled) {
+                inflateNoVideoOverlay()
+                binding.noVideoOverlayStub.root?.isVisible = true
+            } else {
+                binding.noVideoOverlayStub.root?.isVisible = false
+            }
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun inflateNoVideoOverlay() {
+        if (binding.noVideoOverlayStub.isInflated)
+            return
+
+        binding.noVideoOverlayStub.viewStub?.inflate()
+        val stubBinding = binding.noVideoOverlayStub.binding as NoVideoOverlayBinding
+        val rootView = stubBinding.overlayRoot
+        val tapIndicator = stubBinding.tapIndicator
+
+        // Tap indicator should appear immediately, but disappear with animation
+        rootView.layoutTransition?.setDuration(LayoutTransition.APPEARING, 0)
+
+        rootView.setOnTouchListener { _, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN,
+                MotionEvent.ACTION_MOVE -> tapIndicator.apply {
+                    isVisible = true
+                    translationX = event.x - (width / 2)
+                    translationY = event.y - (height / 2)
+                }
+                MotionEvent.ACTION_UP,
+                MotionEvent.ACTION_CANCEL -> tapIndicator.isVisible = false
+            }
+            touchHandler.onTouchEvent(event)
         }
     }
 

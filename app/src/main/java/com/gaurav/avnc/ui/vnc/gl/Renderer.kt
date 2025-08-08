@@ -25,6 +25,7 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
 
     private val projectionMatrix = FloatArray(16)
     private val hideCursor = viewModel.pref.input.hideRemoteCursor
+    private val client = viewModel.client
     private lateinit var program: FrameProgram
     private lateinit var frame: Frame
 
@@ -74,7 +75,7 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
     override fun onDrawFrame(gl: GL10?) {
         glClear(GL_COLOR_BUFFER_BIT)
 
-        if (!viewModel.client.connected)
+        if (!client.connected || client.frameBufferUpdatesPaused.get())
             return
 
         val state = viewModel.frameState.getSnapshot()
@@ -89,8 +90,8 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
         program.useProgram()
         program.setUniforms(projectionMatrix)
 
-        viewModel.client.uploadFrameTexture()
-        if (!hideCursor) viewModel.client.uploadCursor()
+        client.uploadFrameTexture()
+        if (!hideCursor) client.uploadCursor()
 
         frame.updateFbSize(state.fbWidth, state.fbHeight)
         frame.bind(program)

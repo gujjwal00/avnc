@@ -100,8 +100,7 @@ class Messenger(private val client: VncClient) {
         execute { client.refreshFrameBuffer() }
     }
 
-    fun pauseFramebufferUpdates(pause: Boolean) {
-        execute { client.pauseFramebufferUpdates(pause) }
     fun setFrameBufferUpdatesPaused(pause: Boolean) {
+        execute { client.setFrameBufferUpdatesPaused(pause) }
     }
 }
