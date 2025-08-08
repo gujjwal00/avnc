@@ -15,9 +15,12 @@ import androidx.core.content.edit
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onIdle
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.DrawerActions
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
+import androidx.test.espresso.matcher.ViewMatchers.isNotChecked
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -106,6 +109,7 @@ class VncActivityTest {
                             block: (ActivityScenario<VncActivity>) -> Unit) {
         testServer = TestServer()
         testServer.start()
+        targetPrefs.edit { putBoolean("run_info_has_shown_viewer_help", true) }
 
         profile = ServerProfile(host = testServer.host, port = testServer.port)
         profileModifier?.invoke(profile)
@@ -124,6 +128,9 @@ class VncActivityTest {
 
         testServer.awaitStop()
     }
+
+    private fun loadTestProfile() = runBlocking { dbRule.db.serverProfileDao.getByID(profile.ID) }
+
 
     @Test
     fun openKeyboard() {
@@ -228,20 +235,90 @@ class VncActivityTest {
             onView(withText(R.string.pref_gesture_style_auto)).checkWillBeDisplayed()
             onView(withText(R.string.pref_gesture_style_auto)).check(matches(isChecked()))
 
-            fun loadProfile() = runBlocking { dbRule.db.serverProfileDao.getByID(profile.ID) }
-
             // Test switching to touchpad
             onView(withId(R.id.gesture_style_touchpad)).doClick()
-            pollingAssert { assertEquals("touchpad", loadProfile()?.gestureStyle) }
+            pollingAssert { assertEquals("touchpad", loadTestProfile()?.gestureStyle) }
             it.onActivity { a -> assertEquals("touchpad", a.viewModel.activeGestureStyle.value) }
         }
+    }
+
+    @Test
+    fun normalViewMode() {
+        testWrapper {
+            onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+            onView(withId(R.id.view_modes_toggle)).checkWillBeDisplayed().doClick()
+            onView(withContentDescription(R.string.desc_view_mode_normal))
+                    .checkWillBeDisplayed()
+                    .check(matches(isChecked())) // Normal mode is the default
+
+            onView(withContentDescription(R.string.desc_view_mode_no_input)).check(matches(isNotChecked()))
+            onView(withContentDescription(R.string.desc_view_mode_no_video)).check(matches(isNotChecked()))
+            onView(withId(R.id.drawer_layout)).perform(DrawerActions.close())
+
+            onView(withId(R.id.frame_view)).checkIsDisplayed()
+            onView(withText(R.string.msg_video_disabled)).check(doesNotExist())
+        }
+    }
+
+    @Test
+    fun noInputMode() {
+        testWrapper(useDatabase = true) {
+            onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+            onView(withId(R.id.view_modes_toggle)).checkWillBeDisplayed().doClick()
+            onView(withContentDescription(R.string.desc_view_mode_no_input))
+                    .checkWillBeDisplayed()
+                    .check(matches(isNotChecked()))
+                    .doClick()
+
+            onView(withContentDescription(R.string.desc_view_mode_normal)).check(matches(isNotChecked()))
+            onView(withContentDescription(R.string.desc_view_mode_no_input)).check(matches(isChecked()))
+            onView(withContentDescription(R.string.desc_view_mode_no_video)).check(matches(isNotChecked()))
+            onView(withId(R.id.drawer_layout)).perform(DrawerActions.close())
+
+            onView(withText(R.string.msg_video_disabled)).check(doesNotExist())
+            onView(withId(R.id.frame_view)).checkIsDisplayed().doTypeText("abc")
+
+            pollingAssert { assertEquals(ServerProfile.VIEW_MODE_NO_INPUT, loadTestProfile()?.viewMode) }
+            it.onActivity { a -> assertEquals(ServerProfile.VIEW_MODE_NO_INPUT, a.viewModel.activeViewMode.value) }
+        }
+
+        assertEquals(0, testServer.receivedKeySyms.size)
+    }
+
+    @Test
+    fun noVideoMode() {
+        testWrapper(useDatabase = true) {
+            onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+            onView(withId(R.id.view_modes_toggle)).checkWillBeDisplayed().doClick()
+            onView(withContentDescription(R.string.desc_view_mode_no_video))
+                    .checkWillBeDisplayed()
+                    .check(matches(isNotChecked()))
+                    .doClick()
+
+            onView(withContentDescription(R.string.desc_view_mode_normal)).check(matches(isNotChecked()))
+            onView(withContentDescription(R.string.desc_view_mode_no_input)).check(matches(isNotChecked()))
+            onView(withContentDescription(R.string.desc_view_mode_no_video)).check(matches(isChecked()))
+            onView(withId(R.id.drawer_layout)).perform(DrawerActions.close())
+
+            onView(withText(R.string.msg_video_disabled)).checkWillBeDisplayed()
+
+            pollingAssert { assertEquals(ServerProfile.VIEW_MODE_NO_VIDEO, loadTestProfile()?.viewMode) }
+            it.onActivity { a ->
+                assertEquals(ServerProfile.VIEW_MODE_NO_VIDEO, a.viewModel.activeViewMode.value)
+                repeat(10) {
+                    a.viewModel.refreshFrameBuffer()
+                }
+            }
+        }
+
+        // no-video mode is implemented by stopping incremental updates
+        assertEquals(1, testServer.receivedIncrementalUpdateRequests)
     }
 
     @Test
     fun openToolbarWithButton() {
         targetPrefs.edit {
             putBoolean("toolbar_open_with_button", true)
-            putBoolean("run_info_has_shown_viewer_help", true)
         }
 
         testWrapper {

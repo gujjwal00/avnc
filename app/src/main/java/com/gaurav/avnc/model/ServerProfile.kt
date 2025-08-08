@@ -212,16 +212,6 @@ data class ServerProfile(
     }
 
     /**
-     * Specifies whether 'View Only' mode should be used.
-     * Retained for compatibility during migration
-     */
-    var viewOnly: Boolean
-        get() = (viewMode == VIEW_MODE_NO_INPUT)
-        set(value) {
-            viewMode = if (value) VIEW_MODE_NO_INPUT else VIEW_MODE_NORMAL
-        }
-
-    /**
      * Delegated property builder for [flags] field.
      */
     private class Flag(val flag: Long) {

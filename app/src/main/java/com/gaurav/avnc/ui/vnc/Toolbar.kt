@@ -29,6 +29,7 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginTop
 import androidx.drawerlayout.widget.DrawerLayout
 import com.gaurav.avnc.R
+import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.viewmodel.VncViewModel.State
 import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
 
@@ -86,6 +87,7 @@ class Toolbar(private val activity: VncActivity) {
         setupFlyouts()
         setupFlyoutClose()
         setupOpenerButton()
+        setupViewModeSelection()
         setupGestureStyleSelection()
         setupGestureExclusionRect()
         setupDrawerCloseOnScrimSwipe()
@@ -141,6 +143,42 @@ class Toolbar(private val activity: VncActivity) {
         toast(R.string.msg_zoom_saved)
     }
 
+    private fun setupViewModeSelection() {
+        val viewModeButtonMap = mapOf(
+                ServerProfile.VIEW_MODE_NORMAL to R.id.view_mode_normal,
+                ServerProfile.VIEW_MODE_NO_INPUT to R.id.view_mode_no_input,
+                ServerProfile.VIEW_MODE_NO_VIDEO to R.id.view_mode_no_video
+        )
+
+        binding.viewModeGroup.let { group ->
+            check(group.childCount == viewModeButtonMap.size)
+
+            viewModel.activeViewMode.observe(activity) {
+                group.check(viewModeButtonMap[it] ?: R.id.view_mode_normal)
+            }
+
+            group.addOnButtonCheckedListener { _, checkedId, isChecked ->
+                if (isChecked) {
+                    if (viewModel.state.value.isConnected) { // Make sure profile is available
+                        val newMode = viewModeButtonMap.entries.first { it.value == checkedId }.key
+                        if (viewModel.activeViewMode.value != newMode) {
+                            viewModel.setViewMode(newMode)
+                            showViewModeChangeToast(newMode)
+                        }
+                    }
+                    close()
+                }
+            }
+        }
+    }
+
+    private fun showViewModeChangeToast(newMode: Int) {
+        when (newMode) {
+            ServerProfile.VIEW_MODE_NORMAL -> toast(R.string.msg_normal_view_mode)
+            ServerProfile.VIEW_MODE_NO_INPUT -> toast(R.string.msg_input_disabled)
+        }
+    }
+
     private fun setupGestureStyleSelection() {
         val styleButtonMap = mapOf(
                 "auto" to R.id.gesture_style_auto,
@@ -158,7 +196,7 @@ class Toolbar(private val activity: VncActivity) {
             group.setOnCheckedChangeListener { _, id ->
                 if (viewModel.state.value.isConnected) { // Make sure profile is available
                     val newStyle = styleButtonMap.entries.first { it.value == id }.key
-                    viewModel.setProfileGestureStyle(newStyle)
+                    viewModel.setGestureStyle(newStyle)
                 }
                 close()
             }
@@ -262,6 +300,7 @@ class Toolbar(private val activity: VncActivity) {
     }
 
     private fun setupFlyouts() {
+        flyouts += binding.viewModesToggle to binding.viewModeGroup
         flyouts += binding.gestureStyleToggle to binding.gestureStyleGroup
         flyouts += binding.zoomOptionsToggle to binding.zoomOptionsGroup
 

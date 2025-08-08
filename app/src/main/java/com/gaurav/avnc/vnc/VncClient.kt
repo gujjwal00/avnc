@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
@@ -79,9 +80,15 @@ class VncClient(private val observer: Observer) {
     private val stateLock = ReentrantReadWriteLock()
 
     /**
-     * In 'View-only' mode input to remote server is disabled
+     * If true, all input to remote server is disabled
      */
-    private var viewOnlyMode = false
+    private val inputDisabled = AtomicBoolean(false)
+
+    /**
+     * If true, client stops sending framebuffer update requests to server
+     */
+    val frameBufferUpdatesPaused = AtomicBoolean(false)
+
 
     /**
      * Latest pointer position. See [moveClientPointer].
@@ -116,10 +123,9 @@ class VncClient(private val observer: Observer) {
      *
      * @param securityType RFB security type to use.
      */
-    fun configure(viewOnly: Boolean, securityType: Int, useLocalCursor: Boolean, imageQuality: Int, useRawEncoding: Boolean) {
+    fun configure(securityType: Int, useLocalCursor: Boolean, imageQuality: Int, useRawEncoding: Boolean) {
         stateLock.read {
             if (!connected && !destroyed) {
-                viewOnlyMode = viewOnly
                 nativeConfigure(nativePtr, securityType, useLocalCursor, imageQuality, useRawEncoding)
             }
         }
@@ -252,20 +258,33 @@ class VncClient(private val observer: Observer) {
             nativeSetDesktopSize(nativePtr, width, height)
     }
 
+    fun setInputDisabled(disabled: Boolean) {
+        inputDisabled.set(disabled)
+    }
+
     /**
      * Sends frame buffer update request to remote server.
      */
     fun refreshFrameBuffer() = ifConnected {
-        nativeRefreshFrameBuffer(nativePtr)
+        if (!frameBufferUpdatesPaused.get())
+            nativeRefreshFrameBuffer(nativePtr)
     }
 
     /**
      * Change framebuffer update status.
      * If paused, client will effectively stop asking for framebuffer updates from server.
+     * This will do network IO when resuming, so must not be called from Main thread.
      */
-    fun pauseFramebufferUpdates(pause: Boolean) = ifConnected {
-        nativePauseFramebufferUpdates(nativePtr, pause)
+    fun setFrameBufferUpdatesPaused(pause: Boolean) {
+        stateLock.read {
+            if (destroyed || !frameBufferUpdatesPaused.compareAndSet(!pause, pause))
+                return
+
+            nativePauseFramebufferUpdates(nativePtr, pause)
+            refreshFrameBuffer()
+        }
     }
+
 
     /**
      * Puts framebuffer contents in currently active OpenGL texture.
@@ -317,7 +336,7 @@ class VncClient(private val observer: Observer) {
     }
 
     private inline fun ifConnectedAndInteractive(block: () -> Unit) = ifConnected {
-        if (!viewOnlyMode)
+        if (!inputDisabled.get())
             block()
     }
 

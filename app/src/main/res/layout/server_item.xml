@@ -90,8 +90,8 @@
             <ImageView
                 style="@style/ServerCardHintIcon"
                 android:importantForAccessibility="no"
-                android:src="@drawable/ic_visibility"
-                app:isVisible="@{profile.viewOnly}" />
+                android:src="@{profile.viewMode == ServerProfile.VIEW_MODE_NO_INPUT ? @drawable/ic_input_off : @drawable/ic_video_off}"
+                app:isVisible="@{profile.viewMode != ServerProfile.VIEW_MODE_NORMAL}" />
 
             <ImageView
                 style="@style/ServerCardHintIcon"

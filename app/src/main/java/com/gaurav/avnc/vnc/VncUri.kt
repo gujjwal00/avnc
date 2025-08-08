@@ -70,7 +70,7 @@ class VncUri(str: String) {
         securityType?.let { profile.securityType = it }
         channelType?.let { profile.channelType = it }
         colorLevel?.let { profile.colorLevel = it }
-        viewOnly?.let { profile.viewOnly = it }
+        viewOnly?.let { profile.viewMode = if (it) ServerProfile.VIEW_MODE_NO_INPUT else ServerProfile.VIEW_MODE_NORMAL }
         sshHost?.let { profile.sshHost = it }
         sshPort?.let { profile.sshPort = it }
         sshUsername?.let { profile.sshUsername = it }

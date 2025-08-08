@@ -127,12 +127,13 @@
 
 
                 <!--View-only mode-->
-                <CheckBox
+                <TextView
                     android:id="@+id/view_only"
-                    style="@style/FormField.CheckBox"
-                    android:checked="@={viewModel.profile.viewOnly}"
-                    android:text="@string/title_view_only_mode"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    style="@style/FormField.LabelWithIcon"
+                    android:drawableTint="?android:textColorTertiary"
+                    android:paddingVertical="@dimen/padding_small"
+                    android:text="@string/msg_view_only_checkbox_migration"
+                    app:drawableStartCompat="@drawable/ic_input_off"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/use_repeater" />
 
