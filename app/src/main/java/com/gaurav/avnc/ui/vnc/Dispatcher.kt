@@ -258,7 +258,10 @@ class Dispatcher(private val activity: VncActivity) {
          * [vs] Movement of vertical scroll wheel
          */
         fun doRemoteScrollFromMouse(p: PointF, hs: Float, vs: Float) {
-            doRemoteScroll(p, hs * deltaPerScroll, vs * deltaPerScroll)
+            // hs is -ve for for left and +ve for right. But doRemoteScroll() works
+            // in terms of finger movement where -ve is right and +ve is left
+            // So we have to invert the sign of hs for doRemoteScroll()
+            doRemoteScroll(p, -1 * hs * deltaPerScroll, vs * deltaPerScroll)
         }
     }
 
