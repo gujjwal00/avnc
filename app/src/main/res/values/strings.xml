@@ -73,6 +73,7 @@
     <string name="hint_username">Username</string>
     <string name="hint_password">Password</string>
     <string name="hint_wol_mac">MAC address</string>
+    <string name="hint_wol_address">Broadcast address (optional)</string>
     <string name="hint_ssh_host">SSH host</string>
     <string name="hint_ssh_port">SSH port</string>
     <string name="hint_key_password">Key password</string>
@@ -103,6 +104,7 @@
     <string name="msg_export_auth_required">Authenticate to export servers</string>
     <string name="msg_required">Required</string>
     <string name="msg_invalid_mac_address">Invalid MAC address</string>
+    <string name="msg_invalid_broadcast_address">Invalid broadcast address</string>
     <string name="msg_invalid_key_file">Invalid private key file</string>
     <string name="msg_invalid_vnc_uri">Invalid VNC URI</string>
     <string name="msg_copied_to_clipboard">Copied</string>

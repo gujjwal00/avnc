@@ -180,6 +180,35 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/wol" />
 
+                <EditText
+                    android:id="@+id/wol_broadcast_address"
+                    style="@style/FormField.EditText"
+                    android:drawableStart="@drawable/ic_broadcast"
+                    android:hint="@string/hint_wol_address"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:text="@={viewModel.profile.wolBroadcastAddress}"
+                    app:isVisible="@{viewModel.enableWol}"
+                    app:layout_constraintEnd_toStartOf="@id/wol_port"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/wol_mac" />
+
+
+                <!--Port-->
+                <EditText
+                    android:id="@+id/wol_port"
+                    style="@style/FormField.EditText"
+                    android:layout_marginStart="0dp"
+                    android:ems="3"
+                    android:hint="@string/hint_port"
+                    android:importantForAutofill="no"
+                    android:inputType="number"
+                    app:isVisible="@{viewModel.enableWol}"
+                    android:text='@={"" +  viewModel.profile.wolPort}'
+                    app:layout_constraintBottom_toBottomOf="@id/wol_broadcast_address"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/wol_broadcast_address" />
+
                 <!--Button-up delay-->
                 <CheckBox
                     android:id="@+id/button_up_delay"
@@ -188,7 +217,7 @@
                     android:text="@string/title_button_up_delay"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/wol_mac" />
+                    app:layout_constraintTop_toBottomOf="@id/wol_broadcast_address" />
 
                 <ImageButton
                     android:id="@+id/button_up_delay_help_btn"
