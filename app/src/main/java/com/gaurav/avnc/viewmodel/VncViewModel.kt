@@ -248,7 +248,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
             client.setupRepeater(profile.idOnRepeater)
 
         if (profile.enableWol)
-            runCatching { broadcastWoLPackets(profile.wolMAC) }
+            runCatching { broadcastWoLPackets(profile.wolMAC, profile.wolBroadcastAddress, profile.wolPort) }
                     .onFailure {
                         launchMain {
                             Toast.makeText(app, "Wake-on-LAN: ${it.message}", Toast.LENGTH_LONG).show()

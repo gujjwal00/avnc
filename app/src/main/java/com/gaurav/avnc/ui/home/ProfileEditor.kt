@@ -43,6 +43,7 @@ import com.gaurav.avnc.databinding.FragmentProfileEditorBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.util.MsgDialog
 import com.gaurav.avnc.util.OpenableDocument
+import com.gaurav.avnc.util.parseBroadcastAddress
 import com.gaurav.avnc.util.parseMacAddress
 import com.gaurav.avnc.viewmodel.EditorViewModel
 import com.gaurav.avnc.viewmodel.HomeViewModel
@@ -280,8 +281,12 @@ class AdvancedProfileEditor : Fragment() {
         if (binding.useRepeater.isChecked)
             result = result and validateNotEmpty(binding.idOnRepeater)
 
-        if (binding.wol.isChecked)
-            result = result and (validateNotEmpty(binding.wolMac) && validateMACAddress())
+        if (binding.wol.isChecked) {
+            result = result and
+                    (validateNotEmpty(binding.wolMac) && validateWolMACAddress()) and
+                    (binding.wolBroadcastAddress.length() == 0 || validateWolBroadcastAddress()) and
+                    validateNotEmpty(binding.wolPort)
+        }
 
         if (binding.useSshTunnel.isChecked) {
             result = result and
@@ -311,12 +316,24 @@ class AdvancedProfileEditor : Fragment() {
     }
 
 
-    private fun validateMACAddress(): Boolean {
-        if (runCatching { parseMacAddress(binding.wolMac.text.toString()) }.isFailure) {
+    private fun validateWolMACAddress(): Boolean {
+        runCatching {
+            parseMacAddress(binding.wolMac.text.toString())
+        }.onFailure {
             binding.wolMac.error = getText(R.string.msg_invalid_mac_address)
-            return false
+        }.let {
+            return it.isSuccess
         }
-        return true
+    }
+
+    private fun validateWolBroadcastAddress(): Boolean {
+        runCatching {
+            parseBroadcastAddress(binding.wolBroadcastAddress.text.toString())
+        }.onFailure {
+            binding.wolBroadcastAddress.error = getText(R.string.msg_invalid_broadcast_address)
+        }.let {
+            return it.isSuccess
+        }
     }
 
     private fun validatePrivateKey(): Boolean {
