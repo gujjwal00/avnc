@@ -290,9 +290,10 @@ class VncActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT < 26 || !viewModel.pref.input.capturePointer)
             return
 
-        if (viewModel.state.value.isConnected)
+        if (viewModel.state.value.isConnected) {
+            binding.frameView.requestFocus()
             binding.frameView.requestPointerCapture()
-        else
+        } else
             binding.frameView.releasePointerCapture()
     }
 
