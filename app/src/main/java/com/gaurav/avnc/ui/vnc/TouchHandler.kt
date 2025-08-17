@@ -224,6 +224,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
 
 
     private fun handleGestureEvent(event: MotionEvent): Boolean {
+        dispatcher.accelerator.addMovement(event)
         swipeVsScale.onTouchEvent(event)
         scaleDetector.onTouchEvent(event)
         return gestureDetector.onTouchEvent(event)

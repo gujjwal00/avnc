@@ -54,6 +54,7 @@ class Dispatcher(private val activity: VncActivity) {
     private val viewModel = activity.viewModel
     private val messenger = viewModel.messenger
     private val gesturePref = viewModel.pref.input.gesture
+    val accelerator = PointerAcceleration(viewModel)
 
 
     /**************************************************************************
@@ -157,7 +158,7 @@ class Dispatcher(private val activity: VncActivity) {
 
     fun onCapturedMouseButtonDown(button: PointerButton) = relativeMode.doButtonDown(button, PointF())
     fun onCapturedMouseButtonUp(button: PointerButton) = relativeMode.doButtonUp(button, PointF())
-    fun onCapturedMouseMove(dx: Float, dy: Float) = relativeMode.doMovePointer(PointF(), dx, dy)
+    fun onCapturedMouseMove(dx: Float, dy: Float) = relativeMode.doMovePointer(dx, dy, false)
     fun onCapturedMouseScroll(hs: Float, vs: Float) = relativeMode.doRemoteScrollFromMouse(PointF(), hs, vs)
 
     fun onStylusTap(p: PointF) = directMode.doClick(PointerButton.Left, p)
@@ -320,14 +321,24 @@ class Dispatcher(private val activity: VncActivity) {
 
         override fun transformPoint(p: PointF) = pointerPosition
 
-        override fun doMovePointer(p: PointF, dx: Float, dy: Float) {
+        override fun doMovePointer(p: PointF, dx: Float, dy: Float) = doMovePointer(dx, dy, true)
+
+        fun doMovePointer(dx: Float, dy: Float, accelerate: Boolean) {
             val xLimit = viewModel.frameState.fbWidth - 1
             val yLimit = viewModel.frameState.fbHeight - 1
             if (xLimit < 0 || yLimit < 0)
                 return
 
+            var adx = dx
+            var ady = dy
+            if (accelerate) {
+                accelerator.compute()
+                adx = accelerator.updateDx(dx)
+                ady = accelerator.updateDy(dy)
+            }
+
             pointerPosition.apply {
-                offset(dx, dy)
+                offset(adx, ady)
                 x = x.coerceIn(0f, xLimit)
                 y = y.coerceIn(0f, yLimit)
             }
