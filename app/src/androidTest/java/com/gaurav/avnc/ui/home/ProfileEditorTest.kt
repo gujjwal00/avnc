@@ -148,7 +148,7 @@ class BasicEditorTest {
         val server = TestServer()
         server.start()
         onView(withHint(R.string.hint_host)).doTypeText(server.host)
-        onView(withHint(R.string.hint_port)).perform(ViewActions.clearText()).doTypeText(server.port.toString())
+        onView(withId(R.id.port)).perform(ViewActions.clearText()).doTypeText(server.port.toString())
         onView(withText(R.string.title_try)).doClick()
 
         onView(withId(R.id.frame_view)).checkWillBeDisplayed()
