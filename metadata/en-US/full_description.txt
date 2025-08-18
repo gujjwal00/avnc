@@ -4,13 +4,16 @@ Features:
 
 - Material Design (with Dark theme)
 - Configurable gestures
-- Tight encoding
 - Virtual Keys
+- VNC Repeater support
+- Wake-on-LAN support
+- Built-in SSH tunnel (VNC over SSH)
 - Picture-in-Picture mode
 - View-only mode
-- Zeroconf Server Discovery
-- TLS support (AnonTLS, VeNCrypt)
-- SSH tunnel (VNC over SSH)
+- No-video mode
+- Automatic Server Discovery (Zeroconf)
 - Import/Export servers
-- VNC Repeater support
 - Clipboard Sync with server
+- `vnc://` URI support
+- TLS support (AnonTLS, VeNCrypt)
+- Tight encoding support

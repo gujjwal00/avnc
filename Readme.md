@@ -10,16 +10,20 @@
 ### Features
 - Material Design (with Dark theme)
 - Configurable gestures
-- Tight encoding
 - Virtual Keys
+- VNC Repeater support
+- Wake-on-LAN support
+- Built-in SSH tunnel (VNC over SSH)
 - Picture-in-Picture mode
 - View-only mode
-- Zeroconf Server Discovery
-- TLS support (AnonTLS, VeNCrypt)
-- SSH tunnel (VNC over SSH)
+- No-video mode
+- Automatic Server Discovery (Zeroconf)
 - Import/Export servers
-- VNC Repeater support
 - Clipboard Sync with server
+- `vnc://` URI support
+- TLS support (AnonTLS, VeNCrypt)
+- Tight encoding support
+
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.gaurav.avnc/)
 [<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Play Store" height="80">](https://play.google.com/store/apps/details?id=com.gaurav.avnc)
@@ -64,3 +68,11 @@ Android Studio) to know more about the code.
 You can translate AVNC on [Weblate](https://hosted.weblate.org/engage/avnc/).
 
 [<img src="https://hosted.weblate.org/widgets/avnc/-/open-graph.png" alt="Translation status" height="200" />](https://hosted.weblate.org/engage/avnc/)
+
+
+## Credits
+
+- Author of libraries AVNC depends on (LibVNCClient, libjpeg-turbo, wolfSSL, sshlib, leakcanary etc.)
+- Contributors for reporting issues, providing fixes
+- Contributors for translating AVNC, and [Weblate](https://weblate.org/) for translation hosting
+- [Browserstack](https://www.browserstack.com/) for providing testing infrastructure
