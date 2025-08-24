@@ -89,6 +89,7 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
     var emitLegacyKeysym = true
     var vkMetaState = 0
     private var hasSentShiftDown = false
+    private var hasSentCtrlDown = false
     private val inputPref = prefs.input
     private val kcm by lazy { KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD) }
 
@@ -157,6 +158,7 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
         remapInEvents(model)
         composeDiacritics(model)
         generateFakeShifts(model)
+        generateFakeCtrl(model)
         releaseSoftAlt(model)
         generateOutEvents(model)
         remapOutEvents(model)
@@ -295,6 +297,15 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
                 accentSequence.clear()
         }
     }
+
+    private fun generateFakeCtrl(model: EventModel) {
+        if (model.source.action == KeyEvent.ACTION_DOWN && !isCtrlKey(model.source.keyCode) &&
+            model.source.isCtrlPressed && !hasSentCtrlDown) {
+            model.inEvents.add(0, InEvent(true, KeyEvent.KEYCODE_CTRL_LEFT))
+            model.inEvents.add(InEvent(false, KeyEvent.KEYCODE_CTRL_LEFT))
+        }
+    }
+
 
     /**
      * In some cases we need to simulate Shift key presses to ensure proper handling of
@@ -462,6 +473,10 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
         return (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT)
     }
 
+    private fun isCtrlKey(keyCode: Int): Boolean {
+        return (keyCode == KeyEvent.KEYCODE_CTRL_LEFT || keyCode == KeyEvent.KEYCODE_CTRL_RIGHT)
+    }
+
     /**
      * Some cases where we want to ignore events.
      */
@@ -481,6 +496,9 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
     private fun postProcessEvent(event: KeyEvent) {
         if (isShiftKey(event.keyCode))
             hasSentShiftDown = event.action == KeyEvent.ACTION_DOWN
+
+        if (isCtrlKey(event.keyCode))
+            hasSentCtrlDown = event.action == KeyEvent.ACTION_DOWN
 
         processedEventObserver?.invoke(event)
     }

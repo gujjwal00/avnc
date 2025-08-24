@@ -289,6 +289,14 @@ class KeyHandlerTest {
     }
 
     @Test
+    fun fakeCtrlPress() {
+        sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CTRL_ON)
+
+        assertEquals(XKeySym.XK_Control_L, dispatchedKeyDowns[0])
+        assertEquals(XKeySym.XK_a, dispatchedKeyDowns[1])
+    }
+
+    @Test
     fun observerTest() {
         var observedEvent: KeyEvent? = null
         keyHandler.processedEventObserver = { observedEvent = it }
