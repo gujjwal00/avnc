@@ -512,6 +512,7 @@ class VncActivity : AppCompatActivity() {
         //giving apps a chance to handle it. For better or worse, they set the 'source'
         //for such key events to Mouse, enabling the following workarounds.
         if (keyEvent.keyCode == KeyEvent.KEYCODE_BACK &&
+            keyEvent.scanCode == 0 &&
             InputDevice.getDevice(keyEvent.deviceId)?.supportsSource(InputDevice.SOURCE_MOUSE) == true &&
             viewModel.pref.input.interceptMouseBack) {
             if (keyEvent.action == KeyEvent.ACTION_DOWN)
