@@ -237,7 +237,6 @@
     <string name="msg_video_disabled">Відео вимкнено</string>
     <string name="msg_gesture_style_locked_to_touchpad">Стиль жесту «Сенсорна панель» активний</string>
     <string name="msg_view_only_checkbox_migration">Тепер ви можете вимкнути введення даних у режимі реального часу під час сеансу</string>
-    <string name="msg_invalid_broadcast_address">Недійсна адреса розсилки</string>
     <string name="desc_view_modes_toggle">Режими перегляду</string>
     <string name="desc_view_mode_normal">Звичайний режим</string>
     <string name="desc_view_mode_no_input">Вимкнути всі входи</string>

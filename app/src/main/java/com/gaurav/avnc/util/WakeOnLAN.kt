@@ -10,7 +10,6 @@ package com.gaurav.avnc.util
 
 import java.net.DatagramPacket
 import java.net.DatagramSocket
-import java.net.Inet4Address
 import java.net.InetAddress
 import java.net.InterfaceAddress
 import java.net.NetworkInterface
@@ -27,10 +26,13 @@ fun parseMacAddress(macAddress: String): ByteArray {
 
 /**
  * Coverts to [InetAddress].
- * Also makes sure [address] is IPv4.
  */
 fun parseBroadcastAddress(address: String): InetAddress {
-    return InetAddress.getByName(address).also { check(it is Inet4Address && address == it.hostAddress) }
+    try {
+        return InetAddress.getByName(address)
+    } catch (t: Throwable) {
+        throw IllegalArgumentException("Invalid broadcast address", t)
+    }
 }
 
 
