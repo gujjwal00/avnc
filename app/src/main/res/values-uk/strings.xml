@@ -231,4 +231,17 @@
     <string name="desc_toolbar_btn">Відкрити панель інструментів</string>
     <string name="pref_long_press_swipe_disabled_summary">Вимкнено поточним значенням жесту <b>Довге натискання</b></string>
     <string name="pref_toolbar_open_with_button">Показати кнопку для відкриття</string>
+    <string name="hint_wol_address">Адреса розсилки (необов\'язково))</string>
+    <string name="msg_normal_view_mode">Звичайний режим увімкнено</string>
+    <string name="msg_input_disabled">Введення вимкнено</string>
+    <string name="msg_video_disabled">Відео вимкнено</string>
+    <string name="msg_gesture_style_locked_to_touchpad">Стиль жесту «Сенсорна панель» активний</string>
+    <string name="msg_view_only_checkbox_migration">Тепер ви можете вимкнути введення даних у режимі реального часу під час сеансу</string>
+    <string name="msg_invalid_broadcast_address">Недійсна адреса розсилки</string>
+    <string name="desc_view_modes_toggle">Режими перегляду</string>
+    <string name="desc_view_mode_normal">Звичайний режим</string>
+    <string name="desc_view_mode_no_input">Вимкнути всі входи</string>
+    <string name="desc_view_mode_no_video">Вимкнути відео</string>
+    <string name="pref_capture_pointer">Вказівник захоплення</string>
+    <string name="pref_vk_row_count">Рядки</string>
 </resources>
