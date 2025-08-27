@@ -221,4 +221,6 @@
     <string name="desc_toolbar_btn">打開工具列</string>
     <string name="pref_forget_known_hosts_question">忘記已知的 SSH 主機和信任的伺服器證書？</string>
     <string name="pref_forget_known_hosts">忘記已知的主機</string>
+    <string name="msg_video_disabled">停用了視訊</string>
+    <string name="msg_wake_on_lan_help">局域網路喚醒(Wake-On-Lan)可用於遠端開機一臺電腦。</string>
 </resources>
