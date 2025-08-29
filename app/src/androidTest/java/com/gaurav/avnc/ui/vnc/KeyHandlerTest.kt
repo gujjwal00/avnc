@@ -138,7 +138,10 @@ class KeyHandlerTest {
     @Test
     fun charWithShiftCtrlAlt() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_SHIFT_ON or KeyEvent.META_CTRL_ON or KeyEvent.META_ALT_ON)
-        assertEquals('A'.code, dispatchedKeyDowns[1])
+        assertEquals(XKeySym.XK_Alt_L, dispatchedKeyDowns[0])
+        assertEquals(XKeySym.XK_Control_L, dispatchedKeyDowns[1])
+        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[2])
+        assertEquals('A'.code, dispatchedKeyDowns[3])
     }
 
     @Test
@@ -181,14 +184,18 @@ class KeyHandlerTest {
 
     @Test
     fun charWithCapslockCtrl() {
+        sendDown(KeyEvent.KEYCODE_CTRL_LEFT)
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON or KeyEvent.META_CTRL_ON)
-        assertEquals('A'.code, dispatchedKeyDowns.firstOrNull())
+        assertEquals(XKeySym.XK_Control_L, dispatchedKeyDowns[0])
+        assertEquals('A'.code, dispatchedKeyDowns[1])
     }
 
     @Test
     fun charWithCapslockAlt() {
+        sendDown(KeyEvent.KEYCODE_ALT_LEFT)
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON or KeyEvent.META_ALT_ON)
-        assertEquals('A'.code, dispatchedKeyDowns.firstOrNull())
+        assertEquals(XKeySym.XK_Alt_L, dispatchedKeyDowns[0])
+        assertEquals('A'.code, dispatchedKeyDowns[1])
     }
 
     @Test
@@ -286,6 +293,22 @@ class KeyHandlerTest {
 
         assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[0])
         assertEquals(XKeySym.XK_at, dispatchedKeyDowns[1])
+    }
+
+    @Test
+    fun fakeCtrlPress() {
+        sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CTRL_ON)
+
+        assertEquals(XKeySym.XK_Control_L, dispatchedKeyDowns[0])
+        assertEquals(XKeySym.XK_a, dispatchedKeyDowns[1])
+    }
+
+    @Test
+    fun fakeAltPress() {
+        sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_ALT_ON)
+
+        assertEquals(XKeySym.XK_Alt_L, dispatchedKeyDowns[0])
+        assertEquals(XKeySym.XK_a, dispatchedKeyDowns[1])
     }
 
     @Test

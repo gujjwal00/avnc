@@ -89,6 +89,8 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
     var emitLegacyKeysym = true
     var vkMetaState = 0
     private var hasSentShiftDown = false
+    private var hasSentCtrlDown = false
+    private var hasSentAltDown = false
     private val inputPref = prefs.input
     private val kcm by lazy { KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD) }
 
@@ -157,7 +159,8 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
         remapInEvents(model)
         composeDiacritics(model)
         generateFakeShifts(model)
-        releaseSoftAlt(model)
+        generateFakeCtrl(model)
+        generateFakeAlt(model)
         generateOutEvents(model)
         remapOutEvents(model)
 
@@ -358,18 +361,26 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
         }
     }
 
-    /**
-     * Some characters in Android can generate events with Alt-key combination:
-     * Ç  => Alt + C  ; ß => Alt + S
-     *
-     * But Sending Alt press in most cases breaks typing these characters on server
-     * because that's not their usual key combination. To fix this, we artificially
-     * release the Alt key before sending these characters.
-     */
-    private fun releaseSoftAlt(model: EventModel) {
+    private fun generateFakeCtrl(model: EventModel) {
+        // Generate Ctrl press if event says it is pressed but we never received down event
+        if (model.source.action == KeyEvent.ACTION_DOWN && !isCtrlKey(model.source.keyCode) &&
+            model.source.isCtrlPressed && !hasSentCtrlDown) {
+            model.inEvents.add(0, InEvent(true, KeyEvent.KEYCODE_CTRL_LEFT))
+            model.inEvents.add(InEvent(false, KeyEvent.KEYCODE_CTRL_LEFT))
+        }
+    }
+
+    private fun generateFakeAlt(model: EventModel) {
         model.source.let {
-            // Only apply the workaround to events coming from software keyboards to avoid
-            // interfering with shortcuts on external keyboards
+            // Some characters in Android can generate events with Alt-key combination:
+            // Ç  => Alt + C  ; ß => Alt + S
+            //
+            // But Sending Alt press in most cases breaks typing these characters on server
+            // because that's not their usual key combination. To fix this, we artificially
+            // release the Alt key before sending these characters.
+            //
+            // This workaround is only applied to events coming from software keyboards
+            // to avoid interfering with shortcuts on external keyboards
             if (it.action == KeyEvent.ACTION_DOWN && it.deviceId == KeyCharacterMap.VIRTUAL_KEYBOARD &&
                 it.scanCode == 0 && it.isAltPressed && it.unicodeChar.toChar() in "Ççß") {
                 var keyCode = KeyEvent.KEYCODE_ALT_LEFT
@@ -378,6 +389,13 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
 
                 if (model.inEvents.isNotEmpty()) // Can be empty if InEvent was used for diacritics
                     model.inEvents.add(0, InEvent(false, keyCode))
+                return
+            }
+
+            // Generate Alt press if event says it is pressed but we never received down event
+            if (it.action == KeyEvent.ACTION_DOWN && !isAltKey(it.keyCode) && it.isAltPressed && !hasSentAltDown) {
+                model.inEvents.add(0, InEvent(true, KeyEvent.KEYCODE_ALT_LEFT))
+                model.inEvents.add(InEvent(false, KeyEvent.KEYCODE_ALT_LEFT))
             }
         }
     }
@@ -462,6 +480,14 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
         return (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT)
     }
 
+    private fun isCtrlKey(keyCode: Int): Boolean {
+        return (keyCode == KeyEvent.KEYCODE_CTRL_LEFT || keyCode == KeyEvent.KEYCODE_CTRL_RIGHT)
+    }
+
+    private fun isAltKey(keyCode: Int): Boolean {
+        return (keyCode == KeyEvent.KEYCODE_ALT_LEFT || keyCode == KeyEvent.KEYCODE_ALT_RIGHT)
+    }
+
     /**
      * Some cases where we want to ignore events.
      */
@@ -481,6 +507,12 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
     private fun postProcessEvent(event: KeyEvent) {
         if (isShiftKey(event.keyCode))
             hasSentShiftDown = event.action == KeyEvent.ACTION_DOWN
+
+        if (isCtrlKey(event.keyCode))
+            hasSentCtrlDown = event.action == KeyEvent.ACTION_DOWN
+
+        if (isAltKey(event.keyCode))
+            hasSentAltDown = event.action == KeyEvent.ACTION_DOWN
 
         processedEventObserver?.invoke(event)
     }
