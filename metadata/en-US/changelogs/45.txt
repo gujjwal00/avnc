@@ -1,0 +1,5 @@
+* Added ability to disable video and use AVNC only for remote control
+* Added support for pointer capture (Settings => Input => Capture pointer)
+* Added option for Wake-on-LAN broadcast address & port
+* Added support for `SaveConnection` vnc:// URI parameter
+* Added an option for virtual-key row count
