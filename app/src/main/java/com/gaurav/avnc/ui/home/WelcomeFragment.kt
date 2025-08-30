@@ -20,7 +20,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 /**
- * Simple fragment to show welcome message after V2 update
+ * Simple fragment to show welcome message after major updates
  */
 class WelcomeFragment : BottomSheetDialogFragment() {
 

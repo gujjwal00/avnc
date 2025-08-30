@@ -22,14 +22,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/margin_small"
-            android:text="🎉 Welcome to AVNC v2 🎉"
+            android:text="🎉 Welcome to AVNC v3 🎉"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
-            android:text="Use per-orientation zoom, change default zoom, control image quality, improved virtual keys, and much more. See what's new in version 2."
+            android:text="Disable video to use AVNC as remote control, Capture pointer for seamless experience, Use Wake-on-LAN over Internet, and much more. See what's new in version 3."
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
         <Button
