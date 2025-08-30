@@ -252,7 +252,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
                     .onFailure {
                         launchMain {
                             Toast.makeText(app, "Wake-on-LAN: ${it.message}", Toast.LENGTH_LONG).show()
-                            Log.w(javaClass.simpleName, "Cannot send WoL packet", it)
+                            Log.w("WakeOnLAN", "Cannot send WoL packet", it)
                         }
                     }
     }

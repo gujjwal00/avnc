@@ -31,7 +31,7 @@ fun parseBroadcastAddress(address: String): InetAddress {
     try {
         return InetAddress.getByName(address)
     } catch (t: Throwable) {
-        throw IllegalArgumentException("Invalid broadcast address", t)
+        throw IllegalArgumentException("Invalid broadcast address: $address", t)
     }
 }
 
