@@ -17,12 +17,14 @@ import com.gaurav.avnc.instrumentation
 import com.gaurav.avnc.targetContext
 import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.vnc.XKeySym
+import io.mockk.Called
+import io.mockk.MockKVerificationScope
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verifySequence
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -34,35 +36,13 @@ class KeyHandlerTest {
     private lateinit var keyHandler: KeyHandler
     private lateinit var prefs: AppPreferences
     private lateinit var mockDispatcher: Dispatcher
-    private lateinit var dispatchedKeys: ArrayList<Pair<Int, Boolean>>
-    private lateinit var dispatchedKeyDowns: ArrayList<Int>
-    private lateinit var dispatchedKeyUps: ArrayList<Int>
-    private lateinit var dispatchedXTDowns: ArrayList<Int>
-    private lateinit var dispatchedXTUps: ArrayList<Int>
     private val kcm by lazy { KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD) }
 
     @Before
     fun before() {
         instrumentation.runOnMainSync { prefs = AppPreferences(targetContext) }
-
-        dispatchedKeys = arrayListOf()
-        dispatchedKeyDowns = arrayListOf()
-        dispatchedKeyUps = arrayListOf()
-        dispatchedXTDowns = arrayListOf()
-        dispatchedXTUps = arrayListOf()
         mockDispatcher = mockk()
-        every { mockDispatcher.onXKey(any(), any(), true) } answers {
-            dispatchedKeys.add(Pair(firstArg(), true))
-            dispatchedKeyDowns.add(firstArg())
-            dispatchedXTDowns.add(secondArg())
-            true
-        }
-        every { mockDispatcher.onXKey(any(), any(), false) } answers {
-            dispatchedKeys.add(Pair(firstArg(), false))
-            dispatchedKeyUps.add(firstArg())
-            dispatchedXTUps.add(secondArg())
-            true
-        }
+        every { mockDispatcher.onXKey(any(), any(), any()) } returns true
         keyHandler = KeyHandler(mockDispatcher, prefs)
     }
 
@@ -108,20 +88,38 @@ class KeyHandlerTest {
         keyHandler.onKeyEvent(KeyEvent(0, 0, KeyEvent.ACTION_UP, keyCode, 0, 0, 0, scancode))
     }
 
+    /**
+     * Verification
+     */
+    private fun verifySentKeys(block: MockKVerificationScope.() -> Unit) = verifySequence { block() }
+    private fun verifyNoneSent() = verifySentKeys { mockDispatcher wasNot Called }
+    private fun MockKVerificationScope.dn(keySym: Int, xtCode: Int = any()) = mockDispatcher.onXKey(keySym, xtCode, true)
+    private fun MockKVerificationScope.dn(char: Char) = dn(char.code)
+    private fun MockKVerificationScope.up(keySym: Int, xtCode: Int = any()) = mockDispatcher.onXKey(keySym, xtCode, false)
+    private fun MockKVerificationScope.up(char: Char) = up(char.code)
+
 
     /**************************************************************************/
     @Test
     fun simpleChar() {
         keyHandler.onKey(KeyEvent.KEYCODE_A)
-        assertEquals('a'.code, dispatchedKeyDowns.firstOrNull())
+        verifySentKeys {
+            dn('a')
+            up('a')
+        }
     }
 
     @Test
     fun charWithShift() {
         sendDown(KeyEvent.KEYCODE_SHIFT_LEFT)
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_SHIFT_ON)
-        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[0])
-        assertEquals('A'.code, dispatchedKeyDowns[1])
+
+        verifySentKeys {
+            dn(XKeySym.XK_Shift_L)
+            dn('A')
+            up('A')
+        }
+
     }
 
     @Test
@@ -130,18 +128,31 @@ class KeyHandlerTest {
         sendDown(KeyEvent.KEYCODE_CTRL_LEFT)
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_SHIFT_ON or KeyEvent.META_CTRL_ON)
 
-        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[0])
-        assertEquals(XKeySym.XK_Control_L, dispatchedKeyDowns[1])
-        assertEquals('A'.code, dispatchedKeyDowns[2])
+        verifySentKeys {
+            dn(XKeySym.XK_Shift_L)
+            dn(XKeySym.XK_Control_L)
+            dn('A')
+            up('A')
+        }
     }
 
     @Test
     fun charWithShiftCtrlAlt() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_SHIFT_ON or KeyEvent.META_CTRL_ON or KeyEvent.META_ALT_ON)
-        assertEquals(XKeySym.XK_Alt_L, dispatchedKeyDowns[0])
-        assertEquals(XKeySym.XK_Control_L, dispatchedKeyDowns[1])
-        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[2])
-        assertEquals('A'.code, dispatchedKeyDowns[3])
+
+        verifySentKeys {
+            // "Fake" meta key events should be generated to workaround
+            // buggy keyboards which don't send meta key presses properly
+            dn(XKeySym.XK_Alt_L)
+            dn(XKeySym.XK_Control_L)
+            dn(XKeySym.XK_Shift_L)
+            dn('A')
+
+            up(XKeySym.XK_Shift_L)
+            up(XKeySym.XK_Control_L)
+            up(XKeySym.XK_Alt_L)
+            up('A')
+        }
     }
 
     @Test
@@ -149,16 +160,22 @@ class KeyHandlerTest {
         sendDown(KeyEvent.KEYCODE_SHIFT_LEFT)
         sendDown(KeyEvent.KEYCODE_ALT_LEFT)
         sendKeyWithMeta(KeyEvent.KEYCODE_6, KeyEvent.META_SHIFT_ON or KeyEvent.META_ALT_ON)
-        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[0])
-        assertEquals(XKeySym.XK_Alt_L, dispatchedKeyDowns[1])
-        assertEquals('^'.code, dispatchedKeyDowns[2])
-        assertEquals('^'.code, dispatchedKeyUps[0])
+
+        verifySentKeys {
+            dn(XKeySym.XK_Shift_L)
+            dn(XKeySym.XK_Alt_L)
+            dn('^')
+            up('^')
+        }
     }
 
     @Test
     fun charWithCapslock() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON)
-        assertEquals('A'.code, dispatchedKeyDowns.firstOrNull())
+        verifySentKeys {
+            dn('A')
+            up('A')
+        }
     }
 
 
@@ -169,59 +186,88 @@ class KeyHandlerTest {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON or KeyEvent.META_SHIFT_ON)
         sendUp(KeyEvent.KEYCODE_SHIFT_LEFT)
 
-        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[0])
-        assertEquals('a'.code, dispatchedKeyDowns[1])
-        dispatchedKeyUps.reverse()
+        verifySentKeys {
+            dn(XKeySym.XK_Shift_L)
+            dn('a')
+            up('a')
+            up(XKeySym.XK_Shift_L)
+        }
     }
 
     @Test
     @SdkSuppress(minSdkVersion = 31)
     fun charWithCapslockShift_withMissingShiftPress() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON or KeyEvent.META_SHIFT_ON)
-        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[0]) // This should be fake-pressed by KeyHandler
-        assertEquals('a'.code, dispatchedKeyDowns[1])
+        verifySentKeys {
+            dn(XKeySym.XK_Shift_L) // Simulated
+            dn('a')
+            up(XKeySym.XK_Shift_L) // Simulated
+            up('a')
+        }
     }
 
     @Test
     fun charWithCapslockCtrl() {
         sendDown(KeyEvent.KEYCODE_CTRL_LEFT)
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON or KeyEvent.META_CTRL_ON)
-        assertEquals(XKeySym.XK_Control_L, dispatchedKeyDowns[0])
-        assertEquals('A'.code, dispatchedKeyDowns[1])
+        verifySentKeys {
+            dn(XKeySym.XK_Control_L)
+            dn('A')
+            up('A')
+        }
     }
 
     @Test
     fun charWithCapslockAlt() {
         sendDown(KeyEvent.KEYCODE_ALT_LEFT)
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CAPS_LOCK_ON or KeyEvent.META_ALT_ON)
-        assertEquals(XKeySym.XK_Alt_L, dispatchedKeyDowns[0])
-        assertEquals('A'.code, dispatchedKeyDowns[1])
+        verifySentKeys {
+            dn(XKeySym.XK_Alt_L)
+            dn('A')
+            up('A')
+        }
     }
 
     @Test
     fun charWithSuper() {
-        sendKeyWithMeta(KeyEvent.KEYCODE_META_LEFT, KeyEvent.META_META_ON)
+        sendDown(KeyEvent.KEYCODE_META_LEFT)
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_META_ON)
-        assertEquals(XKeySym.XK_Super_L, dispatchedKeyDowns[0])
-        assertEquals('a'.code, dispatchedKeyDowns[1])
+        verifySentKeys {
+            dn(XKeySym.XK_Super_L)
+            dn('a')
+            up('a')
+        }
     }
 
     @Test
     fun multipleChars() {
         keyHandler.onKeyEvent(KeyEvent(0, "abCde", 0, 0))
 
-        assertEquals('a'.code, dispatchedKeyDowns[0])
-        assertEquals('b'.code, dispatchedKeyDowns[1])
-        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[2]) // Fake Shift press is expected
-        assertEquals('C'.code, dispatchedKeyDowns[3])
-        assertEquals('d'.code, dispatchedKeyDowns[4])
-        assertEquals('e'.code, dispatchedKeyDowns[5])
+        verifySentKeys {
+            dn('a')
+            up('a')
+            dn('b')
+            up('b')
+
+            dn(XKeySym.XK_Shift_L) // Simulated
+            dn('C')
+            up(XKeySym.XK_Shift_L)
+            up('C')
+
+            dn('d')
+            up('d')
+            dn('e')
+            up('e')
+        }
     }
 
     @Test
     fun numpadWithNumlock() {
         sendKeyWithMeta(KeyEvent.KEYCODE_NUMPAD_1, KeyEvent.META_NUM_LOCK_ON)
-        assertEquals('1'.code, dispatchedKeyDowns.firstOrNull())
+        verifySentKeys {
+            dn('1')
+            up('1')
+        }
     }
 
     @Test
@@ -233,7 +279,7 @@ class KeyHandlerTest {
 
         //Unless NumLock is on, these should not be sent because we
         //want them to fallback to their secondary actions
-        assertTrue(dispatchedKeyDowns.isEmpty())
+        verifyNoneSent()
     }
 
     @Test
@@ -241,17 +287,21 @@ class KeyHandlerTest {
         val scLeft = 105
         val xtLeft = 203
         sendKeyWithScancode(KeyEvent.KEYCODE_DPAD_LEFT, scLeft)
-        assertEquals(xtLeft, dispatchedXTDowns.first())
-        assertEquals(xtLeft, dispatchedXTUps.first())
+        verifySentKeys {
+            dn(XKeySym.XK_Left, xtLeft)
+            up(XKeySym.XK_Left, xtLeft)
+        }
     }
 
     @Test
     fun rawKeySuper() {
-        val scLeft = 125
-        val xtLeft = 219
-        sendKeyWithScancode(KeyEvent.KEYCODE_META_LEFT, scLeft)
-        assertEquals(xtLeft, dispatchedXTDowns.first())
-        assertEquals(xtLeft, dispatchedXTUps.first())
+        val scSuper = 125
+        val xtSuper = 219
+        sendKeyWithScancode(KeyEvent.KEYCODE_META_LEFT, scSuper)
+        verifySentKeys {
+            dn(XKeySym.XK_Super_L, xtSuper)
+            up(XKeySym.XK_Super_L, xtSuper)
+        }
     }
 
     @Test
@@ -281,34 +331,44 @@ class KeyHandlerTest {
         sendDown(KeyEvent.KEYCODE_TAB, '\t'.code)
         sendDown(KeyEvent.KEYCODE_ENTER, '\n'.code)
 
-        assertEquals(XKeySym.XK_space, dispatchedKeyDowns[0])
-        assertEquals(XKeySym.XK_Tab, dispatchedKeyDowns[1])
-        assertEquals(XKeySym.XK_Return, dispatchedKeyDowns[2])
+        verifySentKeys {
+            dn(XKeySym.XK_space)
+            dn(XKeySym.XK_Tab)
+            dn(XKeySym.XK_Return)
+        }
     }
 
     @Test
     fun fakeShiftBeforeSingleVariantKeys() {
         // If KEYCODE_AT is received directly (and not Shift + 2), fake Shift should be generated
         sendDown(KeyEvent.KEYCODE_AT, '@'.code)
-
-        assertEquals(XKeySym.XK_Shift_L, dispatchedKeyDowns[0])
-        assertEquals(XKeySym.XK_at, dispatchedKeyDowns[1])
+        verifySentKeys {
+            dn(XKeySym.XK_Shift_L)
+            dn(XKeySym.XK_at)
+            up(XKeySym.XK_Shift_L)
+        }
     }
 
     @Test
     fun fakeCtrlPress() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_CTRL_ON)
-
-        assertEquals(XKeySym.XK_Control_L, dispatchedKeyDowns[0])
-        assertEquals(XKeySym.XK_a, dispatchedKeyDowns[1])
+        verifySentKeys {
+            dn(XKeySym.XK_Control_L)
+            dn(XKeySym.XK_a)
+            up(XKeySym.XK_Control_L)
+            up(XKeySym.XK_a)
+        }
     }
 
     @Test
     fun fakeAltPress() {
         sendKeyWithMeta(KeyEvent.KEYCODE_A, KeyEvent.META_ALT_ON)
-
-        assertEquals(XKeySym.XK_Alt_L, dispatchedKeyDowns[0])
-        assertEquals(XKeySym.XK_a, dispatchedKeyDowns[1])
+        verifySentKeys {
+            dn(XKeySym.XK_Alt_L)
+            dn(XKeySym.XK_a)
+            up(XKeySym.XK_Alt_L)
+            up(XKeySym.XK_a)
+        }
     }
 
     @Test
@@ -328,28 +388,34 @@ class KeyHandlerTest {
     @Test
     fun diacriticTest_accent() {
         sendAccent(ACCENT_TILDE)
-        assertTrue(dispatchedKeyDowns.isEmpty())
+        verifyNoneSent()
     }
 
     @Test
     fun diacriticTest_twoAccents() {
         sendAccent(ACCENT_TILDE)
         sendAccent(ACCENT_CIRCUMFLEX)
-        assertTrue(dispatchedKeyDowns.isEmpty())
+        verifyNoneSent()
     }
 
     @Test
     fun diacriticTest_sameAccentTwice() {
         sendAccent(ACCENT_TILDE)
         sendAccent(ACCENT_TILDE)
-        assertEquals(ACCENT_TILDE + 0x1000000, dispatchedKeyDowns.firstOrNull())
+        verifySentKeys {
+            dn(ACCENT_TILDE + 0x1000000)
+            up(ACCENT_TILDE + 0x1000000)
+        }
     }
 
     @Test
     fun diacriticTest_charAfterAccent() {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_A, 'a')
-        assertEquals('ã'.code, dispatchedKeyDowns.firstOrNull())
+        verifySentKeys {
+            dn('ã')
+            up('ã')
+        }
     }
 
     @Test
@@ -357,7 +423,10 @@ class KeyHandlerTest {
         sendDown(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
         sendKey(KeyEvent.KEYCODE_A, 'a')
         sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
-        assertEquals('ã'.code, dispatchedKeyDowns.firstOrNull())
+        verifySentKeys {
+            dn('ã')
+            up('ã')
+        }
     }
 
     @Test
@@ -372,8 +441,12 @@ class KeyHandlerTest {
         sendDown(KeyEvent.KEYCODE_A, 'a'.code)
         sendUp(KeyEvent.KEYCODE_A, 'a'.code)
 
-        assertEquals('a'.code, dispatchedKeyDowns[0]) // First should be normal, as accent was pressed later
-        assertEquals('ã'.code, dispatchedKeyDowns[1]) // Second should be accented
+        verifySentKeys {
+            dn('a') // First should be normal, as accent was pressed later
+            up('a')
+            dn('ã') // Second should be accented
+            up('ã')
+        }
     }
 
     @Test
@@ -387,8 +460,12 @@ class KeyHandlerTest {
         sendUp(KeyEvent.KEYCODE_A, 'a'.code)
         sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
 
-        assertEquals('a'.code, dispatchedKeyDowns[0])
-        assertEquals('ã'.code, dispatchedKeyDowns[1])
+        verifySentKeys {
+            dn('a') // First should be normal, as accent was pressed later
+            up('a')
+            dn('ã') // Second should be accented
+            up('ã')
+        }
     }
 
     @Test
@@ -396,8 +473,13 @@ class KeyHandlerTest {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_A, 'a') // First one should be accented,
         sendKey(KeyEvent.KEYCODE_A, 'a') // next one should be normal
-        assertEquals('ã'.code, dispatchedKeyDowns[0])
-        assertEquals('a'.code, dispatchedKeyDowns[1])
+
+        verifySentKeys {
+            dn('ã')
+            up('ã')
+            dn('a')
+            up('a')
+        }
     }
 
     @Test
@@ -407,9 +489,12 @@ class KeyHandlerTest {
         sendKey(KeyEvent.KEYCODE_A, 'A')
         sendUp(KeyEvent.KEYCODE_SHIFT_RIGHT)
 
-        assertEquals(XKeySym.XK_Shift_R, dispatchedKeyDowns[0])
-        assertEquals('Ã'.code, dispatchedKeyDowns[1])
-        dispatchedKeyUps.reverse()
+        verifySentKeys {
+            dn(XKeySym.XK_Shift_R)
+            dn('Ã')
+            up('Ã')
+            up(XKeySym.XK_Shift_R)
+        }
     }
 
     @Test
@@ -417,7 +502,10 @@ class KeyHandlerTest {
         sendAccent(ACCENT_CIRCUMFLEX)
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_A, 'a')
-        assertEquals('ẫ'.code + 0x1000000, dispatchedKeyDowns.firstOrNull())
+        verifySentKeys {
+            dn('ẫ'.code + 0x1000000)
+            up('ẫ'.code + 0x1000000)
+        }
     }
 
     @Test
@@ -428,7 +516,10 @@ class KeyHandlerTest {
         sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
 
         sendKey(KeyEvent.KEYCODE_A, 'a')
-        assertEquals('ẫ'.code + 0x1000000, dispatchedKeyDowns.firstOrNull())
+        verifySentKeys {
+            dn('ẫ'.code + 0x1000000)
+            up('ẫ'.code + 0x1000000)
+        }
     }
 
     @Test
@@ -439,7 +530,10 @@ class KeyHandlerTest {
         sendUp(0, ACCENT_CIRCUMFLEX or KeyCharacterMap.COMBINING_ACCENT)
 
         sendKey(KeyEvent.KEYCODE_A, 'a')
-        assertEquals('ẫ'.code + 0x1000000, dispatchedKeyDowns.firstOrNull())
+        verifySentKeys {
+            dn('ẫ'.code + 0x1000000)
+            up('ẫ'.code + 0x1000000)
+        }
     }
 
     @Test
@@ -449,21 +543,27 @@ class KeyHandlerTest {
         sendKey(KeyEvent.KEYCODE_A, 'a')
         sendUp(0, ACCENT_CIRCUMFLEX or KeyCharacterMap.COMBINING_ACCENT)
         sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
-        assertEquals('ẫ'.code + 0x1000000, dispatchedKeyDowns.firstOrNull())
+        verifySentKeys {
+            dn('ẫ'.code + 0x1000000)
+            up('ẫ'.code + 0x1000000)
+        }
     }
 
     @Test
     fun diacriticTest_spaceAfterAccent() {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_SPACE, ' ')
-        assertEquals(ACCENT_TILDE + 0x1000000, dispatchedKeyDowns.firstOrNull())
+        verifySentKeys {
+            dn(ACCENT_TILDE + 0x1000000)
+            up(ACCENT_TILDE + 0x1000000)
+        }
     }
 
     @Test
     fun diacriticTest_invalidCharAfterAccent() {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_B, 'b')
-        assertTrue(dispatchedKeyDowns.isEmpty())
+        verifyNoneSent()
     }
 
     @Test
@@ -471,34 +571,49 @@ class KeyHandlerTest {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_B, 'b')  // This will stop composition,
         sendKey(KeyEvent.KEYCODE_B, 'b')  // next char will be passed through
-        assertEquals(1, dispatchedKeyDowns.size)
-        assertEquals('b'.code, dispatchedKeyDowns.first())
+        verifySentKeys {
+            dn('b')
+            up('b')
+        }
     }
 
     @Test
     fun diacriticTest_metaKeyAfterAccent() {
         sendAccent(ACCENT_TILDE)
         sendKey(KeyEvent.KEYCODE_SHIFT_RIGHT, 0)  // Meta-keys should be passed through
-        assertEquals(XKeySym.XK_Shift_R, dispatchedKeyDowns.firstOrNull())
+        verifySentKeys {
+            dn(XKeySym.XK_Shift_R)
+            up(XKeySym.XK_Shift_R)
+        }
     }
 
     @Test
     fun cCedilla() {
         kcm.getEvents(charArrayOf('ç')).forEach { keyHandler.onKeyEvent(it) }
 
-        assertEquals(XKeySym.XK_Alt_L to true, dispatchedKeys[0])
-        assertEquals(XKeySym.XK_Alt_L to false, dispatchedKeys[1]) // expected fake release of Alt
-        assertEquals('ç'.code to true, dispatchedKeys[2])
+        verifySentKeys {
+            dn(XKeySym.XK_Alt_L)
+            up(XKeySym.XK_Alt_L) // expected fake release of Alt
+            dn('ç')
+            up('ç')
+            up(XKeySym.XK_Alt_L) // normal release of Alt
+
+        }
     }
 
     @Test
     fun cCedillaUppercase() {
         kcm.getEvents(charArrayOf('Ç')).forEach { keyHandler.onKeyEvent(it) }
 
-        assertEquals(XKeySym.XK_Shift_L to true, dispatchedKeys[0])
-        assertEquals(XKeySym.XK_Alt_L to true, dispatchedKeys[1])
-        assertEquals(XKeySym.XK_Alt_L to false, dispatchedKeys[2]) // expected fake release of Alt
-        assertEquals('Ç'.code to true, dispatchedKeys[3])
+        verifySentKeys {
+            dn(XKeySym.XK_Shift_L)
+            dn(XKeySym.XK_Alt_L)
+            up(XKeySym.XK_Alt_L) // expected fake release of Alt
+            dn('Ç')
+            up('Ç')
+            up(XKeySym.XK_Alt_L) // normal release of Alt
+            up(XKeySym.XK_Shift_L)
+        }
     }
 
     /**************************************************************************/
@@ -513,14 +628,19 @@ class KeyHandlerTest {
         keyHandler.onKey(KeyEvent.KEYCODE_LANGUAGE_SWITCH)
         keyHandler.onKey(KeyEvent.KEYCODE_ALT_RIGHT)
 
-        assertEquals(XKeySym.XK_Super_L, dispatchedKeyDowns[0])
-        assertEquals(XKeySym.XK_Super_L, dispatchedKeyDowns[1])
-
-        // Alt press with scan code (from hardware keyboard)
+        // Alt press with scan code (from hardware keyboard),  which should be cleared when remapping
         val altScanCode = 100
         keyHandler.onKeyEvent(KeyEvent(0L, 0L, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ALT_RIGHT, 0, KeyEvent.META_ALT_ON or KeyEvent.META_ALT_LEFT_ON, 123, altScanCode))
-        assertEquals(XKeySym.XK_Super_L, dispatchedKeyDowns[2])
-        assertEquals(0, dispatchedXTDowns.count { it != 0 })
+
+        verifySentKeys {
+            dn(XKeySym.XK_Super_L)
+            up(XKeySym.XK_Super_L)
+
+            dn(XKeySym.XK_Super_L)
+            up(XKeySym.XK_Super_L)
+
+            dn(XKeySym.XK_Super_L, 0)
+        }
     }
 
 
@@ -531,7 +651,11 @@ class KeyHandlerTest {
         keyHandler.onKey(KeyEvent.KEYCODE_ALT_LEFT)
 
         // Should generate 'Meta' instead of normal 'Alt'
-        assertEquals(XKeySym.XK_Meta_R, dispatchedKeyDowns[0])
-        assertEquals(XKeySym.XK_Meta_L, dispatchedKeyDowns[1])
+        verifySentKeys {
+            dn(XKeySym.XK_Meta_R)
+            up(XKeySym.XK_Meta_R)
+            dn(XKeySym.XK_Meta_L)
+            up(XKeySym.XK_Meta_L)
+        }
     }
 }
