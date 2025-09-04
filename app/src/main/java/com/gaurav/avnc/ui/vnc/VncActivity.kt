@@ -104,6 +104,7 @@ class VncActivity : AppCompatActivity() {
     val toolbar by lazy { Toolbar(this) }
     private val serverUnlockPrompt = DeviceAuthPrompt(this)
     private val layoutManager by lazy { LayoutManager(this) }
+    private var forceDisabledPointerCapture = false
     private var restoredFromBundle = false
     private var wasConnectedWhenStopped = false
     private var onStartTime = 0L
@@ -339,11 +340,16 @@ class VncActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT < 26 || !viewModel.pref.input.capturePointer)
             return
 
-        if (viewModel.state.value.isConnected) {
+        if (viewModel.state.value.isConnected && !forceDisabledPointerCapture) {
             binding.frameView.requestFocus()
             binding.frameView.requestPointerCapture()
         } else
             binding.frameView.releasePointerCapture()
+    }
+
+    fun forceDisablePointerCapture(forceDisable: Boolean) {
+        forceDisabledPointerCapture = forceDisable
+        updatePointerCapture()
     }
 
     private fun updateStatusContainerVisibility(isConnected: Boolean) {
