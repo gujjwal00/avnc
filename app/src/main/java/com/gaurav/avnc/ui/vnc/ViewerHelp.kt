@@ -36,6 +36,7 @@ class ViewerHelp {
     private fun initHelpView(activity: VncActivity) {
         val binding = ViewerHelpBinding.inflate(activity.layoutInflater, activity.binding.drawerLayout, false)
         activity.binding.drawerLayout.addView(binding.root, 1)
+        activity.forceDisablePointerCapture(true)
 
         binding.root.setOnClickListener { /* Consume clicks to stop them from passing through to FrameView */ }
 
@@ -52,6 +53,7 @@ class ViewerHelp {
         }
         binding.endBtn.setOnClickListener {
             activity.viewModel.pref.runInfo.hasShownViewerHelp = true
+            activity.forceDisablePointerCapture(false)
             binding.root.animate().alpha(0f).withEndAction {
                 activity.binding.drawerLayout.removeView(binding.root)
             }
