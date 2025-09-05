@@ -230,4 +230,16 @@
     <string name="pref_long_press_swipe_disabled_summary">معطلة بالقيمة الحالية لإيماءة <b>الضغط لفترة طويلة</b></string>
     <string name="pref_three_finger_tap">نقرة بثلاثة أصابع</string>
     <string name="pref_toolbar_open_with_button">زر الإظهار لفتح</string>
+    <string name="hint_wol_address">أذع العنوان (اختياري)</string>
+    <string name="msg_normal_view_mode">الوضع العادي مفعل</string>
+    <string name="msg_input_disabled">الأدخال مغلق</string>
+    <string name="msg_video_disabled">العرض مغلق</string>
+    <string name="msg_gesture_style_locked_to_touchpad">إيماءات \'لوحة اللمس\' مفعلة</string>
+    <string name="msg_view_only_checkbox_migration">الان يمكنك تعطيل الادخال في الجلسة</string>
+    <string name="desc_view_modes_toggle">عرض الاوضاع</string>
+    <string name="desc_view_mode_normal">الوضع العادي</string>
+    <string name="desc_view_mode_no_input">تعطيل جميع المدخلات</string>
+    <string name="desc_view_mode_no_video">تعطيل الصورة</string>
+    <string name="pref_capture_pointer">استهداف المؤشر</string>
+    <string name="pref_vk_row_count">سطور</string>
 </resources>
