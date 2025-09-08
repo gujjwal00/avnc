@@ -241,19 +241,17 @@ static rfbBool onMallocFrameBuffer(rfbClient *client) {
 
 static void onGotCursorShape(rfbClient *client, int xHot, int yHot, int width, int height, int bytesPerPixel) {
     auto ex = getClientExtension(client);
+    auto obj = getManagedClient(client);
+    auto env = context.getEnv();
+    auto cls = context.managedCls;
 
     LOCK(ex->mutex);
-
-    //Steel buffers from rfbClient
     updateCursor(ex->cursor, client->rcSource, client->rcMask, (uint16_t) width, (uint16_t) height,
                  (uint16_t) xHot, (uint16_t) yHot);
-    client->rcSource = NULL;
-    client->rcMask = NULL;
-
     UNLOCK(ex->mutex);
 
-    //Fake framebuffer update to trigger rendering
-    onFinishedFrameBufferUpdate(client);
+    jmethodID mid = env->GetMethodID(cls, "cbHandleCursorInfo", "(IIII)V");
+    env->CallVoidMethod(obj, mid, width, height, xHot, yHot);
 }
 
 /**
@@ -535,75 +533,26 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeUploadFrameTexture(JNIEnv *env, jobject
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_gaurav_avnc_vnc_VncClient_nativeUploadCursor(JNIEnv *env, jobject thiz, jlong client_ptr, jint px, jint py) {
+Java_com_gaurav_avnc_vnc_VncClient_nativeUploadCursorTexture(JNIEnv *env, jobject thiz, jlong client_ptr) {
 
     auto client = (rfbClient *) client_ptr;
     auto ex = getClientExtension(client);
     auto cursor = ex->cursor;
 
-    if (!cursor)
+    if (!cursor || !cursor->buffer)
         return;
-
-    //Current algo for cursor rendering is slightly weird. Main issue is that
-    //glTexSubImage2D() does not perform any composition with target texture.
-    //So, we have to manually blend transparent/invalid pixels of the cursor
-    //with corresponding pixels from framebuffer. scratchBuffer is used for
-    //this composition.
 
     LOCK(ex->mutex);
 
-    //Effective cursor position in framebuffer
-    int32_t fbCursorX = px - cursor->xHot;
-    int32_t fbCursorY = py - cursor->yHot;
-
-    //Rectangular portion of the framebuffer to be updated.
-    //Cursor can overflow outside the framebuffer if moved near the edges,
-    //but glTexSubImage2D() doesn't allow values outside target texture,
-    //so we need to only update the intersection of framebuffer & cursor.
-    int32_t left = -1, top = -1, right = -1, bottom = -1;
-
-    auto fb = (uint32_t *) client->frameBuffer;
-    auto buffer = (uint32_t *) cursor->buffer;
-    auto scratch = (uint32_t *) cursor->scratchBuffer;
-    auto mask = cursor->mask;
-
-    //Scratch buffer index
-    int32_t z = 0;
-
-    for (int32_t y = 0; y < cursor->height; ++y) {
-        for (int32_t x = 0; x < cursor->width; ++x) {
-
-            //Corresponding pixel in framebuffer
-            auto fbX = fbCursorX + x;
-            auto fbY = fbCursorY + y;
-
-            if (fbX >= 0 && fbX < ex->fbRealWidth && fbY >= 0 && fbY < ex->fbRealHeight) {
-                auto isValidPixel = mask[y * cursor->width + x];
-                if (isValidPixel)
-                    scratch[z++] = buffer[y * cursor->width + x];
-                else
-                    scratch[z++] = fb[fbY * ex->fbRealWidth + fbX];
-
-                if (left == -1 && top == -1) {
-                    left = fbX;
-                    top = fbY;
-                }
-                right = fbX;
-                bottom = fbY;
-            }
-        }
-    }
-
-    if (left >= 0 && top >= 0)
-        glTexSubImage2D(GL_TEXTURE_2D,
-                        0,
-                        left,
-                        top,
-                        right - left + 1,
-                        bottom - top + 1,
-                        GL_RGBA,
-                        GL_UNSIGNED_BYTE,
-                        scratch);
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,
+                 GL_RGBA,
+                 cursor->width,
+                 cursor->height,
+                 0,
+                 GL_RGBA,
+                 GL_UNSIGNED_BYTE,
+                 cursor->buffer);
 
     UNLOCK(ex->mutex);
 }

@@ -97,6 +97,11 @@ class VncClient(private val observer: Observer) {
     var pointerY = 0; private set
 
     /**
+     * Cursor info, used by Renderer
+     */
+    var cursorInfo = CursorInfo()
+
+    /**
      * Client-side cursor rendering creates a synchronization issue.
      * Suppose if pointer is moved to (50,10) by client. A PointerEvent is sent
      * to the server and cursor is immediately rendered on (50,10).
@@ -295,10 +300,10 @@ class VncClient(private val observer: Observer) {
     }
 
     /**
-     * Upload cursor shape into framebuffer texture.
+     * Upload cursor contents in currently active OpenGL texture
      */
-    fun uploadCursor() = ifConnected {
-        nativeUploadCursor(nativePtr, pointerX, pointerY)
+    fun uploadCursorTexture() = ifConnected {
+        nativeUploadCursorTexture(nativePtr)
     }
 
     /**
@@ -384,7 +389,7 @@ class VncClient(private val observer: Observer) {
     private external fun nativeGetHeight(clientPtr: Long): Int
     private external fun nativeIsEncrypted(clientPtr: Long): Boolean
     private external fun nativeUploadFrameTexture(clientPtr: Long)
-    private external fun nativeUploadCursor(clientPtr: Long, px: Int, py: Int)
+    private external fun nativeUploadCursorTexture(clientPtr: Long)
     private external fun nativeGetLastErrorStr(): String
     private external fun nativeIsServerMacOS(clientPtr: Long): Boolean
     private external fun nativeInterrupt(clientPtr: Long)
@@ -429,6 +434,12 @@ class VncClient(private val observer: Observer) {
     private fun cbHandleCursorPos(x: Int, y: Int) {
         if (!ignorePointerMovesByServer)
             moveClientPointer(x, y)
+    }
+
+    @Keep
+    private fun cbHandleCursorInfo(width: Int, height: Int, xHot: Int, yHot: Int) {
+        cursorInfo = CursorInfo(width, height, xHot, yHot)
+        cbFinishedFrameBufferUpdate() // Fake call to trigger rendering
     }
 
 

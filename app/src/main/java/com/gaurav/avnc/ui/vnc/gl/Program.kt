@@ -8,32 +8,19 @@
 
 package com.gaurav.avnc.ui.vnc.gl
 
-import android.opengl.GLES20.GL_CLAMP_TO_EDGE
-import android.opengl.GLES20.GL_LINEAR
 import android.opengl.GLES20.GL_TEXTURE0
-import android.opengl.GLES20.GL_TEXTURE_2D
-import android.opengl.GLES20.GL_TEXTURE_MAG_FILTER
-import android.opengl.GLES20.GL_TEXTURE_MIN_FILTER
-import android.opengl.GLES20.GL_TEXTURE_WRAP_S
-import android.opengl.GLES20.GL_TEXTURE_WRAP_T
 import android.opengl.GLES20.glActiveTexture
-import android.opengl.GLES20.glBindTexture
-import android.opengl.GLES20.glGenTextures
 import android.opengl.GLES20.glGetAttribLocation
 import android.opengl.GLES20.glGetUniformLocation
-import android.opengl.GLES20.glTexParameteri
 import android.opengl.GLES20.glUniform1i
 import android.opengl.GLES20.glUniformMatrix4fv
 import android.opengl.GLES20.glUseProgram
-import android.util.Log
 import com.gaurav.avnc.BuildConfig
 
 /**
  * Represents the GL program used for Frame rendering.
- *
- * NOTE: It must be instantiated in an OpenGL context.
  */
-class FrameProgram {
+class Program {
 
     companion object {
         // Attribute constants
@@ -48,34 +35,15 @@ class FrameProgram {
     val program = ShaderCompiler.buildProgram(Shaders.VERTEX_SHADER, Shaders.FRAGMENT_SHADER)
     val aPositionLocation = glGetAttribLocation(program, A_POSITION)
     val aTextureCoordinatesLocation = glGetAttribLocation(program, A_TEXTURE_COORDINATES)
-    val uProjectionLocation = glGetUniformLocation(program, U_PROJECTION)
-    val uTexUnitLocation = glGetUniformLocation(program, U_TEXTURE_UNIT)
-    val textureId = createTexture()
-    var validated = false
+    private val uProjectionLocation = glGetUniformLocation(program, U_PROJECTION)
+    private val uTexUnitLocation = glGetUniformLocation(program, U_TEXTURE_UNIT)
+    private var validated = false
 
 
     fun setUniforms(projectionMatrix: FloatArray) {
         glUniformMatrix4fv(uProjectionLocation, 1, false, projectionMatrix, 0)
         glActiveTexture(GL_TEXTURE0)
-        glBindTexture(GL_TEXTURE_2D, textureId)
         glUniform1i(uTexUnitLocation, 0)
-    }
-
-    private fun createTexture(): Int {
-        val texturesObjects = intArrayOf(0)
-        glGenTextures(1, texturesObjects, 0)
-        if (texturesObjects[0] == 0) {
-            Log.e("Texture", "Could not generate texture.")
-            return 0
-        }
-
-        glBindTexture(GL_TEXTURE_2D, texturesObjects[0])
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
-        glBindTexture(GL_TEXTURE_2D, 0)
-        return texturesObjects[0]
     }
 
     fun validate() {
