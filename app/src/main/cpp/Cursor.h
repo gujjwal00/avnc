@@ -54,8 +54,6 @@ const uint8_t DefaultCursorMask[DefaultCursorWidth * DefaultCursorHeight]
  */
 struct Cursor {
     uint8_t *buffer;
-    uint8_t *mask;
-    uint8_t *scratchBuffer; //Used during rendering
     uint16_t width;
     uint16_t height;
     uint16_t xHot;
@@ -65,47 +63,51 @@ struct Cursor {
 //Only 4-byte pixels are currently supported
 const uint8_t PixelBytes = 4;
 
-/**
- * Creates a new CursorData, initialized with default cursor info.
- */
-Cursor *newCursor() {
-    auto cursor = (Cursor *) malloc(sizeof(Cursor));
-    if (cursor) {
-        cursor->buffer = (uint8_t *) DefaultCursorBuffer;
-        cursor->mask = (uint8_t *) DefaultCursorMask;
-        cursor->scratchBuffer = (uint8_t *) malloc(DefaultCursorWidth * DefaultCursorHeight * PixelBytes);
-        cursor->width = DefaultCursorWidth;
-        cursor->height = DefaultCursorHeight;
-        cursor->xHot = DefaultCursorXHot;
-        cursor->yHot = DefaultCursorYHot;
-    }
-    return cursor;
-}
-
-void freeCursorBuffers(Cursor *cursor) {
-    if (cursor) {
-        free(cursor->scratchBuffer);
-        if (cursor->buffer != (uint8_t *) DefaultCursorBuffer) free(cursor->buffer);
-        if (cursor->mask != (uint8_t *) DefaultCursorMask) free(cursor->mask);
-    }
-}
-
 void freeCursor(Cursor *cursor) {
-    freeCursorBuffers(cursor);
+    if (cursor) free(cursor->buffer);
     free(cursor);
 }
 
-void updateCursor(Cursor *cursor, uint8_t *buffer, uint8_t *mask, uint16_t width, uint16_t height,
-                  uint16_t xHot, uint16_t yHot) {
+/**
+ * Updates a cursor with given pixel data.
+ */
+void updateCursor(Cursor *cursor, const uint8_t *buffer, const uint8_t *mask, const uint16_t width,
+                  const uint16_t height, const uint16_t xHot, const uint16_t yHot) {
+    free(cursor->buffer);
 
-    freeCursorBuffers(cursor);
-    cursor->buffer = buffer;
-    cursor->mask = mask;
-    cursor->scratchBuffer = (uint8_t *) malloc(width * height * PixelBytes);
+    const size_t pixelCount = width * height;
+    const size_t bufferSize = pixelCount * PixelBytes;
+
+    cursor->buffer = (uint8_t *) malloc(bufferSize);
+    if (!cursor->buffer)
+        return;
+
+    memcpy(cursor->buffer, buffer, bufferSize);
     cursor->width = width;
     cursor->height = height;
     cursor->xHot = xHot;
     cursor->yHot = yHot;
+
+    // Set Alpha channel according to mask
+    for (size_t i = 0; i < pixelCount; ++i) {
+        if (mask[i])
+            cursor->buffer[PixelBytes * i + 3] = 0xff; // Alpha => 1
+        else
+            cursor->buffer[PixelBytes * i + 3] = 0;    // Alpha => 0
+    }
+}
+
+/**
+ * Creates a new Cursor, initialized with default info.
+ */
+Cursor *newCursor() {
+    auto cursor = (Cursor *) malloc(sizeof(Cursor));
+    if (cursor) {
+        memset(cursor, 0, sizeof(Cursor));
+        updateCursor(cursor, reinterpret_cast<const uint8_t *>(DefaultCursorBuffer), DefaultCursorMask,
+                     DefaultCursorWidth, DefaultCursorHeight, DefaultCursorXHot, DefaultCursorYHot);
+    }
+    return cursor;
 }
 
 #endif //AVNC_CURSOR_H
