@@ -41,6 +41,7 @@ import androidx.viewpager.widget.ViewPager
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.VirtualKeysBinding
 import com.gaurav.avnc.util.AppPreferences
+import com.gaurav.avnc.util.addOnGlobalLayoutListener
 import kotlin.math.min
 import kotlin.math.sign
 
@@ -51,7 +52,7 @@ import kotlin.math.sign
  *
  * This class manages the inflation & visibility of virtual keys.
  */
-class VirtualKeys(activity: VncActivity) {
+class VirtualKeys(private val activity: VncActivity) {
 
     private val viewModel = activity.viewModel
     private val pref = activity.viewModel.pref
@@ -197,7 +198,7 @@ class VirtualKeys(activity: VncActivity) {
         root.layoutParams = root.layoutParams.apply { width = keys.measuredWidth; height = keys.measuredHeight }
 
         // Update size after layout changes
-        keys.viewTreeObserver.addOnGlobalLayoutListener {
+        addOnGlobalLayoutListener(activity, keys) {
             val w = min(keys.width, frameView.width)
             val h = keys.height
             if (w > 0 && h > 0 && (root.width != w || root.height != h))

@@ -23,6 +23,7 @@ import androidx.core.view.WindowInsetsCompat.Type
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
+import com.gaurav.avnc.util.addOnGlobalLayoutListener
 import kotlin.math.max
 
 /**
@@ -37,7 +38,7 @@ import kotlin.math.max
  * AndroidX compat library has been the only respite. It has at least hidden a
  * bunch of if-else statement from our own code. But all that mess is still there.
  */
-class LayoutManager(activity: VncActivity) {
+class LayoutManager(private val activity: VncActivity) {
     private val viewModel = activity.viewModel
     private val rootView = activity.binding.root
     private val frameView = activity.binding.frameView
@@ -75,7 +76,7 @@ class LayoutManager(activity: VncActivity) {
     }
 
     private fun hookGlobalLayoutListener() {
-        rootView.viewTreeObserver.addOnGlobalLayoutListener {
+        addOnGlobalLayoutListener(activity, rootView) {
             viewModel.frameState.setWindowSize(rootView.width.toFloat(), rootView.height.toFloat())
             viewModel.frameState.setViewportSize(frameView.width.toFloat(), frameView.height.toFloat())
             virtualKeys.container?.let { updateVirtualKeyInsets(it) }
