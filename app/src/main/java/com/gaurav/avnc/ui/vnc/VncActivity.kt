@@ -124,6 +124,7 @@ class VncActivity : AppCompatActivity() {
         binding.frameView.initialize(this)
         viewModel.frameViewRef = WeakReference(binding.frameView)
         toolbar.initialize()
+        binding.frameHost.layoutTransition.setAnimateParentHierarchy(false)
 
         setupLayout()
         setupServerUnlock()
