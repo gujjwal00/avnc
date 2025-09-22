@@ -43,6 +43,7 @@ import com.gaurav.avnc.databinding.NoVideoOverlayBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.SamsungDex
+import com.gaurav.avnc.util.enableChildLayoutTransitions
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
 import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isDisconnected
@@ -260,10 +261,14 @@ class VncActivity : AppCompatActivity() {
         if (binding.noVideoOverlayStub.isInflated)
             return
 
+        enableChildLayoutTransitions(binding.frameContainer)
+
         binding.noVideoOverlayStub.viewStub?.inflate()
         val stubBinding = binding.noVideoOverlayStub.binding as NoVideoOverlayBinding
         val rootView = stubBinding.overlayRoot
         val tapIndicator = stubBinding.tapIndicator
+
+        enableChildLayoutTransitions(stubBinding.overlayRoot)
 
         // Tap indicator should appear immediately, but disappear with animation
         rootView.layoutTransition?.setDuration(LayoutTransition.APPEARING, 0)
