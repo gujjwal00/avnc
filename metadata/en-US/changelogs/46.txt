@@ -1,0 +1,1 @@
+* Fixed AVNC stuck at the progress bar after connecting
