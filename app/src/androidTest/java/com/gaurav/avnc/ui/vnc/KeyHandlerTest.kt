@@ -48,28 +48,25 @@ class KeyHandlerTest {
 
     /**
      * [KeyEvent] uses character-maps to retrieve the unicode character for each event.
-     * We cannot programmatically change the character-map, so we use this custom event.
+     * We cannot programmatically change the character-map, so we use this custom event to
+     * override the unicode character.
      */
-    private class TestKeyEvent(action: Int, keyCode: Int, private val uChar: Int) : KeyEvent(action, keyCode) {
-        override fun getUnicodeChar() = uChar
-        override fun getUnicodeChar(metaState: Int) = uChar
+    private class TestKeyEvent(action: Int, keyCode: Int, private val uChar: Int? = null) : KeyEvent(action, keyCode) {
+        override fun getUnicodeChar() = uChar ?: super.getUnicodeChar()
+        override fun getUnicodeChar(metaState: Int) = uChar ?: super.getUnicodeChar(metaState)
     }
 
-    private fun sendDown(keyCode: Int, uChar: Int = 0) {
+    private fun sendDown(keyCode: Int, uChar: Int? = null) {
         keyHandler.onKeyEvent(TestKeyEvent(KeyEvent.ACTION_DOWN, keyCode, uChar))
     }
 
-    private fun sendUp(keyCode: Int, uChar: Int = 0) {
+    private fun sendUp(keyCode: Int, uChar: Int? = null) {
         keyHandler.onKeyEvent(TestKeyEvent(KeyEvent.ACTION_UP, keyCode, uChar))
     }
 
-    private fun sendKey(keyCode: Int, uChar: Int) {
+    private fun sendKey(keyCode: Int, uChar: Int? = null) {
         sendDown(keyCode, uChar)
         sendUp(keyCode, uChar)
-    }
-
-    private fun sendKey(keyCode: Int, uChar: Char) {
-        sendKey(keyCode, uChar.code)
     }
 
     private fun sendAccent(accent: Int) {
@@ -102,7 +99,7 @@ class KeyHandlerTest {
     /**************************************************************************/
     @Test
     fun simpleChar() {
-        keyHandler.onKey(KeyEvent.KEYCODE_A)
+        sendKey(KeyEvent.KEYCODE_A)
         verifySentKeys {
             dn('a')
             up('a')
@@ -327,9 +324,9 @@ class KeyHandlerTest {
     @Test
     fun specialKeysWithPreferredKeyCode() {
         // Some keys for which Android keyCode should be used instead of their Unicode character
-        sendDown(KeyEvent.KEYCODE_SPACE, ' '.code)
-        sendDown(KeyEvent.KEYCODE_TAB, '\t'.code)
-        sendDown(KeyEvent.KEYCODE_ENTER, '\n'.code)
+        sendDown(KeyEvent.KEYCODE_SPACE)
+        sendDown(KeyEvent.KEYCODE_TAB)
+        sendDown(KeyEvent.KEYCODE_ENTER)
 
         verifySentKeys {
             dn(XKeySym.XK_space)
@@ -411,7 +408,7 @@ class KeyHandlerTest {
     @Test
     fun diacriticTest_charAfterAccent() {
         sendAccent(ACCENT_TILDE)
-        sendKey(KeyEvent.KEYCODE_A, 'a')
+        sendKey(KeyEvent.KEYCODE_A)
         verifySentKeys {
             dn('ã')
             up('ã')
@@ -421,7 +418,7 @@ class KeyHandlerTest {
     @Test
     fun diacriticTest_charWhileAccentIsDown() {
         sendDown(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
-        sendKey(KeyEvent.KEYCODE_A, 'a')
+        sendKey(KeyEvent.KEYCODE_A)
         sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
         verifySentKeys {
             dn('ã')
@@ -434,12 +431,12 @@ class KeyHandlerTest {
         // Here we test key up/down events for accents and characters mixed in
         // non-sequential order. This case can happen when you type quickly.
 
-        sendDown(KeyEvent.KEYCODE_A, 'a'.code)
+        sendDown(KeyEvent.KEYCODE_A)
         sendDown(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
-        sendUp(KeyEvent.KEYCODE_A, 'a'.code)
+        sendUp(KeyEvent.KEYCODE_A)
         sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
-        sendDown(KeyEvent.KEYCODE_A, 'a'.code)
-        sendUp(KeyEvent.KEYCODE_A, 'a'.code)
+        sendDown(KeyEvent.KEYCODE_A)
+        sendUp(KeyEvent.KEYCODE_A)
 
         verifySentKeys {
             dn('a') // First should be normal, as accent was pressed later
@@ -453,11 +450,11 @@ class KeyHandlerTest {
     fun diacriticTest_interMixedUpDowns2() {
         // Another variation of intermixed up/downs
 
-        sendDown(KeyEvent.KEYCODE_A, 'a'.code)
+        sendDown(KeyEvent.KEYCODE_A)
         sendDown(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
-        sendUp(KeyEvent.KEYCODE_A, 'a'.code)
-        sendDown(KeyEvent.KEYCODE_A, 'a'.code)
-        sendUp(KeyEvent.KEYCODE_A, 'a'.code)
+        sendUp(KeyEvent.KEYCODE_A)
+        sendDown(KeyEvent.KEYCODE_A)
+        sendUp(KeyEvent.KEYCODE_A)
         sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
 
         verifySentKeys {
@@ -471,8 +468,8 @@ class KeyHandlerTest {
     @Test
     fun diacriticTest_twiceCharAfterAccent() {
         sendAccent(ACCENT_TILDE)
-        sendKey(KeyEvent.KEYCODE_A, 'a') // First one should be accented,
-        sendKey(KeyEvent.KEYCODE_A, 'a') // next one should be normal
+        sendKey(KeyEvent.KEYCODE_A) // First one should be accented,
+        sendKey(KeyEvent.KEYCODE_A) // next one should be normal
 
         verifySentKeys {
             dn('ã')
@@ -486,7 +483,7 @@ class KeyHandlerTest {
     fun diacriticTest_capitalCharAfterAccent() {
         sendDown(KeyEvent.KEYCODE_SHIFT_RIGHT)
         sendAccent(ACCENT_TILDE)
-        sendKey(KeyEvent.KEYCODE_A, 'A')
+        sendKey(KeyEvent.KEYCODE_A, 'A'.code)
         sendUp(KeyEvent.KEYCODE_SHIFT_RIGHT)
 
         verifySentKeys {
@@ -501,7 +498,7 @@ class KeyHandlerTest {
     fun diacriticTest_charAfterTwoAccents() {
         sendAccent(ACCENT_CIRCUMFLEX)
         sendAccent(ACCENT_TILDE)
-        sendKey(KeyEvent.KEYCODE_A, 'a')
+        sendKey(KeyEvent.KEYCODE_A)
         verifySentKeys {
             dn('ẫ'.code + 0x1000000)
             up('ẫ'.code + 0x1000000)
@@ -515,7 +512,7 @@ class KeyHandlerTest {
         sendUp(0, ACCENT_CIRCUMFLEX or KeyCharacterMap.COMBINING_ACCENT)
         sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
 
-        sendKey(KeyEvent.KEYCODE_A, 'a')
+        sendKey(KeyEvent.KEYCODE_A)
         verifySentKeys {
             dn('ẫ'.code + 0x1000000)
             up('ẫ'.code + 0x1000000)
@@ -529,7 +526,7 @@ class KeyHandlerTest {
         sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
         sendUp(0, ACCENT_CIRCUMFLEX or KeyCharacterMap.COMBINING_ACCENT)
 
-        sendKey(KeyEvent.KEYCODE_A, 'a')
+        sendKey(KeyEvent.KEYCODE_A)
         verifySentKeys {
             dn('ẫ'.code + 0x1000000)
             up('ẫ'.code + 0x1000000)
@@ -540,7 +537,7 @@ class KeyHandlerTest {
     fun diacriticTest_charWhileTwoAccentsAreDown() {
         sendDown(0, ACCENT_CIRCUMFLEX or KeyCharacterMap.COMBINING_ACCENT)
         sendDown(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
-        sendKey(KeyEvent.KEYCODE_A, 'a')
+        sendKey(KeyEvent.KEYCODE_A)
         sendUp(0, ACCENT_CIRCUMFLEX or KeyCharacterMap.COMBINING_ACCENT)
         sendUp(0, ACCENT_TILDE or KeyCharacterMap.COMBINING_ACCENT)
         verifySentKeys {
@@ -552,7 +549,7 @@ class KeyHandlerTest {
     @Test
     fun diacriticTest_spaceAfterAccent() {
         sendAccent(ACCENT_TILDE)
-        sendKey(KeyEvent.KEYCODE_SPACE, ' ')
+        sendKey(KeyEvent.KEYCODE_SPACE)
         verifySentKeys {
             dn(ACCENT_TILDE + 0x1000000)
             up(ACCENT_TILDE + 0x1000000)
@@ -562,15 +559,15 @@ class KeyHandlerTest {
     @Test
     fun diacriticTest_invalidCharAfterAccent() {
         sendAccent(ACCENT_TILDE)
-        sendKey(KeyEvent.KEYCODE_B, 'b')
+        sendKey(KeyEvent.KEYCODE_B)
         verifyNoneSent()
     }
 
     @Test
     fun diacriticTest_twiceInvalidCharAfterAccent() {
         sendAccent(ACCENT_TILDE)
-        sendKey(KeyEvent.KEYCODE_B, 'b')  // This will stop composition,
-        sendKey(KeyEvent.KEYCODE_B, 'b')  // next char will be passed through
+        sendKey(KeyEvent.KEYCODE_B)  // This will stop composition,
+        sendKey(KeyEvent.KEYCODE_B)  // next char will be passed through
         verifySentKeys {
             dn('b')
             up('b')
@@ -580,7 +577,7 @@ class KeyHandlerTest {
     @Test
     fun diacriticTest_metaKeyAfterAccent() {
         sendAccent(ACCENT_TILDE)
-        sendKey(KeyEvent.KEYCODE_SHIFT_RIGHT, 0)  // Meta-keys should be passed through
+        sendKey(KeyEvent.KEYCODE_SHIFT_RIGHT)  // Meta-keys should be passed through
         verifySentKeys {
             dn(XKeySym.XK_Shift_R)
             up(XKeySym.XK_Shift_R)
@@ -623,10 +620,10 @@ class KeyHandlerTest {
         val mockPrefs = mockk<AppPreferences>()
         every { mockPrefs.input.kmLanguageSwitchToSuper } returns true
         every { mockPrefs.input.kmRightAltToSuper } returns true
-        val keyHandler = KeyHandler(mockDispatcher, mockPrefs)
+        keyHandler = KeyHandler(mockDispatcher, mockPrefs)
 
-        keyHandler.onKey(KeyEvent.KEYCODE_LANGUAGE_SWITCH)
-        keyHandler.onKey(KeyEvent.KEYCODE_ALT_RIGHT)
+        sendKey(KeyEvent.KEYCODE_LANGUAGE_SWITCH)
+        sendKey(KeyEvent.KEYCODE_ALT_RIGHT)
 
         // Alt press with scan code (from hardware keyboard),  which should be cleared when remapping
         val altScanCode = 100
@@ -647,8 +644,8 @@ class KeyHandlerTest {
     @Test
     fun macOSCompatibility() {
         keyHandler.enableMacOSCompatibility = true
-        keyHandler.onKey(KeyEvent.KEYCODE_ALT_RIGHT)
-        keyHandler.onKey(KeyEvent.KEYCODE_ALT_LEFT)
+        sendKey(KeyEvent.KEYCODE_ALT_RIGHT)
+        sendKey(KeyEvent.KEYCODE_ALT_LEFT)
 
         // Should generate 'Meta' instead of normal 'Alt'
         verifySentKeys {

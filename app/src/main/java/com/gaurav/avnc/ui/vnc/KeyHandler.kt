@@ -94,13 +94,6 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
     private val inputPref = prefs.input
     private val kcm by lazy { KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD) }
 
-    /**
-     * Shortcut to send both up & down events
-     */
-    fun onKey(keyCode: Int) {
-        onKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, keyCode))
-        onKeyEvent(KeyEvent(KeyEvent.ACTION_UP, keyCode))
-    }
 
     fun onKeyEvent(event: KeyEvent): Boolean {
         if (shouldIgnoreEvent(event))
