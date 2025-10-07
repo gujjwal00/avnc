@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2020  Gaurav Ujjwal.
+ * Copyright (c) 2025  Gaurav Ujjwal.
  *
  * SPDX-License-Identifier:  GPL-3.0-or-later
  *
  * See COPYING.txt for more details.
  */
 
-package com.gaurav.avnc.ui.vnc
+package com.gaurav.avnc.ui.vnc.input
 
 import android.content.Context
 import android.graphics.PointF
@@ -18,6 +18,7 @@ import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ViewConfiguration
+import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.vnc.PointerButton
 import kotlin.math.PI

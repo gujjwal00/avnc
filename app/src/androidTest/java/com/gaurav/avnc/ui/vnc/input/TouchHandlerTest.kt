@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2021  Gaurav Ujjwal.
+ * Copyright (c) 2025  Gaurav Ujjwal.
  *
  * SPDX-License-Identifier:  GPL-3.0-or-later
  *
  * See COPYING.txt for more details.
  */
 
-package com.gaurav.avnc.ui.vnc
+package com.gaurav.avnc.ui.vnc.input
 
 import android.graphics.Point
 import android.graphics.PointF
@@ -22,6 +22,7 @@ import com.gaurav.avnc.instrumentation
 import com.gaurav.avnc.targetConfigContext
 import com.gaurav.avnc.targetContext
 import com.gaurav.avnc.targetPrefs
+import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.vnc.PointerButton
 import io.mockk.mockk

@@ -9,7 +9,6 @@
 package com.gaurav.avnc.ui.vnc.input
 
 import android.graphics.PointF
-import com.gaurav.avnc.ui.vnc.PointerAcceleration
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.PointerButton
 import kotlin.math.abs

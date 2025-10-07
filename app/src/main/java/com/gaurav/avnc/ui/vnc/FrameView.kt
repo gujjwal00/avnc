@@ -19,6 +19,8 @@ import android.view.PointerIcon
 import android.view.inputmethod.BaseInputConnection
 import android.view.inputmethod.EditorInfo
 import com.gaurav.avnc.ui.vnc.gl.Renderer
+import com.gaurav.avnc.ui.vnc.input.KeyHandler
+import com.gaurav.avnc.ui.vnc.input.TouchHandler
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.VncClient
 

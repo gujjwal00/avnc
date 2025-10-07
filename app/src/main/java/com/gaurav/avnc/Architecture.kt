@@ -15,7 +15,7 @@ import com.gaurav.avnc.ui.home.HomeActivity
 import com.gaurav.avnc.ui.home.ServerTabs
 import com.gaurav.avnc.ui.home.UrlBarActivity
 import com.gaurav.avnc.ui.prefs.PrefsActivity
-import com.gaurav.avnc.ui.vnc.Dispatcher
+import com.gaurav.avnc.ui.vnc.input.Dispatcher
 import com.gaurav.avnc.ui.vnc.FrameState
 import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.ui.vnc.ConfirmationDialog

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2021  Gaurav Ujjwal.
+ * Copyright (c) 2025  Gaurav Ujjwal.
  *
  * SPDX-License-Identifier:  GPL-3.0-or-later
  *
  * See COPYING.txt for more details.
  */
 
-package com.gaurav.avnc.ui.vnc
+package com.gaurav.avnc.ui.vnc.input
 
 import android.os.Build
 import android.view.KeyCharacterMap

@@ -6,7 +6,7 @@
  * See COPYING.txt for more details.
  */
 
-package com.gaurav.avnc.ui.vnc
+package com.gaurav.avnc.ui.vnc.input
 
 import android.view.MotionEvent
 import android.view.VelocityTracker
