@@ -138,7 +138,6 @@ class VncActivity : AppCompatActivity() {
         binding.reconnectBtn.setOnClickListener { retryConnection() }
         viewModel.loginInfoRequest.observe(this) { showLoginDialog() }
         viewModel.confirmationRequest.observe(this) { showConfirmationDialog() }
-        viewModel.activeGestureStyle.observe(this) { dispatcher.onGestureStyleChanged() }
         viewModel.state.observe(this) { onClientStateChanged(it) }
         viewModel.profileLive.observe(this) { onProfileUpdated() }
 

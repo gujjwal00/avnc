@@ -125,6 +125,10 @@ class Dispatcher(private val activity: VncActivity) {
         }
     }
 
+    init {
+        viewModel.activeGestureStyle.observe(activity) { config = Config() }
+    }
+
     /**************************************************************************
      * Event receivers
      **************************************************************************/
@@ -133,6 +137,7 @@ class Dispatcher(private val activity: VncActivity) {
         config.defaultMode.onGestureStart()
         stopFrameFling()
     }
+
     fun onGestureStop(p: PointF) {
         config.defaultMode.onGestureStop(p)
         viewModel.frameState.onGestureStop()
@@ -170,10 +175,6 @@ class Dispatcher(private val activity: VncActivity) {
     fun onStylusScroll(p: PointF) = directMode.doButtonDown(PointerButton.Left, p)
 
     fun onXKey(keySym: Int, xtCode: Int, isDown: Boolean) = messenger.sendKey(keySym, xtCode, isDown)
-
-    fun onGestureStyleChanged() {
-        config = Config()
-    }
 
     /**************************************************************************
      * Available actions
