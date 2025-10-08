@@ -87,7 +87,7 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
     var processedEventObserver: ((KeyEvent) -> Unit)? = null
     var enableMacOSCompatibility = false
     var emitLegacyKeysym = true
-    var vkMetaState = 0
+    private var vkMetaState = 0
     private var hasSentShiftDown = false
     private var hasSentCtrlDown = false
     private var hasSentAltDown = false
@@ -103,6 +103,11 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
 
         postProcessEvent(event)
         return handled
+    }
+
+    fun onVkKeyEvent(event: KeyEvent): Boolean {
+        updateVkMetaState(event)
+        return onKeyEvent(event)
     }
 
     /************************************************************************************
@@ -508,6 +513,25 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
             hasSentAltDown = event.action == KeyEvent.ACTION_DOWN
 
         processedEventObserver?.invoke(event)
+    }
+
+    private fun updateVkMetaState(vkEvent: KeyEvent) {
+        val metaKeyFlag = when (vkEvent.keyCode) {
+            KeyEvent.KEYCODE_SHIFT_LEFT -> KeyEvent.META_SHIFT_ON or KeyEvent.META_SHIFT_LEFT_ON
+            KeyEvent.KEYCODE_SHIFT_RIGHT -> KeyEvent.META_SHIFT_ON or KeyEvent.META_SHIFT_RIGHT_ON
+            KeyEvent.KEYCODE_CTRL_LEFT -> KeyEvent.META_CTRL_ON or KeyEvent.META_CTRL_LEFT_ON
+            KeyEvent.KEYCODE_CTRL_RIGHT -> KeyEvent.META_CTRL_ON or KeyEvent.META_CTRL_RIGHT_ON
+            KeyEvent.KEYCODE_ALT_LEFT -> KeyEvent.META_ALT_ON or KeyEvent.META_ALT_LEFT_ON
+            KeyEvent.KEYCODE_ALT_RIGHT -> KeyEvent.META_ALT_ON or KeyEvent.META_ALT_RIGHT_ON
+            KeyEvent.KEYCODE_META_LEFT -> KeyEvent.META_META_ON or KeyEvent.META_META_LEFT_ON
+            KeyEvent.KEYCODE_META_RIGHT -> KeyEvent.META_META_ON or KeyEvent.META_META_RIGHT_ON
+            else -> return
+        }
+
+        if (vkEvent.action == KeyEvent.ACTION_DOWN)
+            vkMetaState = vkMetaState or metaKeyFlag
+        else
+            vkMetaState = vkMetaState and metaKeyFlag.inv()
     }
 
     /**

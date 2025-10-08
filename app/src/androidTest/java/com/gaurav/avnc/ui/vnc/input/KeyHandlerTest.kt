@@ -369,6 +369,27 @@ class KeyHandlerTest {
     }
 
     @Test
+    fun virtualMetaKeyStateWithNormalKeys() {
+        keyHandler.onVkKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_SHIFT_LEFT))
+        sendKey(KeyEvent.KEYCODE_A)
+
+        keyHandler.onVkKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_SHIFT_LEFT))
+        sendKey(KeyEvent.KEYCODE_A)
+
+        verifySentKeys {
+            // After VK Shift is pressed, next characters should be capitalized
+            dn(XKeySym.XK_Shift_L)
+            dn(XKeySym.XK_A)
+            up(XKeySym.XK_A)
+
+            // Once Shift is released, characters should be handled normally
+            up(XKeySym.XK_Shift_L)
+            dn(XKeySym.XK_a)
+            up(XKeySym.XK_a)
+        }
+    }
+
+    @Test
     fun observerTest() {
         var observedEvent: KeyEvent? = null
         keyHandler.processedEventObserver = { observedEvent = it }

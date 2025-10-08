@@ -305,39 +305,17 @@ class VirtualKeys(private val activity: VncActivity) {
         val text = textBox.text?.ifEmpty { "\n" }?.toString() ?: return
         val events = keyCharMap.getEvents(text.toCharArray())
 
-        // Temporarily clear vkMetaState, so it doesn't affect the following events
-        val vkMetaState = keyHandler.vkMetaState
-        keyHandler.vkMetaState = 0
+        // Release Meta keys to avoid interference with these key events
+        releaseMetaKeys()
 
+        // These events are sent to KeyHandler.onKeyEvent() instead of onVkKeyEvent()
+        // to treat these like normal system key events.
         if (events == null)
             keyHandler.onKeyEvent(KeyEvent(SystemClock.uptimeMillis(), text, 0, 0))
         else
             events.forEach { keyHandler.onKeyEvent(it) }
 
-        keyHandler.vkMetaState = vkMetaState
         textBox.setText("")
-    }
-
-    private fun updateMetaState(keyCode: Int, isDown: Boolean) {
-        val metaKeyFlag = when (keyCode) {
-            KeyEvent.KEYCODE_SHIFT_LEFT -> KeyEvent.META_SHIFT_ON or KeyEvent.META_SHIFT_LEFT_ON
-            KeyEvent.KEYCODE_SHIFT_RIGHT -> KeyEvent.META_SHIFT_ON or KeyEvent.META_SHIFT_RIGHT_ON
-            KeyEvent.KEYCODE_CTRL_LEFT -> KeyEvent.META_CTRL_ON or KeyEvent.META_CTRL_LEFT_ON
-            KeyEvent.KEYCODE_CTRL_RIGHT -> KeyEvent.META_CTRL_ON or KeyEvent.META_CTRL_RIGHT_ON
-            KeyEvent.KEYCODE_ALT_LEFT -> KeyEvent.META_ALT_ON or KeyEvent.META_ALT_LEFT_ON
-            KeyEvent.KEYCODE_ALT_RIGHT -> KeyEvent.META_ALT_ON or KeyEvent.META_ALT_RIGHT_ON
-            KeyEvent.KEYCODE_META_LEFT -> KeyEvent.META_META_ON or KeyEvent.META_META_LEFT_ON
-            KeyEvent.KEYCODE_META_RIGHT -> KeyEvent.META_META_ON or KeyEvent.META_META_RIGHT_ON
-            else -> return
-        }
-
-        var metaState = keyHandler.vkMetaState
-        if (isDown)
-            metaState = metaState or metaKeyFlag
-        else
-            metaState = metaState and metaKeyFlag.inv()
-
-        keyHandler.vkMetaState = metaState
     }
 
     private fun sendKey(keyCode: Int) {
@@ -347,8 +325,7 @@ class VirtualKeys(private val activity: VncActivity) {
 
     private fun sendKey(keyCode: Int, isDown: Boolean) {
         val action = if (isDown) KeyEvent.ACTION_DOWN else KeyEvent.ACTION_UP
-        updateMetaState(keyCode, isDown)
-        keyHandler.onKeyEvent(KeyEvent(action, keyCode))
+        keyHandler.onVkKeyEvent(KeyEvent(action, keyCode))
     }
 }
 
