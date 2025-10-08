@@ -19,8 +19,7 @@ import android.view.PointerIcon
 import android.view.inputmethod.BaseInputConnection
 import android.view.inputmethod.EditorInfo
 import com.gaurav.avnc.ui.vnc.gl.Renderer
-import com.gaurav.avnc.ui.vnc.input.KeyHandler
-import com.gaurav.avnc.ui.vnc.input.TouchHandler
+import com.gaurav.avnc.ui.vnc.input.InputHandler
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.VncClient
 
@@ -48,15 +47,14 @@ import com.gaurav.avnc.vnc.VncClient
  */
 class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(context, attrs) {
 
-    private lateinit var touchHandler: TouchHandler
-    private lateinit var keyHandler: KeyHandler
+    private lateinit var inputHandler: InputHandler
 
     /**
      * Input connection used for intercepting key events
      */
     inner class InputConnection : BaseInputConnection(this, false) {
         override fun sendKeyEvent(event: KeyEvent): Boolean {
-            return keyHandler.onKeyEvent(event) || super.sendKeyEvent(event)
+            return inputHandler.onKeyEvent(event) || super.sendKeyEvent(event)
         }
     }
 
@@ -64,6 +62,7 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
      * Should be called from [VncActivity.onCreate].
      */
     fun initialize(activity: VncActivity) {
+        inputHandler = activity.inputHandler
         val viewModel = activity.viewModel
 
         setEGLContextClientVersion(2)
@@ -73,11 +72,6 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
         // Hide local cursor if requested and supported
         if (Build.VERSION.SDK_INT >= 24 && viewModel.pref.input.hideLocalCursor)
             pointerIcon = PointerIcon.getSystemIcon(context, PointerIcon.TYPE_NULL)
-    }
-
-    fun setInputHandlers(keyHandler: KeyHandler, touchHandler: TouchHandler) {
-        this.keyHandler = keyHandler
-        this.touchHandler = touchHandler
     }
 
     override fun onCreateInputConnection(outAttrs: EditorInfo): InputConnection {
@@ -93,18 +87,18 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        return touchHandler.onTouchEvent(event)
+        return inputHandler.onTouchEvent(event)
     }
 
     override fun onGenericMotionEvent(event: MotionEvent): Boolean {
-        return touchHandler.onGenericMotionEvent(event)
+        return inputHandler.onGenericMotionEvent(event)
     }
 
     override fun onHoverEvent(event: MotionEvent): Boolean {
-        return touchHandler.onHoverEvent(event)
+        return inputHandler.onHoverEvent(event)
     }
 
     override fun onCapturedPointerEvent(event: MotionEvent): Boolean {
-        return touchHandler.onCapturedPointerEvent(event)
+        return inputHandler.onCapturedPointerEvent(event)
     }
 }

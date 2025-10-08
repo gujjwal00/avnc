@@ -84,9 +84,8 @@ import com.gaurav.avnc.vnc.XTKeyCode
  */
 class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
 
-    var processedEventObserver: ((KeyEvent) -> Unit)? = null
     var enableMacOSCompatibility = false
-    var emitLegacyKeysym = true
+    private var emitLegacyKeysym = true  // Hardcoded to true
     private var vkMetaState = 0
     private var hasSentShiftDown = false
     private var hasSentCtrlDown = false
@@ -511,8 +510,6 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
 
         if (isAltKey(event.keyCode))
             hasSentAltDown = event.action == KeyEvent.ACTION_DOWN
-
-        processedEventObserver?.invoke(event)
     }
 
     private fun updateVkMetaState(vkEvent: KeyEvent) {

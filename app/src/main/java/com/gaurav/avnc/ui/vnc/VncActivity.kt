@@ -22,7 +22,6 @@ import android.os.Parcelable
 import android.os.SystemClock
 import android.util.Log
 import android.util.Rational
-import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.WindowManager
@@ -41,9 +40,7 @@ import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.databinding.NoVideoOverlayBinding
 import com.gaurav.avnc.model.ServerProfile
-import com.gaurav.avnc.ui.vnc.input.Dispatcher
-import com.gaurav.avnc.ui.vnc.input.KeyHandler
-import com.gaurav.avnc.ui.vnc.input.TouchHandler
+import com.gaurav.avnc.ui.vnc.input.InputHandler
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.SamsungDex
 import com.gaurav.avnc.util.enableChildLayoutTransitions
@@ -100,9 +97,7 @@ class VncActivity : AppCompatActivity() {
 
     val viewModel by viewModels<VncViewModel>()
     lateinit var binding: ActivityVncBinding
-    private val dispatcher by lazy { Dispatcher(this) }
-    private val touchHandler by lazy { TouchHandler(binding.frameView, dispatcher, viewModel.pref) }
-    val keyHandler by lazy { KeyHandler(dispatcher, viewModel.pref) }
+    val inputHandler = InputHandler(this)
     val virtualKeys by lazy { VirtualKeys(this) }
     val toolbar by lazy { Toolbar(this) }
     private val serverUnlockPrompt = DeviceAuthPrompt(this)
@@ -287,7 +282,7 @@ class VncActivity : AppCompatActivity() {
                 MotionEvent.ACTION_UP,
                 MotionEvent.ACTION_CANCEL -> tapIndicator.isVisible = false
             }
-            touchHandler.onTouchEvent(event)
+            inputHandler.onTouchEvent(event)
         }
     }
 
@@ -300,7 +295,7 @@ class VncActivity : AppCompatActivity() {
     }
 
     fun showKeyboard() {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 
         binding.frameView.requestFocus()
         imm.showSoftInput(binding.frameView, 0)
@@ -315,15 +310,14 @@ class VncActivity : AppCompatActivity() {
         binding.frameView.keepScreenOn = isConnected && viewModel.pref.viewer.keepScreenOn
         SamsungDex.setMetaKeyCapture(this, isConnected)
         layoutManager.onConnectionStateChanged()
+        inputHandler.onStateChanged(newState)
         updateStatusContainerVisibility(isConnected)
         updatePointerCapture()
         autoReconnect(newState)
 
         if (isConnected) {
             ViewerHelp().onConnected(this)
-            keyHandler.enableMacOSCompatibility = viewModel.client.isConnectedToMacOS()
             virtualKeys.onConnected(isInPiPMode())
-            binding.frameView.setInputHandlers(keyHandler, touchHandler)
             autoReconnectDelay = 1
         }
 
@@ -506,33 +500,14 @@ class VncActivity : AppCompatActivity() {
      ************************************************************************************/
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        return keyHandler.onKeyEvent(event) || workarounds(event) || super.onKeyDown(keyCode, event)
+        return inputHandler.onKeyEvent(event) || super.onKeyDown(keyCode, event)
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
-        return keyHandler.onKeyEvent(event) || workarounds(event) || super.onKeyUp(keyCode, event)
+        return inputHandler.onKeyEvent(event) || super.onKeyUp(keyCode, event)
     }
 
     override fun onKeyMultiple(keyCode: Int, repeatCount: Int, event: KeyEvent): Boolean {
-        return keyHandler.onKeyEvent(event) || super.onKeyMultiple(keyCode, repeatCount, event)
-    }
-
-    private fun workarounds(keyEvent: KeyEvent): Boolean {
-
-        //It seems that some device manufacturers are hell-bent on making developers'
-        //life miserable. In their infinite wisdom, they decided that Android apps don't
-        //need Mouse right-click events. It is hardcoded to act as back-press, without
-        //giving apps a chance to handle it. For better or worse, they set the 'source'
-        //for such key events to Mouse, enabling the following workarounds.
-        if (keyEvent.keyCode == KeyEvent.KEYCODE_BACK &&
-            keyEvent.scanCode == 0 &&
-            keyEvent.flags and KeyEvent.FLAG_VIRTUAL_HARD_KEY == 0 &&
-            InputDevice.getDevice(keyEvent.deviceId)?.supportsSource(InputDevice.SOURCE_MOUSE) == true &&
-            viewModel.pref.input.interceptMouseBack) {
-            if (keyEvent.action == KeyEvent.ACTION_DOWN)
-                touchHandler.onMouseBack()
-            return true
-        }
-        return false
+        return inputHandler.onKeyEvent(event) || super.onKeyMultiple(keyCode, repeatCount, event)
     }
 }

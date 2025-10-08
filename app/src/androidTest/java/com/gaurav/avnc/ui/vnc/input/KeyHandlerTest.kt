@@ -389,16 +389,6 @@ class KeyHandlerTest {
         }
     }
 
-    @Test
-    fun observerTest() {
-        var observedEvent: KeyEvent? = null
-        keyHandler.processedEventObserver = { observedEvent = it }
-        keyHandler.onKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_F1))
-
-        assertNotNull(observedEvent)
-        assertEquals(KeyEvent.KEYCODE_F1, observedEvent?.keyCode)
-    }
-
     /**************************************************************************/
     private val ACCENT_TILDE = 0x02DC
     private val ACCENT_CIRCUMFLEX = 0x02C6

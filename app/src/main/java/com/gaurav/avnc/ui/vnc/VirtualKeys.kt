@@ -56,7 +56,7 @@ class VirtualKeys(private val activity: VncActivity) {
 
     private val viewModel = activity.viewModel
     private val pref = activity.viewModel.pref
-    private val keyHandler = activity.keyHandler
+    private val inputHandler = activity.inputHandler
     private val frameView = activity.binding.frameView
     private val stub = activity.binding.virtualKeysStub
     private val toggleKeys = mutableSetOf<ToggleButton>()
@@ -143,7 +143,7 @@ class VirtualKeys(private val activity: VncActivity) {
         initTextPage(binding)
         initKeys(binding)
         initPager(binding)
-        keyHandler.processedEventObserver = ::onAfterKeyEvent
+        inputHandler.onAfterKeyEventListeners += ::onAfterKeyEvent
     }
 
     /**
@@ -311,9 +311,9 @@ class VirtualKeys(private val activity: VncActivity) {
         // These events are sent to KeyHandler.onKeyEvent() instead of onVkKeyEvent()
         // to treat these like normal system key events.
         if (events == null)
-            keyHandler.onKeyEvent(KeyEvent(SystemClock.uptimeMillis(), text, 0, 0))
+            inputHandler.onKeyEvent(KeyEvent(SystemClock.uptimeMillis(), text, 0, 0))
         else
-            events.forEach { keyHandler.onKeyEvent(it) }
+            events.forEach { inputHandler.onKeyEvent(it) }
 
         textBox.setText("")
     }
@@ -325,7 +325,7 @@ class VirtualKeys(private val activity: VncActivity) {
 
     private fun sendKey(keyCode: Int, isDown: Boolean) {
         val action = if (isDown) KeyEvent.ACTION_DOWN else KeyEvent.ACTION_UP
-        keyHandler.onVkKeyEvent(KeyEvent(action, keyCode))
+        inputHandler.onVkKeyEvent(KeyEvent(action, keyCode))
     }
 }
 
