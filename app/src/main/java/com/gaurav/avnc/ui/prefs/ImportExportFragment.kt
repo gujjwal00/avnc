@@ -8,11 +8,14 @@
 
 package com.gaurav.avnc.ui.prefs
 
+import android.content.ActivityNotFoundException
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Keep
 import androidx.annotation.StringRes
@@ -53,7 +56,7 @@ class ImportExportFragment : Fragment() {
         viewModel.exportFinishedEvent.observe(viewLifecycleOwner) { if (it) showMsg(R.string.msg_exported) }
 
         exportAuthPrompt.init(
-                onSuccess = { exportFilePicker.launch(generateFilename()) },
+                onSuccess = { launchFilePicker(exportFilePicker, generateFilename()) },
                 onFail = { viewModel.importExportError.value = it }
         )
 
@@ -79,7 +82,7 @@ class ImportExportFragment : Fragment() {
     }
 
     private fun startImport() {
-        importFilePicker.launch(arrayOf("*/*"))
+        launchFilePicker(importFilePicker, arrayOf("*/*"))
     }
 
     /**
@@ -91,7 +94,16 @@ class ImportExportFragment : Fragment() {
             exportAuthPrompt.launch(getString(R.string.msg_export_auth_required))
             viewModel.importExportError.value = null //Clear old error
         } else
-            exportFilePicker.launch(generateFilename())
+            launchFilePicker(exportFilePicker, generateFilename())
+    }
+
+    private fun <I> launchFilePicker(picker: ActivityResultLauncher<I>, args: I) {
+        try {
+            picker.launch(args)
+        } catch (e: ActivityNotFoundException) {
+            Snackbar.make(requireView(), "Error: No app found to choose backup file.", Snackbar.LENGTH_LONG).show()
+            Log.e("ImportExport", "Error: No app found to choose backup file.", e)
+        }
     }
 
     private fun import(uri: Uri?) {

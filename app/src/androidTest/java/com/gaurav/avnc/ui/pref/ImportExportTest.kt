@@ -10,6 +10,7 @@ package com.gaurav.avnc.ui.pref
 
 import android.app.Activity
 import android.app.Instrumentation
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import androidx.core.net.toUri
 import androidx.test.espresso.Espresso.onView
@@ -115,6 +116,15 @@ class ImportExportTest {
         val data = file.bufferedReader().use { it.readText() }
         Assert.assertTrue("Exported data: `$data` should contain `$sampleName`", data.contains(sampleName))
         Assert.assertTrue("Exported data: `$data` should contain `$sampleSecret`", data.contains(sampleSecret))
+    }
+
+    @Test
+    fun missingFilePickerApp() {
+        Intents.intending(IntentMatchers.hasAction(Intent.ACTION_CREATE_DOCUMENT))
+                .respondWithFunction { throw ActivityNotFoundException() }
+
+        onView(withText(R.string.title_export)).doClick()
+        onView(withSubstring("No app found to choose backup file")).checkWillBeDisplayed()
     }
 
 
