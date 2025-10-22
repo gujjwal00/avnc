@@ -158,7 +158,7 @@ object XKeySymAndroid {
             XKeySym.XK_Home,                    //  KEYCODE_MOVE_HOME = 122
             XKeySym.XK_End,                     //  KEYCODE_MOVE_END = 123
             XKeySym.XK_Insert,                  //  KEYCODE_INSERT = 124
-            0,                                  //  KEYCODE_FORWARD = 125
+            XKeySym.XF86XK_Forward,             //  KEYCODE_FORWARD = 125
             0,                                  //  KEYCODE_MEDIA_PLAY = 126
             0,                                  //  KEYCODE_MEDIA_PAUSE = 127
             0,                                  //  KEYCODE_MEDIA_CLOSE = 128

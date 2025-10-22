@@ -10,6 +10,8 @@ package com.gaurav.avnc.ui.vnc
 
 import android.content.Context
 import android.content.Intent
+import android.view.InputDevice
+import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.edit
 import androidx.test.core.app.ActivityScenario
@@ -43,6 +45,9 @@ import com.gaurav.avnc.setClipboardText
 import com.gaurav.avnc.targetContext
 import com.gaurav.avnc.targetPrefs
 import com.gaurav.avnc.vnc.XKeySym
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -201,6 +206,23 @@ class VncActivityTest {
         testWrapper {
             pollingAssert { assertEquals(sample, testServer.receivedCutText) }
         }
+    }
+
+    @Test
+    fun remoteBackPressOnMouseBack() {
+        targetPrefs.edit { putString("mouse_back", "remote-back-press") }
+        testWrapper {
+            it.onActivity { activity ->
+                val mouseDevice = mockk<InputDevice>()
+                every { mouseDevice.supportsSource(InputDevice.SOURCE_MOUSE) } returns true
+                mockkStatic(InputDevice::getDevice) {
+                    every { InputDevice.getDevice(any()) } returns mouseDevice
+
+                    activity.dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK))
+                }
+            }
+        }
+        assertEquals(XKeySym.XF86XK_Back, testServer.receivedKeySyms.getOrNull(0))
     }
 
 

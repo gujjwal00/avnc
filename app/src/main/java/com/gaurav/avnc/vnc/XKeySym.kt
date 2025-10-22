@@ -2522,4 +2522,6 @@ object XKeySym {
     const val XF86XK_AudioLowerVolume   = 0x1008FF11
     const val XF86XK_AudioRaiseVolume   = 0x1008FF13
     const val XF86XK_AudioMute          = 0x1008FF12
+    const val XF86XK_Back               = 0x1008ff26
+    const val XF86XK_Forward            = 0x1008ff27
 }

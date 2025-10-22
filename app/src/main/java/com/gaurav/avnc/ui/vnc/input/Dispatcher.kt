@@ -13,6 +13,7 @@ import com.gaurav.avnc.ui.vnc.VncActivity
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.PointerButton
+import com.gaurav.avnc.vnc.XKeySym
 
 /**
  * We allow users to customize the actions for different events.
@@ -91,6 +92,7 @@ class Dispatcher(private val activity: VncActivity) {
                 "double-click" -> { p -> defaultMode.doDoubleClick(PointerButton.Left, p) }
                 "middle-click" -> { p -> defaultMode.doClick(PointerButton.Middle, p) }
                 "right-click" -> { p -> defaultMode.doClick(PointerButton.Right, p) }
+                "remote-back-press" -> { _ -> doRemoteBackPress() }
                 "open-keyboard" -> { _ -> doOpenKeyboard() }
                 else -> { _ -> } //Nothing
             }
@@ -185,4 +187,11 @@ class Dispatcher(private val activity: VncActivity) {
     private fun doPan(dx: Float, dy: Float) = viewModel.panFrame(dx, dy)
     private fun startFrameFling(vx: Float, vy: Float) = viewModel.frameScroller.fling(vx, vy)
     private fun stopFrameFling() = viewModel.frameScroller.stop()
+
+    private fun doRemoteBackPress() {
+        // RFB doesn't support pressing Back mouse button
+        // So we press the Back key on keyboard
+        onXKey(XKeySym.XF86XK_Back, 0, true)
+        onXKey(XKeySym.XF86XK_Back, 0, false)
+    }
 }
