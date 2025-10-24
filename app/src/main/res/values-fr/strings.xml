@@ -240,4 +240,5 @@
     <string name="msg_gesture_style_locked_to_touchpad">Style de geste \'Touchpad\' est actif</string>
     <string name="pref_long_press_swipe_disabled_summary">Désactivé par la valeur actuelle du geste <b>Pression longue</b></string>
     <string name="pref_toolbar_open_with_swipe">Faites glisser depuis le bord pour ouvrir</string>
+    <string name="pref_gesture_action_two_left_clicks">Deux clics gauches</string>
 </resources>
