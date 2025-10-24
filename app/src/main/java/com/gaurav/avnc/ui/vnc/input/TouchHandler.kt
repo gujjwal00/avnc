@@ -218,7 +218,12 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
      * Finger Gestures (and everything else beside mouse & stylus)
      ****************************************************************************************/
     private val scaleDetector = ScaleGestureDetector(frameView.context, this).apply { isQuickScaleEnabled = false }
-    private val gestureDetector = GestureDetectorEx(frameView.context, FingerGestureListener(), pref.input.gesture.longPressDetectionEnabled)
+    private val gestureDetector = GestureDetectorEx(
+            frameView.context,
+            FingerGestureListener(),
+            pref.input.gesture.longPressDetectionEnabled,
+            pref.input.gesture.doubleClickDetectionEnabled,
+    )
     private val swipeVsScale = SwipeVsScale()
     private val longPressSwipeEnabled = pref.input.gesture.longPressSwipeEnabled
     private val swipeSensitivity = pref.input.gesture.swipeSensitivity
@@ -297,7 +302,12 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
      * [GestureDetectorEx] is used to for this purpose. It internally uses stock
      * [GestureDetector], and some custom event processing to detect more gestures.
      */
-    private class GestureDetectorEx(context: Context, val listener: GestureListenerEx, val enableLongPress: Boolean) {
+    private class GestureDetectorEx(
+            context: Context,
+            val listener: GestureListenerEx,
+            val enableLongPress: Boolean,
+            enableDoubleClick: Boolean,
+    ) {
 
         /**
          * Detected gestures. Some of these come directly from stock [GestureDetector],
@@ -365,9 +375,22 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
          * -                                    (double-tap)                           (double-tap-swipe)
          *
          */
-        private val innerDetector1 = GestureDetector(context, InnerListener1())
-        private val innerDetector2 = GestureDetector(context, InnerListener2()).apply { setIsLongpressEnabled(false) }
-        private val innerDetector3 = GestureDetector(context, InnerListener3()).apply { setIsLongpressEnabled(false) }
+        private val innerListener1: InnerListener1 = when (enableDoubleClick) {
+            true -> DoubleTapListener1()
+            false -> RawListener1()
+        }
+        private val innerListener2: InnerListener2 = when (enableDoubleClick) {
+            true -> DoubleTapListener2()
+            false -> RawListener2()
+        }
+        private val innerListener3: InnerListener3 = when (enableDoubleClick) {
+            true -> DoubleTapListener3()
+            false -> RawListener3()
+        }
+
+        private val innerDetector1 = GestureDetector(context, innerListener1)
+        private val innerDetector2 = GestureDetector(context, innerListener2).apply { setIsLongpressEnabled(false) }
+        private val innerDetector3 = GestureDetector(context, innerListener3).apply { setIsLongpressEnabled(false) }
 
         private var longPressDetected = false
         private var doubleTapDetected = false
@@ -378,8 +401,18 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         private var cumulatedY = 0f
         private val multiTapSlopSquare = 30 * 30
 
+        private open class RawListener : GestureDetector.OnGestureListener {
+            override fun onDown(e: MotionEvent): Boolean = false
+            override fun onShowPress(e: MotionEvent) {}
+            override fun onSingleTapUp(e: MotionEvent): Boolean = false
+            override fun onScroll(e1: MotionEvent?, e2: MotionEvent, dx: Float, dy: Float): Boolean = false
+            override fun onLongPress(e: MotionEvent) {}
+            override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean = false
+        }
 
-        private inner class InnerListener1 : SimpleOnGestureListener() {
+        private interface InnerListener1 : GestureDetector.OnGestureListener
+
+        private inner class DoubleTapListener1 : SimpleOnGestureListener(), InnerListener1 {
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                 listener.onSingleTapConfirmed(e)
                 return true
@@ -402,7 +435,29 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
             }
         }
 
-        private inner class InnerListener2 : SimpleOnGestureListener() {
+        private inner class RawListener1 : RawListener(), InnerListener1 {
+            override fun onSingleTapUp(e: MotionEvent): Boolean {
+                listener.onSingleTapConfirmed(e)
+                return true
+            }
+
+            override fun onLongPress(e: MotionEvent) {
+                if (!enableLongPress)
+                    return
+
+                longPressDetected = true
+                listener.onLongPress(e)
+            }
+
+            override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+                listener.onFling(velocityX, velocityY)
+                return true
+            }
+        }
+
+        private interface InnerListener2 : GestureDetector.OnGestureListener
+
+        private inner class DoubleTapListener2 : SimpleOnGestureListener(), InnerListener2 {
             override fun onDoubleTap(e: MotionEvent): Boolean {
                 doubleTapDetected = true
                 return true
@@ -413,7 +468,17 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
             override fun onScroll(e1: MotionEvent?, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
         }
 
-        private inner class InnerListener3 : SimpleOnGestureListener() {
+        private inner class RawListener2 : RawListener(), InnerListener2 {
+            override fun onScroll(e1: MotionEvent?, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
+        }
+
+        private interface InnerListener3 : GestureDetector.OnGestureListener
+
+        private inner class DoubleTapListener3 : SimpleOnGestureListener(), InnerListener3 {
+            override fun onScroll(e1: MotionEvent?, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
+        }
+
+        private inner class RawListener3 : RawListener(), InnerListener3 {
             override fun onScroll(e1: MotionEvent?, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
         }
 
