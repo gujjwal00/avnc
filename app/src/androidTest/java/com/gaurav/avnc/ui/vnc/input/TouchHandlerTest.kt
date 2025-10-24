@@ -60,10 +60,15 @@ class TouchHandlerTest {
     }
 
 
-    private fun setupWithPref(mousePassthrough: Boolean = false, dragEnabled: Boolean = false) {
+    private fun setupWithPref(
+            mousePassthrough: Boolean = false,
+            dragEnabled: Boolean = false,
+            doubleClickEnabled: Boolean = true,
+    ) {
         targetPrefs.edit {
             putBoolean("mouse_passthrough", mousePassthrough)
             putString("gesture_drag", if (dragEnabled) "remote-scroll" else "none")
+            putString("gesture_double_tap", if (doubleClickEnabled) "double-click" else "two-left-clicks")
         }
         setup()
     }
@@ -79,6 +84,16 @@ class TouchHandlerTest {
     }
 
     @Test
+    fun singleTapImmediatelySent() {
+        setupWithPref(doubleClickEnabled = false)
+
+        sendDown()
+        sendUp()
+
+        verify { mockDispatcher.onTap1(testPoint) }
+    }
+
+    @Test
     fun doubleTap() {
         sendDown()
         sendUp()
@@ -86,6 +101,19 @@ class TouchHandlerTest {
         sendDown()
         sendUp()
         verify { mockDispatcher.onDoubleTap(testPoint) }
+    }
+
+    @Test
+    fun doubleTapAsTwoClicks() {
+        setupWithPref(doubleClickEnabled = false)
+
+        sendDown()
+        sendUp()
+        Thread.sleep(Delay.BETWEEN_DOUBLE_TAPS)
+        sendDown()
+        sendUp()
+
+        verify(exactly = 2) { mockDispatcher.onTap1(testPoint) }
     }
 
     @Test
