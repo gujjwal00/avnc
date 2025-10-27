@@ -154,6 +154,7 @@
     <string name="pref_mouse_back_action_default">Par défaut</string>
     <string name="pref_swipe_sensitivity">Sensibilité du défilement</string>
     <string name="msg_gesture_style_help"><b>Écran tactile</b>\nEffectuer les actions au point de contact\n\n<b>Pavé tactile</b>\nEffectuer les actions au niveau du pointeur</string>
+    <string name="msg_gesture_double_tap_help"><b>Aucun</b>\nNe rien faire quand un appui double est détecté.\n\n<b>Deux clics gauches</b>\nNe pas détecter les appuis doubles, ce qui permet d’envoyer immédiatement les appuis simples au serveur.</string>
     <string name="msg_drag_gesture_help">L\'attribution d\'une action à ce geste modifiera la détection de la pression longue :
 \n
 \n<b>Appuyer-tenir-lâcher</b> → Appui long

@@ -24,12 +24,14 @@
             app:useSimpleSummaryProvider="true"
             app:widgetLayout="@layout/help_btn" />
 
-        <ListPreference
+        <com.gaurav.avnc.ui.prefs.ListPreferenceEx
             app:defaultValue="double-click"
             app:entries="@array/double_tap_action_entries"
             app:entryValues="@array/double_tap_action_values"
             app:key="gesture_double_tap"
             app:title="@string/pref_double_tap"
+            app:widgetLayout="@layout/help_btn"
+            app:helpMessage="@string/msg_gesture_double_tap_help"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference

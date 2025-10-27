@@ -401,6 +401,11 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         private var cumulatedY = 0f
         private val multiTapSlopSquare = 30 * 30
 
+        /**
+         * A [GestureDetector.OnGestureListener] just like
+         * [SimpleOnGestureListener], except it doesn’t implement
+         * [GestureDetector.OnDoubleTapListener].
+         */
         private open class RawListener : GestureDetector.OnGestureListener {
             override fun onDown(e: MotionEvent): Boolean = false
             override fun onShowPress(e: MotionEvent) {}
@@ -412,6 +417,10 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
 
         private interface InnerListener1 : GestureDetector.OnGestureListener
 
+        /**
+         * [InnerListener1] that waits for single taps to be confirmed, and thus
+         * can detect double taps.
+         */
         private inner class DoubleTapListener1 : SimpleOnGestureListener(), InnerListener1 {
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean = handleSingleTap(e)
 
@@ -421,6 +430,10 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
                     handleFling(velocityX, velocityY)
         }
 
+        /**
+         * [InnerListener1] that doesn’t wait for single taps to be confirmed,
+         * and thus can send them immediately to the server.
+         */
         private inner class RawListener1 : RawListener(), InnerListener1 {
             override fun onSingleTapUp(e: MotionEvent): Boolean = handleSingleTap(e)
 
@@ -432,6 +445,9 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
 
         private interface InnerListener2 : GestureDetector.OnGestureListener
 
+        /**
+         * [InnerListener2] that can detect double taps.
+         */
         private inner class DoubleTapListener2 : SimpleOnGestureListener(), InnerListener2 {
             override fun onDoubleTap(e: MotionEvent): Boolean {
                 doubleTapDetected = true
@@ -443,6 +459,9 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
             override fun onScroll(e1: MotionEvent?, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
         }
 
+        /**
+         * [InnerListener2] that handles double taps as two single taps.
+         */
         private inner class RawListener2 : RawListener(), InnerListener2 {
             override fun onScroll(e1: MotionEvent?, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
         }
