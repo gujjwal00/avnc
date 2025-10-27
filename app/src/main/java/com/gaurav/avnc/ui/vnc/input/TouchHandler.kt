@@ -413,46 +413,21 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         private interface InnerListener1 : GestureDetector.OnGestureListener
 
         private inner class DoubleTapListener1 : SimpleOnGestureListener(), InnerListener1 {
-            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                listener.onSingleTapConfirmed(e)
-                return true
-            }
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean = handleSingleTap(e)
 
-            override fun onLongPress(e: MotionEvent) {
-                if (!enableLongPress)
-                    return
+            override fun onLongPress(e: MotionEvent) = handleLongPress(e)
 
-                if (doubleTapDetected)
-                    return // Ignore long-press triggered during double-tap-swipe
-
-                longPressDetected = true
-                listener.onLongPress(e)
-            }
-
-            override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-                listener.onFling(velocityX, velocityY)
-                return true
-            }
+            override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean =
+                    handleFling(velocityX, velocityY)
         }
 
         private inner class RawListener1 : RawListener(), InnerListener1 {
-            override fun onSingleTapUp(e: MotionEvent): Boolean {
-                listener.onSingleTapConfirmed(e)
-                return true
-            }
+            override fun onSingleTapUp(e: MotionEvent): Boolean = handleSingleTap(e)
 
-            override fun onLongPress(e: MotionEvent) {
-                if (!enableLongPress)
-                    return
+            override fun onLongPress(e: MotionEvent) = handleLongPress(e)
 
-                longPressDetected = true
-                listener.onLongPress(e)
-            }
-
-            override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-                listener.onFling(velocityX, velocityY)
-                return true
-            }
+            override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean =
+                    handleFling(velocityX, velocityY)
         }
 
         private interface InnerListener2 : GestureDetector.OnGestureListener
@@ -480,6 +455,27 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
 
         private inner class RawListener3 : RawListener(), InnerListener3 {
             override fun onScroll(e1: MotionEvent?, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
+        }
+
+        private fun handleLongPress(e: MotionEvent) {
+            if (!enableLongPress)
+                return
+
+            if (doubleTapDetected)
+                return // Ignore long-press triggered during double-tap-swipe
+
+            longPressDetected = true
+            listener.onLongPress(e)
+        }
+
+        private fun handleSingleTap(e: MotionEvent): Boolean {
+            listener.onSingleTapConfirmed(e)
+            return true
+        }
+
+        private fun handleFling(velocityX: Float, velocityY: Float): Boolean {
+            listener.onFling(velocityX, velocityY)
+            return true
         }
 
         private fun handleScroll(e1: MotionEvent?, e2: MotionEvent, dx: Float, dy: Float): Boolean {
