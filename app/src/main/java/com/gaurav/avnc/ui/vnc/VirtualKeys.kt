@@ -365,7 +365,7 @@ enum class VirtualKey(
     // Meta keys
     RightShift(keyCode = KeyEvent.KEYCODE_SHIFT_RIGHT, label = "Shift", isToggle = true),
     RightCtrl(keyCode = KeyEvent.KEYCODE_CTRL_RIGHT, label = "Ctrl", isToggle = true),
-    RightAlt(keyCode = KeyEvent.KEYCODE_ALT_RIGHT, label = "Alt", isToggle = true),
+    RightAlt(keyCode = KeyEvent.KEYCODE_ALT_LEFT, label = "Alt", isToggle = true),
     RightSuper(keyCode = KeyEvent.KEYCODE_META_RIGHT, label = "Super", icon = R.drawable.ic_super_key, isToggle = true),
 
     Esc(keyCode = KeyEvent.KEYCODE_ESCAPE),
