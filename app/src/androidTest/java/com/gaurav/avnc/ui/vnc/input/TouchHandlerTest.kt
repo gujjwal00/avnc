@@ -47,18 +47,7 @@ class TouchHandlerTest {
     private val testPoint = PointF(10f, 10f)
 
     @Before
-    fun setup() {
-        instrumentation.runOnMainSync {
-            mockDispatcher = mockk(relaxed = true)
-            touchHandler = TouchHandler(FrameView(targetConfigContext), mockDispatcher, AppPreferences(targetContext))
-        }
-
-        // Internally, mocks seems to be lazily initialized, and the initialization can take some time.
-        // This is problematic here because gesture detection is very sensitive to timing of events.
-        // So we eagerly trigger the initialization, to avoid messing with timings in actual tests.
-        mockDispatcher.onXKey(0, 0, false)
-    }
-
+    fun setup() = setupWithPref()
 
     private fun setupWithPref(
             mousePassthrough: Boolean = false,
@@ -70,7 +59,16 @@ class TouchHandlerTest {
             putString("gesture_drag", if (dragEnabled) "remote-scroll" else "none")
             putString("gesture_double_tap", if (doubleClickEnabled) "double-click" else "two-left-clicks")
         }
-        setup()
+
+        instrumentation.runOnMainSync {
+            mockDispatcher = mockk(relaxed = true)
+            touchHandler = TouchHandler(FrameView(targetConfigContext), mockDispatcher, AppPreferences(targetContext))
+        }
+
+        // Internally, mocks seems to be lazily initialized, and the initialization can take some time.
+        // This is problematic here because gesture detection is very sensitive to timing of events.
+        // So we eagerly trigger the initialization, to avoid messing with timings in actual tests.
+        mockDispatcher.onXKey(0, 0, false)
     }
 
     /************************* Finger Gestures *******************************************************/
