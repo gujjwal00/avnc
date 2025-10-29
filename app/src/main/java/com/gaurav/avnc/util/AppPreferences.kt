@@ -163,5 +163,17 @@ class AppPreferences(context: Context) {
             remove("run_info_has_connected_successfully")
             putBoolean("run_info_has_shown_viewer_help", true)
         }
+
+        if (!prefs.getBoolean("run_info_right_meta_keys_migrated", false)) prefs.edit {
+            prefs.getString("vk_keys_layout", null)?.let { old ->
+                val new = old
+                        .replace("RightShift", "LeftShift")
+                        .replace("RightCtrl", "LeftCtrl")
+                        .replace("RightAlt", "LeftAlt")
+                        .replace("RightSuper", "LeftSuper")
+                putString("vk_keys_layout", new)
+            }
+            putBoolean("run_info_right_meta_keys_migrated", true)
+        }
     }
 }

@@ -363,10 +363,10 @@ enum class VirtualKey(
     CloseKeys(description = "Close virtual keys", icon = R.drawable.ic_clear),
 
     // Meta keys
-    RightShift(keyCode = KeyEvent.KEYCODE_SHIFT_RIGHT, label = "Shift", isToggle = true),
-    RightCtrl(keyCode = KeyEvent.KEYCODE_CTRL_RIGHT, label = "Ctrl", isToggle = true),
-    RightAlt(keyCode = KeyEvent.KEYCODE_ALT_RIGHT, label = "Alt", isToggle = true),
-    RightSuper(keyCode = KeyEvent.KEYCODE_META_RIGHT, label = "Super", icon = R.drawable.ic_super_key, isToggle = true),
+    LeftShift(keyCode = KeyEvent.KEYCODE_SHIFT_LEFT, label = "Shift", isToggle = true),
+    LeftCtrl(keyCode = KeyEvent.KEYCODE_CTRL_LEFT, label = "Ctrl", isToggle = true),
+    LeftAlt(keyCode = KeyEvent.KEYCODE_ALT_LEFT, label = "Alt", isToggle = true),
+    LeftSuper(keyCode = KeyEvent.KEYCODE_META_LEFT, label = "Super", icon = R.drawable.ic_super_key, isToggle = true),
 
     Esc(keyCode = KeyEvent.KEYCODE_ESCAPE),
     Tab(keyCode = KeyEvent.KEYCODE_TAB),
@@ -403,8 +403,8 @@ enum class VirtualKey(
  */
 object VirtualKeyLayoutConfig {
 
-    private val DEFAULT_LAYOUT = listOf(VirtualKey.ToggleKeyboard, VirtualKey.CloseKeys, VirtualKey.Esc, VirtualKey.RightSuper,
-                                        VirtualKey.Tab, VirtualKey.RightCtrl, VirtualKey.RightShift, VirtualKey.RightAlt,
+    private val DEFAULT_LAYOUT = listOf(VirtualKey.ToggleKeyboard, VirtualKey.CloseKeys, VirtualKey.Esc, VirtualKey.LeftSuper,
+                                        VirtualKey.Tab, VirtualKey.LeftCtrl, VirtualKey.LeftShift, VirtualKey.LeftAlt,
                                         VirtualKey.Home, VirtualKey.Left, VirtualKey.Up, VirtualKey.Down, VirtualKey.End,
                                         VirtualKey.Right, VirtualKey.PgUp, VirtualKey.PgDn)
 
