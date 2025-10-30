@@ -150,6 +150,7 @@
 
     <style name="VirtualKey.Toggle">
         <item name="android:background">@drawable/bg_toggle_button</item>
+        <item name="android:foreground">?selectableItemBackground</item>
     </style>
 
     <style name="VirtualKey.Toggle.Image">
