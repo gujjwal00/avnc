@@ -69,6 +69,7 @@ class AppPreferences(context: Context) {
         val vkShowAll; get() = prefs.getBoolean("vk_show_all", false)
         var vkLayout by StringPref("vk_keys_layout", null)
         val vkRowCount; get() = prefs.getString("vk_row_count", null)?.toIntOrNull() ?: 2
+        val vkUseSuperWithSingleTap; get() = prefs.getBoolean("vk_use_super_with_single_tap", false)
 
         val mousePassthrough; get() = prefs.getBoolean("mouse_passthrough", true)
         val capturePointer; get() = mousePassthrough && prefs.getBoolean("capture_pointer", false)

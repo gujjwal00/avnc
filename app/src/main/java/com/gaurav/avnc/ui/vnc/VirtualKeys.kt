@@ -258,6 +258,13 @@ class VirtualKeys(private val activity: VncActivity) {
             if (key.isChecked) lockedToggleKeys.add(key)
             true
         }
+
+        if ((keyCode == KeyEvent.KEYCODE_META_LEFT || keyCode == KeyEvent.KEYCODE_META_RIGHT) && pref.input.vkUseSuperWithSingleTap)
+            key.setOnClickListener {
+                key.isChecked = true
+                key.isChecked = false
+            }
+
         toggleKeys.add(key)
     }
 

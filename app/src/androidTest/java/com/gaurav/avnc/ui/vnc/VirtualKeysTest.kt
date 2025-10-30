@@ -181,6 +181,19 @@ class VirtualKeysTest {
     }
 
     @Test
+    fun superWithSingleTap() {
+        targetPrefs.edit { putBoolean("vk_use_super_with_single_tap", true) }
+        testWrapper {
+            onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+            onView(withId(R.id.virtual_keys_btn)).doClick()
+            onView(withContentDescription("Super")).checkWillBeDisplayed().doClick()
+        }
+
+        assertEquals(listOf(Pair(XKeySym.XK_Super_L, true), Pair(XKeySym.XK_Super_L, false)),
+                     testServer.receivedKeySyms)
+    }
+
+    @Test
     fun vkModifierKeysShouldApplyToKeyPressedOnKeyboard() {
         testWrapper {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())

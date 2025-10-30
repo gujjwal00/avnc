@@ -156,6 +156,11 @@
             app:key="vk_open_with_keyboard"
             app:title="@string/pref_vk_open_with_keyboard" />
 
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="vk_use_super_with_single_tap"
+            app:title="@string/pref_vk_use_super_with_single_tap" />
+
         <ListPreference
             android:entries="@array/vk_row_count_values"
             android:entryValues="@array/vk_row_count_values"

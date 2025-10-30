@@ -217,6 +217,7 @@
     <string name="pref_customize_virtual_keys">Customize keys</string>
     <string name="pref_vk_open_with_keyboard">Open with keyboard</string>
     <string name="pref_vk_row_count">Rows</string>
+    <string name="pref_vk_use_super_with_single_tap">Use Super key with single tap</string>
     <string name="pref_km">Key mappings</string>
     <string name="pref_km_right_alt_to_super">Right Alt → Super</string>
     <string name="pref_km_language_switch_to_super">Language Switch → Super</string>
