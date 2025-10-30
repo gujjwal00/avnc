@@ -43,6 +43,7 @@ import com.gaurav.avnc.targetPrefs
 import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.vnc.XKeySym
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -95,7 +96,7 @@ class VirtualKeysTest {
         }
 
         //Tab should be received by the server
-        Assert.assertEquals(arrayListOf(XKeySym.XK_Tab), testServer.receivedKeySyms)
+        assertEquals(arrayListOf(XKeySym.XK_Tab), testServer.receivedKeyDowns)
     }
 
     @Test
@@ -174,9 +175,9 @@ class VirtualKeysTest {
         }
 
         val sentByClient = text.toCharArray().map { it.code }.toList()
-        val receivedOnServer = testServer.receivedKeySyms.filter { it != XKeySym.XK_Shift_L }.toList()
+        val receivedOnServer = testServer.receivedKeyDowns.filter { it != XKeySym.XK_Shift_L }.toList()
 
-        Assert.assertEquals(sentByClient, receivedOnServer)
+        assertEquals(sentByClient, receivedOnServer)
     }
 
     @Test
@@ -188,7 +189,7 @@ class VirtualKeysTest {
             onView(withText("Shift")).checkWillBeDisplayed().doClick()
             onView(withId(R.id.frame_view)).doTypeText("a") // Should be sent as uppercase A to server
         }
-        Assert.assertEquals(listOf(XKeySym.XK_Shift_R, XKeySym.XK_A), testServer.receivedKeySyms)
+        assertEquals(listOf(XKeySym.XK_Shift_R, XKeySym.XK_A), testServer.receivedKeyDowns)
     }
 
     @Test
@@ -233,8 +234,8 @@ class VirtualKeysTest {
         Assert.assertNotEquals(defaultKeys, defaultAllKeys)
 
         // For now, duplicate keys are not allowed
-        Assert.assertEquals(defaultKeys, defaultKeys.distinct())
-        Assert.assertEquals(defaultAllKeys, defaultAllKeys.distinct())
+        assertEquals(defaultKeys, defaultKeys.distinct())
+        assertEquals(defaultAllKeys, defaultAllKeys.distinct())
     }
 
     @Test
@@ -246,6 +247,6 @@ class VirtualKeysTest {
         val defaultKeys = VirtualKeyLayoutConfig.getDefaultLayout(prefs)
 
         // If for some reason layout pref is corrupted, default config should be loaded
-        Assert.assertEquals(defaultKeys, keys)
+        assertEquals(defaultKeys, keys)
     }
 }

@@ -41,7 +41,8 @@ class TestServer(name: String = "Friends") {
     private val serverJob = Thread { theServer() }
     val host = ss.inetAddress.hostAddress!!
     val port = ss.localPort
-    var receivedKeySyms = arrayListOf<Int>()
+    var receivedKeySyms = mutableListOf<Pair<Int, Boolean>>()
+    val receivedKeyDowns get() = receivedKeySyms.filter { it.second }.map { it.first }
     var receivedCutText = ""
     var receivedIncrementalUpdateRequests = 0
 
@@ -138,8 +139,7 @@ class TestServer(name: String = "Friends") {
                     val key = readInt(input)
 
                     // Record it
-                    if (isDown)
-                        receivedKeySyms.add(key)
+                    receivedKeySyms.add(Pair(key, isDown))
                 }
 
                 0 -> input.skip(19) //SetPixelFormat

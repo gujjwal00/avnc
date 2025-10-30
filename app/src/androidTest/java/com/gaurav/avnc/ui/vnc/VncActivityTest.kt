@@ -159,7 +159,7 @@ class VncActivityTest {
         }
 
         val sentByClient = text.toCharArray().map { it.code }.toList()
-        val receivedOnServer = testServer.receivedKeySyms.filter { it != XKeySym.XK_Shift_L }.toList()
+        val receivedOnServer = testServer.receivedKeyDowns.filter { it != XKeySym.XK_Shift_L }.toList()
 
         assertEquals(sentByClient, receivedOnServer)
     }
@@ -222,7 +222,7 @@ class VncActivityTest {
                 }
             }
         }
-        assertEquals(XKeySym.XF86XK_Back, testServer.receivedKeySyms.getOrNull(0))
+        assertEquals(XKeySym.XF86XK_Back, testServer.receivedKeyDowns.getOrNull(0))
     }
 
 
@@ -304,7 +304,7 @@ class VncActivityTest {
             it.onActivity { a -> assertEquals(ServerProfile.VIEW_MODE_NO_INPUT, a.viewModel.activeViewMode.value) }
         }
 
-        assertEquals(0, testServer.receivedKeySyms.size)
+        assertEquals(0, testServer.receivedKeyDowns.size)
     }
 
     @Test
