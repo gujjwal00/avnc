@@ -222,7 +222,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
     private val swipeVsScale = SwipeVsScale()
     private val longPressSwipeEnabled = pref.input.gesture.longPressSwipeEnabled
     private val swipeSensitivity = pref.input.gesture.swipeSensitivity
-
+    private val quickTap1Enabled = pref.input.gesture.canQuickTap1
 
     private fun handleGestureEvent(event: MotionEvent): Boolean {
         dispatcher.accelerator.addMovement(event)
@@ -241,8 +241,20 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
 
     private inner class FingerGestureListener : GestureDetectorEx.GestureListenerEx {
 
-        override fun onSingleTapConfirmed(e: MotionEvent) = dispatcher.onTap1(e.point())
-        override fun onDoubleTapConfirmed(e: MotionEvent) = dispatcher.onDoubleTap(e.point())
+        override fun onSingleTap(e: MotionEvent) {
+            // If quick-tap is enabled, we don't have to wait for onSingleTapConfirmed()
+            // which involves ~300ms timeout to rule out double-tap gesture
+            if (quickTap1Enabled) dispatcher.onTap1(e.point())
+        }
+
+        override fun onSingleTapConfirmed(e: MotionEvent) {
+            if (!quickTap1Enabled) dispatcher.onTap1(e.point())
+        }
+
+        override fun onDoubleTapConfirmed(e: MotionEvent) {
+            // When quick tap is enabled, both taps would be sent via onSingleTap()
+            if (!quickTap1Enabled) dispatcher.onDoubleTap(e.point())
+        }
 
         override fun onMultiFingerTap(e: MotionEvent, fingerCount: Int) {
             when (fingerCount) {
@@ -328,6 +340,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
          * is set, [onScrollAfterLongPress] is called.
          */
         interface GestureListenerEx {
+            fun onSingleTap(e: MotionEvent)
             fun onSingleTapConfirmed(e: MotionEvent)
             fun onDoubleTapConfirmed(e: MotionEvent)
             fun onMultiFingerTap(e: MotionEvent, fingerCount: Int)
@@ -354,7 +367,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
          * -                                 +------------------+
          * -                              +->| [innerDetector1] |
          * -                              |  +------------------+
-         * -                              |   (tap, long-press)
+         * -                              | (quick-tap, long-press)
          * -   +----------------+  event  |
          * -   | [onTouchEvent] |---------+
          * -   +----------------+         |
@@ -362,10 +375,10 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
          * -                              |  +------------------+  double-tap event   +------------------+
          * -                              +->| [innerDetector2] |-------------------->| [innerDetector3] |
          * -                                 +------------------+                     +------------------+
-         * -                                    (double-tap)                           (double-tap-swipe)
+         * -                               (confirmed-tap, double-tap)                 (double-tap-swipe)
          *
          */
-        private val innerDetector1 = GestureDetector(context, InnerListener1())
+        private val innerDetector1 = GestureDetector(context, InnerListener1()).apply { setOnDoubleTapListener(null) }
         private val innerDetector2 = GestureDetector(context, InnerListener2()).apply { setIsLongpressEnabled(false) }
         private val innerDetector3 = GestureDetector(context, InnerListener3()).apply { setIsLongpressEnabled(false) }
 
@@ -380,8 +393,8 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
 
 
         private inner class InnerListener1 : SimpleOnGestureListener() {
-            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                listener.onSingleTapConfirmed(e)
+            override fun onSingleTapUp(e: MotionEvent): Boolean {
+                listener.onSingleTap(e)
                 return true
             }
 
@@ -403,6 +416,11 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         }
 
         private inner class InnerListener2 : SimpleOnGestureListener() {
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                listener.onSingleTapConfirmed(e)
+                return true
+            }
+
             override fun onDoubleTap(e: MotionEvent): Boolean {
                 doubleTapDetected = true
                 return true
