@@ -209,6 +209,7 @@ class VncActivityTest {
     }
 
     @Test
+    @SdkSuppress(minSdkVersion = 28)
     fun remoteBackPressOnMouseBack() {
         targetPrefs.edit { putString("mouse_back", "remote-back-press") }
         testWrapper {

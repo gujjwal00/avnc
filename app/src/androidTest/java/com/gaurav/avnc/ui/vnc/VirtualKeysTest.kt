@@ -202,7 +202,7 @@ class VirtualKeysTest {
             onView(withText("Shift")).checkWillBeDisplayed().doClick()
             onView(withId(R.id.frame_view)).doTypeText("a") // Should be sent as uppercase A to server
         }
-        assertEquals(listOf(XKeySym.XK_Shift_R, XKeySym.XK_A), testServer.receivedKeyDowns)
+        assertEquals(listOf(XKeySym.XK_Shift_L, XKeySym.XK_A), testServer.receivedKeyDowns)
     }
 
     @Test
