@@ -18,6 +18,7 @@ import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ViewConfiguration
+import androidx.core.view.postDelayed
 import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.vnc.PointerButton
@@ -240,6 +241,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
     }
 
     private inner class FingerGestureListener : GestureDetectorEx.GestureListenerEx {
+        var repeatingClicks = false
 
         override fun onSingleTapConfirmed(e: MotionEvent) = dispatcher.onTap1(e.point())
         override fun onDoubleTapConfirmed(e: MotionEvent) = dispatcher.onDoubleTap(e.point())
@@ -254,11 +256,31 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         override fun onLongPress(e: MotionEvent) {
             frameView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
 
+            if (pref.input.gesture.longPress == "repeated-clicks")
+            {
+                dispatcher.onTap1(e.point())
+                repeatingClicks = true
+                frameView.postDelayed(ViewConfiguration.getLongPressTimeout().toLong()) {
+                    repeatClick(e.point())
+                }
+            }
+
             // If long-press-swipe is disabled, we can dispatch long-press immediately
             if (!longPressSwipeEnabled) dispatcher.onLongPress(e.point())
         }
 
+        private fun repeatClick(p: PointF) {
+            if (!repeatingClicks) {
+                return
+            }
+            dispatcher.onTap1(p)
+            frameView.postDelayed(ViewConfiguration.getKeyRepeatDelay().toLong()) {
+                repeatClick(p)
+            }
+        }
+
         override fun onLongPressConfirmed(e: MotionEvent) {
+            repeatingClicks = false
             if (longPressSwipeEnabled) dispatcher.onLongPress(e.point())
         }
 
