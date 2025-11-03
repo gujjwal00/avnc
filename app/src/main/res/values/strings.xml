@@ -166,6 +166,7 @@
     <string name="pref_gesture_action_none" translatable="false">@string/title_none</string>
     <string name="pref_gesture_action_left_click">Left-click</string>
     <string name="pref_gesture_action_left_press">Long-press</string>
+    <string name="pref_gesture_action_repeated_clicks">Repeated clicks</string>
     <string name="pref_gesture_action_middle_click">Middle-click</string>
     <string name="pref_gesture_action_right_click">Right-click</string>
     <string name="pref_gesture_action_double_click">Double-click</string>

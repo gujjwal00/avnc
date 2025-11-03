@@ -90,6 +90,7 @@
     <string name="pref_experimental_summary">Bonus</string>
     <string name="pref_tools">Outils</string>
     <string name="pref_gesture_action_left_click">Clic gauche</string>
+    <string name="pref_gesture_action_repeated_clicks">Clics répétés</string>
     <string name="pref_gesture_action_middle_click">Clic du milieu</string>
     <string name="pref_theme">Thème</string>
     <string name="tip_empty_server_list">La liste des serveurs est vide.
