@@ -243,4 +243,6 @@
     <string name="desc_view_mode_no_video">Вимкнути відео</string>
     <string name="pref_capture_pointer">Вказівник захоплення</string>
     <string name="pref_vk_row_count">Рядки</string>
+    <string name="pref_gesture_action_remote_back_press">Зворотний прес на сервері</string>
+    <string name="pref_vk_use_super_with_single_tap">Використовуйте клавішу Super одним натисканням</string>
 </resources>
