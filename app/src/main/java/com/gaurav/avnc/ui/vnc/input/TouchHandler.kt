@@ -300,6 +300,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         }
 
         override fun onScrollAfterLongPress(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float) {
+            repeatingClicks = false
             dispatcher.onLongPressSwipe(e1.point(), e2.point(), dx, dy)
         }
 
