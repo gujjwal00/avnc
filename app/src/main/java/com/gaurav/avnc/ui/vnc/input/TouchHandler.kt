@@ -218,7 +218,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
      * Finger Gestures (and everything else beside mouse & stylus)
      ****************************************************************************************/
     private val scaleDetector = ScaleGestureDetector(frameView.context, this).apply { isQuickScaleEnabled = false }
-    private val gestureDetector = GestureDetectorEx(frameView.context, FingerGestureListener(), pref.input.gesture.longPressDetectionEnabled)
+    private val gestureDetector = GestureDetectorEx(frameView.context, FingerGestureListener(), pref)
     private val swipeVsScale = SwipeVsScale()
     private val longPressSwipeEnabled = pref.input.gesture.longPressSwipeEnabled
     private val swipeSensitivity = pref.input.gesture.swipeSensitivity
@@ -297,7 +297,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
      * [GestureDetectorEx] is used to for this purpose. It internally uses stock
      * [GestureDetector], and some custom event processing to detect more gestures.
      */
-    private class GestureDetectorEx(context: Context, val listener: GestureListenerEx, val enableLongPress: Boolean) {
+    private class GestureDetectorEx(context: Context, val listener: GestureListenerEx, prefs: AppPreferences) {
 
         /**
          * Detected gestures. Some of these come directly from stock [GestureDetector],
@@ -369,6 +369,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         private val innerDetector2 = GestureDetector(context, InnerListener2()).apply { setIsLongpressEnabled(false) }
         private val innerDetector3 = GestureDetector(context, InnerListener3()).apply { setIsLongpressEnabled(false) }
 
+        private val enableLongPress = prefs.input.gesture.longPressDetectionEnabled
         private var longPressDetected = false
         private var doubleTapDetected = false
         private var scrolling = false
