@@ -60,6 +60,7 @@ class AppPreferences(context: Context) {
         val longPressDetectionEnabled; get() = (longPress != "none" || longPressSwipeEnabled)
         val swipeSensitivity; get() = prefs.getInt("gesture_swipe_sensitivity", 10) / 10f
         val invertVerticalScrolling; get() = prefs.getBoolean("invert_vertical_scrolling", false)
+        val canQuickTap1; get() = ((doubleTap == "none" || doubleTap == "double-click") && doubleTapSwipe == "none")
     }
 
     inner class Input {

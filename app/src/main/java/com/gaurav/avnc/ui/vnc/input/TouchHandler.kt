@@ -326,6 +326,16 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
          * [onScrollAfterLongPress]
          * This is the long-press-swipe gesture. If scrolling after [longPressDetected] flag
          * is set, [onScrollAfterLongPress] is called.
+         *
+         * Quick Tap
+         * ---------
+         * Usually, we have to wait ~300ms inside [GestureDetector] to rule out double-tap
+         * before [onSingleTapConfirmed] can be called. But in some scenarios this delay
+         * can be avoided. When Quick Tap is enabled ([quickTap1Enabled]), [onSingleTapConfirmed]
+         * can be called immediately from [GestureDetector.OnGestureListener.onSingleTapUp].
+         *
+         * When Quick Tap is enabled, [onSingleTapConfirmed] is called twice instead of
+         * [onDoubleTapConfirmed] for double-tap gestures.
          */
         interface GestureListenerEx {
             fun onSingleTapConfirmed(e: MotionEvent)
@@ -354,7 +364,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
          * -                                 +------------------+
          * -                              +->| [innerDetector1] |
          * -                              |  +------------------+
-         * -                              |   (tap, long-press)
+         * -                              | (quick-tap, long-press)
          * -   +----------------+  event  |
          * -   | [onTouchEvent] |---------+
          * -   +----------------+         |
@@ -362,13 +372,14 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
          * -                              |  +------------------+  double-tap event   +------------------+
          * -                              +->| [innerDetector2] |-------------------->| [innerDetector3] |
          * -                                 +------------------+                     +------------------+
-         * -                                    (double-tap)                           (double-tap-swipe)
+         * -                               (confirmed-tap, double-tap)                 (double-tap-swipe)
          *
          */
-        private val innerDetector1 = GestureDetector(context, InnerListener1())
+        private val innerDetector1 = GestureDetector(context, InnerListener1()).apply { setOnDoubleTapListener(null) }
         private val innerDetector2 = GestureDetector(context, InnerListener2()).apply { setIsLongpressEnabled(false) }
         private val innerDetector3 = GestureDetector(context, InnerListener3()).apply { setIsLongpressEnabled(false) }
 
+        private val quickTap1Enabled = prefs.input.gesture.canQuickTap1
         private val enableLongPress = prefs.input.gesture.longPressDetectionEnabled
         private var longPressDetected = false
         private var doubleTapDetected = false
@@ -381,8 +392,9 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
 
 
         private inner class InnerListener1 : SimpleOnGestureListener() {
-            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                listener.onSingleTapConfirmed(e)
+            override fun onSingleTapUp(e: MotionEvent): Boolean {
+                if (quickTap1Enabled)
+                    listener.onSingleTapConfirmed(e)
                 return true
             }
 
@@ -404,6 +416,12 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         }
 
         private inner class InnerListener2 : SimpleOnGestureListener() {
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                if (!quickTap1Enabled)
+                    listener.onSingleTapConfirmed(e)
+                return true
+            }
+
             override fun onDoubleTap(e: MotionEvent): Boolean {
                 doubleTapDetected = true
                 return true
@@ -465,7 +483,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
                         if (longPressDetected && !doubleTapDetected && !scrolling && maxFingerDown <= 1)
                             listener.onLongPressConfirmed(downEvent)
 
-                        if (doubleTapDetected && !longPressDetected && !scrolling && maxFingerDown <= 1)
+                        if (doubleTapDetected && !longPressDetected && !scrolling && !quickTap1Enabled && maxFingerDown <= 1)
                             listener.onDoubleTapConfirmed(downEvent)
 
                         val gestureDuration = (e.eventTime - downEvent.eventTime)
