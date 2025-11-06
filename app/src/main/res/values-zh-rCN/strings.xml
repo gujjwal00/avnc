@@ -234,4 +234,6 @@
     <string name="desc_view_mode_no_video">停用视频</string>
     <string name="pref_capture_pointer">捕获指针</string>
     <string name="pref_vk_row_count">行数</string>
+    <string name="pref_gesture_action_remote_back_press">在服务器上按返回</string>
+    <string name="pref_vk_use_super_with_single_tap">单次轻按使用超级键</string>
 </resources>
