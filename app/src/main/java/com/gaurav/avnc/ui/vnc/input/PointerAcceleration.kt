@@ -100,7 +100,7 @@ class PointerAcceleration(private val viewModel: VncViewModel) {
                 // When velocity starts increasing above T2, acceleration factor starts increasing
                 // quadratically to move the pointer faster and faster.
                 // Following equation is basically y = x^2, with a multiplier to reduce the y value.
-                else -> 0.0025f * ((velocity * velocity) / THRESHOLD2) + BASELINE_FACTOR
+                else -> 0.0005f * ((velocity * velocity) / THRESHOLD2) + BASELINE_FACTOR
             }
             return f.coerceIn(MIN_FACTOR, MAX_FACTOR)
         }
