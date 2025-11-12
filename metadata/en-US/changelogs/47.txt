@@ -1,0 +1,4 @@
+* Enabled pointer acceleration for Touchpad gesture style
+* Added option to operate Super/Windows virtual key with single tap
+* Added support for sending XF86Back and XF86Forward for mouse Back/Forward clicks
+* Fixed crash during Import/Export if no file manager app was installed
