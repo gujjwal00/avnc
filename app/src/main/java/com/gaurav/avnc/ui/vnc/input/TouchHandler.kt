@@ -379,8 +379,8 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         private val innerDetector2 = GestureDetector(context, InnerListener2()).apply { setIsLongpressEnabled(false) }
         private val innerDetector3 = GestureDetector(context, InnerListener3()).apply { setIsLongpressEnabled(false) }
 
-        private val quickTap1Enabled = prefs.input.gesture.canQuickTap1
-        private val enableLongPress = prefs.input.gesture.longPressDetectionEnabled
+        private val quickTap1Enabled = prefs.input.gesture.quickTap1Enabled
+        private val longPressEnabled = prefs.input.gesture.longPressDetectionEnabled
         private var longPressDetected = false
         private var doubleTapDetected = false
         private var scrolling = false
@@ -399,7 +399,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
             }
 
             override fun onLongPress(e: MotionEvent) {
-                if (!enableLongPress)
+                if (!longPressEnabled)
                     return
 
                 if (doubleTapDetected)
