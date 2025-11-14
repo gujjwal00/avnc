@@ -364,7 +364,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
          * -                                 +------------------+
          * -                              +->| [innerDetector1] |
          * -                              |  +------------------+
-         * -                              | (quick-tap, long-press)
+         * -                              |   (tap, long-press)
          * -   +----------------+  event  |
          * -   | [onTouchEvent] |---------+
          * -   +----------------+         |
@@ -372,12 +372,13 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
          * -                              |  +------------------+  double-tap event   +------------------+
          * -                              +->| [innerDetector2] |-------------------->| [innerDetector3] |
          * -                                 +------------------+                     +------------------+
-         * -                               (confirmed-tap, double-tap)                 (double-tap-swipe)
+         * -                                    (double-tap)                           (double-tap-swipe)
          *
          */
-        private val innerDetector1 = GestureDetector(context, InnerListener1()).apply { setOnDoubleTapListener(null) }
+        private val innerDetector1 = GestureDetector(context, InnerListener1())
         private val innerDetector2 = GestureDetector(context, InnerListener2()).apply { setIsLongpressEnabled(false) }
         private val innerDetector3 = GestureDetector(context, InnerListener3()).apply { setIsLongpressEnabled(false) }
+        private val innerDetector4 = GestureDetector(context, InnerListener4()).apply { setOnDoubleTapListener(null) }
 
         private val quickTap1Enabled = prefs.input.gesture.quickTap1Enabled
         private val longPressEnabled = prefs.input.gesture.longPressDetectionEnabled
@@ -392,8 +393,8 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
 
 
         private inner class InnerListener1 : SimpleOnGestureListener() {
-            override fun onSingleTapUp(e: MotionEvent): Boolean {
-                if (quickTap1Enabled)
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                if (!quickTap1Enabled)
                     listener.onSingleTapConfirmed(e)
                 return true
             }
@@ -416,12 +417,6 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         }
 
         private inner class InnerListener2 : SimpleOnGestureListener() {
-            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-                if (!quickTap1Enabled)
-                    listener.onSingleTapConfirmed(e)
-                return true
-            }
-
             override fun onDoubleTap(e: MotionEvent): Boolean {
                 doubleTapDetected = true
                 return true
@@ -434,6 +429,14 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
 
         private inner class InnerListener3 : SimpleOnGestureListener() {
             override fun onScroll(e1: MotionEvent?, e2: MotionEvent, dx: Float, dy: Float) = handleScroll(e1, e2, dx, dy)
+        }
+
+        private inner class InnerListener4 : SimpleOnGestureListener() {
+            override fun onSingleTapUp(e: MotionEvent): Boolean {
+                if (quickTap1Enabled)
+                    listener.onSingleTapConfirmed(e)
+                return true
+            }
         }
 
         private fun handleScroll(e1: MotionEvent?, e2: MotionEvent, dx: Float, dy: Float): Boolean {
@@ -467,6 +470,8 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         fun onTouchEvent(e: MotionEvent): Boolean {
             innerDetector1.onTouchEvent(e)
             innerDetector2.onTouchEvent(e)
+            if (quickTap1Enabled)
+                innerDetector4.onTouchEvent(e)
 
             when (e.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
