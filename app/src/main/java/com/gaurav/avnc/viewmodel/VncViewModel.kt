@@ -20,6 +20,7 @@ import com.gaurav.avnc.ui.vnc.FrameScroller
 import com.gaurav.avnc.ui.vnc.FrameState
 import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.util.LiveRequest
+import com.gaurav.avnc.util.Tones
 import com.gaurav.avnc.util.broadcastWoLPackets
 import com.gaurav.avnc.util.getClipboardText
 import com.gaurav.avnc.util.getUnknownCertificateMessage
@@ -507,4 +508,9 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     override fun onPointerMoved(x: Int, y: Int) {
         frameViewRef.get()?.requestRender()
     }
+
+    override fun onBell() {
+        pref.ui.bell?.let { Tones.notify(it) }
+    }
+
 }

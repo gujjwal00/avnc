@@ -28,6 +28,7 @@ class VncClientTest {
         override fun onGotXCutText(text: String) {
             cutText = text
         }
+        override fun onBell() {}
     }
 
 

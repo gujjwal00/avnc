@@ -53,8 +53,7 @@ class VncClient(private val observer: Observer) {
         fun onFramebufferUpdated()
         fun onFramebufferSizeChanged(width: Int, height: Int)
         fun onPointerMoved(x: Int, y: Int)
-
-        //fun onBell()
+        fun onBell()
     }
 
     /**
@@ -428,7 +427,7 @@ class VncClient(private val observer: Observer) {
 
 
     @Keep
-    private fun cbBell() = Unit // observer.onBell()
+    private fun cbBell() = observer.onBell()
 
     @Keep
     private fun cbHandleCursorPos(x: Int, y: Int) {

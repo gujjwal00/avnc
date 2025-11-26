@@ -118,6 +118,7 @@
     <string name="pref_gesture_action_remote_scroll">Faire défiler le contenu distant</string>
     <string name="pref_gesture_action_remote_drag">Faire glisser le contenu distant</string>
     <string name="pref_gesture_action_open_keyboard">Ouvrir le clavier</string>
+    <string name="pref_tone_nack">Non-acquittement</string>
     <string name="pref_prefer_advanced_editor">Ouvrir directement les options avancées du serveur</string>
     <string name="pref_logs">Journaux</string>
     <string name="pref_enable_pip">Picture-in-picture</string>
@@ -240,4 +241,9 @@
     <string name="msg_gesture_style_locked_to_touchpad">Style de geste \'Touchpad\' est actif</string>
     <string name="pref_long_press_swipe_disabled_summary">Désactivé par la valeur actuelle du geste <b>Pression longue</b></string>
     <string name="pref_toolbar_open_with_swipe">Faites glisser depuis le bord pour ouvrir</string>
+    <string name="pref_bell">Sonnerie</string>
+    <string name="pref_bell_help_msg">Son joué quand le serveur VNC envoie un message BELL. Ce son est joué avec le volume Android des notifications.</string>
+    <string name="pref_tone_ack">Acquittement</string>
+    <string name="pref_tone_beep">Bip</string>
+    <string name="pref_tone_beep2">Double bip</string>
 </resources>

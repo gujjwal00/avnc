@@ -19,6 +19,22 @@
         <item>light</item>
     </string-array>
 
+    <!-- Some TONE_ constants from android.media.ToneGenerator -->
+    <string-array name="tones_entries">
+        <item>@string/title_none</item>
+        <item>@string/pref_tone_ack</item>
+        <item>@string/pref_tone_beep</item>
+        <item>@string/pref_tone_beep2</item>
+        <item>@string/pref_tone_nack</item>
+    </string-array>
+    <string-array name="tones_values">
+        <item>none</item>
+        <item>25</item>
+        <item>24</item>
+        <item>28</item>
+        <item>26</item>
+    </string-array>
+
     <string-array name="orientation_entries">
         <item>@string/pref_orientation_option_auto</item>
         <item>@string/pref_orientation_option_portrait</item>

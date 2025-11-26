@@ -181,6 +181,12 @@
     <string name="pref_theme_option_system">System</string>
     <string name="pref_theme_option_dark">Dark</string>
     <string name="pref_theme_option_light">Light</string>
+    <string name="pref_bell">Bell</string>
+    <string name="pref_bell_help_msg">Sound played when the VNC server issues a BELL message. It is played with the Android notification volume.</string>
+    <string name="pref_tone_ack">Acknowledgment</string>
+    <string name="pref_tone_beep">Beep</string>
+    <string name="pref_tone_beep2">Double beep</string>
+    <string name="pref_tone_nack">Non-acknowledgment</string>
     <string name="pref_prefer_advanced_editor">Directly open advanced server options</string>
     <string name="pref_sort_server_list">Sort saved servers by name</string>
     <string name="pref_gesture">Gestures</string>

@@ -17,6 +17,16 @@
         app:title="@string/pref_theme"
         app:useSimpleSummaryProvider="true" />
 
+    <com.gaurav.avnc.ui.prefs.ListPreferenceEx
+        app:defaultValue="24"
+        app:entries="@array/tones_entries"
+        app:entryValues="@array/tones_values"
+        app:key="bell"
+        app:title="@string/pref_bell"
+        app:helpMessage="@string/pref_bell_help_msg"
+        app:widgetLayout="@layout/help_btn"
+        app:useSimpleSummaryProvider="true"/>
+
     <SwitchPreference
         app:defaultValue="false"
         app:key="sort_server_list"
