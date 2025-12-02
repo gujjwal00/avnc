@@ -208,7 +208,6 @@
     <string name="msg_normal_view_mode">Mode normal activé</string>
     <string name="msg_input_disabled">Saisie désactivée</string>
     <string name="msg_video_disabled">Vidéo désactivée</string>
-    <string name="msg_view_only_checkbox_migration">Vous pouvez maintenant désactiver la saisie en direct dans une session</string>
     <string name="msg_zoom_locked">Zoom verrouillé</string>
     <string name="msg_zoom_unlocked">Zoom déverrouillé</string>
     <string name="msg_saved">Sauvegardé</string>

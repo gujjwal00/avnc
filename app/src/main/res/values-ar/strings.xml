@@ -235,7 +235,6 @@
     <string name="msg_input_disabled">الأدخال مغلق</string>
     <string name="msg_video_disabled">العرض مغلق</string>
     <string name="msg_gesture_style_locked_to_touchpad">إيماءات \'لوحة اللمس\' مفعلة</string>
-    <string name="msg_view_only_checkbox_migration">الان يمكنك تعطيل الادخال في الجلسة</string>
     <string name="desc_view_modes_toggle">عرض الاوضاع</string>
     <string name="desc_view_mode_normal">الوضع العادي</string>
     <string name="desc_view_mode_no_input">تعطيل جميع المدخلات</string>

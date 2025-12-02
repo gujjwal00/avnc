@@ -88,7 +88,6 @@
     <string name="msg_video_disabled">Video disabled</string>
     <string name="msg_gesture_style_locked_to_touchpad">\'Touchpad\' gesture style is active</string>
     <!--Temporary message for view mode migration -->
-    <string name="msg_view_only_checkbox_migration">You can now disable input live in a session</string>
     <string name="msg_zoom_locked">Zoom locked</string>
     <string name="msg_zoom_unlocked">Zoom unlocked</string>
     <string name="msg_zoom_reset">Zoom reset to 100%</string>

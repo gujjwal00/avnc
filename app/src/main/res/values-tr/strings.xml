@@ -228,7 +228,6 @@
     <string name="msg_input_disabled">Giriş devre dışı</string>
     <string name="msg_video_disabled">Video devre dışı</string>
     <string name="msg_gesture_style_locked_to_touchpad">\'Dokunmatik yüzey\' hareket biçimi etkin</string>
-    <string name="msg_view_only_checkbox_migration">Artık oturumda canlı girişi devre dışı bırakabilirsiniz</string>
     <string name="msg_done">Tamam</string>
     <string name="msg_required">Gerekli</string>
     <string name="msg_invalid_mac_address">Geçersiz MAC adresi</string>
