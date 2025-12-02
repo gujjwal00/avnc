@@ -8,7 +8,6 @@
 
 package com.gaurav.avnc.ui.prefs
 
-import android.content.Context
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
 import android.os.Build
@@ -17,12 +16,9 @@ import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
 import androidx.preference.SwitchPreference
 import com.gaurav.avnc.R
-import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.util.DeviceAuthPrompt
-import com.gaurav.avnc.util.Tones
 import com.google.android.material.appbar.MaterialToolbar
 
 class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -81,37 +77,7 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
     }
 
     @Keep class Main : PrefFragment(R.xml.pref_main)
-    @Keep class Appearance : PrefFragment(R.xml.pref_appearance) {
-
-        private var listener: OnSharedPreferenceChangeListener? = null
-
-        override fun onAttach(context: Context) {
-            super.onAttach(context)
-            val prefs = AppPreferences(context)
-            listener = OnSharedPreferenceChangeListener { _, key ->
-                if (key == "bell") {
-                    prefs.ui.bell?.let { Tones.notify(it) }
-                }
-            }
-        }
-
-        override fun onStart() {
-            super.onStart()
-            context?.let {
-                PreferenceManager.getDefaultSharedPreferences(it)
-                        .registerOnSharedPreferenceChangeListener(listener)
-            }
-        }
-
-        override fun onStop() {
-            super.onStop()
-            context?.let {
-                PreferenceManager.getDefaultSharedPreferences(it)
-                        .unregisterOnSharedPreferenceChangeListener(listener)
-            }
-        }
-
-    }
+    @Keep class Appearance : PrefFragment(R.xml.pref_appearance)
 
     @Keep class Viewer : PrefFragment(R.xml.pref_viewer) {
         override fun onCreate(savedInstanceState: Bundle?) {

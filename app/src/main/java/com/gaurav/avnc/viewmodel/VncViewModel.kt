@@ -10,6 +10,7 @@ package com.gaurav.avnc.viewmodel
 
 import android.app.Application
 import android.graphics.RectF
+import android.media.ToneGenerator
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
@@ -510,7 +511,9 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     override fun onBell() {
-        pref.ui.bell?.let { Tones.notify(it) }
+        if (pref.ui.bell) {
+            Tones.notify(ToneGenerator.TONE_PROP_BEEP)
+        }
     }
 
 }

@@ -25,7 +25,7 @@ class AppPreferences(context: Context) {
 
     inner class UI {
         val theme = StringLivePref("theme", "system")
-        var bell by IntPref("bell", ToneGenerator.TONE_PROP_BEEP)
+        var bell by BooleanPref("bell_enabled", true)
         var preferAdvancedEditor by BooleanPref("prefer_advanced_editor", false)
         val sortServerList = BooleanLivePref("sort_server_list", false)
     }
@@ -120,23 +120,6 @@ class AppPreferences(context: Context) {
     inner class BooleanPref(val key: String, default: Boolean) : Pref<Boolean>({ getBoolean(key, default) }, { putBoolean(key, it) })
     inner class StringPref(val key: String, default: String?) : Pref<String?>({ getString(key, default) }, { putString(key, it) })
     inner class FloatPref(val key: String, default: Float) : Pref<Float>({ getFloat(key, default) }, { putFloat(key, it) })
-    inner class IntPref(val key: String, default: Int?) : Pref<Int?>(
-        {
-            val string = getString(key, null)
-            if (string == "none") {
-                null
-            } else {
-                string?.toIntOrNull() ?: default
-            }
-        },
-        {
-            if (it == null) {
-                putString(key, "none")
-            } else {
-                putString(key, it.toString())
-            }
-        },
-    )
 
     /**
      * For some preference changes we want to provide live feedback to user.
