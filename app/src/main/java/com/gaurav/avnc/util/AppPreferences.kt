@@ -10,6 +10,7 @@ package com.gaurav.avnc.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.ToneGenerator
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.preference.PreferenceManager
@@ -24,6 +25,7 @@ class AppPreferences(context: Context) {
 
     inner class UI {
         val theme = StringLivePref("theme", "system")
+        var bell by BooleanPref("bell_enabled", true)
         var preferAdvancedEditor by BooleanPref("prefer_advanced_editor", false)
         val sortServerList = BooleanLivePref("sort_server_list", false)
     }

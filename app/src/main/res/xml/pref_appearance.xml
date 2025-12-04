@@ -18,6 +18,11 @@
         app:useSimpleSummaryProvider="true" />
 
     <SwitchPreference
+        app:defaultValue="true"
+        app:key="bell_enabled"
+        app:title="@string/pref_bell"/>
+
+    <SwitchPreference
         app:defaultValue="false"
         app:key="sort_server_list"
         app:title="@string/pref_sort_server_list" />
