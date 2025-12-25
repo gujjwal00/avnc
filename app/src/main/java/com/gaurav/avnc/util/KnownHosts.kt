@@ -10,7 +10,6 @@ package com.gaurav.avnc.util
 
 import android.content.Context
 import android.util.Log
-import com.google.crypto.tink.subtle.Hex
 import java.io.File
 import java.security.MessageDigest
 import java.security.cert.Certificate
@@ -30,14 +29,25 @@ fun forgetKnownHosts(context: Context): Boolean {
 }
 
 //------------------ Trusted certificates -------------------------
+private fun bytesToHex(bytes: ByteArray): String {
+    val chars = "0123456789abcdef"
+    val result = StringBuilder(2 * bytes.size)
+    for (b in bytes) {
+        // convert to unsigned
+        val v = b.toInt() and 0xff
+        result.append(chars[v / 16])
+        result.append(chars[v % 16])
+    }
+    return result.toString()
+}
 
 private fun getTrustedCertsDir(context: Context) = File(context.filesDir, "trusted_certs")
 
 private fun getFileForTrustedCertificate(context: Context, certificate: Certificate): File {
     val certDigest = MessageDigest.getInstance("SHA1").digest(certificate.encoded)
-    val certFile = Hex.encode(certDigest)
+    val certFileName = bytesToHex(certDigest)
     val certDir = getTrustedCertsDir(context)
-    return File(certDir, certFile)
+    return File(certDir, certFileName)
 }
 
 /**
@@ -80,7 +90,6 @@ fun isCertificateTrusted(context: Context, certificate: Certificate): Boolean {
     return false
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 fun getUnknownCertificateMessage(certificate: X509Certificate): String {
     fun commonName(p: X500Principal) = p.name.split(',')  // Doesn't handle escaped comma
                                                .find { it.startsWith("CN=", true) }
