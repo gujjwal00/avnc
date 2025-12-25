@@ -46,10 +46,10 @@ import com.gaurav.avnc.util.OpenableDocument
 import com.gaurav.avnc.util.parseMacAddress
 import com.gaurav.avnc.viewmodel.EditorViewModel
 import com.gaurav.avnc.viewmodel.HomeViewModel
+import com.gaurav.avnc.viewmodel.service.PemKey
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
-import com.trilead.ssh2.crypto.PEMDecoder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -346,7 +346,8 @@ class AdvancedProfileEditor : Fragment() {
                     check(it.length < 2 * 1024 * 1024) { "File is too big [${it.length}]" }
                     key = it.createInputStream().use { s -> s.reader().use { r -> r.readText() } }
                 }
-                PEMDecoder.parsePEM(key.toCharArray()) //Try to parse key
+
+                PemKey(key) //Try to parse key
             }
 
             withContext(Dispatchers.Main) {
