@@ -20,7 +20,9 @@ import com.trilead.ssh2.Connection
 import com.trilead.ssh2.KnownHosts
 import com.trilead.ssh2.LocalPortForwarder
 import com.trilead.ssh2.ServerHostKeyVerifier
+import com.trilead.ssh2.crypto.OpenSSHKeyEncoder
 import com.trilead.ssh2.crypto.PEMDecoder
+import com.trilead.ssh2.crypto.PEMStructure
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -75,6 +77,46 @@ class HostKeyVerifier(private val observer: SshTunnel.Observer) : ServerHostKeyV
 
         return false
     }
+}
+
+/**
+ * Handler for PEM encoded private keys
+ */
+class PemKey(source: String) {
+    private var keyPair: KeyPair? = null
+    private val ps: PEMStructure?
+
+    init {
+        if (source.contains("-----BEGIN PRIVATE KEY-----")) {
+            ps = null
+            keyPair = parsePKCS8Key(source)
+        } else {
+            ps = PEMDecoder.parsePEM(source.toCharArray())
+            if (!PEMDecoder.isPEMEncrypted(ps))
+                keyPair = PEMDecoder.decode(ps, "")
+        }
+
+        check(keyPair != null || ps != null) { "Unsupported private key file" }
+    }
+
+    private fun parsePKCS8Key(key: String): KeyPair {
+        val pkBytes = key.substringAfter("-----BEGIN PRIVATE KEY-----")
+                .substringBefore("-----END PRIVATE KEY-----")
+                .let { kotlin.io.encoding.Base64.Mime.decode(it) }
+
+        return OpenSSHKeyEncoder.recoverKeyPair(pkBytes)
+    }
+
+    fun isEncrypted(): Boolean {
+        return keyPair == null && PEMDecoder.isPEMEncrypted(ps)
+    }
+
+    fun decrypt(password: String) {
+        checkNotNull(ps)
+        keyPair = PEMDecoder.decode(ps, password)
+    }
+
+    fun getKeyPair() = keyPair!!
 }
 
 /**
@@ -154,12 +196,12 @@ class SshTunnel(private val observer: Observer) {
                 if (cached != null) {
                     connection.authenticateWithPublicKey(profile.sshUsername, cached)
                 } else {
-                    val pem = PEMDecoder.parsePEM(pk.toCharArray())
-                    var password = ""
-                    if (PEMDecoder.isPEMEncrypted(pem)) {
-                        password = observer.getSshKeyPassword()  //Blocking call
+                    val pemKey = PemKey(pk)
+                    if (pemKey.isEncrypted()) {
+                        val password = observer.getSshKeyPassword()  //Blocking call
+                        pemKey.decrypt(password)
                     }
-                    val keyPair = PEMDecoder.decode(pem, password)
+                    val keyPair = pemKey.getKeyPair()
                     connection.authenticateWithPublicKey(profile.sshUsername, keyPair)
                     KeyCache.put(pk, keyPair)
                 }

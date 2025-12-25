@@ -53,6 +53,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import kotlinx.coroutines.runBlocking
+import org.apache.sshd.common.util.security.SecurityUtils
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -366,6 +367,15 @@ class SshTunnelTest {
                         -----END OPENSSH PRIVATE KEY-----
                         """
         const val ENCRYPTED_KEY_PASSWORD = "1234"
+
+        const val PKCS8_KEY = """
+                        -----BEGIN PRIVATE KEY-----
+                        MIG2AgEAMBAGByqGSM49AgEGBSuBBAAiBIGeMIGbAgEBBDBimbpEtheeSyycspfn
+                        o63tyCe/jPGi1UdOZPiHeDJvuguEoQlbIjCnrvVLT/s4sp2hZANiAAQ61WOxechs
+                        9DrgZAhZVMrxDpJi8w/HgdHeRJxSPZcsjgCBRfjnWQk552zJgYIyXJZeJ3f6Ucny
+                        SW2K9yTFyJwDDCdlfpynbarSu8ffUPkTK0ozfDit3utt9mRBi1sILpc=
+                        -----END PRIVATE KEY-----
+                        """
     }
 
     @Before
@@ -423,6 +433,21 @@ class SshTunnelTest {
             onView(withHint(R.string.hint_key_password)).doTypeText(ENCRYPTED_KEY_PASSWORD)
             onView(withText(android.R.string.ok)).doClick()
 
+            vncSession.assertConnected()
+            stop()
+        }
+    }
+
+    @Test
+    fun sshTunnelWithPKCS8Key() {
+        val pubKey = PKCS8_KEY.byteInputStream().use {
+            SecurityUtils.loadKeyPairIdentities(null, null, it, null).first().public
+        }
+
+        SshTunnelScenario().apply {
+            setupAuthWithKey(USER, pubKey, PKCS8_KEY)
+            start()
+            checkAndTrustHostFingerprint()
             vncSession.assertConnected()
             stop()
         }

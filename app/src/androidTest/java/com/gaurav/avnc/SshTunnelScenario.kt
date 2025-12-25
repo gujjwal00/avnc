@@ -63,11 +63,16 @@ class SshTunnelScenario {
     }
 
     fun setupAuthWithKey(user: String, key: String, keyPassword: String?) {
+        val pubKey = PEMDecoder.decode(key.toCharArray(), keyPassword).public
+        setupAuthWithKey(user, pubKey, key)
+    }
+
+    fun setupAuthWithKey(user: String, pubKey: PublicKey, keyStr: String) {
         testUser = user
-        testPubKey = PEMDecoder.decode(key.toCharArray(), keyPassword).public
+        testPubKey = pubKey
         profile.sshAuthType = ServerProfile.SSH_AUTH_KEY
         profile.sshUsername = testUser
-        profile.sshPrivateKey = key
+        profile.sshPrivateKey = keyStr
     }
 
     fun start() = apply {
