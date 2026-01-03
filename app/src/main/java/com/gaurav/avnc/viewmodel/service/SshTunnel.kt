@@ -201,7 +201,7 @@ class SshTunnel(private val viewModel: VncViewModel) {
 
     /**
      * In many error conditions, SSHLib throws [IOException] with a generic message
-     * like 'An error happened when connecting'. This gives not indication to the user about
+     * like 'An error happened when connecting'. This gives no indication to users about
      * actual cause of the error. So this function attempts to find the root cause of the
      * error, and provide a better message to the user.
      */

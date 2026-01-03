@@ -29,7 +29,7 @@ class TestServer(name: String = "Friends") {
     //Protocol config
     private val protocol = "RFB 003.008\n"
     private val serverName = name.toByteArray()
-    private val securityTypes = byteArrayOf(1, 2, 18, 19)
+    private val securityTypes = byteArrayOf(1, 2)
     private val securityFailReason = "We should take a break!"
     private val frameWidth: Short = 10
     private val frameHeight: Short = 10
@@ -41,18 +41,28 @@ class TestServer(name: String = "Friends") {
     private val serverJob = Thread { theServer() }
     val host = ss.inetAddress.hostAddress!!
     val port = ss.localPort
-    var receivedKeySyms = mutableListOf<Pair<Int, Boolean>>()
+
+    @Volatile
+    private var stopRequested = false
+
+    //Event log
+    val receivedKeySyms = mutableListOf<Pair<Int, Boolean>>()
     val receivedKeyDowns get() = receivedKeySyms.filter { it.second }.map { it.first }
-    var receivedCutText = ""
-    var receivedIncrementalUpdateRequests = 0
+    var receivedCutText = ""; private set
+    var receivedIncrementalUpdateRequests = 0; private set
 
 
     fun start() {
         serverJob.start()
     }
 
+    fun stop() {
+        stopRequested = true
+        awaitStop()
+    }
+
     fun awaitStop() {
-        serverJob.join(30_000)
+        serverJob.join()
     }
 
     fun sendCutText(str: String) {
@@ -103,14 +113,14 @@ class TestServer(name: String = "Friends") {
         output.write(serverName)
 
         // Msg Loop
-        while (true) {
+        while (!stopRequested) {
 
-            //Read the incoming message with a timeout
+            //Read the incoming message type with a timeout
             socket.soTimeout = 100
-            val msg = runCatching { input.read() }.getOrNull() ?: -2
+            val msgType = runCatching { input.read() }.getOrNull() ?: -2
             socket.soTimeout = 0
 
-            when (msg) {
+            when (msgType) {
 
                 3 -> { //FramebufferUpdateRequest
 
@@ -161,21 +171,21 @@ class TestServer(name: String = "Friends") {
                     receivedCutText = StandardCharsets.ISO_8859_1.decode(textBuffer).toString()
                 }
 
-                -1 -> return //EOF
+                -1 -> break //EOF
             }
 
             //Send queued cut-text to client
-            cutTextQueue.peek()?.let {
+            cutTextQueue.poll()?.let {
                 val bytes = StandardCharsets.ISO_8859_1.encode(it).array()
 
                 output.write(3) //ServerCutText
                 output.write(ByteArray(3)) //Padding
                 output.write(toByteArray(bytes.size))
                 output.write(bytes)
-
-                cutTextQueue.remove()
             }
         }
+
+        socket.close()
     }
 
     private fun toByteArray(i: Int): ByteArray {
@@ -186,9 +196,9 @@ class TestServer(name: String = "Friends") {
         return ByteBuffer.allocate(2).putShort(s).order(ByteOrder.BIG_ENDIAN).array()
     }
 
-    private fun readInt(input: InputStream) =
-            input.read().shl(24) +
-            input.read().shl(16) +
-            input.read().shl(8) +
-            input.read()
+    private val intBytes = ByteArray(4)
+    private fun readInt(input: InputStream): Int {
+        input.read(intBytes)
+        return ByteBuffer.wrap(intBytes).order(ByteOrder.BIG_ENDIAN).getInt()
+    }
 }
