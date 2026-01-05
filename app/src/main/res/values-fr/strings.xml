@@ -8,7 +8,7 @@
     <string name="title_advanced">Avancé</string>
     <string name="title_cancel">Annuler</string>
     <string name="title_save">Enregistrer</string>
-    <string name="title_undo">Annuler</string>
+    <string name="title_undo">Défaire</string>
     <string name="title_settings">Paramètres</string>
     <string name="title_vnc_login">Connexion VNC</string>
     <string name="title_export">Exporter</string>
@@ -240,4 +240,7 @@
     <string name="pref_long_press_swipe_disabled_summary">Désactivé par la valeur actuelle du geste <b>Pression longue</b></string>
     <string name="pref_toolbar_open_with_swipe">Faites glisser depuis le bord pour ouvrir</string>
     <string name="pref_bell">Sonnerie</string>
+    <string name="title_enable_wol">Wake-on-LAN</string>
+    <string name="title_got_it">J\'ai compris</string>
+    <string name="pref_vk_use_super_with_single_tap">Utilisation de la touche super avec un seul appuis</string>
 </resources>
