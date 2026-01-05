@@ -10,7 +10,6 @@ package com.gaurav.avnc.ui.vnc
 
 import android.view.KeyEvent
 import androidx.core.content.edit
-import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onIdle
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.pressImeActionButton
@@ -29,14 +28,14 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.gaurav.avnc.CleanPrefsRule
 import com.gaurav.avnc.R
-import com.gaurav.avnc.TestServer
+import com.gaurav.avnc.VncSessionScenario
+import com.gaurav.avnc.VncSessionTest
 import com.gaurav.avnc.checkIsDisplayed
 import com.gaurav.avnc.checkIsNotDisplayed
 import com.gaurav.avnc.checkWillBeDisplayed
 import com.gaurav.avnc.doClick
 import com.gaurav.avnc.doLongClick
 import com.gaurav.avnc.doTypeText
-import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.runOnMainSync
 import com.gaurav.avnc.targetContext
 import com.gaurav.avnc.targetPrefs
@@ -44,45 +43,20 @@ import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.vnc.XKeySym
 import org.junit.Assert
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class VirtualKeysTest {
+class VirtualKeysTest : VncSessionTest() {
 
     @JvmField
     @Rule
     val prefsRule = CleanPrefsRule()
 
-    private lateinit var testServer: TestServer
-
-    //TODO: Simplify these tests
-    private fun testWrapper(block: () -> Unit) {
-        testServer = TestServer()
-        testServer.start()
-
-        val profile = ServerProfile(host = testServer.host, port = testServer.port)
-        val intent = createVncIntent(targetContext, profile)
-
-        ActivityScenario.launch<VncActivity>(intent).use {
-            onView(withId(R.id.frame_view)).checkWillBeDisplayed()            // Wait for connection
-            onView(withId(R.id.drawer_layout)).perform(DrawerActions.close()) // Suppress initial drawer open
-            block()
-        }
-
-        testServer.awaitStop()
-    }
-
-    @Before
-    fun before() {
-        targetPrefs.edit { putBoolean("run_info_has_shown_viewer_help", true) }
-    }
-
     @Test
     fun basicTest() {
-        testWrapper {
+        vncSession.run {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.virtual_keys_btn)).doClick()
 
@@ -96,12 +70,12 @@ class VirtualKeysTest {
         }
 
         //Tab should be received by the server
-        assertEquals(arrayListOf(XKeySym.XK_Tab), testServer.receivedKeyDowns)
+        assertEquals(arrayListOf(XKeySym.XK_Tab), vncSession.server.receivedKeyDowns)
     }
 
     @Test
     fun showAllKeys() {
-        testWrapper {
+        vncSession.run {
             targetPrefs.edit { putBoolean("vk_show_all", true) }
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.virtual_keys_btn)).doClick()
@@ -114,7 +88,7 @@ class VirtualKeysTest {
 
     @Test
     fun openWithKeyboard() {
-        testWrapper {
+        vncSession.run {
             targetPrefs.edit { putBoolean("vk_open_with_keyboard", true) }
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.keyboard_btn)).doClick()
@@ -129,7 +103,7 @@ class VirtualKeysTest {
 
     @Test
     fun visibilityShouldBeSavedAcrossSessions() {
-        testWrapper {
+        VncSessionScenario().run {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.virtual_keys_btn)).doClick()
             onIdle()
@@ -138,8 +112,8 @@ class VirtualKeysTest {
             onView(withText("Tab")).checkIsDisplayed()
         }
 
-        testWrapper {
-            // Was open previously, so expect it to open
+        VncSessionScenario().run {
+            // Was open previously, so expect it to open automatically
             onIdle()
             onView(withText("Ctrl")).checkWillBeDisplayed()
             onView(withText("Alt")).checkIsDisplayed()
@@ -150,10 +124,10 @@ class VirtualKeysTest {
             onView(withText("Ctrl")).checkIsNotDisplayed()
         }
 
-        testWrapper {
-            // should remain closed
+        VncSessionScenario().run {
+            // Was closed, so should remain closed
             onIdle()
-            Thread.sleep(100)
+            Thread.sleep(400)
             onView(withText("Ctrl")).check(doesNotExist())
         }
     }
@@ -162,7 +136,7 @@ class VirtualKeysTest {
     fun textBoxInput() {
         val text = "abcxyzABCXYZ1234567890{}[]()`~@#$%^&*_+-=/*"
 
-        testWrapper {
+        vncSession.run {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.virtual_keys_btn)).doClick()
             onView(withText("Ctrl")).checkIsDisplayed()
@@ -175,7 +149,7 @@ class VirtualKeysTest {
         }
 
         val sentByClient = text.toCharArray().map { it.code }.toList()
-        val receivedOnServer = testServer.receivedKeyDowns.filter { it != XKeySym.XK_Shift_L }.toList()
+        val receivedOnServer = vncSession.server.receivedKeyDowns.filter { it != XKeySym.XK_Shift_L }.toList()
 
         assertEquals(sentByClient, receivedOnServer)
     }
@@ -183,31 +157,31 @@ class VirtualKeysTest {
     @Test
     fun superWithSingleTap() {
         targetPrefs.edit { putBoolean("vk_use_super_with_single_tap", true) }
-        testWrapper {
+        vncSession.run {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.virtual_keys_btn)).doClick()
             onView(withContentDescription("Super")).checkWillBeDisplayed().doClick()
         }
 
         assertEquals(listOf(Pair(XKeySym.XK_Super_L, true), Pair(XKeySym.XK_Super_L, false)),
-                     testServer.receivedKeySyms)
+                     vncSession.server.receivedKeySyms)
     }
 
     @Test
     fun vkModifierKeysShouldApplyToKeyPressedOnKeyboard() {
-        testWrapper {
+        vncSession.run {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.virtual_keys_btn)).doClick()
 
             onView(withText("Shift")).checkWillBeDisplayed().doClick()
             onView(withId(R.id.frame_view)).doTypeText("a") // Should be sent as uppercase A to server
         }
-        assertEquals(listOf(XKeySym.XK_Shift_L, XKeySym.XK_A), testServer.receivedKeyDowns)
+        assertEquals(listOf(XKeySym.XK_Shift_L, XKeySym.XK_A), vncSession.server.receivedKeyDowns)
     }
 
     @Test
     fun unlockedToggleKeysShouldBeReleasedWithNextKey() {
-        testWrapper {
+        vncSession.run {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.virtual_keys_btn)).doClick()
 
@@ -221,7 +195,7 @@ class VirtualKeysTest {
 
     @Test
     fun lockedToggleKeysShouldRemainLockedAfterNextKeys() {
-        testWrapper {
+        vncSession.run {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.virtual_keys_btn)).doClick()
 
