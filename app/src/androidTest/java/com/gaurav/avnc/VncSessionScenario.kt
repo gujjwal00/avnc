@@ -13,8 +13,10 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.model.db.MainDb
 import com.gaurav.avnc.ui.vnc.VncActivity
 import com.gaurav.avnc.ui.vnc.createVncIntent
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 
 /**
@@ -60,6 +62,16 @@ class VncSessionScenario {
         } finally {
             stop()
         }
+    }
+
+    fun saveProfileToDB(db: MainDb) = apply {
+        runBlocking {
+            profile.ID = db.serverProfileDao.save(profile)
+        }
+    }
+
+    fun onActivity(action: ActivityScenario.ActivityAction<VncActivity>) {
+        activityScenario!!.onActivity(action)
     }
 
     private fun suppressViewerHelp() {

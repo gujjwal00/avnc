@@ -53,7 +53,8 @@ class TestServer(name: String = "Friends") {
 
 
     fun start() {
-        serverJob.start()
+        if (!serverJob.isAlive && !stopRequested)
+            serverJob.start()
     }
 
     fun stop() {

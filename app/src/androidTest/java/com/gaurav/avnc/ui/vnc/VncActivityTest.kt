@@ -31,7 +31,7 @@ import com.gaurav.avnc.CleanPrefsRule
 import com.gaurav.avnc.EmptyDatabaseRule
 import com.gaurav.avnc.ProgressAssertion
 import com.gaurav.avnc.R
-import com.gaurav.avnc.TestServer
+import com.gaurav.avnc.VncSessionTest
 import com.gaurav.avnc.checkIsDisplayed
 import com.gaurav.avnc.checkIsNotDisplayed
 import com.gaurav.avnc.checkWillBeDisplayed
@@ -96,10 +96,7 @@ class StartupTest {
 }
 
 @RunWith(AndroidJUnit4::class)
-class VncActivityTest {
-
-    private lateinit var testServer: TestServer
-    private lateinit var profile: ServerProfile
+class VncActivityTest : VncSessionTest() {
 
     @Rule
     @JvmField
@@ -109,37 +106,14 @@ class VncActivityTest {
     @JvmField
     val prefRule = CleanPrefsRule()
 
-    //TODO: Simplify these tests
-    private fun testWrapper(useDatabase: Boolean = false, profileModifier: ((ServerProfile) -> Unit)? = null,
-                            block: (ActivityScenario<VncActivity>) -> Unit) {
-        testServer = TestServer()
-        testServer.start()
-        targetPrefs.edit { putBoolean("run_info_has_shown_viewer_help", true) }
-
-        profile = ServerProfile(host = testServer.host, port = testServer.port)
-        profileModifier?.invoke(profile)
-        if (useDatabase) {
-            runBlocking {
-                profile.ID = dbRule.db.serverProfileDao.save(profile)
-            }
-        }
-        val intent = createVncIntent(targetContext, profile)
-
-        ActivityScenario.launch<VncActivity>(intent).use {
-            onView(withId(R.id.frame_view)).checkWillBeDisplayed()            // Wait for connection
-            onView(withId(R.id.drawer_layout)).perform(DrawerActions.close()) // Suppress initial drawer open
-            block(it)
-        }
-
-        testServer.awaitStop()
+    private fun loadProfileFromDB() = runBlocking {
+        dbRule.db.serverProfileDao.getByID(vncSession.profile.ID)
     }
-
-    private fun loadTestProfile() = runBlocking { dbRule.db.serverProfileDao.getByID(profile.ID) }
 
 
     @Test
     fun openKeyboard() {
-        testWrapper {
+        vncSession.run {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.keyboard_btn)).doClick()
             onIdle()
@@ -154,12 +128,12 @@ class VncActivityTest {
     fun textInput() {
         val text = "abcxyzABCXYZ1234567890{}[]()`~@#$%^&*_+-=/*"
 
-        testWrapper {
+        vncSession.run {
             onView(withId(R.id.frame_view)).doTypeText(text)
         }
 
         val sentByClient = text.toCharArray().map { it.code }.toList()
-        val receivedOnServer = testServer.receivedKeyDowns.filter { it != XKeySym.XK_Shift_L }.toList()
+        val receivedOnServer = vncSession.server.receivedKeyDowns.filter { it != XKeySym.XK_Shift_L }.toList()
 
         assertEquals(sentByClient, receivedOnServer)
     }
@@ -194,8 +168,8 @@ class VncActivityTest {
     fun clientToServerClipboard() {
         val sample = "Pivot! Pivot! Pivot! Pivot!!!"
         setClipboardText(sample)
-        testWrapper {
-            pollingAssert { assertEquals(sample, testServer.receivedCutText) }
+        vncSession.run {
+            pollingAssert { assertEquals(sample, vncSession.server.receivedCutText) }
         }
     }
 
@@ -203,8 +177,8 @@ class VncActivityTest {
     fun clientToServerClipboardWithHtmlClip() {
         val sample = "Pivot! Pivot! Pivot! Pivot!!!"
         setClipboardHtml(sample)
-        testWrapper {
-            pollingAssert { assertEquals(sample, testServer.receivedCutText) }
+        vncSession.run {
+            pollingAssert { assertEquals(sample, vncSession.server.receivedCutText) }
         }
     }
 
@@ -212,8 +186,8 @@ class VncActivityTest {
     @SdkSuppress(minSdkVersion = 28)
     fun remoteBackPressOnMouseBack() {
         targetPrefs.edit { putString("mouse_back", "remote-back-press") }
-        testWrapper {
-            it.onActivity { activity ->
+        vncSession.run {
+            vncSession.onActivity { activity ->
                 val mouseDevice = mockk<InputDevice>()
                 every { mouseDevice.supportsSource(InputDevice.SOURCE_MOUSE) } returns true
                 mockkStatic(InputDevice::getDevice) {
@@ -223,14 +197,15 @@ class VncActivityTest {
                 }
             }
         }
-        assertEquals(XKeySym.XF86XK_Back, testServer.receivedKeyDowns.getOrNull(0))
+        assertEquals(XKeySym.XF86XK_Back, vncSession.server.receivedKeyDowns.getOrNull(0))
     }
 
 
     /*************************** Toolbar *******************************************/
     @Test
     fun gestureStyleUiTouchpad() {
-        testWrapper(profileModifier = { it.gestureStyle = "touchpad" }) {
+        vncSession.profile.gestureStyle = "touchpad"
+        vncSession.run {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.gesture_style_toggle)).checkWillBeDisplayed().doClick()
             onView(withText(R.string.pref_gesture_style_touchpad))
@@ -241,7 +216,8 @@ class VncActivityTest {
 
     @Test
     fun gestureStyleUiTouchscreen() {
-        testWrapper(profileModifier = { it.gestureStyle = "touchscreen" }) {
+        vncSession.profile.gestureStyle = "touchscreen"
+        vncSession.run {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.gesture_style_toggle)).checkWillBeDisplayed().doClick()
             onView(withText(R.string.pref_gesture_style_touchscreen))
@@ -252,7 +228,8 @@ class VncActivityTest {
 
     @Test
     fun gestureStyleChange() {
-        testWrapper(useDatabase = true) {
+        vncSession.saveProfileToDB(dbRule.db)
+        vncSession.run {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.gesture_style_toggle)).checkWillBeDisplayed().doClick()
             onView(withText(R.string.pref_gesture_style_auto)).checkWillBeDisplayed()
@@ -260,14 +237,14 @@ class VncActivityTest {
 
             // Test switching to touchpad
             onView(withId(R.id.gesture_style_touchpad)).doClick()
-            pollingAssert { assertEquals("touchpad", loadTestProfile()?.gestureStyle) }
-            it.onActivity { a -> assertEquals("touchpad", a.viewModel.activeGestureStyle.value) }
+            pollingAssert { assertEquals("touchpad", loadProfileFromDB()?.gestureStyle) }
+            vncSession.onActivity { a -> assertEquals("touchpad", a.viewModel.activeGestureStyle.value) }
         }
     }
 
     @Test
     fun normalViewMode() {
-        testWrapper {
+        vncSession.run {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.view_modes_toggle)).checkWillBeDisplayed().doClick()
             onView(withContentDescription(R.string.desc_view_mode_normal))
@@ -285,7 +262,8 @@ class VncActivityTest {
 
     @Test
     fun noInputMode() {
-        testWrapper(useDatabase = true) {
+        vncSession.saveProfileToDB(dbRule.db)
+        vncSession.run {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.view_modes_toggle)).checkWillBeDisplayed().doClick()
             onView(withContentDescription(R.string.desc_view_mode_no_input))
@@ -301,16 +279,17 @@ class VncActivityTest {
             onView(withText(R.string.msg_video_disabled)).check(doesNotExist())
             onView(withId(R.id.frame_view)).checkIsDisplayed().doTypeText("abc")
 
-            pollingAssert { assertEquals(ServerProfile.VIEW_MODE_NO_INPUT, loadTestProfile()?.viewMode) }
-            it.onActivity { a -> assertEquals(ServerProfile.VIEW_MODE_NO_INPUT, a.viewModel.activeViewMode.value) }
+            pollingAssert { assertEquals(ServerProfile.VIEW_MODE_NO_INPUT, loadProfileFromDB()?.viewMode) }
+            vncSession.onActivity { a -> assertEquals(ServerProfile.VIEW_MODE_NO_INPUT, a.viewModel.activeViewMode.value) }
         }
 
-        assertEquals(0, testServer.receivedKeyDowns.size)
+        assertEquals(0, vncSession.server.receivedKeyDowns.size)
     }
 
     @Test
     fun noVideoMode() {
-        testWrapper(useDatabase = true) {
+        vncSession.saveProfileToDB(dbRule.db)
+        vncSession.run {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.view_modes_toggle)).checkWillBeDisplayed().doClick()
             onView(withContentDescription(R.string.desc_view_mode_no_video))
@@ -325,8 +304,8 @@ class VncActivityTest {
 
             onView(withText(R.string.msg_video_disabled)).checkWillBeDisplayed()
 
-            pollingAssert { assertEquals(ServerProfile.VIEW_MODE_NO_VIDEO, loadTestProfile()?.viewMode) }
-            it.onActivity { a ->
+            pollingAssert { assertEquals(ServerProfile.VIEW_MODE_NO_VIDEO, loadProfileFromDB()?.viewMode) }
+            vncSession.onActivity { a ->
                 assertEquals(ServerProfile.VIEW_MODE_NO_VIDEO, a.viewModel.activeViewMode.value)
                 repeat(10) {
                     a.viewModel.refreshFrameBuffer()
@@ -335,7 +314,7 @@ class VncActivityTest {
         }
 
         // no-video mode is implemented by stopping incremental updates
-        assertEquals(1, testServer.receivedIncrementalUpdateRequests)
+        assertEquals(1, vncSession.server.receivedIncrementalUpdateRequests)
     }
 
     @Test
@@ -344,7 +323,7 @@ class VncActivityTest {
             putBoolean("toolbar_open_with_button", true)
         }
 
-        testWrapper {
+        vncSession.run {
             onView(withId(R.id.open_toolbar_btn)).checkWillBeDisplayed().doClick()
             onView(withId(R.id.keyboard_btn)).checkWillBeDisplayed()
             onView(withId(R.id.virtual_keys_btn)).checkIsDisplayed()
