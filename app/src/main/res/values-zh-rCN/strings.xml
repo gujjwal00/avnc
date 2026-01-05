@@ -235,4 +235,5 @@
     <string name="pref_vk_row_count">行数</string>
     <string name="pref_gesture_action_remote_back_press">在服务器上按返回</string>
     <string name="pref_vk_use_super_with_single_tap">单次轻按使用超级键</string>
+    <string name="pref_bell">响铃</string>
 </resources>

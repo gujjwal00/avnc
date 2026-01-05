@@ -169,7 +169,7 @@
     <string name="pref_gesture_style_touchpad">Сенсорная панель</string>
     <string name="pref_gesture_style_touchscreen_summary">Выполнять действия в точках соприкосновения</string>
     <string name="pref_per_orientation_zoom">Отдельное масштабирование для каждой ориентации</string>
-    <string name="pref_display_cutout">Заполнить зону выреза экрана</string>
+    <string name="pref_display_cutout">Заполнить всю зону выреза экрана</string>
     <string name="msg_invalid_vnc_uri">Неверный VNC URI</string>
     <string name="msg_button_up_delay_help">Задержка событий нажатия может помочь в некоторых редких случаях, если приложение не реагирует на нажатия.</string>
     <string name="msg_shortcut_server_deleted">Этот сервер был удален</string>
@@ -234,4 +234,17 @@
     <string name="pref_toolbar_open_with_button">Показать кнопку, чтобы открыть</string>
     <string name="desc_toolbar_btn">Открыть панель инструментов</string>
     <string name="pref_long_press_swipe_disabled_summary">Отключено текущим значением жеста <b>Длительное нажатие</b></string>
+    <string name="pref_vk_use_super_with_single_tap">Использовать клавишу Super одним нажатием</string>
+    <string name="hint_wol_address">Адрес вещания (необязательно)</string>
+    <string name="msg_normal_view_mode">Включён обычный режим</string>
+    <string name="msg_input_disabled">Ввод отключён</string>
+    <string name="msg_video_disabled">Видео отключено</string>
+    <string name="msg_gesture_style_locked_to_touchpad">Стиль жеста «Сенсорный тачпад» активирован</string>
+    <string name="desc_view_modes_toggle">Режимы просмотра</string>
+    <string name="desc_view_mode_normal">Обычный режим</string>
+    <string name="desc_view_mode_no_input">Отключить все вводы</string>
+    <string name="desc_view_mode_no_video">Отключить видео</string>
+    <string name="pref_gesture_action_remote_back_press">Обратный звонок на сервере</string>
+    <string name="pref_capture_pointer">Захватывать указатель</string>
+    <string name="pref_vk_row_count">Рядков</string>
 </resources>

@@ -247,4 +247,5 @@
     <string name="pref_forget_known_hosts_question">Bilinen SSH ana makineleri ve güvenilir sunucu sertifikaları unutulsun mu?</string>
     <string name="pref_gesture_action_remote_back_press">Sunucuda geri basma</string>
     <string name="pref_vk_use_super_with_single_tap">Tek dokunma ile Süper tuşunu kullan</string>
+    <string name="pref_bell">Zil</string>
 </resources>
