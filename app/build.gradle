@@ -83,6 +83,7 @@ android {
     packaging {
         resources.excludes += "META-INF/LICENSE.md"
         resources.excludes += "META-INF/LICENSE-notice.md"
+        resources.excludes += "META-INF/DEPENDENCIES"
     }
 }
 
@@ -124,4 +125,5 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit-ktx:1.3.0"
     androidTestImplementation "androidx.room:room-testing:$roomVersion"
     androidTestImplementation "io.mockk:mockk-android:1.14.5"
+    androidTestImplementation 'org.apache.sshd:sshd-core:2.16.0'
 }
