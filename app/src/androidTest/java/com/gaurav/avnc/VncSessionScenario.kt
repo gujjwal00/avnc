@@ -11,12 +11,15 @@ package com.gaurav.avnc
 import androidx.core.content.edit
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.model.db.MainDb
 import com.gaurav.avnc.ui.vnc.VncActivity
 import com.gaurav.avnc.ui.vnc.createVncIntent
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.core.IsNot.not
 import org.junit.Before
 
 /**
@@ -40,7 +43,7 @@ class VncSessionScenario {
 
     fun assertConnected() = apply {
         onView(withId(R.id.frame_view)).checkWillBeDisplayed()
-        pollingAssert { onView(withId(R.id.status_container)).checkIsNotDisplayed() }
+        onView(withId(R.id.status_container)).checkWithTimeout(matches(not(isDisplayed())))
     }
 
     fun start() = apply {

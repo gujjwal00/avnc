@@ -38,6 +38,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.viewpager2.widget.ViewPager2
@@ -106,6 +107,7 @@ fun ViewInteraction.performWithTimeout(action: ViewAction, timeout: Int = 5000):
  */
 fun ViewInteraction.checkIsDisplayed() = check(matches(isDisplayed()))!!
 fun ViewInteraction.checkWillBeDisplayed() = checkWithTimeout(matches(isDisplayed()))
+fun ViewInteraction.checkWillBeCompletelyDisplayed() = checkWithTimeout(matches(isCompletelyDisplayed()))
 fun ViewInteraction.checkIsNotDisplayed() = check(matches(not(isDisplayed())))!!
 fun ViewInteraction.doClick() = perform(click())!!
 fun ViewInteraction.doLongClick() = perform(longClick())!!

@@ -82,7 +82,7 @@ class IntentReceiverTest {
         val server = TestServer().apply { start() }
         ActivityScenario.launch<Activity>(newUriIntent("vnc://localhost:${server.port}")).use {
             onView(withId(R.id.frame_view)).checkWillBeDisplayed()
-            assertEquals(Lifecycle.State.DESTROYED, it.state)
+            pollingAssert { assertEquals(Lifecycle.State.DESTROYED, it.state) }
         }
     }
 

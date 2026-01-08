@@ -36,6 +36,7 @@ import com.gaurav.avnc.SshTunnelScenario
 import com.gaurav.avnc.VncSessionTest
 import com.gaurav.avnc.checkIsDisplayed
 import com.gaurav.avnc.checkIsNotDisplayed
+import com.gaurav.avnc.checkWillBeCompletelyDisplayed
 import com.gaurav.avnc.checkWillBeDisplayed
 import com.gaurav.avnc.doClick
 import com.gaurav.avnc.doTypeText
@@ -271,7 +272,7 @@ class VncActivityTest : VncSessionTest() {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.view_modes_toggle)).checkWillBeDisplayed().doClick()
             onView(withContentDescription(R.string.desc_view_mode_no_input))
-                    .checkWillBeDisplayed()
+                    .checkWillBeCompletelyDisplayed()
                     .check(matches(isNotChecked()))
                     .doClick()
 
@@ -297,7 +298,7 @@ class VncActivityTest : VncSessionTest() {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.view_modes_toggle)).checkWillBeDisplayed().doClick()
             onView(withContentDescription(R.string.desc_view_mode_no_video))
-                    .checkWillBeDisplayed()
+                    .checkWillBeCompletelyDisplayed()
                     .check(matches(isNotChecked()))
                     .doClick()
 
