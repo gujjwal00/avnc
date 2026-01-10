@@ -15,6 +15,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.gaurav.avnc.R
 import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.vnc.FrameScroller
@@ -24,6 +25,7 @@ import com.gaurav.avnc.util.LiveRequest
 import com.gaurav.avnc.util.Tones
 import com.gaurav.avnc.util.broadcastWoLPackets
 import com.gaurav.avnc.util.getClipboardText
+import com.gaurav.avnc.util.getKnownHostsFile
 import com.gaurav.avnc.util.getUnknownCertificateMessage
 import com.gaurav.avnc.util.isCertificateTrusted
 import com.gaurav.avnc.util.setClipboardText
@@ -184,7 +186,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      */
     val messenger = Messenger(client)
 
-    private val sshTunnel = SshTunnel(this)
+    private val sshTunnel = SshTunnel(SshTunnelObserver())
 
     /**
      * Used to confirm something with user before continuing.
@@ -265,7 +267,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
                 client.connect(profile.host, profile.port)
 
             ServerProfile.CHANNEL_SSH_TUNNEL ->
-                sshTunnel.open().use {
+                sshTunnel.open(profile).use {
                     client.connect(it.host, it.port)
                 }
 
@@ -516,4 +518,24 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
         }
     }
 
+    /**************************************************************************
+     * [SshTunnel.Observer] Implementation
+     **************************************************************************/
+    private inner class SshTunnelObserver : SshTunnel.Observer {
+        override fun getKnownSshHostsFile() = getKnownHostsFile(app)
+
+        override fun getSshPassword(): String {
+            return getLoginInfo(LoginInfo.Type.SSH_PASSWORD).password
+        }
+
+        override fun getSshKeyPassword(): String {
+            return getLoginInfo(LoginInfo.Type.SSH_KEY_PASSWORD).password
+        }
+
+        override fun confirmHostKey(message: String, isNewHost: Boolean): Boolean {
+            val titleRes = if (isNewHost) R.string.title_unknown_ssh_host else R.string.title_ssh_host_key_changed
+            val title = app.getString(titleRes)
+            return confirmationRequest.requestResponse(Pair(title, message))
+        }
+    }
 }
