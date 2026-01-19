@@ -9,6 +9,7 @@
 package com.gaurav.avnc
 
 import java.io.InputStream
+import java.io.OutputStream
 import java.net.ServerSocket
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -37,8 +38,8 @@ class TestServer(name: String = "Friends") {
 
     //Server config
     private val ss = ServerSocket(0)
-    private val cutTextQueue = LinkedTransferQueue<String>()
     private val serverJob = Thread { theServer() }
+    private val queuedActions = LinkedTransferQueue<(OutputStream) -> Unit>()
     val host = ss.inetAddress.hostAddress!!
     val port = ss.localPort
 
@@ -67,7 +68,13 @@ class TestServer(name: String = "Friends") {
     }
 
     fun sendCutText(str: String) {
-        cutTextQueue.transfer(str)
+        queuedActions.transfer {
+            val bytes = StandardCharsets.ISO_8859_1.encode(str).array()
+            it.write(3) //ServerCutText
+            it.write(ByteArray(3)) //Padding
+            it.write(toByteArray(bytes.size))
+            it.write(bytes)
+        }
     }
 
 
@@ -116,7 +123,8 @@ class TestServer(name: String = "Friends") {
         // Msg Loop
         while (!stopRequested) {
 
-            //Read the incoming message type with a timeout
+            //Read the incoming message type with a timeout to allow
+            //processing of queued actions.
             socket.soTimeout = 100
             val msgType = runCatching { input.read() }.getOrNull() ?: -2
             socket.soTimeout = 0
@@ -166,24 +174,16 @@ class TestServer(name: String = "Friends") {
                 6 -> { //ClientCutText
                     input.skip(3)//padding
                     val length = readInt(input)
-                    val textBuffer = ByteBuffer.allocate(length)
-                    for (i in 1..length) textBuffer.put(input.read().toByte())
-                    textBuffer.rewind()
-                    receivedCutText = StandardCharsets.ISO_8859_1.decode(textBuffer).toString()
+                    val textBuffer = ByteArray(length)
+                    val read = input.read(textBuffer)
+                    check(read == length)
+                    receivedCutText = textBuffer.toString(StandardCharsets.ISO_8859_1)
                 }
 
                 -1 -> break //EOF
             }
 
-            //Send queued cut-text to client
-            cutTextQueue.poll()?.let {
-                val bytes = StandardCharsets.ISO_8859_1.encode(it).array()
-
-                output.write(3) //ServerCutText
-                output.write(ByteArray(3)) //Padding
-                output.write(toByteArray(bytes.size))
-                output.write(bytes)
-            }
+            queuedActions.poll()?.invoke(output)
         }
 
         socket.close()
