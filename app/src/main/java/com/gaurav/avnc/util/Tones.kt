@@ -5,7 +5,7 @@ import android.media.ToneGenerator
 import android.util.Log
 
 object Tones {
-    private val notifications = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100)
+    private val notifications = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 50)
 
     /**
      * @param tone a `TONE_` constant from [ToneGenerator].
