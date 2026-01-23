@@ -185,6 +185,7 @@ class VirtualKeys(private val activity: VncActivity) {
                     if (position == textPageIndex) binding.textBox.requestFocus()
                     else frameView.requestFocus()
                 }
+                pref.runInfo.virtualKeysTextBoxVisible = (position == textPageIndex)
             }
         })
 
@@ -204,6 +205,10 @@ class VirtualKeys(private val activity: VncActivity) {
             if (w > 0 && h > 0 && (root.width != w || root.height != h))
                 root.layoutParams = root.layoutParams.apply { width = w; height = h }
         }
+
+        // Switch to text page if it was active last time
+        if (pref.runInfo.virtualKeysTextBoxVisible)
+            pager.setCurrentItem(pages.indexOf(binding.textPage), false)
     }
 
 

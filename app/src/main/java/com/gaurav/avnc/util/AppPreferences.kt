@@ -10,7 +10,6 @@ package com.gaurav.avnc.util
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.media.ToneGenerator
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.preference.PreferenceManager
@@ -102,6 +101,7 @@ class AppPreferences(context: Context) {
         var hasShownViewerHelp by BooleanPref("run_info_has_shown_viewer_help", false)
         var hasShownV3WelcomeMsg by BooleanPref("run_info_has_shown_v3_welcome_msg", false)
         var showVirtualKeys by BooleanPref("run_info_show_virtual_keys", true)
+        var virtualKeysTextBoxVisible by BooleanPref("run_info_virtual_keys_textbox_visible", false)
         var toolbarOpenerBtnVerticalBias by FloatPref("run_info_toolbar_opener_vertical_bias", .5f)
     }
 

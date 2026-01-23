@@ -155,6 +155,18 @@ class VirtualKeysTest : VncSessionTest() {
     }
 
     @Test
+    fun textBoxVisibilityShouldBeSavedAcrossSessions() {
+        VncSessionScenario().run {
+            onView(withId(R.id.pager)).perform(ViewPagerActions.scrollToLast(false))
+            onView(withHint(R.string.hint_send_text_to_server)).checkIsDisplayed()
+        }
+
+        VncSessionScenario().run {
+            onView(withHint(R.string.hint_send_text_to_server)).checkWillBeDisplayed()
+        }
+    }
+
+    @Test
     fun textBoxInput() {
         val text = "abcxyzABCXYZ1234567890{}[]()`~@#$%^&*_+-=/*"
 
