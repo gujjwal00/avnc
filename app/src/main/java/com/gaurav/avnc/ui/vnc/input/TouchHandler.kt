@@ -365,15 +365,19 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
          * -                              +->| [innerDetector1] |
          * -                              |  +------------------+
          * -                              |   (tap, long-press)
-         * -   +----------------+  event  |
-         * -   | [onTouchEvent] |---------+
-         * -   +----------------+         |
          * -                              |
-         * -                              |  +------------------+  double-tap event   +------------------+
-         * -                              +->| [innerDetector2] |-------------------->| [innerDetector3] |
-         * -                                 +------------------+                     +------------------+
-         * -                                    (double-tap)                           (double-tap-swipe)
-         *
+         * -                              |
+         * -   +----------------+  event  |  +------------------+  double-tap event   +------------------+
+         * -   | [onTouchEvent] |---------+->| [innerDetector2] |-------------------->| [innerDetector3] |
+         * -   +----------------+         |  +------------------+                     +------------------+
+         * -                              |      (double-tap)                          (double-tap-swipe)
+         * -                              |
+         * -                              |
+         * -                              |   +------------------+
+         * -                              +-> | [innerDetector4] |
+         *                                    +------------------+
+         *                                        (quick-tap)
+         *                                                          
          */
         private val innerDetector1 = GestureDetector(context, InnerListener1())
         private val innerDetector2 = GestureDetector(context, InnerListener2()).apply { setIsLongpressEnabled(false) }
