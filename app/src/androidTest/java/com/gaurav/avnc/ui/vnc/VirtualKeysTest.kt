@@ -57,6 +57,37 @@ class VirtualKeysTest : VncSessionTest() {
     @Test
     fun basicTest() {
         vncSession.run {
+            // Should be visible
+            onView(withText("Ctrl")).checkIsDisplayed()
+            onView(withText("Alt")).checkIsDisplayed()
+            onView(withText("Tab")).checkIsDisplayed()
+
+            // Send Tab
+            onView(withText("Tab")).doClick()
+        }
+
+        //Tab should be received by the server
+        assertEquals(arrayListOf(XKeySym.XK_Tab), vncSession.server.receivedKeyDowns)
+    }
+
+    @Test
+    fun showAllKeys() {
+        targetPrefs.edit { putBoolean("vk_show_all", true) }
+
+        vncSession.run {
+            onView(withText("Insert")).perform(scrollTo()).checkIsDisplayed()
+            onView(withText("Delete")).perform(scrollTo()).checkIsDisplayed()
+            onView(withText("F1")).perform(scrollTo()).checkIsDisplayed()
+        }
+    }
+
+
+    @Test
+    fun openWithToolbar() {
+        targetPrefs.edit { putBoolean("run_info_show_virtual_keys", false) }
+
+        vncSession.run {
+            onView(withText("Ctrl")).check(doesNotExist())
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.virtual_keys_btn)).doClick()
 
@@ -74,22 +105,13 @@ class VirtualKeysTest : VncSessionTest() {
     }
 
     @Test
-    fun showAllKeys() {
-        vncSession.run {
-            targetPrefs.edit { putBoolean("vk_show_all", true) }
-            onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
-            onView(withId(R.id.virtual_keys_btn)).doClick()
-
-            onView(withText("Insert")).perform(scrollTo()).checkIsDisplayed()
-            onView(withText("Delete")).perform(scrollTo()).checkIsDisplayed()
-            onView(withText("F1")).perform(scrollTo()).checkIsDisplayed()
+    fun openAlongWithKeyboard() {
+        targetPrefs.edit {
+            putBoolean("vk_open_with_keyboard", true)
+            putBoolean("run_info_show_virtual_keys", false)
         }
-    }
 
-    @Test
-    fun openWithKeyboard() {
         vncSession.run {
-            targetPrefs.edit { putBoolean("vk_open_with_keyboard", true) }
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
             onView(withId(R.id.keyboard_btn)).doClick()
             onIdle()
@@ -104,23 +126,8 @@ class VirtualKeysTest : VncSessionTest() {
     @Test
     fun visibilityShouldBeSavedAcrossSessions() {
         VncSessionScenario().run {
-            onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
-            onView(withId(R.id.virtual_keys_btn)).doClick()
-            onIdle()
-            onView(withText("Ctrl")).checkIsDisplayed()
-            onView(withText("Alt")).checkIsDisplayed()
-            onView(withText("Tab")).checkIsDisplayed()
-        }
-
-        VncSessionScenario().run {
-            // Was open previously, so expect it to open automatically
-            onIdle()
-            onView(withText("Ctrl")).checkWillBeDisplayed()
-            onView(withText("Alt")).checkIsDisplayed()
-            onView(withText("Tab")).checkIsDisplayed()
-
-            // close it
-            onView(withContentDescription("Close virtual keys")).doClick()
+            // Should open by default, so close it
+            onView(withContentDescription("Close virtual keys")).checkWillBeDisplayed().doClick()
             onView(withText("Ctrl")).checkIsNotDisplayed()
         }
 
@@ -129,6 +136,21 @@ class VirtualKeysTest : VncSessionTest() {
             onIdle()
             Thread.sleep(400)
             onView(withText("Ctrl")).check(doesNotExist())
+
+
+            // Now open it
+            onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
+            onView(withId(R.id.virtual_keys_btn)).doClick()
+
+            onView(withText("Ctrl")).checkWillBeDisplayed()
+            onView(withText("Alt")).checkIsDisplayed()
+        }
+
+        VncSessionScenario().run {
+            // Should open by default now
+            onView(withText("Ctrl")).checkWillBeDisplayed()
+            onView(withText("Alt")).checkIsDisplayed()
+            onView(withText("Tab")).checkIsDisplayed()
         }
     }
 
@@ -137,9 +159,7 @@ class VirtualKeysTest : VncSessionTest() {
         val text = "abcxyzABCXYZ1234567890{}[]()`~@#$%^&*_+-=/*"
 
         vncSession.run {
-            onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
-            onView(withId(R.id.virtual_keys_btn)).doClick()
-            onView(withText("Ctrl")).checkIsDisplayed()
+            onView(withText("Ctrl")).checkWillBeDisplayed()
 
             onView(withId(R.id.pager)).perform(ViewPagerActions.scrollToLast(false))
             onView(withHint(R.string.hint_send_text_to_server))
@@ -158,8 +178,6 @@ class VirtualKeysTest : VncSessionTest() {
     fun superWithSingleTap() {
         targetPrefs.edit { putBoolean("vk_use_super_with_single_tap", true) }
         vncSession.run {
-            onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
-            onView(withId(R.id.virtual_keys_btn)).doClick()
             onView(withContentDescription("Super")).checkWillBeDisplayed().doClick()
         }
 
@@ -170,9 +188,6 @@ class VirtualKeysTest : VncSessionTest() {
     @Test
     fun vkModifierKeysShouldApplyToKeyPressedOnKeyboard() {
         vncSession.run {
-            onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
-            onView(withId(R.id.virtual_keys_btn)).doClick()
-
             onView(withText("Shift")).checkWillBeDisplayed().doClick()
             onView(withId(R.id.frame_view)).doTypeText("a") // Should be sent as uppercase A to server
         }
@@ -182,10 +197,7 @@ class VirtualKeysTest : VncSessionTest() {
     @Test
     fun unlockedToggleKeysShouldBeReleasedWithNextKey() {
         vncSession.run {
-            onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
-            onView(withId(R.id.virtual_keys_btn)).doClick()
-
-            onView(withText("Shift")).checkIsDisplayed().doClick()
+            onView(withText("Shift")).checkWillBeDisplayed().doClick()
 
             onView(withText("Shift")).check(matches(isChecked()))
             onView(withId(R.id.frame_view)).perform(pressKey(KeyEvent.KEYCODE_A))
@@ -196,10 +208,7 @@ class VirtualKeysTest : VncSessionTest() {
     @Test
     fun lockedToggleKeysShouldRemainLockedAfterNextKeys() {
         vncSession.run {
-            onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
-            onView(withId(R.id.virtual_keys_btn)).doClick()
-
-            onView(withText("Shift")).checkIsDisplayed().doLongClick() // Long-click locks the key
+            onView(withText("Shift")).checkWillBeDisplayed().doLongClick() // Long-click locks the key
 
             onView(withText("Shift")).check(matches(isChecked()))
             onView(withId(R.id.frame_view))

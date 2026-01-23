@@ -101,7 +101,7 @@ class AppPreferences(context: Context) {
     inner class RunInfo {
         var hasShownViewerHelp by BooleanPref("run_info_has_shown_viewer_help", false)
         var hasShownV3WelcomeMsg by BooleanPref("run_info_has_shown_v3_welcome_msg", false)
-        var showVirtualKeys by BooleanPref("run_info_show_virtual_keys", false)
+        var showVirtualKeys by BooleanPref("run_info_show_virtual_keys", true)
         var toolbarOpenerBtnVerticalBias by FloatPref("run_info_toolbar_opener_vertical_bias", .5f)
     }
 
