@@ -46,10 +46,10 @@ class VncClient(private val observer: Observer) {
      * There is NO guarantee about which thread will invoke [Observer] methods.
      */
     interface Observer {
-        fun onPasswordRequired(): String
-        fun onCredentialRequired(): UserCredential
-        fun onVerifyCertificate(certificate: X509Certificate): Boolean
-        fun onGotXCutText(text: String)
+        fun getVncPassword(): String
+        fun getVncCredentials(): UserCredential
+        fun verifyVncServerCertificate(certificate: X509Certificate): Boolean
+        fun onCutTextReceived(text: String)
         fun onFramebufferUpdated()
         fun onFramebufferSizeChanged(width: Int, height: Int)
         fun onPointerMoved(x: Int, y: Int)
@@ -395,17 +395,17 @@ class VncClient(private val observer: Observer) {
     private external fun nativeCleanup(clientPtr: Long)
 
     @Keep
-    private fun cbGetPassword() = observer.onPasswordRequired()
+    private fun cbGetPassword() = observer.getVncPassword()
 
     @Keep
-    private fun cbGetCredential() = observer.onCredentialRequired()
+    private fun cbGetCredential() = observer.getVncCredentials()
 
     @Keep
     private fun cbVerifyServerCertificate(der: ByteArray): Boolean {
         val cert = ByteArrayInputStream(der).use {
             CertificateFactory.getInstance("X.509").generateCertificate(it)
         }
-        return observer.onVerifyCertificate(cert as X509Certificate)
+        return observer.verifyVncServerCertificate(cert as X509Certificate)
     }
 
     @Keep
@@ -414,7 +414,7 @@ class VncClient(private val observer: Observer) {
             val cutText = it.decode(ByteBuffer.wrap(bytes)).toString()
             if (cutText != lastCutText) {
                 lastCutText = cutText
-                observer.onGotXCutText(cutText)
+                observer.onCutTextReceived(cutText)
             }
         }
     }

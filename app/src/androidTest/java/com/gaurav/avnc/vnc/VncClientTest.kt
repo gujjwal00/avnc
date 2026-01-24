@@ -19,13 +19,13 @@ class VncClientTest {
     open class TestObserver : VncClient.Observer {
         var cutText = ""
 
-        override fun onPasswordRequired() = ""
-        override fun onCredentialRequired() = UserCredential()
-        override fun onVerifyCertificate(certificate: X509Certificate) = false
+        override fun getVncPassword() = ""
+        override fun getVncCredentials() = UserCredential()
+        override fun verifyVncServerCertificate(certificate: X509Certificate) = false
         override fun onFramebufferUpdated() {}
         override fun onFramebufferSizeChanged(width: Int, height: Int) {}
         override fun onPointerMoved(x: Int, y: Int) {}
-        override fun onGotXCutText(text: String) {
+        override fun onCutTextReceived(text: String) {
             cutText = text
         }
         override fun onBell() {}

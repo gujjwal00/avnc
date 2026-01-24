@@ -69,7 +69,7 @@ class HostKeyVerifier(private val observer: SshTunnel.Observer) : ServerHostKeyV
                  |If you continue, this key will be added to trusted list.
                  """.trimMargin()
 
-        if (observer.confirmHostKey(message, isNew)) {
+        if (observer.confirmSshHostKeyWithUser(message, isNew)) {
             //User has confirmed the key, so remember it.
             KnownHosts.addHostkeyToFile(knownHostsFile, arrayOf(hostname), keyAlgorithm, key)
             return true
@@ -140,7 +140,7 @@ class SshTunnel(private val observer: Observer) {
 
     interface Observer {
         fun getKnownSshHostsFile(): File
-        fun confirmHostKey(message: String, isNewHost: Boolean): Boolean
+        fun confirmSshHostKeyWithUser(message: String, isNewHost: Boolean): Boolean
         fun getSshPassword(): String
         fun getSshKeyPassword(): String
     }
