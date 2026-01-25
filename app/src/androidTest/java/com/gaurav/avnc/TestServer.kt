@@ -15,6 +15,10 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.LinkedTransferQueue
+import javax.crypto.Cipher
+import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.DESKeySpec
+import kotlin.random.Random
 
 /**
  * A tiny VNC server.
@@ -30,8 +34,6 @@ class TestServer(name: String = "Friends") {
     //Protocol config
     private val protocol = "RFB 003.008\n"
     private val serverName = name.toByteArray()
-    private val securityTypes = byteArrayOf(1, 2)
-    private val securityFailReason = "We should take a break!"
     private val frameWidth: Short = 10
     private val frameHeight: Short = 10
     private val frameBuffer = ByteArray(frameWidth * frameHeight * 4)
@@ -42,6 +44,11 @@ class TestServer(name: String = "Friends") {
     private val queuedActions = LinkedTransferQueue<(OutputStream) -> Unit>()
     val host = ss.inetAddress.hostAddress!!
     val port = ss.localPort
+
+    //Security config
+    private val securityTypes = mutableListOf<Byte>(1)
+    private val securityFailReason = "We should take a break!"
+    private var password = ""
 
     @Volatile
     private var stopRequested = false
@@ -77,6 +84,10 @@ class TestServer(name: String = "Friends") {
         }
     }
 
+    fun setupVncAuth(newPassword: String) {
+        password = newPassword
+        securityTypes.add(0, 2 /*VncAuth*/)
+    }
 
     /**
      * Behold The Server
@@ -92,16 +103,22 @@ class TestServer(name: String = "Friends") {
 
         //Security Handshake
         output.write(securityTypes.size)
-        output.write(securityTypes)
+        output.write(securityTypes.toByteArray())
         when (input.read()) { //Security Type
             // NoAuth
-            1 -> output.write(ByteArray(4))   //Security result
+            1 -> output.write(toByteArray(0))   //Security result
 
             //VncAuth
             2 -> {
-                output.write(ByteArray(16))   //Challenge
-                input.skip(16)                  //Response
-                output.write(ByteArray(4))    //Security result
+                val challenge = Random.nextBytes(16)
+                val response = ByteArray(16)
+                val expected = encryptVncAuthChallenge(challenge, password)
+
+                output.write(challenge)
+                input.read(response)
+
+                val securityResult = if (response.contentEquals(expected)) 0 else 1
+                output.write(toByteArray(securityResult))
             }
 
             else -> {
@@ -202,4 +219,16 @@ class TestServer(name: String = "Friends") {
         input.read(intBytes)
         return ByteBuffer.wrap(intBytes).order(ByteOrder.BIG_ENDIAN).getInt()
     }
+
+    private fun encryptVncAuthChallenge(challenge: ByteArray, password: String): ByteArray {
+        val effectivePassword = password.padEnd(8, Char(0)).take(8)
+        val keyBytes = effectivePassword.toByteArray().map { reverseBits(it) }.toByteArray()
+        val keySpec = DESKeySpec(keyBytes)
+        val key = SecretKeyFactory.getInstance("DES").generateSecret(keySpec)
+        val cipher = Cipher.getInstance("DES/ECB/NoPadding")
+        cipher.init(Cipher.ENCRYPT_MODE, key)
+        return cipher.doFinal(challenge)
+    }
+
+    private fun reverseBits(b: Byte) = Integer.reverse(b.toInt()).shr(24).toByte()
 }

@@ -10,6 +10,7 @@ package com.gaurav.avnc.vnc
 
 import com.gaurav.avnc.TestServer
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.security.cert.X509Certificate
@@ -18,8 +19,9 @@ class VncClientTest {
 
     open class TestObserver : VncClient.Observer {
         var cutText = ""
+        var password = ""
 
-        override fun getVncPassword() = ""
+        override fun getVncPassword() = password
         override fun getVncCredentials() = UserCredential()
         override fun verifyVncServerCertificate(certificate: X509Certificate) = false
         override fun onFramebufferUpdated() {}
@@ -28,6 +30,7 @@ class VncClientTest {
         override fun onCutTextReceived(text: String) {
             cutText = text
         }
+
         override fun onBell() {}
     }
 
@@ -102,5 +105,18 @@ class VncClientTest {
         client.cleanup()
         server.awaitStop()
         assertEquals(sampleTextWithAccent, server.receivedCutText)
+    }
+
+    @Test
+    fun vncAuth() {
+        val testPassword = "Pivot!"
+        server.setupVncAuth(testPassword)
+        observer.password = testPassword
+
+        connect()
+        assertTrue(client.connected)
+
+        client.cleanup()
+        server.awaitStop()
     }
 }
