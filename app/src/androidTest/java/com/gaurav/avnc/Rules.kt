@@ -8,6 +8,9 @@
 
 package com.gaurav.avnc
 
+import android.os.Build
+import android.os.ParcelFileDescriptor
+import android.provider.Settings
 import androidx.core.content.edit
 import com.gaurav.avnc.model.db.MainDb
 import kotlinx.coroutines.runBlocking
@@ -34,3 +37,45 @@ class CleanPrefsRule : ExternalResource() {
     }
 }
 
+
+/**
+ * JUnit rule to disable animations
+ */
+class DisableAnimationsRule : ExternalResource() {
+    private val animationPrefs = listOf(Settings.Global.WINDOW_ANIMATION_SCALE,
+                                        Settings.Global.TRANSITION_ANIMATION_SCALE,
+                                        Settings.Global.ANIMATOR_DURATION_SCALE)
+
+    private val defaultValues = mutableMapOf<String, String>()
+
+    private val enabledValue = "1.0"
+    private val disabledValue = "0.0"
+
+    override fun before() {
+        check(Build.VERSION.SDK_INT >= 30) { "Disabling animations only works on newer versions" }
+        animationPrefs.forEach {
+            defaultValues[it] = getPref(it).ifBlank { enabledValue }
+            setPref(it, disabledValue)
+        }
+    }
+
+    override fun after() {
+        animationPrefs.forEach {
+            setPref(it, defaultValues[it] ?: enabledValue)
+        }
+    }
+
+    private fun getPref(name: String) = runCmd("settings get global $name")
+    private fun setPref(name: String, value: String) = runCmd("settings put global $name $value")
+
+    private fun runCmd(cmd: String): String {
+        return instrumentation.uiAutomation.executeShellCommand(cmd).use { pfd ->
+            ParcelFileDescriptor.AutoCloseInputStream(pfd).use { stream ->
+                stream.reader().use { reader ->
+                    reader.readText()
+                }
+            }
+        }
+    }
+
+}

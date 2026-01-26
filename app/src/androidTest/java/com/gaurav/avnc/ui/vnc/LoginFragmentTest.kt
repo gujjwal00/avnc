@@ -16,146 +16,94 @@
 
 package com.gaurav.avnc.ui.vnc
 
-import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.Espresso.onIdle
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.filters.SdkSuppress
+import com.gaurav.avnc.DisableAnimationsRule
+import com.gaurav.avnc.EmptyDatabaseRule
 import com.gaurav.avnc.R
+import com.gaurav.avnc.VncSessionTest
 import com.gaurav.avnc.checkIsDisplayed
 import com.gaurav.avnc.checkIsNotDisplayed
 import com.gaurav.avnc.checkWillBeDisplayed
 import com.gaurav.avnc.doClick
 import com.gaurav.avnc.doTypeText
 import com.gaurav.avnc.inDialog
-import com.gaurav.avnc.model.LoginInfo
-import com.gaurav.avnc.model.ServerProfile
-import com.gaurav.avnc.model.db.MainDb
 import com.gaurav.avnc.pollingAssert
-import com.gaurav.avnc.runOnMainSync
-import com.gaurav.avnc.targetApp
-import com.gaurav.avnc.targetContext
-import com.gaurav.avnc.viewmodel.VncViewModel
-import com.gaurav.avnc.withActivity
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert
 import org.junit.Assert.assertEquals
+import org.junit.Rule
 import org.junit.Test
-import java.io.Closeable
-import kotlin.concurrent.thread
 
 private const val SAMPLE_USERNAME = "Chandler"
 private const val SAMPLE_PASSWORD = "Bing"
 
-class LoginFragmentTest {
+@SdkSuppress(minSdkVersion = 30) // due to DisableAnimationsRule
+class LoginFragmentTest : VncSessionTest() {
 
-    private class Scenario(private val profileTemplate: ServerProfile? = null) : Closeable {
-        private val dao = MainDb.getInstance(targetContext).serverProfileDao
-        private val profile = setupProfile()
-        private var loginInfo = LoginInfo()
-        private val activityScenario = ActivityScenario.launch<VncActivity>(createVncIntent(targetContext, profile))
-        private val viewModel = activityScenario.withActivity { viewModel }
-        private var loginInfoThread: Thread? = null
+    @Rule
+    @JvmField
+    val dbRule = EmptyDatabaseRule()
 
-        private fun setupProfile() = runBlocking {
-            dao.deleteAll()
-            (profileTemplate?.copy() ?: ServerProfile()).apply { ID = dao.save(this) }
-        }
+    @Rule
+    @JvmField
+    val noAnim = DisableAnimationsRule()
 
-        fun triggerLoginInfoRequest(type: LoginInfo.Type) {
-            // Wait for initialization
-            pollingAssert { Assert.assertNotEquals(viewModel.state.value, VncViewModel.State.Created) }
-            loginInfoThread = thread { loginInfo = viewModel.getLoginInfo(type) }
-        }
+    @Test
+    fun vncPasswordLogin() {
+        vncSession.apply {
+            server.setupVncAuth(SAMPLE_PASSWORD)
+            startServer()
+            startActivity()
 
-        fun waitForLoginInfo(): LoginInfo {
-            loginInfoThread!!.join(5000)
-            return loginInfo
-        }
+            onView(withId(R.id.password)).inDialog().checkWillBeDisplayed().doTypeText(SAMPLE_PASSWORD)
+            onView(withId(R.id.username)).inDialog().checkIsNotDisplayed()
+            onView(withId(R.id.remember)).inDialog().checkIsNotDisplayed()
+            onView(withText(android.R.string.ok)).inDialog().checkIsDisplayed().doClick()
 
-        fun triggerLoginSave(): ServerProfile {
-            viewModel.state.postValue(VncViewModel.State.Connected)
-            onIdle()
-            return viewModel.profile
-        }
-
-        override fun close() {
-            activityScenario.close()
-            runBlocking { dao.deleteAll() }
+            assertConnected()
+            stop()
         }
     }
 
-    private fun passwordLogin(type: LoginInfo.Type) = Scenario().use { scenario ->
-        scenario.triggerLoginInfoRequest(type)
-        onView(withId(R.id.password)).inDialog().checkWillBeDisplayed().doTypeText(SAMPLE_PASSWORD)
-        onView(withId(R.id.username)).inDialog().checkIsNotDisplayed()
-        onView(withText(android.R.string.ok)).inDialog().checkIsDisplayed().doClick()
-        assertEquals(SAMPLE_PASSWORD, scenario.waitForLoginInfo().password)
+    @Test
+    fun vncUsernameAndPasswordLogin() {
+        vncSession.apply {
+            server.setupDHAuth(SAMPLE_USERNAME, SAMPLE_PASSWORD)
+            startServer()
+            startActivity()
+
+            onView(withId(R.id.username)).inDialog().checkWillBeDisplayed().doTypeText(SAMPLE_USERNAME)
+            onView(withId(R.id.password)).inDialog().checkIsDisplayed().doTypeText(SAMPLE_PASSWORD)
+            onView(withId(R.id.remember)).inDialog().checkIsNotDisplayed()
+            onView(withText(android.R.string.ok)).inDialog().checkIsDisplayed().doClick()
+
+            assertConnected()
+            stop()
+        }
     }
 
     @Test
-    fun vncPasswordLogin() = passwordLogin(LoginInfo.Type.VNC_PASSWORD)
+    fun rememberLoginDetails() {
+        vncSession.apply {
+            saveProfileToDB(dbRule.db)
+            server.setupDHAuth(SAMPLE_USERNAME, SAMPLE_PASSWORD)
+            startServer()
+            startActivity()
 
-    @Test
-    fun sshPasswordLogin() = passwordLogin(LoginInfo.Type.SSH_PASSWORD)
+            onView(withId(R.id.username)).inDialog().checkWillBeDisplayed().doTypeText(SAMPLE_USERNAME)
+            onView(withId(R.id.password)).inDialog().checkIsDisplayed().doTypeText(SAMPLE_PASSWORD)
+            onView(withId(R.id.remember)).inDialog().checkIsDisplayed().doClick()
+            onView(withText(android.R.string.ok)).inDialog().checkIsDisplayed().doClick()
 
-    @Test
-    fun sshKeyPasswordLogin() = passwordLogin(LoginInfo.Type.SSH_KEY_PASSWORD)
-
-    @Test
-    fun vncCredentialLoginWithRememberChecked() = Scenario().use { scenario ->
-        scenario.triggerLoginInfoRequest(LoginInfo.Type.VNC_CREDENTIAL)
-        onView(withId(R.id.username)).inDialog().checkWillBeDisplayed().doTypeText(SAMPLE_USERNAME)
-        onView(withId(R.id.password)).inDialog().checkWillBeDisplayed().doTypeText(SAMPLE_PASSWORD)
-        onView(withId(R.id.remember)).inDialog().checkIsDisplayed().doClick()
-        onView(withText(android.R.string.ok)).inDialog().checkIsDisplayed().doClick()
-
-        val l = scenario.waitForLoginInfo()
-        val p = scenario.triggerLoginSave()
-        assertEquals(SAMPLE_USERNAME, l.username)
-        assertEquals(SAMPLE_PASSWORD, l.password)
-        assertEquals(SAMPLE_USERNAME, p.username)
-        assertEquals(SAMPLE_PASSWORD, p.password)
-    }
-
-    @Test
-    fun vncCredentialLoginWhenPasswordIsAvailable() = Scenario(ServerProfile(password = SAMPLE_PASSWORD)).use { scenario ->
-        scenario.triggerLoginInfoRequest(LoginInfo.Type.VNC_CREDENTIAL)
-        onView(withId(R.id.username)).inDialog().checkWillBeDisplayed().doTypeText(SAMPLE_USERNAME)
-        onView(withId(R.id.password)).inDialog().checkIsNotDisplayed()
-        onView(withText(android.R.string.ok)).inDialog().checkIsDisplayed().doClick()
-
-        val l = scenario.waitForLoginInfo()
-        assertEquals(SAMPLE_USERNAME, l.username)
-        assertEquals(SAMPLE_PASSWORD, l.password)
-    }
-
-    @Test
-    fun sshPasswordLoginWithRememberChecked() = Scenario().use { scenario ->
-        scenario.triggerLoginInfoRequest(LoginInfo.Type.SSH_PASSWORD)
-        onView(withId(R.id.password)).inDialog().checkWillBeDisplayed().doTypeText(SAMPLE_PASSWORD)
-        onView(withId(R.id.remember)).inDialog().checkIsDisplayed().doClick()
-        onView(withText(android.R.string.ok)).inDialog().checkIsDisplayed().doClick()
-
-        val l = scenario.waitForLoginInfo()
-        val p = scenario.triggerLoginSave()
-        assertEquals(SAMPLE_PASSWORD, l.password)
-        assertEquals(SAMPLE_PASSWORD, p.sshPassword)
-    }
-
-    /**
-     * If login information is already available in profile,
-     * [VncViewModel] should provide it without triggering login dialog.
-     */
-    @Test(timeout = 5000)
-    fun savedLoginTest() {
-        val profile = ServerProfile(username = "AB", password = "BC", sshPassword = "CD")
-        val viewModel = runOnMainSync { VncViewModel(targetApp).apply { initConnection(profile) } }
-        pollingAssert { Assert.assertNotEquals(viewModel.state.value, VncViewModel.State.Created) }
-
-        assertEquals("AB", viewModel.getLoginInfo(LoginInfo.Type.VNC_CREDENTIAL).username)
-        assertEquals("BC", viewModel.getLoginInfo(LoginInfo.Type.VNC_CREDENTIAL).password)
-        assertEquals("BC", viewModel.getLoginInfo(LoginInfo.Type.VNC_PASSWORD).password)
-        assertEquals("CD", viewModel.getLoginInfo(LoginInfo.Type.SSH_PASSWORD).password)
+            assertConnected()
+            pollingAssert {
+                val saved = runBlocking { dbRule.db.serverProfileDao.getByID(profile.ID) }
+                assertEquals(SAMPLE_USERNAME, saved?.username)
+                assertEquals(SAMPLE_PASSWORD, saved?.password)
+            }
+            stop()
+        }
     }
 }
