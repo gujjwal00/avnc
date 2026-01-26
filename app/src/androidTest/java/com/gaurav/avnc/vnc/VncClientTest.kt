@@ -19,10 +19,11 @@ class VncClientTest {
 
     open class TestObserver : VncClient.Observer {
         var cutText = ""
+        var username = ""
         var password = ""
 
         override fun getVncPassword() = password
-        override fun getVncCredentials() = UserCredential()
+        override fun getVncCredentials() = UserCredential(username, password)
         override fun verifyVncServerCertificate(certificate: X509Certificate) = false
         override fun onFramebufferUpdated() {}
         override fun onFramebufferSizeChanged(width: Int, height: Int) {}
@@ -111,6 +112,21 @@ class VncClientTest {
     fun vncAuth() {
         val testPassword = "Pivot!"
         server.setupVncAuth(testPassword)
+        observer.password = testPassword
+
+        connect()
+        assertTrue(client.connected)
+
+        client.cleanup()
+        server.awaitStop()
+    }
+
+    @Test
+    fun dhAuth() {
+        val testUsername = "Ross"
+        val testPassword = "Pivot!"
+        server.setupDHAuth(testUsername, testPassword)
+        observer.username = testUsername
         observer.password = testPassword
 
         connect()
