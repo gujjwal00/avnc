@@ -138,11 +138,6 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     val loginInfoRequest = LiveRequest<LoginInfo.Type, LoginInfo>(LoginInfo(), viewModelScope)
 
     /**
-     * Fired to unlock saved servers.
-     */
-    val serverUnlockRequest = LiveRequest<Any?, Boolean>(false, viewModelScope)
-
-    /**
      * List of saved profiles.
      * Used by login-autocompletion.
      */
@@ -241,10 +236,6 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     private fun preConnect() {
-        if (profile.ID != 0L && pref.server.lockSavedServer)
-            if (!serverUnlockRequest.requestResponse(null))
-                throw IOException("Could not unlock server")
-
         client.configure(profile.securityType, true  /* Hardcoded to true */,
                          profile.imageQuality, profile.useRawEncoding)
 

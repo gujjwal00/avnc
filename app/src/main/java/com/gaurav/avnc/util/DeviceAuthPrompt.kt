@@ -67,6 +67,11 @@ class DeviceAuthPrompt(private val activity: FragmentActivity) {
     }
 
     /**
+     * Whether authentication prompt has been launched
+     */
+    fun hasLaunched() = viewModel.isPromptShown
+
+    /**
      * Launch auth prompt.
      */
     fun launch(title: String) {

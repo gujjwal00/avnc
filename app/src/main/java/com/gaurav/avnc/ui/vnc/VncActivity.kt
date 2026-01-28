@@ -43,6 +43,7 @@ import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.vnc.input.InputHandler
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.SamsungDex
+import com.gaurav.avnc.util.debugCheck
 import com.gaurav.avnc.util.enableChildLayoutTransitions
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
@@ -112,10 +113,8 @@ class VncActivity : AppCompatActivity() {
         DeviceAuthPrompt.applyFingerprintDialogFix(supportFragmentManager)
 
         super.onCreate(savedInstanceState)
-        if (!initConnection(savedInstanceState)) {
-            finish()
+        if (!startup(savedInstanceState))
             return
-        }
 
         //Main UI
         binding = DataBindingUtil.setContentView(this, R.layout.activity_vnc)
@@ -126,7 +125,6 @@ class VncActivity : AppCompatActivity() {
         toolbar.initialize()
 
         setupLayout()
-        setupServerUnlock()
         setupNoVideoOverlay()
 
         //Observers
@@ -174,37 +172,97 @@ class VncActivity : AppCompatActivity() {
         outState.putBoolean("wasConnectedWhenStopped", wasConnectedWhenStopped || viewModel.state.value.isConnected)
     }
 
-    private fun initConnection(savedState: Bundle?): Boolean {
-        @Suppress("DEPRECATION")
+
+    /**********************************************************************************************
+     * Session startup
+     *********************************************************************************************/
+    private sealed class StartupArg {
+        data class Profile(val profile: ServerProfile) : StartupArg()
+        data class ProfileId(val profileId: Long) : StartupArg()
+    }
+
+    @Suppress("DEPRECATION")
+    private fun prepareStartupArg(savedState: Bundle?): StartupArg? {
+        val id = intent.getLongExtra(PROFILE_ID_KEY, 0)
         val profile = savedState?.getParcelable(PROFILE_KEY)
                       ?: intent.getParcelableExtra<ServerProfile?>(PROFILE_KEY)
 
-        if (profile != null) {
-            viewModel.initConnection(profile.copy()) // Use a copy to avoid modification to intent
+        return when {
+            id != 0L -> StartupArg.ProfileId(id)
+            profile != null -> StartupArg.Profile(profile.copy())  // Use a copy to avoid modification to intent
+            else -> {
+                handleMissingStartupArgs()
+                null
+            }
+        }
+    }
+
+    private fun startup(savedState: Bundle?): Boolean {
+        if (viewModel.profileLive.value != null) // todo refactor
             return true
-        }
 
-        val profileId = intent.getLongExtra(PROFILE_ID_KEY, 0)
-        if (profileId == 0L) {
-            Toast.makeText(this, "Error: Missing Server Info", Toast.LENGTH_LONG).show()
-            return false
-        }
+        val startupArg = prepareStartupArg(savedState) ?: return false
+        val isSavedServer = startupArg is StartupArg.ProfileId ||
+                            (startupArg is StartupArg.Profile && startupArg.profile.ID == 0L)
 
-        initConnectionFromId(profileId)
+        if (isSavedServer && viewModel.pref.server.lockSavedServer)
+            startAfterUnlockingServer(startupArg)
+        else
+            startSession(startupArg)
+
         return true
     }
 
-    private fun initConnectionFromId(profileId: Long) {
-        lifecycleScope.launch {
-            val profile = viewModel.getProfileById(profileId)
-            if (profile != null) {
-                viewModel.initConnection(profile)
-            } else {
-                Toast.makeText(this@VncActivity, "Error: Invalid Server ID", Toast.LENGTH_LONG).show()
-                Log.e(TAG, "Invalid profile ID passed via Intent: $profileId")
-                finish()
+
+    private fun startAfterUnlockingServer(startupArg: StartupArg) {
+        serverUnlockPrompt.init(
+                onSuccess = { startSession(startupArg) },
+                onFail = { handleServerUnlockFailure(it) }
+        )
+
+        if (serverUnlockPrompt.canLaunch()) {
+            if (!serverUnlockPrompt.hasLaunched())
+                serverUnlockPrompt.launch(getString(R.string.title_unlock_dialog))
+        } else
+            startSession(startupArg)
+    }
+
+
+    private fun startSession(startupArg: StartupArg) {
+        when (startupArg) {
+            is StartupArg.Profile -> startSession(startupArg.profile)
+            is StartupArg.ProfileId -> {
+                lifecycleScope.launch {
+                    val profile = viewModel.getProfileById(startupArg.profileId)
+                    if (profile == null)
+                        handleInvalidProfileId(startupArg.profileId)
+                    else
+                        startSession(profile)
+                }
             }
         }
+    }
+
+    private fun startSession(profile: ServerProfile) {
+        viewModel.initConnection(profile)
+    }
+
+    private fun handleMissingStartupArgs() {
+        debugCheck(false) // Crash debug builds
+        Toast.makeText(this, "Error: Missing Server Info", Toast.LENGTH_LONG).show()
+        finish()
+    }
+
+    private fun handleServerUnlockFailure(msg: String) {
+        Toast.makeText(this, "Could not unlock server", Toast.LENGTH_LONG).show()
+        Log.e(TAG, "Server unlock failed: $msg")
+        finish()
+    }
+
+    private fun handleInvalidProfileId(id: Long) {
+        Toast.makeText(this, "Error: Invalid Server ID", Toast.LENGTH_LONG).show()
+        Log.e(TAG, "Invalid profile ID passed via Intent: $id")
+        finish()
     }
 
     private fun onProfileUpdated() {
@@ -226,20 +284,6 @@ class VncActivity : AppCompatActivity() {
                 overridePendingTransition(0, 0)
             }
             finish()
-        }
-    }
-
-    private fun setupServerUnlock() {
-        serverUnlockPrompt.init(
-                onSuccess = { viewModel.serverUnlockRequest.offerResponse(true) },
-                onFail = { viewModel.serverUnlockRequest.offerResponse(false) }
-        )
-
-        viewModel.serverUnlockRequest.observe(this) {
-            if (serverUnlockPrompt.canLaunch())
-                serverUnlockPrompt.launch(getString(R.string.title_unlock_dialog))
-            else
-                viewModel.serverUnlockRequest.offerResponse(true)
         }
     }
 
