@@ -25,9 +25,11 @@ import androidx.test.espresso.matcher.ViewMatchers.isNotChecked
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withHint
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withSubstring
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
+import com.gaurav.avnc.BiometricMocking
 import com.gaurav.avnc.CleanPrefsRule
 import com.gaurav.avnc.EmptyDatabaseRule
 import com.gaurav.avnc.ProgressAssertion
@@ -206,6 +208,34 @@ class VncActivityTest : VncSessionTest() {
         assertEquals(XKeySym.XF86XK_Back, vncSession.server.receivedKeyDowns.getOrNull(0))
     }
 
+    @Test
+    @SdkSuppress(minSdkVersion = 28)
+    fun serverUnlock() {
+        targetPrefs.edit { putBoolean("lock_saved_server", true) }
+        vncSession.saveProfileToDB(dbRule.db)
+        BiometricMocking.start()
+        vncSession.startServer()
+        vncSession.startActivity()
+
+        BiometricMocking.endWithSuccess()
+        vncSession.assertConnected()
+        vncSession.stop()
+    }
+
+    @Test
+    @SdkSuppress(minSdkVersion = 28)
+    fun serverUnlockWithWrongBiometric() {
+        targetPrefs.edit { putBoolean("lock_saved_server", true) }
+        vncSession.saveProfileToDB(dbRule.db)
+        BiometricMocking.start()
+        vncSession.startServer()
+        vncSession.startActivity()
+
+        BiometricMocking.endWithError("Error")
+        onView(withSubstring("Could not unlock server")).checkWillBeDisplayed()
+        onView(withId(R.id.frame_view)).checkIsNotDisplayed()
+        vncSession.stop()
+    }
 
     /*************************** Toolbar *******************************************/
     @Test

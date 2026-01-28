@@ -78,6 +78,7 @@ class TestServer(name: String = "Friends") {
 
     fun stop() {
         stopRequested = true
+        ss.close()
         awaitStop()
     }
 
@@ -110,7 +111,7 @@ class TestServer(name: String = "Friends") {
      * Behold The Server
      */
     private fun theServer() {
-        val socket = ss.use { it.accept() }
+        val socket = ss.use { runCatching { it.accept() }.onFailure { return }.getOrThrow() }
         val input = socket.getInputStream()
         val output = socket.getOutputStream()
 
