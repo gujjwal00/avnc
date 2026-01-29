@@ -10,7 +10,6 @@ package com.gaurav.avnc.ui.home
 
 import android.app.ActivityOptions
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -20,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.gaurav.avnc.R
@@ -119,7 +119,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun launchBugReport() {
         val url = AboutActivity.BUG_REPORT_URL + Debugging.bugReportUrlParams()
-        runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))) }
+        runCatching { startActivity(Intent(Intent.ACTION_VIEW, url.toUri())) }
     }
 
     /**

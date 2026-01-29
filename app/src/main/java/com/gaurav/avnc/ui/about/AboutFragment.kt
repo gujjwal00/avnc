@@ -9,11 +9,11 @@
 package com.gaurav.avnc.ui.about
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.gaurav.avnc.BuildConfig
 import com.gaurav.avnc.R
@@ -41,7 +41,7 @@ class AboutFragment : Fragment() {
 
     private fun openUrl(url: String) {
         if (url.isNotEmpty()) {
-            runCatching { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))) }
+            runCatching { startActivity(Intent(Intent.ACTION_VIEW, url.toUri())) }
         }
     }
 

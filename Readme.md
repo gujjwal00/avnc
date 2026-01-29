@@ -72,7 +72,7 @@ You can translate AVNC on [Weblate](https://hosted.weblate.org/engage/avnc/).
 
 ## Credits
 
-- Author of libraries AVNC depends on (LibVNCClient, libjpeg-turbo, wolfSSL, sshlib, leakcanary etc.)
+- Authors of libraries AVNC depends on (LibVNCClient, libjpeg-turbo, wolfSSL, sshlib, leakcanary etc.)
 - Contributors for reporting issues, providing fixes
 - Contributors for translating AVNC, and [Weblate](https://weblate.org/) for translation hosting
 - [Browserstack](https://www.browserstack.com/) for providing testing infrastructure

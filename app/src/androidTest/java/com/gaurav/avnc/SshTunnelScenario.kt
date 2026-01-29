@@ -27,7 +27,7 @@ import java.nio.file.Files
 import java.security.PublicKey
 
 class SshTunnelScenario {
-    val sshServer = SshServer.setUpDefaultServer()
+    val sshServer = SshServer.setUpDefaultServer()!!
     val vncSession = VncSessionScenario()
     val profile get() = vncSession.profile
 
@@ -83,7 +83,7 @@ class SshTunnelScenario {
 
     fun checkAndTrustHostFingerprint() {
         onView(withText(R.string.title_unknown_ssh_host)).inDialog().checkWillBeDisplayed()
-        onView(withSubstring(hostFingerprint)).inDialog().checkWillBeDisplayed()
+        onView(withSubstring(HOST_FINGERPRINT)).inDialog().checkWillBeDisplayed()
         onView(withText(R.string.title_continue)).inDialog().doClick()
     }
 
@@ -93,27 +93,28 @@ class SshTunnelScenario {
     }
 
     companion object {
-        private val HOST_KEY = """
-                    -----BEGIN OPENSSH PRIVATE KEY-----
-                    b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAlwAAAAdzc2gtcn
-                    NhAAAAAwEAAQAAAIEA0UtMRu2BZUpggGVwqbrxkoknLndRMClkofe148MFMBqT3drKFbMo
-                    3I2qQeqOIL0XesRnJz1uXz2oYlwtP1BJqu6uxDvcgu2RUsD4/P5LmoOJgzX3j38jNihkGU
-                    IN2pIEmXsJu7oOP2vdS7GD1WfBs1/nyHW8i53Oaa//98YE5E0AAAIITX/Jvk1/yb4AAAAH
-                    c3NoLXJzYQAAAIEA0UtMRu2BZUpggGVwqbrxkoknLndRMClkofe148MFMBqT3drKFbMo3I
-                    2qQeqOIL0XesRnJz1uXz2oYlwtP1BJqu6uxDvcgu2RUsD4/P5LmoOJgzX3j38jNihkGUIN
-                    2pIEmXsJu7oOP2vdS7GD1WfBs1/nyHW8i53Oaa//98YE5E0AAAADAQABAAAAgG9RFkPPRP
-                    hDw+nmijKsTJo8uos7SQJNscl3v9VhP5wjNqxUFxHNlZkg/AJNJ8T/7cINPjQft1mOqMWP
-                    8zzujg8V4vuu7TEXpVh3cqshXwkWVgGz/7M3Q/fFjG5uj813/hxM573ymJQZ5HouI7T/He
-                    jtse+uLidGWDiTtNV8WwuhAAAAQQDV8Iq28srDFKUVs6JMl0Ur6h/YGh39eiACl1cpx9/G
-                    KrgZzOqzkBgAeZT5k2oezvbpA89wI+LddBs7LJooUUSgAAAAQQD9UMj89wfccLF3zMXIe6
-                    qMWjp6MHr0N9CAZHg+f8OU1b92hGvvQi6DF4ES3qoeQ/D5oNehX5M/d5dlLVeoePKpAAAA
-                    QQDTgxaEBZUeSQP1OfmAz5p/T3swUj7j3WnNTlpCT293mcwMd4rO9R2TIGei2rNdCPwbRV
-                    ZA3JLs7Mj+tBgEVk8FAAAAD2dhdXJhdkBlbGVjdHJvbgECAw==
-                    -----END OPENSSH PRIVATE KEY-----
-                    """.trimIndent()
+        private const val HOST_KEY = """
+                          -----BEGIN OPENSSH PRIVATE KEY-----
+                          b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAlwAAAAdzc2gtcn
+                          NhAAAAAwEAAQAAAIEA0UtMRu2BZUpggGVwqbrxkoknLndRMClkofe148MFMBqT3drKFbMo
+                          3I2qQeqOIL0XesRnJz1uXz2oYlwtP1BJqu6uxDvcgu2RUsD4/P5LmoOJgzX3j38jNihkGU
+                          IN2pIEmXsJu7oOP2vdS7GD1WfBs1/nyHW8i53Oaa//98YE5E0AAAIITX/Jvk1/yb4AAAAH
+                          c3NoLXJzYQAAAIEA0UtMRu2BZUpggGVwqbrxkoknLndRMClkofe148MFMBqT3drKFbMo3I
+                          2qQeqOIL0XesRnJz1uXz2oYlwtP1BJqu6uxDvcgu2RUsD4/P5LmoOJgzX3j38jNihkGUIN
+                          2pIEmXsJu7oOP2vdS7GD1WfBs1/nyHW8i53Oaa//98YE5E0AAAADAQABAAAAgG9RFkPPRP
+                          hDw+nmijKsTJo8uos7SQJNscl3v9VhP5wjNqxUFxHNlZkg/AJNJ8T/7cINPjQft1mOqMWP
+                          8zzujg8V4vuu7TEXpVh3cqshXwkWVgGz/7M3Q/fFjG5uj813/hxM573ymJQZ5HouI7T/He
+                          jtse+uLidGWDiTtNV8WwuhAAAAQQDV8Iq28srDFKUVs6JMl0Ur6h/YGh39eiACl1cpx9/G
+                          KrgZzOqzkBgAeZT5k2oezvbpA89wI+LddBs7LJooUUSgAAAAQQD9UMj89wfccLF3zMXIe6
+                          qMWjp6MHr0N9CAZHg+f8OU1b92hGvvQi6DF4ES3qoeQ/D5oNehX5M/d5dlLVeoePKpAAAA
+                          QQDTgxaEBZUeSQP1OfmAz5p/T3swUj7j3WnNTlpCT293mcwMd4rO9R2TIGei2rNdCPwbRV
+                          ZA3JLs7Mj+tBgEVk8FAAAAD2dhdXJhdkBlbGVjdHJvbgECAw==
+                          -----END OPENSSH PRIVATE KEY-----
+                          """
+
+        const val HOST_FINGERPRINT = "SHA256:h4L6a6+kb54WbUxcK4FqsS3ebocJc5ZhiDB56d32Zdk"
 
         val hostKeyPair = PEMDecoder.decode(HOST_KEY.toCharArray(), null)!!
-        val hostFingerprint = "SHA256:h4L6a6+kb54WbUxcK4FqsS3ebocJc5ZhiDB56d32Zdk"
 
         init {
             val wd = Files.createTempDirectory("mina-sshd")

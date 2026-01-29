@@ -26,7 +26,6 @@ import com.gaurav.avnc.databinding.ServerDiscoveryItemBinding
 import com.gaurav.avnc.databinding.ServerSavedBinding
 import com.gaurav.avnc.databinding.ServerSavedItemBinding
 import com.gaurav.avnc.model.ServerProfile
-import com.gaurav.avnc.ui.home.ServerTabs.PagerAdapter.ViewHolder
 import com.gaurav.avnc.util.setClipboardText
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -94,7 +93,7 @@ class ServerTabs(val activity: HomeActivity) {
      */
     private inner class PagerAdapter : RecyclerView.Adapter<PagerAdapter.ViewHolder>() {
 
-        private inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v)
+        inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v)
 
         override fun getItemCount() = 2
         override fun getItemViewType(position: Int) = position
@@ -232,12 +231,12 @@ class ServerTabs(val activity: HomeActivity) {
             rootView.setOnCreateContextMenuListener { contextMenu, view, _ ->
                 MenuInflater(view.context).inflate(contextMenuId, contextMenu)
                 contextMenu.forEach { item ->
-                    item.setOnMenuItemClickListener { onContextMenuItemClick(it) }
+                    item.setOnMenuItemClickListener { onContextMenuItemClick(it); true }
                 }
             }
         }
 
-        private fun onContextMenuItemClick(item: MenuItem): Boolean {
+        private fun onContextMenuItemClick(item: MenuItem) {
             when (item.itemId) {
                 R.id.edit -> homeViewModel.onEditProfile(profile)
                 R.id.duplicate -> homeViewModel.onDuplicateProfile(profile)
@@ -245,7 +244,6 @@ class ServerTabs(val activity: HomeActivity) {
                 R.id.copy_host -> copyToClipboard(profile.host)
                 R.id.copy_name -> copyToClipboard(profile.name)
             }
-            return true
         }
 
         private fun copyToClipboard(text: String) {

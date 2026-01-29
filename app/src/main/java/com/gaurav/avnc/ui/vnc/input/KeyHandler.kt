@@ -267,7 +267,7 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
             val isAccent = uChar and KeyCharacterMap.COMBINING_ACCENT != 0
             val maskedChar = uChar and KeyCharacterMap.COMBINING_ACCENT_MASK
 
-            if ((!isAccent && accentSequence.size == 0) ||  // No tracking yet (most common case)
+            if ((!isAccent && accentSequence.isEmpty()) ||  // No tracking yet (most common case)
                 (!isAccent && isUp && !accentSequence.contains(maskedChar)) || // Spurious key-ups
                 (KeyEvent.isModifierKey(keyCode))) { // Modifier keys are passed-on to the server
                 ++i

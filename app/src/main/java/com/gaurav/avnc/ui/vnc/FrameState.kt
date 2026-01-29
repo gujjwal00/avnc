@@ -10,7 +10,6 @@ package com.gaurav.avnc.ui.vnc
 
 import android.graphics.PointF
 import android.graphics.RectF
-import com.gaurav.avnc.ui.vnc.FrameState.Snapshot
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min

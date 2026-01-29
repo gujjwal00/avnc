@@ -9,6 +9,7 @@
 package com.gaurav.avnc.vnc
 
 import android.net.Uri
+import androidx.core.net.toUri
 import com.gaurav.avnc.model.ServerProfile
 import java.net.URI
 
@@ -30,7 +31,7 @@ class VncUri(str: String) {
      */
     private val uriString = str.replaceFirst(Regex("^(vnc:/?/?)?", RegexOption.IGNORE_CASE), "vnc://")
 
-    private val uri = Uri.parse(uriString)
+    private val uri = uriString.toUri()
 
     /**
      * Older versions of Android [Uri] does not support IPv6, so we need to use Java [URI] for host & port.

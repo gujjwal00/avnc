@@ -42,10 +42,10 @@ class EditorViewModel(app: Application, state: SavedStateHandle, initialProfile:
 
 
     fun prepareProfileForSave(): ServerProfile {
-        profile.useRepeater = useRepeater.value ?: false
+        profile.useRepeater = useRepeater.value == true
         profile.idOnRepeater = idOnRepeater.value?.toIntOrNull() ?: 0
-        profile.useRawEncoding = useRawEncoding.value ?: false
-        profile.enableWol = enableWol.value ?: false
+        profile.useRawEncoding = useRawEncoding.value == true
+        profile.enableWol = enableWol.value == true
         profile.channelType = if (useSshTunnel.value == true) ServerProfile.CHANNEL_SSH_TUNNEL else ServerProfile.CHANNEL_TCP
         profile.sshAuthType = if (sshUsePassword.value == true) ServerProfile.SSH_AUTH_PASSWORD else ServerProfile.SSH_AUTH_KEY
         return profile
