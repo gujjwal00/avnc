@@ -82,9 +82,9 @@ class SshTunnelScenario {
     }
 
     fun checkAndTrustHostFingerprint() {
-        onView(withText(R.string.title_unknown_ssh_host)).checkWillBeDisplayed()
-        onView(withSubstring(hostFingerprint)).checkWillBeDisplayed()
-        onView(withText(R.string.title_continue)).doClick()
+        onView(withText(R.string.title_unknown_ssh_host)).inDialog().checkWillBeDisplayed()
+        onView(withSubstring(hostFingerprint)).inDialog().checkWillBeDisplayed()
+        onView(withText(R.string.title_continue)).inDialog().doClick()
     }
 
     fun stop() = apply {

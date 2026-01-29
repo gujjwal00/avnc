@@ -14,6 +14,7 @@ import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.base.DefaultFailureHandler
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
@@ -25,6 +26,7 @@ import com.gaurav.avnc.EmptyDatabaseRule
 import com.gaurav.avnc.R
 import com.gaurav.avnc.VncSessionScenario
 import com.gaurav.avnc.doClick
+import com.gaurav.avnc.targetContext
 import com.gaurav.avnc.ui.about.AboutActivity
 import com.gaurav.avnc.ui.prefs.PrefsActivity
 import org.hamcrest.Matchers.containsString
@@ -105,6 +107,7 @@ class AutoConnectTest {
 
     @Test
     fun autoConnectOnStartup() {
+        Espresso.setFailureHandler(DefaultFailureHandler(targetContext, false))
         val vncSession = VncSessionScenario()
         vncSession.profile.fConnectOnAppStart = true
         vncSession.saveProfileToDB(dbRule.db)

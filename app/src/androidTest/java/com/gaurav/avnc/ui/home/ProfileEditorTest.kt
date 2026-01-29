@@ -12,7 +12,6 @@ import androidx.core.content.edit
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ScrollToAction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.RootMatchers.isDialog
@@ -27,10 +26,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.gaurav.avnc.CleanPrefsRule
 import com.gaurav.avnc.EmptyDatabaseRule
 import com.gaurav.avnc.R
+import com.gaurav.avnc.ScrollToBottom
 import com.gaurav.avnc.TestServer
 import com.gaurav.avnc.checkIsDisplayed
-import com.gaurav.avnc.checkIsNotDisplayed
+import com.gaurav.avnc.checkWillBeCompletelyDisplayed
 import com.gaurav.avnc.checkWillBeDisplayed
+import com.gaurav.avnc.checkWillBeHidden
 import com.gaurav.avnc.doClick
 import com.gaurav.avnc.doTypeText
 import com.gaurav.avnc.model.ServerProfile
@@ -152,7 +153,7 @@ class BasicEditorTest {
         onView(withText(R.string.title_try)).doClick()
 
         onView(withId(R.id.frame_view)).checkWillBeDisplayed()
-        onView(withId(R.id.status_container)).checkIsNotDisplayed()
+        onView(withId(R.id.status_container)).checkWillBeHidden()
 
         Espresso.pressBack()
         onView(withText(R.string.title_try)).checkWillBeDisplayed()
@@ -222,9 +223,10 @@ class PrivateKeyTest {
         Intents.init()
         targetPrefs.edit { putBoolean("prefer_advanced_editor", true) }
         onView(withContentDescription(R.string.desc_add_new_server_btn)).doClick()
-        onView(withId(R.id.use_ssh_tunnel)).performWithTimeout(ScrollToAction())
+        onView(withId(R.id.scroll_view)).performWithTimeout(ScrollToBottom())
         onView(withId(R.id.use_ssh_tunnel)).doClick()
-        onView(withId(R.id.key_import_btn)).performWithTimeout(ScrollToAction())
+        onView(withId(R.id.scroll_view)).performWithTimeout(ScrollToBottom())
+        onView(withId(R.id.key_import_btn)).checkWillBeCompletelyDisplayed()
     }
 
     @After
