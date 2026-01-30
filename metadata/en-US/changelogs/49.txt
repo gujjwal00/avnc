@@ -1,0 +1,7 @@
+* Added support for Bell messages from server
+* Added support for importing PKCS8 encoded private keys
+* Virtual keys are now shown by default for new users
+* Virtual keys textbox visibility is now saved across sessions
+  (Swipe left on virtual keys to open the textbox)
+* Fixed some characters not being sent to server
+* New language: Galician  by @nlimeres
