@@ -26,7 +26,7 @@ import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.gaurav.avnc.viewmodel.PrefsViewModel
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.viewmodel.service.Discovery
-import com.gaurav.avnc.viewmodel.service.SshTunnel
+import com.gaurav.avnc.viewmodel.service.SshClient
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.VncClient
 
@@ -101,7 +101,7 @@ import com.gaurav.avnc.vnc.VncClient
  * - [VncClient] is a wrapper around native `rfbClient` from LibVNCClient.
  *
  * - [LoginFragment] is used to ask username & password from user.
- * - [SshTunnel] is used to create a SSH tunnel, which can be used for connection.
+ * - [SshClient] is used to create a SSH tunnel, which can be used for connection.
  * - [ConfirmationDialog] is used to verify unknown SSH hosts and X509 certs with user.
  * -
  * - [Messenger] is used to send events to VNC server.
@@ -120,7 +120,7 @@ import com.gaurav.avnc.vnc.VncClient
  * These are sort-of standalone components which perform a particular task:
  *
  * - Server discovery ([Discovery])
- * - SSH Tunnel ([SshTunnel])
+ * - SSH Tunnel ([SshClient])
  * - Import/Export (in [PrefsViewModel])
  *
  * Note: These are NOT Android Services (these are called services for lack of a better word).

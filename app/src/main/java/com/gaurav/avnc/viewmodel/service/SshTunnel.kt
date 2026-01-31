@@ -42,7 +42,7 @@ import java.security.MessageDigest
  * Known hosts & keys are stored in a file inside app's private storage.
  * For unknown host, user is prompted to confirm the key.
  */
-class HostKeyVerifier(private val observer: SshTunnel.Observer) : ServerHostKeyVerifier {
+class HostKeyVerifier(private val observer: SshClient.Observer) : ServerHostKeyVerifier {
 
     override fun verifyServerHostKey(hostname: String, port: Int, keyAlgorithm: String, key: ByteArray): Boolean {
         val knownHostsFile = observer.getKnownSshHostsFile()
@@ -136,7 +136,7 @@ class SshTunnelException(message: String = "", cause: Throwable? = null) : IOExc
 /**
  * Manager for SSH Tunnel
  */
-class SshTunnel(private val observer: Observer) {
+class SshClient(private val observer: Observer) {
 
     interface Observer {
         fun getKnownSshHostsFile(): File
@@ -151,7 +151,7 @@ class SshTunnel(private val observer: Observer) {
     /**
      * Opens the tunnel according to [profile]
      */
-    fun open(profile: ServerProfile): TunnelGate {
+    fun openTunnel(profile: ServerProfile): TunnelGate {
         check(connection == null) { "Connection already open" }
 
         connection = connect(profile)

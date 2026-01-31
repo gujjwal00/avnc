@@ -31,7 +31,7 @@ import com.gaurav.avnc.util.isCertificateTrusted
 import com.gaurav.avnc.util.setClipboardText
 import com.gaurav.avnc.util.trustCertificate
 import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
-import com.gaurav.avnc.viewmodel.service.SshTunnel
+import com.gaurav.avnc.viewmodel.service.SshClient
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
@@ -181,7 +181,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      */
     val messenger = Messenger(client)
 
-    private val sshTunnel = SshTunnel(SshTunnelObserver())
+    private val sshClient = SshClient(SshTunnelObserver())
 
     /**
      * Used to confirm something with user before continuing.
@@ -258,7 +258,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
                 client.connect(profile.host, profile.port)
 
             ServerProfile.CHANNEL_SSH_TUNNEL ->
-                sshTunnel.open(profile).use {
+                sshClient.openTunnel(profile).use {
                     client.connect(it.host, it.port)
                 }
 
@@ -279,7 +279,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     private fun cleanup() {
         messenger.cleanup()
         client.cleanup()
-        sshTunnel.close()
+        sshClient.close()
     }
 
     /**
@@ -510,9 +510,9 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     /**************************************************************************
-     * [SshTunnel.Observer] Implementation
+     * [SshClient.Observer] Implementation
      **************************************************************************/
-    private inner class SshTunnelObserver : SshTunnel.Observer {
+    private inner class SshTunnelObserver : SshClient.Observer {
         override fun getKnownSshHostsFile() = getKnownHostsFile(app)
 
         override fun getSshPassword(): String {
