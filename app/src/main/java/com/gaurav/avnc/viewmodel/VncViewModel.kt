@@ -277,7 +277,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     private fun cleanup() {
-        messenger.cleanup()
+        messenger.shutdown()
         client.cleanup()
         sshClient.close()
     }
