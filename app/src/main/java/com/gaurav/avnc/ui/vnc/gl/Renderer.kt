@@ -31,7 +31,6 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
 
     private val projectionMatrix = FloatArray(16)
     private val drawCursor = !viewModel.pref.input.hideRemoteCursor
-    private val client = viewModel.client
     private lateinit var program: Program
     private lateinit var frame: Frame
     private lateinit var cursor: Cursor
@@ -84,6 +83,7 @@ class Renderer(val viewModel: VncViewModel) : GLSurfaceView.Renderer {
         glClear(GL_COLOR_BUFFER_BIT)
         glDisable(GL_BLEND)
 
+        val client = viewModel.client
         if (!client.connected || client.frameBufferUpdatesPaused.get())
             return
 

@@ -53,7 +53,6 @@ import com.gaurav.avnc.vnc.XKeySym
 class Dispatcher(private val activity: VncActivity) {
 
     private val viewModel = activity.viewModel
-    private val messenger = viewModel.messenger
     private val gesturePref = viewModel.pref.input.gesture
     val accelerator = PointerAcceleration(viewModel)
 
@@ -176,7 +175,7 @@ class Dispatcher(private val activity: VncActivity) {
     fun onStylusLongPress(p: PointF) = directMode.doClick(PointerButton.Right, p)
     fun onStylusScroll(p: PointF) = directMode.doButtonDown(PointerButton.Left, p)
 
-    fun onXKey(keySym: Int, xtCode: Int, isDown: Boolean) = messenger.sendKey(keySym, xtCode, isDown)
+    fun onXKey(keySym: Int, xtCode: Int, isDown: Boolean) = viewModel.messenger.sendKey(keySym, xtCode, isDown)
 
     /**************************************************************************
      * Available actions
