@@ -116,7 +116,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      */
     val profileLive = MutableLiveData<ServerProfile>()
 
-    val client = VncClient(this)
+    lateinit var client: VncClient
 
     /**
      * We have two places for connection state (both are synced):
@@ -125,6 +125,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      * [state]               - More granular, used by observers & data binding
      */
     val state = MutableLiveData(State.Created)
+
+    val connected get() = state.value == State.Connected
 
     /**
      * Reason for disconnecting.
@@ -179,7 +181,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     /**
      * Used for sending events to remote server.
      */
-    val messenger = Messenger(client)
+    var messenger: Messenger? = null
 
     private val sshClient = SshClient(SshTunnelObserver())
 
@@ -192,7 +194,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
     override fun onCleared() {
         super.onCleared()
-        if (state.value != State.Disconnected)
+        if (state.value == State.Connecting || state.value == State.Connected)
             client.interrupt()
     }
 
@@ -236,6 +238,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     private fun preConnect() {
+        client = VncClient(this)
         client.configure(profile.securityType, true  /* Hardcoded to true */,
                          profile.imageQuality, profile.useRawEncoding)
 
@@ -250,6 +253,9 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
                             Log.w("WakeOnLAN", "Cannot send WoL packet", it)
                         }
                     }
+
+        client.setInputDisabled(profile.viewMode == ServerProfile.VIEW_MODE_NO_INPUT)
+        client.setFrameBufferUpdatesPaused(profile.viewMode == ServerProfile.VIEW_MODE_NO_VIDEO)
     }
 
     private fun connect() {
@@ -265,10 +271,11 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
             else -> throw IOException("Unknown Channel: ${profile.channelType}")
         }
 
+        messenger = Messenger(client)
         state.postValue(State.Connected)
 
         // Initial sync, slightly delayed to allow extended clipboard negotiations
-        launchIO { delay(1000L); sendClipboardText() }
+        launchMain { delay(1000L); sendClipboardText() }
     }
 
     private fun processMessages() {
@@ -277,7 +284,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     private fun cleanup() {
-        messenger.shutdown()
+        messenger?.shutdown()
         client.cleanup()
         sshClient.close()
     }
@@ -357,8 +364,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      **************************************************************************/
 
     fun sendClipboardText() {
-        if (pref.server.clipboardSync && client.connected) launchIO {
-            getClipboardText(app)?.let { messenger.sendClipboardText(it) }
+        if (pref.server.clipboardSync && connected) launchIO {
+            getClipboardText(app)?.let { messenger?.sendClipboardText(it) }
         }
     }
 
@@ -402,21 +409,21 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      * In portrait mode, safe area is used instead of window to exclude the keyboard.
      */
     fun resizeRemoteDesktop() {
-        if (state.value.isConnected && profile.resizeRemoteDesktop && !videoDisabled)
+        if (connected && profile.resizeRemoteDesktop && !videoDisabled)
             frameState.let {
                 if (it.windowWidth > it.windowHeight)
-                    messenger.setDesktopSize(it.windowWidth.toInt(), it.windowHeight.toInt())
+                    messenger?.setDesktopSize(it.windowWidth.toInt(), it.windowHeight.toInt())
                 else
-                    messenger.setDesktopSize(it.safeArea.width().toInt(), it.safeArea.height().toInt())
+                    messenger?.setDesktopSize(it.safeArea.width().toInt(), it.safeArea.height().toInt())
             }
     }
 
     fun setFrameBufferUpdatesPaused(paused: Boolean) {
-        messenger.setFrameBufferUpdatesPaused(paused)
+        messenger?.setFrameBufferUpdatesPaused(paused)
     }
 
     fun refreshFrameBuffer() {
-        messenger.refreshFrameBuffer()
+        messenger?.refreshFrameBuffer()
     }
 
     /**
@@ -454,8 +461,10 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
         if (activeViewMode.value != newMode) {
             activeViewMode.value = newMode
-            client.setInputDisabled(newMode == ServerProfile.VIEW_MODE_NO_INPUT)
-            setFrameBufferUpdatesPaused(newMode == ServerProfile.VIEW_MODE_NO_VIDEO)
+            if (connected) {
+                client.setInputDisabled(newMode == ServerProfile.VIEW_MODE_NO_INPUT)
+                setFrameBufferUpdatesPaused(newMode == ServerProfile.VIEW_MODE_NO_VIDEO)
+            }
             resolveGestureStyle()
         }
     }

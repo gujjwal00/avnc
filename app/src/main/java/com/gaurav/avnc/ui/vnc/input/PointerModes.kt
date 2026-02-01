@@ -34,15 +34,15 @@ abstract class BasePointerMode(val viewModel: VncViewModel) {
     open fun onGestureStop(p: PointF) = doButtonRelease(p)
 
     fun doButtonDown(button: PointerButton, p: PointF) {
-        transformPoint(p)?.let { viewModel.messenger.sendPointerButtonDown(button, it) }
+        transformPoint(p)?.let { viewModel.messenger?.sendPointerButtonDown(button, it) }
     }
 
     fun doButtonUp(button: PointerButton, p: PointF) {
-        transformPoint(p)?.let { viewModel.messenger.sendPointerButtonUp(button, it) }
+        transformPoint(p)?.let { viewModel.messenger?.sendPointerButtonUp(button, it) }
     }
 
     fun doButtonRelease(p: PointF) {
-        transformPoint(p)?.let { viewModel.messenger.sendPointerButtonRelease(it) }
+        transformPoint(p)?.let { viewModel.messenger?.sendPointerButtonRelease(it) }
     }
 
     open fun doClick(button: PointerButton, p: PointF) {
@@ -50,7 +50,7 @@ abstract class BasePointerMode(val viewModel: VncViewModel) {
         // Some apps (mostly games) seems to ignore click event if button-up is received too early
         if ((button == PointerButton.Left || button == PointerButton.Middle || button == PointerButton.Right)
             && viewModel.profile.fButtonUpDelay)
-            viewModel.messenger.insertButtonUpDelay()
+            viewModel.messenger?.insertButtonUpDelay()
         doButtonUp(button, p)
     }
 

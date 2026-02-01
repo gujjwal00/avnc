@@ -175,7 +175,7 @@ class Dispatcher(private val activity: VncActivity) {
     fun onStylusLongPress(p: PointF) = directMode.doClick(PointerButton.Right, p)
     fun onStylusScroll(p: PointF) = directMode.doButtonDown(PointerButton.Left, p)
 
-    fun onXKey(keySym: Int, xtCode: Int, isDown: Boolean) = viewModel.messenger.sendKey(keySym, xtCode, isDown)
+    fun onXKey(keySym: Int, xtCode: Int, isDown: Boolean) = viewModel.messenger!!.sendKey(keySym, xtCode, isDown)
 
     /**************************************************************************
      * Available actions

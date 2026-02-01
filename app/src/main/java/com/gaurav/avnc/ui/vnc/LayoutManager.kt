@@ -141,7 +141,7 @@ class LayoutManager(private val activity: VncActivity) {
         if (!fullscreenEnabled)
             return
 
-        if (viewModel.client.connected)
+        if (viewModel.connected)
             enterFullscreen()
         else
             leaveFullscreen()
@@ -174,7 +174,7 @@ class LayoutManager(private val activity: VncActivity) {
         // applied on 30+ APIs to ensure consistency.
         if (insets.isVisible(Type.ime()))
             insetController.show(Type.navigationBars())
-        else if (fullscreenEnabled && viewModel.client.connected) {
+        else if (fullscreenEnabled && viewModel.connected) {
             insetController.hide(Type.navigationBars())
         }
     }

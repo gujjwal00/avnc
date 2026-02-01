@@ -515,7 +515,7 @@ class VncActivity : AppCompatActivity() {
     }
 
     private fun enterPiPMode() {
-        val canEnter = viewModel.pref.viewer.pipEnabled && viewModel.client.connected
+        val canEnter = viewModel.pref.viewer.pipEnabled && viewModel.connected
 
         if (canEnter && Build.VERSION.SDK_INT >= 26) {
 
