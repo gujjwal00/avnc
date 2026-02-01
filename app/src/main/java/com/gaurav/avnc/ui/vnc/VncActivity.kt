@@ -354,7 +354,7 @@ class VncActivity : AppCompatActivity() {
         binding.frameView.keepScreenOn = isConnected && viewModel.pref.viewer.keepScreenOn
         SamsungDex.setMetaKeyCapture(this, isConnected)
         layoutManager.onConnectionStateChanged()
-        inputHandler.onStateChanged(newState)
+        inputHandler.onStateChanged(isConnected)
         updateStatusContainerVisibility(isConnected)
         updatePointerCapture()
         autoReconnect(newState)
