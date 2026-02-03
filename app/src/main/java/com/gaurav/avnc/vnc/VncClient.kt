@@ -186,16 +186,6 @@ class VncClient(private val observer: Observer) {
     }
 
     /**
-     * Whether connected to a MacOS server
-     */
-    fun isConnectedToMacOS(): Boolean {
-        ifConnected {
-            return nativeIsServerMacOS(nativePtr)
-        }
-        return false
-    }
-
-    /**
      * Sends Key event to remote server.
      *
      * @param keySym    Key symbol
@@ -390,7 +380,6 @@ class VncClient(private val observer: Observer) {
     private external fun nativeUploadFrameTexture(clientPtr: Long)
     private external fun nativeUploadCursorTexture(clientPtr: Long)
     private external fun nativeGetLastErrorStr(): String
-    private external fun nativeIsServerMacOS(clientPtr: Long): Boolean
     private external fun nativeInterrupt(clientPtr: Long)
     private external fun nativeCleanup(clientPtr: Long)
 

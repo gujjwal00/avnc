@@ -42,6 +42,7 @@ import com.gaurav.avnc.checkWillBeCompletelyDisplayed
 import com.gaurav.avnc.checkWillBeDisplayed
 import com.gaurav.avnc.doClick
 import com.gaurav.avnc.doTypeText
+import com.gaurav.avnc.instrumentation
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.onToast
 import com.gaurav.avnc.pollingAssert
@@ -235,6 +236,23 @@ class VncActivityTest : VncSessionTest() {
         onView(withSubstring("Could not unlock server")).checkWillBeDisplayed()
         onView(withId(R.id.frame_view)).checkIsNotDisplayed()
         vncSession.stop()
+    }
+
+    @Test
+    fun macOSAltCompatibility() {
+        vncSession.server.setProtocolString("RFB 003.889\n")
+        vncSession.run {
+            instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_ALT_LEFT)
+            instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_ALT_RIGHT)
+        }
+
+        // Alt key should be sent as Meta key
+        assertEquals(listOf(
+                XKeySym.XK_Meta_L to true,
+                XKeySym.XK_Meta_L to false,
+                XKeySym.XK_Meta_R to true,
+                XKeySym.XK_Meta_R to false,
+        ), vncSession.server.receivedKeySyms)
     }
 
     /*************************** Toolbar *******************************************/

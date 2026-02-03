@@ -84,7 +84,6 @@ import com.gaurav.avnc.vnc.XTKeyCode
  */
 class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
 
-    var enableMacOSCompatibility = false
     private var emitLegacyKeysym = true  // Hardcoded to true
     private var vkMetaState = 0
     private var hasSentShiftDown = false
@@ -159,7 +158,6 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
         generateFakeCtrl(model)
         generateFakeAlt(model)
         generateOutEvents(model)
-        remapOutEvents(model)
 
         return emit(model)
     }
@@ -411,15 +409,6 @@ class KeyHandler(private val dispatcher: Dispatcher, prefs: AppPreferences) {
                 && inputPref.kmBackToEscape) {
                 it.keyCode = KeyEvent.KEYCODE_ESCAPE
                 it.scanCode = 0
-            }
-        }
-    }
-
-    private fun remapOutEvents(model: EventModel) {
-        if (enableMacOSCompatibility) {
-            model.outEvents.forEach {
-                if (it.keySym == XKeySym.XK_Alt_L) it.keySym = XKeySym.XK_Meta_L
-                if (it.keySym == XKeySym.XK_Alt_R) it.keySym = XKeySym.XK_Meta_R
             }
         }
     }

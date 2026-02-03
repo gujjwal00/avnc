@@ -650,20 +650,4 @@ class KeyHandlerTest {
             dn(XKeySym.XK_Super_L, 0)
         }
     }
-
-
-    @Test
-    fun macOSCompatibility() {
-        keyHandler.enableMacOSCompatibility = true
-        sendKey(KeyEvent.KEYCODE_ALT_RIGHT)
-        sendKey(KeyEvent.KEYCODE_ALT_LEFT)
-
-        // Should generate 'Meta' instead of normal 'Alt'
-        verifySentKeys {
-            dn(XKeySym.XK_Meta_R)
-            up(XKeySym.XK_Meta_R)
-            dn(XKeySym.XK_Meta_L)
-            up(XKeySym.XK_Meta_L)
-        }
-    }
 }

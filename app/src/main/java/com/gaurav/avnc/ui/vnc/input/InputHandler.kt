@@ -36,7 +36,6 @@ class InputHandler(private val activity: VncActivity) {
             dispatcher = Dispatcher(activity)
             touchHandler = TouchHandler(activity.binding.frameView, dispatcher!!, viewModel.pref)
             keyHandler = KeyHandler(dispatcher!!, viewModel.pref)
-            keyHandler!!.enableMacOSCompatibility = viewModel.client.isConnectedToMacOS()
         } else {
             dispatcher = null
             touchHandler = null

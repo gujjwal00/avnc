@@ -42,7 +42,7 @@ import kotlin.random.Random
 class TestServer(name: String = "Friends") {
 
     //Protocol config
-    private val protocol = "RFB 003.008\n"
+    private var protocol = "RFB 003.008\n"
     private val serverName = name.toByteArray()
     private val frameWidth: Short = 10
     private val frameHeight: Short = 10
@@ -105,6 +105,12 @@ class TestServer(name: String = "Friends") {
         this.username = username
         this.password = password
         securityTypes.add(0, 30 /*DHAuth*/)
+    }
+
+    fun setProtocolString(proto: String) {
+        check(!serverJob.isAlive)
+        check(proto.length == 12)
+        protocol = proto
     }
 
     /**

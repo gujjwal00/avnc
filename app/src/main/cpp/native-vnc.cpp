@@ -356,12 +356,6 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeInit(JNIEnv *env, jobject thiz, jlong c
     return JNI_FALSE;
 
 }
-extern "C"
-JNIEXPORT jboolean JNICALL
-Java_com_gaurav_avnc_vnc_VncClient_nativeIsServerMacOS(JNIEnv *env, jobject thiz, jlong client_ptr) {
-    auto client = (rfbClient *) client_ptr;
-    return client->serverMajor == 3 && client->serverMinor == 889;
-}
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -420,6 +414,13 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeSendKeyEvent(JNIEnv *env, jobject thiz,
                                                       jint key_sym, jint xt_code, jboolean is_down) {
     auto client = (rfbClient *) client_ptr;
     rfbBool down = is_down ? TRUE : FALSE;
+
+    // Remap Alt key to Meta key for MacOS
+    auto isServerMacOS = client->serverMajor == 3 && client->serverMinor == 889;
+    if (isServerMacOS) {
+        if (key_sym == 0xffe9  /* Left alt  */) key_sym = 0xffe7  /* Left meta  */;
+        if (key_sym == 0xffea  /* Right alt */) key_sym = 0xffe8  /* Right meta */;
+    }
 
     if (xt_code > 0 && SendExtendedKeyEvent(client, key_sym, xt_code, down))
         return JNI_TRUE;
