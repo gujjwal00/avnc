@@ -18,30 +18,29 @@ import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.R
 import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.session.RemoteSession
 import com.gaurav.avnc.ui.vnc.FrameScroller
 import com.gaurav.avnc.ui.vnc.FrameState
 import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.util.LiveRequest
 import com.gaurav.avnc.util.Tones
-import com.gaurav.avnc.util.broadcastWoLPackets
 import com.gaurav.avnc.util.getClipboardText
 import com.gaurav.avnc.util.getKnownHostsFile
 import com.gaurav.avnc.util.getUnknownCertificateMessage
 import com.gaurav.avnc.util.isCertificateTrusted
 import com.gaurav.avnc.util.setClipboardText
 import com.gaurav.avnc.util.trustCertificate
-import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
 import com.gaurav.avnc.viewmodel.service.SshClient
 import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
+import kotlinx.coroutines.runBlocking
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.security.cert.X509Certificate
-import kotlin.concurrent.thread
 
 /**
  * ViewModel for VncActivity
@@ -80,7 +79,7 @@ import kotlin.concurrent.thread
  * via OpenGL ES. [frameState] is read from this thread to decide how/where frame
  * should be drawn.
  */
-class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
+class VncViewModel(app: Application) : BaseViewModel(app) {
 
     /**
      * Connection lifecycle:
@@ -117,6 +116,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     val profileLive = MutableLiveData<ServerProfile>()
 
     lateinit var client: VncClient
+
+    private val session = RemoteSession(RemoteSessionObserver())
 
     /**
      * We have two places for connection state (both are synced):
@@ -183,8 +184,6 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
      */
     var messenger: Messenger? = null
 
-    private val sshClient = SshClient(SshTunnelObserver())
-
     /**
      * Used to confirm something with user before continuing.
      * This is mostly used to warn about unknown SSH host, x509 certificates etc.
@@ -194,8 +193,7 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
 
     override fun onCleared() {
         super.onCleared()
-        if (state.value == State.Connecting || state.value == State.Connected)
-            client.interrupt()
+        session.stop()
     }
 
 
@@ -215,78 +213,8 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
             frameState.setZoom(profile.zoom1, profile.zoom2)
             setViewMode(profile.viewMode)
             resolveGestureStyle()
-            launchConnection()
+            session.start(profile)
         }
-    }
-
-    private fun launchConnection() {
-        thread(name = "VncConnection") {
-            runCatching {
-
-                preConnect()
-                connect()
-                processMessages()
-
-            }.onFailure {
-                if (it is IOException) disconnectReason.postValue(it.message)
-                Log.e(javaClass.simpleName, "Connection failed", it)
-            }
-
-            state.postValue(State.Disconnected)
-            cleanup()
-        }
-    }
-
-    private fun preConnect() {
-        client = VncClient(this)
-        client.configure(profile.securityType, true  /* Hardcoded to true */,
-                         profile.imageQuality, profile.useRawEncoding)
-
-        if (profile.useRepeater)
-            client.setupRepeater(profile.idOnRepeater)
-
-        if (profile.enableWol)
-            runCatching { broadcastWoLPackets(profile.wolMAC, profile.wolBroadcastAddress, profile.wolPort) }
-                    .onFailure {
-                        launchMain {
-                            Toast.makeText(app, "Wake-on-LAN: ${it.message}", Toast.LENGTH_LONG).show()
-                            Log.w("WakeOnLAN", "Cannot send WoL packet", it)
-                        }
-                    }
-
-        client.setInputDisabled(profile.viewMode == ServerProfile.VIEW_MODE_NO_INPUT)
-        client.setFrameBufferUpdatesPaused(profile.viewMode == ServerProfile.VIEW_MODE_NO_VIDEO)
-    }
-
-    private fun connect() {
-        when (profile.channelType) {
-            ServerProfile.CHANNEL_TCP ->
-                client.connect(profile.host, profile.port)
-
-            ServerProfile.CHANNEL_SSH_TUNNEL ->
-                sshClient.openTunnel(profile).use {
-                    client.connect(it.host, it.port)
-                }
-
-            else -> throw IOException("Unknown Channel: ${profile.channelType}")
-        }
-
-        messenger = Messenger(client)
-        state.postValue(State.Connected)
-
-        // Initial sync, slightly delayed to allow extended clipboard negotiations
-        launchMain { delay(1000L); sendClipboardText() }
-    }
-
-    private fun processMessages() {
-        while (viewModelScope.isActive)
-            client.processServerMessage()
-    }
-
-    private fun cleanup() {
-        messenger?.shutdown()
-        client.cleanup()
-        sshClient.close()
     }
 
     /**
@@ -470,58 +398,94 @@ class VncViewModel(app: Application) : BaseViewModel(app), VncClient.Observer {
     }
 
     /**************************************************************************
-     * [VncClient.Observer] Implementation
+     * Session observer
      **************************************************************************/
+    private inner class RemoteSessionObserver : RemoteSession.Observer {
 
-    override fun getVncPassword(): String {
-        return getLoginInfo(LoginInfo.Type.VNC_PASSWORD).password
-    }
+        override fun onConnecting() {
+            state.postValue(State.Connecting)
+        }
 
-    override fun getVncCredentials(): UserCredential {
-        return getLoginInfo(LoginInfo.Type.VNC_CREDENTIAL).let { UserCredential(it.username, it.password) }
-    }
+        override fun onConnected(vncClient: VncClient, messenger: Messenger) {
+            launchMain {
+                this@VncViewModel.client = vncClient
+                this@VncViewModel.messenger = messenger
+                state.value = State.Connected
 
-    override fun verifyVncServerCertificate(certificate: X509Certificate): Boolean {
-        if (isCertificateTrusted(app, certificate))
+                // Initial clipboard sync, slightly delayed to allow extended clipboard negotiations
+                delay(1000L)
+                sendClipboardText()
+            }
+        }
+
+        override fun onDisconnected() {
+            // Block until main thread is synchronised with disconnected state
+            runBlocking(Dispatchers.Main) {
+                state.value = State.Disconnected
+                this@VncViewModel.messenger = null
+            }
+        }
+
+        override fun onConnectionError(error: Throwable) {
+            if (error is IOException)
+                disconnectReason.postValue(error.message)
+        }
+
+        override fun onWakeOnLanBroadcastError(e: Throwable) {
+            launchMain { Toast.makeText(app, "Wake-on-LAN: ${e.message}", Toast.LENGTH_LONG).show() }
+        }
+
+
+        /**************************** [VncClient.Observer] *******************/
+
+        override fun getVncPassword(): String {
+            return getLoginInfo(LoginInfo.Type.VNC_PASSWORD).password
+        }
+
+        override fun getVncCredentials(): UserCredential {
+            return getLoginInfo(LoginInfo.Type.VNC_CREDENTIAL).let { UserCredential(it.username, it.password) }
+        }
+
+        override fun verifyVncServerCertificate(certificate: X509Certificate): Boolean {
+            if (isCertificateTrusted(app, certificate))
+                return true
+
+            val title = "Unknown server certificate"
+            val message = getUnknownCertificateMessage(certificate)
+            if (!confirmationRequest.requestResponse(Pair(title, message)))
+                return false
+
+            trustCertificate(app, certificate)
             return true
-
-        val title = "Unknown server certificate"
-        val message = getUnknownCertificateMessage(certificate)
-        if (!confirmationRequest.requestResponse(Pair(title, message)))
-            return false
-
-        trustCertificate(app, certificate)
-        return true
-    }
-
-    override fun onFramebufferUpdated() {
-        frameViewRef.get()?.requestRender()
-    }
-
-    override fun onCutTextReceived(text: String) {
-        receiveClipboardText(text)
-    }
-
-    override fun onFramebufferSizeChanged(width: Int, height: Int) {
-        launchMain {
-            frameState.setFramebufferSize(width.toFloat(), height.toFloat())
         }
-    }
 
-    override fun onPointerMoved(x: Int, y: Int) {
-        frameViewRef.get()?.requestRender()
-    }
-
-    override fun onBell() {
-        if (pref.ui.bell) {
-            Tones.notify(ToneGenerator.TONE_PROP_BEEP)
+        override fun onFramebufferUpdated() {
+            frameViewRef.get()?.requestRender()
         }
-    }
 
-    /**************************************************************************
-     * [SshClient.Observer] Implementation
-     **************************************************************************/
-    private inner class SshTunnelObserver : SshClient.Observer {
+        override fun onCutTextReceived(text: String) {
+            receiveClipboardText(text)
+        }
+
+        override fun onFramebufferSizeChanged(width: Int, height: Int) {
+            launchMain {
+                frameState.setFramebufferSize(width.toFloat(), height.toFloat())
+            }
+        }
+
+        override fun onPointerMoved(x: Int, y: Int) {
+            frameViewRef.get()?.requestRender()
+        }
+
+        override fun onBell() {
+            if (pref.ui.bell) {
+                Tones.notify(ToneGenerator.TONE_PROP_BEEP)
+            }
+        }
+
+
+        /**************************** [SshClient.Observer] *******************/
+
         override fun getKnownSshHostsFile() = getKnownHostsFile(app)
 
         override fun getSshPassword(): String {
