@@ -9,6 +9,7 @@
 package com.gaurav.avnc.ui.vnc.input
 
 import android.graphics.PointF
+import com.gaurav.avnc.util.debugCheckNotNull
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.PointerButton
 import kotlin.math.abs
@@ -138,17 +139,19 @@ class RelativePointerMode(viewModel: VncViewModel, private val accelerator: Poin
 
     override fun onGestureStart() {
         super.onGestureStart()
+        debugCheckNotNull(viewModel.client)
+
         //Initialize with the latest pointer position
-        pointerPosition.apply {
-            x = viewModel.client.pointerX.toFloat()
-            y = viewModel.client.pointerY.toFloat()
+        viewModel.client?.let {
+            pointerPosition.x = it.pointerX.toFloat()
+            pointerPosition.y = it.pointerY.toFloat()
+            it.ignorePointerMovesByServer = true
         }
-        viewModel.client.ignorePointerMovesByServer = true
     }
 
     override fun onGestureStop(p: PointF) {
         super.onGestureStop(p)
-        viewModel.client.ignorePointerMovesByServer = false
+        viewModel.client?.ignorePointerMovesByServer = false
     }
 
     override fun transformPoint(p: PointF) = pointerPosition

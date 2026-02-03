@@ -115,7 +115,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
      */
     val profileLive = MutableLiveData<ServerProfile>()
 
-    lateinit var client: VncClient
+    var client: VncClient? = null
 
     private val session = RemoteSession(RemoteSessionObserver())
 
@@ -389,10 +389,8 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
 
         if (activeViewMode.value != newMode) {
             activeViewMode.value = newMode
-            if (connected) {
-                client.setInputDisabled(newMode == ServerProfile.VIEW_MODE_NO_INPUT)
-                setFrameBufferUpdatesPaused(newMode == ServerProfile.VIEW_MODE_NO_VIDEO)
-            }
+            client?.setInputDisabled(newMode == ServerProfile.VIEW_MODE_NO_INPUT)
+            setFrameBufferUpdatesPaused(newMode == ServerProfile.VIEW_MODE_NO_VIDEO)
             resolveGestureStyle()
         }
     }
@@ -422,7 +420,8 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
             // Block until main thread is synchronised with disconnected state
             runBlocking(Dispatchers.Main) {
                 state.value = State.Disconnected
-                this@VncViewModel.messenger = null
+                client = null
+                messenger = null
             }
         }
 
