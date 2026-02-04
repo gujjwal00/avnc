@@ -426,8 +426,10 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
         }
 
         override fun onConnectionError(error: Throwable) {
-            if (error is IOException)
-                disconnectReason.postValue(error.message)
+            when (error) {
+                is IOException -> disconnectReason.postValue(error.message)
+                is UnsatisfiedLinkError -> disconnectReason.postValue("Missing native library")
+            }
         }
 
         override fun onWakeOnLanBroadcastError(e: Throwable) {
