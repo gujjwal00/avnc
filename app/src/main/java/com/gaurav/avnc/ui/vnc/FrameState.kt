@@ -185,17 +185,26 @@ class FrameState(
     /**
      * Adjust zoom scale according to give [scaleFactor].
      *
-     * Returns 'how much' scale factor is actually applied (after coercing).
+     * Focus point of zoom can be specified via [fx] & [fy]. If possible,
+     * frame will be panned to keep the focus point 'fixed' on screen.
      */
     @Synchronized
-    fun updateZoom(scaleFactor: Float): Float {
+    fun updateZoom(scaleFactor: Float, fx: Float = 0f, fy: Float = 0f) {
         val oldScale = zoomScale
         val newScale = zoomScale * scaleFactor
 
         zoomScale = snapZoom(oldScale, newScale)
         coerceValues()
 
-        return zoomScale / oldScale //Applied scale factor
+        // How much zoom was actually changed
+        val appliedScaleFactor = zoomScale / oldScale
+
+        //Calculate how much the focus would shift after scaling
+        val dfx = (fx - frameX) * (appliedScaleFactor - 1)
+        val dfy = (fy - frameY) * (appliedScaleFactor - 1)
+
+        //Translate in opposite direction to keep the focus fixed on screen
+        pan(-dfx, -dfy)
     }
 
     @Synchronized

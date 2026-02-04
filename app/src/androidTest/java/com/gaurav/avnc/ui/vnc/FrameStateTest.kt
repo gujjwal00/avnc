@@ -143,6 +143,63 @@ class FrameStateTest {
     }
 
     @Test
+    fun zoomScaleDefaultFocus() {
+        val state = FrameState()
+        state.setViewportSize(100f, 100f)
+        state.setFramebufferSize(100f, 100f)
+
+        //Focus should remain at (0,0) by default
+        state.updateZoom(2f)
+        assertEquals(2f, state.zoomScale)
+        assertEquals(0f, state.frameX)
+        assertEquals(0f, state.frameY)
+    }
+
+    @Test
+    fun zoomScaleFocusMiddle() {
+        val state = FrameState()
+        state.setViewportSize(100f, 100f)
+        state.setFramebufferSize(100f, 100f)
+
+        state.updateZoom(2f, 50f, 50f)
+
+        //(50,50) would be (100,100) after zoom, so frame should shift top-left by 50
+        assertEquals(2f, state.zoomScale)
+        assertEquals(-50f, state.frameX)
+        assertEquals(-50f, state.frameY)
+    }
+
+    @Test
+    fun zoomScaleFocusEnd() {
+        val state = FrameState()
+        state.setViewportSize(100f, 100f)
+        state.setFramebufferSize(100f, 100f)
+
+        state.updateZoom(2f, 100f, 100f)
+
+        //(100,100) would be (200,200) after zoom, so frame should shift top-left by 100
+        assertEquals(2f, state.zoomScale)
+        assertEquals(-100f, state.frameX)
+        assertEquals(-100f, state.frameY)
+    }
+
+    @Test
+    fun zoomScaleOutFocus() {
+        val state = FrameState()
+        state.setViewportSize(100f, 100f)
+        state.setFramebufferSize(100f, 100f)
+
+        state.updateZoom(.5f, 10f, 10f)
+
+        //(10,10) would be (5,5) after zoom-out, but we can't keep it fixed
+        //because frame has be centered, so expect frame to move to (25,25)
+        assertEquals(.5f, state.zoomScale)
+        assertEquals(25f, state.frameX)
+        assertEquals(25f, state.frameY)
+    }
+
+
+    @Test
     fun positionCoerceTest1() {
         val state = FrameState()
         state.setViewportSize(100f, 100f)

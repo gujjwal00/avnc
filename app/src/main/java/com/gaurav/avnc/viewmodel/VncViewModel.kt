@@ -234,41 +234,33 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
     fun updateZoom(scaleFactor: Float, fx: Float, fy: Float) {
         if (profile.fZoomLocked || videoDisabled) return
 
-        val appliedScaleFactor = frameState.updateZoom(scaleFactor)
-
-        //Calculate how much the focus would shift after scaling
-        val dfx = (fx - frameState.frameX) * (appliedScaleFactor - 1)
-        val dfy = (fy - frameState.frameY) * (appliedScaleFactor - 1)
-
-        //Translate in opposite direction to keep the focus fixed on screen
-        frameState.pan(-dfx, -dfy)
-
-        frameViewRef.get()?.requestRender()
+        frameState.updateZoom(scaleFactor, fx, fy)
+        refreshFrameView()
     }
 
     fun resetZoom() {
         frameState.setZoom(1f, 1f)
-        frameViewRef.get()?.requestRender()
+        refreshFrameView()
     }
 
     fun resetZoomToDefault() {
         frameState.setZoom(profile.zoom1, profile.zoom2)
-        frameViewRef.get()?.requestRender()
+        refreshFrameView()
     }
 
     fun setZoom(zoom1: Float, zoom2: Float) {
         frameState.setZoom(zoom1, zoom2)
-        frameViewRef.get()?.requestRender()
+        refreshFrameView()
     }
 
     fun panFrame(deltaX: Float, deltaY: Float) {
         frameState.pan(deltaX, deltaY)
-        frameViewRef.get()?.requestRender()
+        refreshFrameView()
     }
 
     fun moveFrameTo(x: Float, y: Float) {
         frameState.moveTo(x, y)
-        frameViewRef.get()?.requestRender()
+        refreshFrameView()
     }
 
     fun toggleZoomLock(enabled: Boolean) {
@@ -284,7 +276,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
 
     fun setSafeArea(safeArea: RectF) {
         frameState.setSafeArea(safeArea)
-        frameViewRef.get()?.requestRender()
+        refreshFrameView()
     }
 
     /**************************************************************************
@@ -395,6 +387,10 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
         }
     }
 
+    private fun refreshFrameView() {
+        frameViewRef.get()?.requestRender()
+    }
+
     /**************************************************************************
      * Session observer
      **************************************************************************/
@@ -461,7 +457,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
         }
 
         override fun onFramebufferUpdated() {
-            frameViewRef.get()?.requestRender()
+            refreshFrameView()
         }
 
         override fun onCutTextReceived(text: String) {
@@ -475,7 +471,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
         }
 
         override fun onPointerMoved(x: Int, y: Int) {
-            frameViewRef.get()?.requestRender()
+            refreshFrameView()
         }
 
         override fun onBell() {
