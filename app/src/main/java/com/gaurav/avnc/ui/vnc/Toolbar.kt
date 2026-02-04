@@ -31,7 +31,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.gaurav.avnc.R
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.viewmodel.VncViewModel.State
-import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
 
 /**
  *
@@ -159,7 +158,7 @@ class Toolbar(private val activity: VncActivity) {
 
             group.addOnButtonCheckedListener { _, checkedId, isChecked ->
                 if (isChecked) {
-                    if (viewModel.state.value.isConnected) { // Make sure profile is available
+                    if (viewModel.connected) { // Make sure profile is available
                         val newMode = viewModeButtonMap.entries.first { it.value == checkedId }.key
                         if (viewModel.activeViewMode.value != newMode) {
                             viewModel.setViewMode(newMode)
@@ -194,7 +193,7 @@ class Toolbar(private val activity: VncActivity) {
             }
 
             group.setOnCheckedChangeListener { _, id ->
-                if (viewModel.state.value.isConnected) { // Make sure profile is available
+                if (viewModel.connected) { // Make sure profile is available
                     val newStyle = styleButtonMap.entries.first { it.value == id }.key
                     viewModel.setGestureStyle(newStyle)
                 }
@@ -207,8 +206,8 @@ class Toolbar(private val activity: VncActivity) {
         if (Build.VERSION.SDK_INT >= 29)
             updateGestureExclusionRect()
 
-        updateLockMode(state.isConnected)
-        openerButton.isVisible = openWithButton && state.isConnected
+        updateLockMode(state == State.Connected)
+        openerButton.isVisible = openWithButton && state == State.Connected
     }
 
     private fun updateLockMode(isConnected: Boolean) {
@@ -278,7 +277,7 @@ class Toolbar(private val activity: VncActivity) {
      */
     @RequiresApi(29)
     private fun updateGestureExclusionRect() {
-        if (!openWithSwipe || !viewModel.state.value.isConnected) {
+        if (!openWithSwipe || !viewModel.connected) {
             drawerLayout.systemGestureExclusionRects = listOf()
         } else {
             // Area covered by primaryButtons, in drawerLayout's coordinate space

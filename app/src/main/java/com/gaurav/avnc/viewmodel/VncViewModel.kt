@@ -101,11 +101,6 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
         Connecting,
         Connected,
         Disconnected;
-
-        companion object {
-            val State?.isConnected get() = (this == Connected)
-            val State?.isDisconnected get() = (this == Disconnected)
-        }
     }
 
     lateinit var profile: ServerProfile

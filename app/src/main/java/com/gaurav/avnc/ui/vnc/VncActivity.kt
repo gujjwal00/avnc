@@ -46,8 +46,6 @@ import com.gaurav.avnc.util.SamsungDex
 import com.gaurav.avnc.util.debugCheck
 import com.gaurav.avnc.util.enableChildLayoutTransitions
 import com.gaurav.avnc.viewmodel.VncViewModel
-import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
-import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isDisconnected
 import com.gaurav.avnc.vnc.VncUri
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -163,13 +161,13 @@ class VncActivity : AppCompatActivity() {
         binding.frameView.onPause()
         if (viewModel.pref.viewer.pauseUpdatesInBackground)
             viewModel.setFrameBufferUpdatesPaused(true)
-        wasConnectedWhenStopped = viewModel.state.value.isConnected
+        wasConnectedWhenStopped = viewModel.connected
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelable(PROFILE_KEY, viewModel.profileLive.value)
-        outState.putBoolean("wasConnectedWhenStopped", wasConnectedWhenStopped || viewModel.state.value.isConnected)
+        outState.putBoolean("wasConnectedWhenStopped", wasConnectedWhenStopped || viewModel.connected)
     }
 
 
@@ -348,7 +346,7 @@ class VncActivity : AppCompatActivity() {
     }
 
     private fun onClientStateChanged(newState: VncViewModel.State) {
-        val isConnected = newState.isConnected
+        val isConnected = newState == VncViewModel.State.Connected
 
         binding.frameView.isVisible = isConnected
         binding.frameView.keepScreenOn = isConnected && viewModel.pref.viewer.keepScreenOn
@@ -380,7 +378,7 @@ class VncActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT < 26 || !viewModel.pref.input.capturePointer)
             return
 
-        if (viewModel.state.value.isConnected && !forceDisabledPointerCapture) {
+        if (viewModel.connected && !forceDisabledPointerCapture) {
             binding.frameView.requestFocus()
             binding.frameView.requestPointerCapture()
         } else
@@ -411,7 +409,7 @@ class VncActivity : AppCompatActivity() {
 
     private var autoReconnecting = false
     private fun autoReconnect(state: VncViewModel.State) {
-        if (!state.isDisconnected)
+        if (state != VncViewModel.State.Disconnected)
             return
 
         // If disconnected when coming back from background, try to reconnect immediately
