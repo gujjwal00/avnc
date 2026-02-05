@@ -30,7 +30,6 @@ import androidx.core.view.marginTop
 import androidx.drawerlayout.widget.DrawerLayout
 import com.gaurav.avnc.R
 import com.gaurav.avnc.model.ServerProfile
-import com.gaurav.avnc.viewmodel.VncViewModel.State
 
 /**
  *
@@ -80,8 +79,6 @@ class Toolbar(private val activity: VncActivity) {
         // Root view is transparent. Click on it should work just like a click in scrim area
         drawerView.setOnClickListener { close() }
 
-        viewModel.state.observe(activity) { onStateChange(it) }
-
         setupAlignment()
         setupFlyouts()
         setupFlyoutClose()
@@ -98,6 +95,14 @@ class Toolbar(private val activity: VncActivity) {
 
     fun close() {
         drawerLayout.closeDrawer(drawerView)
+    }
+
+    fun onStateChange(isConnected: Boolean) {
+        if (Build.VERSION.SDK_INT >= 29)
+            updateGestureExclusionRect()
+
+        updateLockMode(isConnected)
+        openerButton.isVisible = openWithButton && isConnected
     }
 
     /**
@@ -200,14 +205,6 @@ class Toolbar(private val activity: VncActivity) {
                 close()
             }
         }
-    }
-
-    private fun onStateChange(state: State) {
-        if (Build.VERSION.SDK_INT >= 29)
-            updateGestureExclusionRect()
-
-        updateLockMode(state == State.Connected)
-        openerButton.isVisible = openWithButton && state == State.Connected
     }
 
     private fun updateLockMode(isConnected: Boolean) {

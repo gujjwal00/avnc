@@ -353,6 +353,7 @@ class VncActivity : AppCompatActivity() {
         SamsungDex.setMetaKeyCapture(this, isConnected)
         layoutManager.onConnectionStateChanged()
         inputHandler.onStateChanged(isConnected)
+        toolbar.onStateChange(isConnected)
         updateStatusContainerVisibility(isConnected)
         updatePointerCapture()
         autoReconnect(newState)
