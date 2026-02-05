@@ -17,7 +17,6 @@ import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.FragmentCredentialBinding
 import com.gaurav.avnc.model.LoginInfo
@@ -97,39 +96,17 @@ class LoginFragment : DialogFragment() {
         return LoginInfo.fromProfile(p, loginType)
     }
 
-    private fun setLoginInfoInProfile(p: ServerProfile, l: LoginInfo) {
-        l.applyTo(p)
-    }
-
     private fun onOk() {
         loginInfo.password = getRealPassword(loginInfo.password)
         viewModel.loginInfoRequest.offerResponse(loginInfo)
         if (binding.remember.isChecked)
-            saveLoginInfo(loginInfo)
+            viewModel.loginInfoToBeRemembered += loginInfo
     }
 
     private fun onCancel() {
         requireActivity().finish()
     }
 
-    /**
-     * If user has asked to remember credentials, we need to save them
-     * to database. But we don't want to save them immediately because
-     * user might have mistyped them. So, we wait until successful
-     * connection before saving them.
-     */
-    private fun saveLoginInfo(loginInfo: LoginInfo) {
-        // Use activity as owner because this fragment will likely be destroyed before connecting
-        viewModel.state.observe(requireActivity(), object : Observer<VncViewModel.State> {
-            override fun onChanged(value: VncViewModel.State) {
-                if (value == VncViewModel.State.Connected) {
-                    setLoginInfoInProfile(viewModel.profile, loginInfo)
-                    viewModel.saveProfile()
-                    viewModel.state.removeObserver(this)
-                }
-            }
-        })
-    }
 
     /**********************************************************************************************
      * Autocompletion

@@ -24,6 +24,7 @@ import com.gaurav.avnc.ui.vnc.FrameState
 import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.util.LiveRequest
 import com.gaurav.avnc.util.Tones
+import com.gaurav.avnc.util.debugCheck
 import com.gaurav.avnc.util.getClipboardText
 import com.gaurav.avnc.util.getKnownHostsFile
 import com.gaurav.avnc.util.getUnknownCertificateMessage
@@ -185,6 +186,14 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
      * This request accepts two strings: First is used as title, second contains the message.
      */
     val confirmationRequest = LiveRequest<Pair<String, String>, Boolean>(false, viewModelScope)
+
+    /**
+     * If user has asked to remember credentials in login dialog, we need to
+     * save them to database. But we don't want to save them immediately
+     * because user might have mistyped them. So, we wait until successful
+     * connection before saving them.
+     */
+    var loginInfoToBeRemembered = mutableListOf<LoginInfo>()
 
     override fun onCleared() {
         super.onCleared()
@@ -381,6 +390,15 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
         frameViewRef.get()?.requestRender()
     }
 
+    private fun rememberLoginInfo() {
+        if (loginInfoToBeRemembered.isNotEmpty()) {
+            debugCheck(profile.ID != 0L)
+            loginInfoToBeRemembered.forEach { it.applyTo(profile) }
+            loginInfoToBeRemembered.clear()
+            saveProfile()
+        }
+    }
+
     /**************************************************************************
      * Session observer
      **************************************************************************/
@@ -395,6 +413,8 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
                 this@VncViewModel.client = vncClient
                 this@VncViewModel.messenger = messenger
                 state.value = State.Connected
+
+                rememberLoginInfo()
 
                 // Initial clipboard sync, slightly delayed to allow extended clipboard negotiations
                 delay(1000L)
