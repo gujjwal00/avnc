@@ -94,24 +94,11 @@ class LoginFragment : DialogFragment() {
     }
 
     private fun getLoginInfoFromProfile(p: ServerProfile): LoginInfo {
-        return when (loginType) {
-            LoginInfo.Type.VNC_PASSWORD -> LoginInfo("", p.password)
-            LoginInfo.Type.VNC_CREDENTIAL -> LoginInfo(p.username, p.password)
-            LoginInfo.Type.SSH_PASSWORD -> LoginInfo("", p.sshPassword)
-            LoginInfo.Type.SSH_KEY_PASSWORD -> LoginInfo() // Not saved in profile
-        }
+        return LoginInfo.fromProfile(p, loginType)
     }
 
     private fun setLoginInfoInProfile(p: ServerProfile, l: LoginInfo) {
-        when (loginType) {
-            LoginInfo.Type.VNC_PASSWORD -> p.password = l.password
-            LoginInfo.Type.VNC_CREDENTIAL -> {
-                p.username = l.username
-                p.password = l.password
-            }
-            LoginInfo.Type.SSH_PASSWORD -> p.sshPassword = l.password
-            LoginInfo.Type.SSH_KEY_PASSWORD -> Unit /* Key password is not saved in profile */
-        }
+        l.applyTo(p)
     }
 
     private fun onOk() {

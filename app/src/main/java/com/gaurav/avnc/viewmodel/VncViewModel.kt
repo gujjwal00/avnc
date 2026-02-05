@@ -133,7 +133,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
      * Fired when we need some credentials from user.
      * It will trigger the Login dialog.
      */
-    val loginInfoRequest = LiveRequest<LoginInfo.Type, LoginInfo>(LoginInfo(), viewModelScope)
+    val loginInfoRequest = LiveRequest<LoginInfo.Type, LoginInfo>(LoginInfo(LoginInfo.Type.VNC_PASSWORD, "", ""), viewModelScope)
 
     /**
      * List of saved profiles.
@@ -302,18 +302,13 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
     }
 
     fun getLoginInfo(type: LoginInfo.Type): LoginInfo {
-        val vu = profile.username
-        val vp = profile.password
-        val sp = profile.sshPassword
+        val li = LoginInfo.fromProfile(profile, type)
 
-        if (type == LoginInfo.Type.VNC_PASSWORD && vp.isNotBlank())
-            return LoginInfo(password = vp)
-
-        if (type == LoginInfo.Type.VNC_CREDENTIAL && vu.isNotBlank() && vp.isNotBlank())
-            return LoginInfo(username = vu, password = vp)
-
-        if (type == LoginInfo.Type.SSH_PASSWORD && sp.isNotBlank())
-            return LoginInfo(password = sp)
+        // If info is already available, return it
+        if ((type == LoginInfo.Type.VNC_PASSWORD && li.password.isNotBlank()) ||
+            (type == LoginInfo.Type.VNC_CREDENTIAL && li.username.isNotBlank() && li.password.isNotBlank()) ||
+            (type == LoginInfo.Type.SSH_PASSWORD && li.password.isNotBlank()))
+            return li
 
         // Something is missing, so we have to ask the user
         return loginInfoRequest.requestResponse(type)  // Blocking call
