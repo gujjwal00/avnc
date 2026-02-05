@@ -13,8 +13,6 @@ package com.gaurav.avnc.model
  * This can be used to hold different [Type]s of credentials.
  */
 data class LoginInfo(
-        var name: String = "", // Profile name
-        var host: String = "",
         var username: String = "",
         var password: String = "",
 ) {

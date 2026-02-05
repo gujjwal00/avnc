@@ -95,10 +95,10 @@ class LoginFragment : DialogFragment() {
 
     private fun getLoginInfoFromProfile(p: ServerProfile): LoginInfo {
         return when (loginType) {
-            LoginInfo.Type.VNC_PASSWORD -> LoginInfo(p.name, p.host, "", p.password)
-            LoginInfo.Type.VNC_CREDENTIAL -> LoginInfo(p.name, p.host, p.username, p.password)
-            LoginInfo.Type.SSH_PASSWORD -> LoginInfo(p.name, p.sshHost, "", p.sshPassword)
-            LoginInfo.Type.SSH_KEY_PASSWORD -> LoginInfo(p.name, p.sshHost, "", "" /*p.sshPrivateKeyPassword*/)
+            LoginInfo.Type.VNC_PASSWORD -> LoginInfo("", p.password)
+            LoginInfo.Type.VNC_CREDENTIAL -> LoginInfo(p.username, p.password)
+            LoginInfo.Type.SSH_PASSWORD -> LoginInfo("", p.sshPassword)
+            LoginInfo.Type.SSH_KEY_PASSWORD -> LoginInfo() // Not saved in profile
         }
     }
 
@@ -144,21 +144,20 @@ class LoginFragment : DialogFragment() {
         })
     }
 
-    /**
-     * Hooks completion adapters
+    /**********************************************************************************************
+     * Autocompletion
      *
      * This feature might not be that useful to end-users, but it saves a lot of time
      * during development because I have to frequently install/uninstall app, test
      * different servers running on different addresses/ports.
-     */
+     *********************************************************************************************/
     private fun setupAutoComplete() {
-        if (viewModel.pref.server.lockSavedServer)
+        if (viewModel.pref.server.lockSavedServer || loginType == LoginInfo.Type.SSH_KEY_PASSWORD)
             return
 
         viewModel.savedProfiles.observe(this) { profiles ->
-            val logins = profiles.map { getLoginInfoFromProfile(it) }
-            val usernames = logins.map { it.username }.filter { it.isNotEmpty() }.distinct()
-            val passwords = preparePasswordSuggestions(logins)
+            val usernames = prepareUsernameSuggestions(profiles)
+            val passwords = preparePasswordSuggestions(profiles)
 
             if (usernames.isNotEmpty()) {
                 val usernameAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, usernames)
@@ -174,20 +173,33 @@ class LoginFragment : DialogFragment() {
         }
     }
 
+    private fun prepareUsernameSuggestions(profiles: List<ServerProfile>): List<String> {
+        if (loginType != LoginInfo.Type.VNC_CREDENTIAL)
+            return listOf()
+
+        return profiles.map { it.username }.filter { it.isNotEmpty() }.distinct()
+    }
+
     /**
      * Instead of showing plaintext passwords, we show server name & host in suggestion
      * list. When user taps OK, we convert the suggestion back to real password.
      */
     private val passwordMap = ArrayMap<String, String>()
 
-    private fun preparePasswordSuggestions(list: List<LoginInfo>): List<String> {
-        list.filter { it.password.isNotEmpty() }
-                .map { Pair("from: ${it.name} [${it.host}]", it.password) }
+    private fun preparePasswordSuggestions(profiles: List<ServerProfile>): List<String> {
+        profiles.map { Pair(getPasswordLabel(it), getLoginInfoFromProfile(it).password) }
                 .distinct()
+                .filter { it.second.isNotEmpty() }
                 .toMap(passwordMap)
-                .removeAll(passwordMap.values) //Guard against (very unlikely) clash with real password
+                .removeAll(passwordMap.values) //Guard against unlikely clash with real password
 
         return passwordMap.keys.toList()
+    }
+
+    private fun getPasswordLabel(profile: ServerProfile): String {
+        val host = if (loginType == LoginInfo.Type.SSH_PASSWORD) profile.sshHost else profile.host
+        return "from: ${profile.name} [${host}]"
+
     }
 
     private fun getRealPassword(typedPassword: String) = passwordMap[typedPassword] ?: typedPassword

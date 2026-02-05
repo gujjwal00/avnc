@@ -165,9 +165,11 @@ class TestServer(name: String = "Friends") {
         }
         output.write(toByteArray(if (successful) 0 else 1))  // Security result
         if (!successful) {
-            output.write(toByteArray(securityFailReason.length))
-            output.write(securityFailReason.toByteArray())
-            socket.close()
+            runCatching {
+                output.write(toByteArray(securityFailReason.length))
+                output.write(securityFailReason.toByteArray())
+                socket.close()
+            }
             return
         }
 

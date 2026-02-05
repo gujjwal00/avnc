@@ -35,6 +35,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.longClick
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
@@ -113,10 +114,12 @@ fun ViewInteraction.checkWillBeDisplayed() = checkWithTimeout(matches(isDisplaye
 fun ViewInteraction.checkWillBeCompletelyDisplayed() = checkWithTimeout(matches(isCompletelyDisplayed()))
 fun ViewInteraction.checkWillBeHidden() = checkWithTimeout(matches(not(isDisplayed())))
 fun ViewInteraction.checkIsNotDisplayed() = check(matches(not(isDisplayed())))!!
+fun ViewInteraction.checkDoesNotExist() = check(doesNotExist())!!
 fun ViewInteraction.doClick() = perform(click())!!
 fun ViewInteraction.doLongClick() = perform(longClick())!!
 fun ViewInteraction.doTypeText(text: String) = perform(typeText(text)).perform(closeSoftKeyboard())!!
 fun ViewInteraction.inDialog() = inRoot(RootMatchers.isDialog())!!
+fun ViewInteraction.inPopup() = inRoot(RootMatchers.isPlatformPopup())!!
 
 
 /**
