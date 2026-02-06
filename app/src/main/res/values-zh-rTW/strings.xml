@@ -127,7 +127,7 @@
     <string name="pref_gesture_style_touchpad">觸控板</string>
     <string name="pref_gesture_style_touchscreen">觸控螢幕</string>
     <string name="pref_single_tap">單擊</string>
-    <string name="pref_double_tap">雙擊</string>
+    <string name="pref_double_tap">雙指點擊</string>
     <string name="pref_long_press">長按</string>
     <string name="pref_swipe_sensitivity">滑動靈敏度</string>
     <string name="pref_mouse">滑鼠</string>
@@ -152,8 +152,8 @@
     <string name="pref_gesture_style_auto_summary">基於應用程式的設置</string>
     <string name="pref_double_tap_swipe">雙擊滑動</string>
     <string name="pref_swipe2">兩指滑動</string>
-    <string name="pref_swipe1">滑動</string>
-    <string name="pref_two_finger_tap">雙擊</string>
+    <string name="pref_swipe1">單指滑動</string>
+    <string name="pref_two_finger_tap">雙指點擊</string>
     <string name="pref_gesture_style_touchscreen_summary">於觸控處執行動作</string>
     <string name="pref_gesture_style_touchpad_summary">於鼠標處執行動作</string>
     <string name="pref_long_press_swipe">長按滑動</string>
@@ -166,7 +166,7 @@
     <string name="pref_mouse_passthrough_summary_off">用鼠標事件執行本機手勢</string>
     <string name="pref_km_back_to_escape_summary">不會影響導覽列</string>
     <string name="pref_orientation">螢幕轉向</string>
-    <string name="pref_display_cutout">擴展檢視器至相機開口</string>
+    <string name="pref_display_cutout">延伸至瀏海範圍</string>
     <string name="pref_zoom">縮放</string>
     <string name="pref_zoom_min">最小</string>
     <string name="pref_zoom_max">最多</string>
@@ -223,4 +223,24 @@
     <string name="pref_forget_known_hosts">忘記已知的主機</string>
     <string name="msg_video_disabled">停用了視訊</string>
     <string name="msg_wake_on_lan_help">局域網路喚醒(Wake-On-Lan)可用於遠端開機一臺電腦。</string>
+    <string name="hint_wol_address">廣播位址 (選填)</string>
+    <string name="msg_input_disabled">輸入功能已停用</string>
+    <string name="msg_gesture_style_locked_to_touchpad">「觸控板」手勢模式已啟用</string>
+    <string name="msg_done">完成</string>
+    <string name="msg_required">必塡</string>
+    <string name="desc_view_modes_toggle">檢視模式</string>
+    <string name="desc_view_mode_normal">一般模式</string>
+    <string name="desc_view_mode_no_input">停用所有輸入</string>
+    <string name="desc_view_mode_no_video">停用視訊</string>
+    <string name="pref_gesture_action_left_press">長按</string>
+    <string name="pref_gesture_action_remote_back_press">伺服器端按下返回鍵</string>
+    <string name="pref_three_finger_tap">三指點擊</string>
+    <string name="pref_swipe3">三指滑動</string>
+    <string name="title_forget">忘卻</string>
+    <string name="msg_normal_view_mode">一般模式已啓用</string>
+    <string name="pref_customize_virtual_keys">自定義鍵</string>
+    <string name="pref_vk_row_count">列 (rows)</string>
+    <string name="pref_vk_use_super_with_single_tap">以單擊使用超級鍵</string>
+    <string name="pref_capture_pointer">擷取鼠標</string>
+    <string name="pref_toolbar_open_with_button">顯示按鈕以開啟</string>
 </resources>
