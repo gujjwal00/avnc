@@ -42,8 +42,6 @@ class LayoutManager(private val activity: VncActivity) {
     private val viewModel = activity.viewModel
     private val rootView = activity.binding.root
     private val frameView = activity.binding.frameView
-    private val virtualKeys = activity.virtualKeys
-    private val toolbar = activity.toolbar
     private val window = activity.window
     private val insetController = WindowCompat.getInsetsController(window, window.decorView)
 
@@ -79,7 +77,7 @@ class LayoutManager(private val activity: VncActivity) {
         addOnGlobalLayoutListener(activity, rootView) {
             viewModel.frameState.setWindowSize(rootView.width.toFloat(), rootView.height.toFloat())
             viewModel.frameState.setViewportSize(frameView.width.toFloat(), frameView.height.toFloat())
-            virtualKeys.container?.let { updateVirtualKeyInsets(it) }
+            activity.virtualKeys.container?.let { updateVirtualKeyInsets(it) }
 
             if (SDK_INT < 30)
                 manuallyGenerateWindowInsets()
@@ -238,13 +236,13 @@ class LayoutManager(private val activity: VncActivity) {
         val maxSafeAreaInsets = safeAreaInsets.fold(Insets.NONE) { a, i -> Insets.max(a, i) }
         applySafeAreaInsets(maxSafeAreaInsets)
 
-        toolbar.handleInsets(windowInsets)
+        activity.toolbar.handleInsets(windowInsets)
     }
 
     private fun applyOpaqueInsets(opaqueInsets: Insets) {
         // Guess if IME is closing
         if (!windowInsets.isVisible(Type.ime()) && rootView.paddingBottom != 0)
-            virtualKeys.onKeyboardClose()
+            activity.virtualKeys.onKeyboardClose()
 
         val insets = windowInsetsToViewInsets(opaqueInsets, rootView)
         if (rootView.paddingRight != insets.right || rootView.paddingBottom != insets.bottom)
