@@ -96,8 +96,8 @@ class VncActivity : AppCompatActivity() {
 
     val viewModel by viewModels<VncViewModel>()
     lateinit var binding: ActivityVncBinding
-    val inputHandler = InputHandler(this)
-    val virtualKeys by lazy { VirtualKeys(this) }
+    private val inputHandler = InputHandler(this)
+    val virtualKeys by lazy { VirtualKeys(this, inputHandler) }
     val toolbar by lazy { Toolbar(this) }
     private val serverUnlockPrompt = DeviceAuthPrompt(this)
     private val layoutManager by lazy { LayoutManager(this) }
@@ -118,7 +118,7 @@ class VncActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_vnc)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-        binding.frameView.initialize(this)
+        binding.frameView.initialize(viewModel, inputHandler)
         viewModel.frameViewRef = WeakReference(binding.frameView)
         toolbar.initialize()
 

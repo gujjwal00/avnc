@@ -40,6 +40,7 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.VirtualKeysBinding
+import com.gaurav.avnc.ui.vnc.input.InputHandler
 import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.util.addOnGlobalLayoutListener
 import kotlin.math.min
@@ -52,11 +53,10 @@ import kotlin.math.sign
  *
  * This class manages the inflation & visibility of virtual keys.
  */
-class VirtualKeys(private val activity: VncActivity) {
+class VirtualKeys(private val activity: VncActivity, private val inputHandler: InputHandler) {
 
     private val viewModel = activity.viewModel
     private val pref = activity.viewModel.pref
-    private val inputHandler = activity.inputHandler
     private val frameView = activity.binding.frameView
     private val stub = activity.binding.virtualKeysStub
     private val toggleKeys = mutableSetOf<ToggleButton>()

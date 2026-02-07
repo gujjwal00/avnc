@@ -61,9 +61,8 @@ class FrameView(context: Context?, attrs: AttributeSet? = null) : GLSurfaceView(
     /**
      * Should be called from [VncActivity.onCreate].
      */
-    fun initialize(activity: VncActivity) {
-        inputHandler = activity.inputHandler
-        val viewModel = activity.viewModel
+    fun initialize(viewModel: VncViewModel, inputHandler: InputHandler) {
+        this.inputHandler = inputHandler
 
         setEGLContextClientVersion(2)
         setRenderer(Renderer(viewModel))
