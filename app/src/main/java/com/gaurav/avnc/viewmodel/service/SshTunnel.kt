@@ -8,6 +8,7 @@
 
 package com.gaurav.avnc.viewmodel.service
 
+import android.os.Build
 import android.system.ErrnoException
 import android.system.OsConstants
 import android.util.Base64
@@ -23,6 +24,7 @@ import com.trilead.ssh2.ServerHostKeyVerifier
 import com.trilead.ssh2.crypto.OpenSSHKeyEncoder
 import com.trilead.ssh2.crypto.PEMDecoder
 import com.trilead.ssh2.crypto.PEMStructure
+import com.trilead.ssh2.crypto.cipher.BlockCipherFactory
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -172,7 +174,10 @@ class SshTunnel(private val observer: Observer) {
     private fun connect(profile: ServerProfile): Connection {
         for (address in InetAddress.getAllByName(profile.sshHost)) {
             try {
-                return Connection(address.hostAddress, profile.sshPort).apply { connect(HostKeyVerifier(observer)) }
+                return Connection(address.hostAddress, profile.sshPort).apply {
+                    removeUnsupportedCiphers(this)
+                    connect(HostKeyVerifier(observer))
+                }
             } catch (e: IOException) {
                 if (e.cause is NoRouteToHostException) continue
                 else throw unwrapLibraryException(e)
@@ -266,6 +271,17 @@ class SshTunnel(private val observer: Observer) {
         }
 
         return e
+    }
+
+    private fun removeUnsupportedCiphers(connection: Connection) {
+        if (Build.VERSION.SDK_INT < 28) {
+            // ChaCha20 is not supported
+            val ciphers = BlockCipherFactory.getDefaultCipherList()
+                    .filter { !it.contains("chacha20") }
+                    .toTypedArray()
+            connection.setClient2ServerCiphers(ciphers)
+            connection.setServer2ClientCiphers(ciphers)
+        }
     }
 
     /**
