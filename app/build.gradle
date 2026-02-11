@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id 'com.android.application' version '8.10.1'
     id 'org.jetbrains.kotlin.android' version '2.2.10'
@@ -85,10 +87,17 @@ android {
         resources.excludes += "META-INF/LICENSE-notice.md"
         resources.excludes += "META-INF/DEPENDENCIES"
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 kotlin {
-    jvmToolchain(17)
+    compilerOptions {
+        it.jvmTarget = JvmTarget.JVM_1_8
+    }
 }
 
 dependencies {
