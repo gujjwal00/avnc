@@ -197,6 +197,11 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
      */
     var loginInfoToBeRemembered = mutableListOf<LoginInfo>()
 
+    /**
+     * Whether activity window is currently focused
+     */
+    val hasWindowFocus = MutableLiveData<Boolean>()
+
     val preferredScreenOrientation = monitor(profileLive) { resolveScreenOrientation() }
 
     override fun onCleared() {

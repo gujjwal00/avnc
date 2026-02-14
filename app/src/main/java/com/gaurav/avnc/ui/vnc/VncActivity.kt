@@ -461,7 +461,7 @@ class VncActivity : AppCompatActivity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        layoutManager.onWindowFocusChanged(hasFocus)
+        viewModel.hasWindowFocus.value = hasFocus
         if (hasFocus) {
             viewModel.sendClipboardText()
             updatePointerCapture()

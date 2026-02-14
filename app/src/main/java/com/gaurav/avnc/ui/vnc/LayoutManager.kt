@@ -59,11 +59,6 @@ class LayoutManager(private val activity: VncActivity) {
         updateFullscreen()
     }
 
-    fun onWindowFocusChanged(hasFocus: Boolean) {
-        if (hasFocus && SDK_INT < 30)
-            updateFullscreen()
-    }
-
     @RequiresApi(30)
     private fun hookInsetsListener() {
         ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
@@ -126,6 +121,8 @@ class LayoutManager(private val activity: VncActivity) {
     private fun hookSystemUiChangeListener() {
         @Suppress("DEPRECATION")
         window.decorView.setOnSystemUiVisibilityChangeListener { updateFullscreen() }
+
+        viewModel.hasWindowFocus.observe(activity) { if (it == true) updateFullscreen() }
     }
 
 
