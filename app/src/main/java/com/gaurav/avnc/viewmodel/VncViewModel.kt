@@ -9,6 +9,7 @@
 package com.gaurav.avnc.viewmodel
 
 import android.app.Application
+import android.content.pm.ActivityInfo
 import android.graphics.RectF
 import android.media.ToneGenerator
 import android.util.Log
@@ -29,6 +30,7 @@ import com.gaurav.avnc.util.getClipboardText
 import com.gaurav.avnc.util.getKnownHostsFile
 import com.gaurav.avnc.util.getUnknownCertificateMessage
 import com.gaurav.avnc.util.isCertificateTrusted
+import com.gaurav.avnc.util.monitor
 import com.gaurav.avnc.util.setClipboardText
 import com.gaurav.avnc.util.trustCertificate
 import com.gaurav.avnc.viewmodel.service.SshClient
@@ -194,6 +196,8 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
      * connection before saving them.
      */
     var loginInfoToBeRemembered = mutableListOf<LoginInfo>()
+
+    val preferredScreenOrientation = monitor(profileLive) { resolveScreenOrientation() }
 
     override fun onCleared() {
         super.onCleared()
@@ -396,6 +400,19 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
             loginInfoToBeRemembered.forEach { it.applyTo(profile) }
             loginInfoToBeRemembered.clear()
             saveProfile()
+        }
+    }
+
+    private fun resolveScreenOrientation(): Int {
+        var choice = profileLive.value?.screenOrientation
+        if (choice == null || choice == "auto")
+            choice = pref.viewer.orientation
+
+
+        return when (choice) {
+            "portrait" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+            "landscape" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            else -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
     }
 

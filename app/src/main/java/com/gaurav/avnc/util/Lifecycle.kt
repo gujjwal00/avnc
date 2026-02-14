@@ -12,6 +12,9 @@ import android.view.View
 import android.view.ViewTreeObserver
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
 
 
 /**
@@ -27,4 +30,22 @@ fun addOnGlobalLayoutListener(owner: LifecycleOwner, view: View, listener: ViewT
             view.viewTreeObserver.removeOnGlobalLayoutListener(listener)
         }
     })
+}
+
+/**
+ * Returns a [LiveData] whose value is updated if any of the [dependencies] changes.
+ *
+ * - [generator] is used to calculate the new value
+ * - If [generator] returns null, value is NOT updated
+ * - No value is set unless one of the [dependencies] is set/changed
+ */
+fun <T : Any> monitor(vararg dependencies: LiveData<*>, generator: () -> T?): LiveData<T> {
+    val mediator = MediatorLiveData<T>()
+    val observer = Observer<Any> {
+        generator()?.let {
+            mediator.value = it
+        }
+    }
+    dependencies.forEach { mediator.addSource(it, observer) }
+    return mediator
 }

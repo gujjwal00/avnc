@@ -14,7 +14,6 @@ import android.app.Activity
 import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -265,9 +264,7 @@ class VncActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun onProfileUpdated() {
-        setupOrientation()
-    }
+    private fun onProfileUpdated() {}
 
     private fun retryConnection(seamless: Boolean = false, nextAutoReconnectDelay: Int = 0) {
         //We simply create a new activity to force creation of new ViewModel
@@ -453,22 +450,12 @@ class VncActivity : AppCompatActivity() {
     private fun setupLayout() {
         layoutManager.initialize()
 
+        viewModel.preferredScreenOrientation.observe(this) { requestedOrientation = it }
+
         if (Build.VERSION.SDK_INT >= 28 && viewModel.pref.viewer.drawBehindCutout) {
             window.attributes = window.attributes.apply {
                 layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
             }
-        }
-    }
-
-    private fun setupOrientation() {
-        val choice = viewModel.profile.screenOrientation.let {
-            if (it != "auto") it else viewModel.pref.viewer.orientation
-        }
-
-        requestedOrientation = when (choice) {
-            "portrait" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            "landscape" -> ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            else -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
     }
 
