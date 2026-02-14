@@ -102,7 +102,6 @@ class VncActivity : AppCompatActivity() {
     val toolbar by lazy { Toolbar(this) }
     private val serverUnlockPrompt = DeviceAuthPrompt(this)
     private val layoutManager by lazy { LayoutManager(this) }
-    private var forceDisabledPointerCapture = false
     private var restoredFromBundle = false
     private var wasConnectedWhenStopped = false
     private var onStartTime = 0L
@@ -132,6 +131,7 @@ class VncActivity : AppCompatActivity() {
         viewModel.confirmationRequest.observe(this) { showConfirmationDialog() }
         viewModel.state.observe(this) { onClientStateChanged(it) }
         viewModel.profileLive.observe(this) { onProfileUpdated() }
+        viewModel.capturePointer.observe(this) { updatePointerCapture(it) }
 
         autoReconnectDelay = intent.getIntExtra(AUTO_RECONNECT_DELAY_KEY, 5)
         savedInstanceState?.let {
@@ -354,7 +354,6 @@ class VncActivity : AppCompatActivity() {
         inputHandler.onStateChanged(isConnected)
         toolbar.onStateChange(isConnected)
         updateStatusContainerVisibility(isConnected)
-        updatePointerCapture()
         autoReconnect(newState)
 
         if (isConnected) {
@@ -374,20 +373,15 @@ class VncActivity : AppCompatActivity() {
         viewModel.saveProfile()
     }
 
-    private fun updatePointerCapture() {
-        if (Build.VERSION.SDK_INT < 26 || !viewModel.pref.input.capturePointer)
+    private fun updatePointerCapture(capturePointer: Boolean) {
+        if (Build.VERSION.SDK_INT < 26)
             return
 
-        if (viewModel.connected && !forceDisabledPointerCapture) {
+        if (capturePointer) {
             binding.frameView.requestFocus()
             binding.frameView.requestPointerCapture()
         } else
             binding.frameView.releasePointerCapture()
-    }
-
-    fun forceDisablePointerCapture(forceDisable: Boolean) {
-        forceDisabledPointerCapture = forceDisable
-        updatePointerCapture()
     }
 
     private fun updateStatusContainerVisibility(isConnected: Boolean) {
@@ -464,7 +458,6 @@ class VncActivity : AppCompatActivity() {
         viewModel.hasWindowFocus.value = hasFocus
         if (hasFocus) {
             viewModel.sendClipboardText()
-            updatePointerCapture()
         }
     }
 
@@ -564,7 +557,7 @@ class VncActivity : AppCompatActivity() {
     private fun initHelpView() {
         val helpBinding = ViewerHelpBinding.inflate(layoutInflater, binding.drawerLayout, false)
         binding.drawerLayout.addView(helpBinding.root, 1)
-        forceDisablePointerCapture(true)
+        viewModel.viewerHelpIsVisible.value = true
 
         helpBinding.root.setOnClickListener { /* Consume clicks to stop them from passing through to FrameView */ }
         enableChildLayoutTransitions(helpBinding.pageHost)
@@ -582,7 +575,7 @@ class VncActivity : AppCompatActivity() {
         }
         helpBinding.endBtn.setOnClickListener {
             viewModel.pref.runInfo.hasShownViewerHelp = true
-            forceDisablePointerCapture(false)
+            viewModel.viewerHelpIsVisible.value = false
             helpBinding.root.animate().alpha(0f).withEndAction {
                 binding.drawerLayout.removeView(helpBinding.root)
             }

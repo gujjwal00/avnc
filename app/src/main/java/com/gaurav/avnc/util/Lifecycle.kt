@@ -49,3 +49,9 @@ fun <T : Any> monitor(vararg dependencies: LiveData<*>, generator: () -> T?): Li
     dependencies.forEach { mediator.addSource(it, observer) }
     return mediator
 }
+
+/**
+ * Checks if value of this LiveData is true.
+ * Returns false if value is null.
+ */
+val LiveData<Boolean>.isTrue get() = (value == true)

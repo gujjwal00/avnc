@@ -30,6 +30,7 @@ import com.gaurav.avnc.util.getClipboardText
 import com.gaurav.avnc.util.getKnownHostsFile
 import com.gaurav.avnc.util.getUnknownCertificateMessage
 import com.gaurav.avnc.util.isCertificateTrusted
+import com.gaurav.avnc.util.isTrue
 import com.gaurav.avnc.util.monitor
 import com.gaurav.avnc.util.setClipboardText
 import com.gaurav.avnc.util.trustCertificate
@@ -202,7 +203,14 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
      */
     val hasWindowFocus = MutableLiveData<Boolean>()
 
+    /**
+     * Whether viewer help is being shown
+     */
+    val viewerHelpIsVisible = MutableLiveData<Boolean>()
+
     val preferredScreenOrientation = monitor(profileLive) { resolveScreenOrientation() }
+
+    val capturePointer = monitor(state, hasWindowFocus, viewerHelpIsVisible) { resolveCapturePointer() }
 
     override fun onCleared() {
         super.onCleared()
@@ -420,6 +428,12 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
             else -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
     }
+
+    private fun resolveCapturePointer(): Boolean {
+        return connected && pref.input.capturePointer &&
+               hasWindowFocus.isTrue && !viewerHelpIsVisible.isTrue
+    }
+
 
     /**************************************************************************
      * Session observer
