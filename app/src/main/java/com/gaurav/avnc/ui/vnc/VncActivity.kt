@@ -39,12 +39,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.databinding.NoVideoOverlayBinding
+import com.gaurav.avnc.databinding.ViewerHelpBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.vnc.input.InputHandler
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.SamsungDex
 import com.gaurav.avnc.util.debugCheck
 import com.gaurav.avnc.util.enableChildLayoutTransitions
+import com.gaurav.avnc.util.loopAnimatedDrawable
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.vnc.VncUri
 import kotlinx.coroutines.delay
@@ -359,7 +361,7 @@ class VncActivity : AppCompatActivity() {
         autoReconnect(newState)
 
         if (isConnected) {
-            ViewerHelp().onConnected(this)
+            showViewerHelp()
             virtualKeys.onConnected(isInPiPMode())
             autoReconnectDelay = 1
         }
@@ -552,5 +554,51 @@ class VncActivity : AppCompatActivity() {
 
     override fun onKeyMultiple(keyCode: Int, repeatCount: Int, event: KeyEvent): Boolean {
         return inputHandler.onKeyEvent(event) || super.onKeyMultiple(keyCode, repeatCount, event)
+    }
+
+
+    /************************************************************************************
+     * Help for new users.
+     * Two of the most common question asked by new users are:
+     * - Where is the toolbar, or how to open it
+     * - How to cleanly exit a session
+     *
+     * When user starts a session for the first time, this help is shown.
+     * It consists of two pages: one shows how to open the toolbar drawer,
+     * other tells about the Back navigation button.
+     ***********************************************************************************/
+    fun showViewerHelp() {
+        if (viewModel.pref.runInfo.hasShownViewerHelp)
+            return
+
+        initHelpView()
+    }
+
+    private fun initHelpView() {
+        val helpBinding = ViewerHelpBinding.inflate(layoutInflater, binding.drawerLayout, false)
+        binding.drawerLayout.addView(helpBinding.root, 1)
+        forceDisablePointerCapture(true)
+
+        helpBinding.root.setOnClickListener { /* Consume clicks to stop them from passing through to FrameView */ }
+        enableChildLayoutTransitions(helpBinding.pageHost)
+
+        // Open help view with animation
+        helpBinding.root.alpha = 0f
+        helpBinding.root.animate().alpha(1f).setStartDelay(500).withEndAction {
+            loopAnimatedDrawable(helpBinding.toolbarAnimation)
+        }
+
+        helpBinding.nextBtn.setOnClickListener {
+            helpBinding.page1.isVisible = false
+            helpBinding.page2.isVisible = true
+            loopAnimatedDrawable(helpBinding.navbarAnimation)
+        }
+        helpBinding.endBtn.setOnClickListener {
+            viewModel.pref.runInfo.hasShownViewerHelp = true
+            forceDisablePointerCapture(false)
+            helpBinding.root.animate().alpha(0f).withEndAction {
+                binding.drawerLayout.removeView(helpBinding.root)
+            }
+        }
     }
 }
