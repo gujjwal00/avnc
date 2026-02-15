@@ -79,6 +79,8 @@ class Toolbar(private val activity: VncActivity) {
         // Root view is transparent. Click on it should work just like a click in scrim area
         drawerView.setOnClickListener { close() }
 
+        viewModel.inPiPMode.observe(activity) { if (it) close() }
+
         setupAlignment()
         setupFlyouts()
         setupFlyoutClose()

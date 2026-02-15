@@ -43,6 +43,7 @@ import com.gaurav.avnc.databinding.VirtualKeysBinding
 import com.gaurav.avnc.ui.vnc.input.InputHandler
 import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.util.addOnGlobalLayoutListener
+import com.gaurav.avnc.util.isTrue
 import kotlin.math.min
 import kotlin.math.sign
 
@@ -100,19 +101,9 @@ class VirtualKeys(private val activity: VncActivity, private val inputHandler: I
         (stub.binding as? VirtualKeysBinding)?.textBox?.let { if (it.isFocused) it.clearFocus() }
     }
 
-    fun onConnected(inPiP: Boolean) {
-        if (!inPiP && pref.runInfo.showVirtualKeys)
+    fun onConnected() {
+        if (pref.runInfo.showVirtualKeys && !viewModel.inPiPMode.isTrue)
             show()
-    }
-
-    fun onPiPModeChanged(inPiPMode: Boolean) {
-        if (inPiPMode && container?.isVisible == true) {
-            hide()
-            closedByPiPMode = true
-        } else if (!inPiPMode && closedByPiPMode) {
-            show()
-            closedByPiPMode = false
-        }
     }
 
     fun releaseMetaKeys() {
@@ -134,6 +125,16 @@ class VirtualKeys(private val activity: VncActivity, private val inputHandler: I
             releaseUnlockedMetaKeys()
     }
 
+    private fun onPiPModeChanged(inPiPMode: Boolean) {
+        if (inPiPMode && container?.isVisible == true) {
+            hide()
+            closedByPiPMode = true
+        } else if (!inPiPMode && closedByPiPMode) {
+            show()
+            closedByPiPMode = false
+        }
+    }
+
     private fun init() {
         if (stub.isInflated)
             return
@@ -144,6 +145,7 @@ class VirtualKeys(private val activity: VncActivity, private val inputHandler: I
         initKeys(binding)
         initPager(binding)
         inputHandler.onAfterKeyEventListeners += ::onAfterKeyEvent
+        viewModel.inPiPMode.observe(activity) { onPiPModeChanged(it) }
     }
 
     /**

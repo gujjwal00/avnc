@@ -358,7 +358,7 @@ class VncActivity : AppCompatActivity() {
 
         if (isConnected) {
             showViewerHelp()
-            virtualKeys.onConnected(isInPiPMode())
+            virtualKeys.onConnected()
             autoReconnectDelay = 1
         }
 
@@ -466,10 +466,6 @@ class VncActivity : AppCompatActivity() {
      * Picture-in-Picture support
      ************************************************************************************/
 
-    private fun isInPiPMode(): Boolean {
-        return Build.VERSION.SDK_INT >= 24 && isInPictureInPictureMode
-    }
-
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
         enterPiPMode()
@@ -478,11 +474,9 @@ class VncActivity : AppCompatActivity() {
     @RequiresApi(26)
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
-        virtualKeys.onPiPModeChanged(isInPictureInPictureMode)
-        if (isInPictureInPictureMode) {
-            toolbar.close()
-            viewModel.resetZoom()
-        } else {
+        viewModel.inPiPMode.value = isInPictureInPictureMode
+
+        if (!isInPictureInPictureMode) {
             // If user taps the Close button on PiP window, Android will stop the Activity
             // but won't destroy it. This is not a problem for singleTask activities since those
             // are still shown in Recents screen. But AVNC doesn't use singleTask. So VncActivity

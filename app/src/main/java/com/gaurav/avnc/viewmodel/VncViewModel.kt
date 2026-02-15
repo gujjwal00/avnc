@@ -208,6 +208,11 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
      */
     val viewerHelpIsVisible = MutableLiveData<Boolean>()
 
+    /**
+     * Whether activity is in Picture-in-Picture mode
+     */
+    val inPiPMode = MutableLiveData<Boolean>()
+
     val preferredScreenOrientation = monitor(profileLive) { resolveScreenOrientation() }
 
     val capturePointer = monitor(state, hasWindowFocus, viewerHelpIsVisible) { resolveCapturePointer() }
@@ -234,6 +239,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
             frameState.setZoom(profile.zoom1, profile.zoom2)
             setViewMode(profile.viewMode)
             resolveGestureStyle()
+            inPiPMode.observeForever { if (it) resetZoom() }
             session.start(profile)
         }
     }
