@@ -20,6 +20,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        configureLeakCanary()
 
         prefs = AppPreferences(this)
         prefs.ui.theme.observeForever { updateNightMode(it) }
@@ -32,5 +33,13 @@ class App : Application() {
             else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
         }
         AppCompatDelegate.setDefaultNightMode(nightMode)
+    }
+
+    private fun configureLeakCanary() {
+        if (BuildConfig.DEBUG) {
+            Class.forName("com.gaurav.avnc.LeakCanaryInitializer")
+                    .getMethod("initialize", Application::class.java)
+                    .invoke(null, this)
+        }
     }
 }
