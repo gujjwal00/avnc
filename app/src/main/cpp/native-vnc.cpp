@@ -288,7 +288,6 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeClientCreate(JNIEnv *env, jobject thiz)
 
     setCallbacks(client);
     client->canHandleNewFBSize = TRUE;
-    client->interruptFd = ex->interruptReadFd;
 
     //Attach reference to managed object
     auto obj = env->NewGlobalRef(thiz);
@@ -354,13 +353,6 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeInit(JNIEnv *env, jobject thiz, jlong c
     }
 
     return JNI_FALSE;
-
-}
-
-extern "C"
-JNIEXPORT void JNICALL
-Java_com_gaurav_avnc_vnc_VncClient_nativeInterrupt(JNIEnv *env, jobject thiz, jlong client_ptr) {
-    setInterrupt((rfbClient *) client_ptr);
 }
 
 extern "C"
@@ -387,16 +379,13 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeProcessServerMessage(JNIEnv *env, jobje
                                                               jlong client_ptr) {
     auto client = (rfbClient *) client_ptr;
 
-    auto waitResult = WaitForMessageInterruptible(client, 1000000, client->interruptFd);
+    auto waitResult = WaitForMessage(client, 1000000);
 
     if (waitResult == 0) // Timeout
         return JNI_TRUE;
 
     if (waitResult > 0 && HandleRFBServerMessage(client))
         return JNI_TRUE;
-
-    if (errno == EINTR)
-        rfbClientLog("Message processing interrupted");
 
     return JNI_FALSE;
 }

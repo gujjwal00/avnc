@@ -296,21 +296,6 @@ class VncClient(private val observer: Observer) {
     }
 
     /**
-     * Try to interrupt long-running operations (e.g. [connect]) executing in other threads.
-     * This can be used to quickly finish/abandon these operations during connection shutdown,
-     * instead of waiting for the usual socket timeouts to kick in.
-     * For now, once interrupt flag is set for a client, it will remain set.
-     *
-     * Because this can be invoked from Main thread, read-lock is only tried once to avoid ANRs.
-     */
-    fun interrupt() {
-        stateLock.tryRead {
-            if (!destroyed)
-                nativeInterrupt(nativePtr)
-        }
-    }
-
-    /**
      * Release all resources allocated by the client.
      * DO NOT use this client after [cleanup].
      */
@@ -380,7 +365,6 @@ class VncClient(private val observer: Observer) {
     private external fun nativeUploadFrameTexture(clientPtr: Long)
     private external fun nativeUploadCursorTexture(clientPtr: Long)
     private external fun nativeGetLastErrorStr(): String
-    private external fun nativeInterrupt(clientPtr: Long)
     private external fun nativeCleanup(clientPtr: Long)
 
     @Keep

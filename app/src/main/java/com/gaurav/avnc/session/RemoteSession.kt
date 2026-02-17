@@ -66,7 +66,6 @@ class RemoteSession(private val observer: Observer) {
     fun stop() {
         log("Requesting session stop")
         stopSession = true
-        vncClient?.interrupt()
     }
 
 
