@@ -451,6 +451,10 @@ class VncActivity : AppCompatActivity() {
                 layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
             }
         }
+
+        if (Build.VERSION.SDK_INT >= 26 && isInPictureInPictureMode) {
+            viewModel.inPiPMode.value = true
+        }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
