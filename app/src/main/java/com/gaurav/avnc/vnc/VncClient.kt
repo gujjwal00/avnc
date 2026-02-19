@@ -42,8 +42,6 @@ class VncClient(private val observer: Observer) {
 
     /**
      * Interface for event observer.
-     * DO NOT throw exceptions from these methods.
-     * There is NO guarantee about which thread will invoke [Observer] methods.
      */
     interface Observer {
         fun getVncPassword(): String

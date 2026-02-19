@@ -83,6 +83,8 @@ static char *onGetPassword(rfbClient *client) {
 
     auto mid = env->GetMethodID(cls, "cbGetPassword", "()Ljava/lang/String;");
     auto jPassword = (jstring) env->CallObjectMethod(obj, mid);
+    if (env->ExceptionCheck())
+        return nullptr;
 
     return getNativeStrCopy(env, jPassword);
 }
@@ -103,7 +105,7 @@ static rfbCredential *onGetCredential(rfbClient *client, int credentialType) {
     jmethodID mid = env->GetMethodID(cls, "cbGetCredential",
                                      "()Lcom/gaurav/avnc/vnc/UserCredential;");
     jobject jCredential = env->CallObjectMethod(obj, mid);
-    if (jCredential == nullptr) {
+    if (!jCredential || env->ExceptionCheck()) {
         return nullptr;
     }
 
@@ -128,9 +130,14 @@ static rfbBool onVerifyServerCertificate(rfbClient *client, const unsigned char 
     auto env = context.getEnv();
     auto cls = context.managedCls;
 
-    jmethodID mid = env->GetMethodID(cls, "cbVerifyServerCertificate", "([B)Z");
     jbyteArray bytes = env->NewByteArray(der_len);
+    if (!bytes) {
+        rfbClientErr("onVerifyServerCertificate: Unable to allocate memory for DER");
+        return FALSE;
+    }
     env->SetByteArrayRegion(bytes, 0, der_len, reinterpret_cast<const jbyte *>(der));
+
+    jmethodID mid = env->GetMethodID(cls, "cbVerifyServerCertificate", "([B)Z");
     auto result = env->CallBooleanMethod(obj, mid, bytes);
     env->DeleteLocalRef(bytes);
     return result ? TRUE : FALSE;
@@ -152,9 +159,14 @@ static void onGotXCutText(rfbClient *client, const char *text, int len, bool is_
     auto env = context.getEnv();
     auto cls = context.managedCls;
 
-    jmethodID mid = env->GetMethodID(cls, "cbGotXCutText", "([BZ)V");
     jbyteArray bytes = env->NewByteArray(len);
+    if (!bytes) {
+        rfbClientErr("onGotXCutText: Unable to allocate memory for cut text");
+        return;
+    }
     env->SetByteArrayRegion(bytes, 0, len, reinterpret_cast<const jbyte *>(text));
+
+    jmethodID mid = env->GetMethodID(cls, "cbGotXCutText", "([BZ)V");
     env->CallVoidMethod(obj, mid, bytes, is_utf8);
     env->DeleteLocalRef(bytes);
 }
