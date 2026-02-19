@@ -1,7 +1,6 @@
 
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.13)
 
-add_link_options("LINKER:--build-id=none")
 
 project(NativeVNC C CXX ASM)
 
@@ -27,6 +26,9 @@ if (CMAKE_ANDROID_ARCH STREQUAL "arm64")
 elseif (CMAKE_ANDROID_ARCH STREQUAL "arm")
     set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} --target=arm-linux-androideabi${ANDROID_NATIVE_API_LEVEL}")
 endif ()
+
+# Clear build id in release builds to allow reproducible builds on F-Droid
+add_link_options("LINKER:$<$<NOT:$<CONFIG:Debug>>:--build-id=none>")
 
 
 ###############################################################################
