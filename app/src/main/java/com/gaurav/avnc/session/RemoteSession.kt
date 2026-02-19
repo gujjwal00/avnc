@@ -47,7 +47,7 @@ class RemoteSession(private val observer: Observer) {
     private var sessionThread: Thread? = null
 
     @Volatile
-    private var stopSession = false
+    private var stopRequested = false
 
     /**
      * Starts remote session for given [profile].
@@ -58,14 +58,18 @@ class RemoteSession(private val observer: Observer) {
         check(sessionThread == null) { "Session re-start is not yet supported" }
 
         log("Requesting session start")
-        stopSession = false
+        stopRequested = false
         sessionThread = startSession(profile)
     }
 
     @Synchronized
     fun stop() {
+        if (sessionThread?.isAlive != true)
+            return // Already stopped
+
         log("Requesting session stop")
-        stopSession = true
+        stopRequested = true
+        sessionThread?.interrupt()
     }
 
 
@@ -77,8 +81,8 @@ class RemoteSession(private val observer: Observer) {
 
             runCatching {
                 startConnection(profile)
-            }.onFailure {
-                handleConnectionError(it)
+            }.let {
+                handleConnectionEnd(it)
             }
 
             stopSession()
@@ -123,16 +127,11 @@ class RemoteSession(private val observer: Observer) {
 
     private fun messageLoop(vncClient: VncClient) {
         log("Running message loop")
-        while (!stopSession)
+        while (!stopRequested)
             vncClient.processServerMessage()
     }
 
     private fun stopSession() {
-        Thread.interrupted() // Clear
-
-        log("Stopping session")
-        observer.onDisconnected()
-
         messenger?.shutdown()
         vncClient?.cleanup()
         sshClient?.close()
@@ -169,12 +168,22 @@ class RemoteSession(private val observer: Observer) {
                 }
     }
 
-    private fun handleConnectionError(error: Throwable) {
-        if (stopSession && error is InterruptedException) {
-            log(error.message ?: "Session interrupted")
-        } else {
-            logE("Connection error", error)
-            observer.onConnectionError(error)
+    private fun handleConnectionEnd(result: Result<Unit>) {
+        runCatching {
+            Thread.interrupted() // clear any pending interrupt
+
+            result.onFailure {
+                if (!stopRequested) {
+                    logE("Connection error", it)
+                    observer.onConnectionError(it)
+                }
+            }
+
+            log("Disconnected from server")
+            observer.onDisconnected()
+
+        }.onFailure {
+            log("Error handling connection end: $it")
         }
     }
 

@@ -11,20 +11,17 @@ package com.gaurav.avnc.util
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.gaurav.avnc.pollingAssert
 import com.gaurav.avnc.runOnMainSync
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import kotlin.concurrent.thread
-import kotlin.coroutines.EmptyCoroutineContext
 
 @RunWith(AndroidJUnit4::class)
 class LiveRequestTest {
 
     @Test
     fun simpleRequest() {
-        val liveRequest = LiveRequest<Any, Any>(Any(), null)
+        val liveRequest = LiveRequest<Any, Any>()
         val requestData = Any()
         val responseData = Any()
         var result: Any? = null
@@ -36,7 +33,7 @@ class LiveRequestTest {
             }
         }
         thread {
-            result = liveRequest.requestResponse(requestData)
+            result = liveRequest.getResponseFor(requestData)
         }
         pollingAssert {
             Assert.assertSame(responseData, result)
@@ -44,19 +41,17 @@ class LiveRequestTest {
     }
 
     @Test
-    fun requestShouldBeCanceledOnScopeTermination() {
-        val scope = CoroutineScope(EmptyCoroutineContext)
-        val canceledValue = Any()
-        val liveRequest = LiveRequest<Any, Any>(canceledValue, scope)
-        var result: Any? = null
+    fun requestShouldBeCanceledOnThreadInterrupt() {
+        val liveRequest = LiveRequest<Any, Any>()
 
         thread {
-            result = liveRequest.requestResponse(Any())
-        }
-
-        scope.cancel()
-        pollingAssert {
-            Assert.assertSame(canceledValue, result)
+            Assert.assertThrows(InterruptedException::class.java) {
+                liveRequest.getResponseFor(Any())
+            }
+        }.let {
+            Thread.sleep(100)
+            it.interrupt()
+            it.join()
         }
     }
 }

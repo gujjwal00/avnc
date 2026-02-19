@@ -15,7 +15,6 @@ import android.media.ToneGenerator
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.R
 import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.model.ServerProfile
@@ -137,7 +136,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
      * Fired when we need some credentials from user.
      * It will trigger the Login dialog.
      */
-    val loginInfoRequest = LiveRequest<LoginInfo.Type, LoginInfo>(LoginInfo(LoginInfo.Type.VNC_PASSWORD, "", ""), viewModelScope)
+    val loginInfoRequest = LiveRequest<LoginInfo.Type, LoginInfo>()
 
     /**
      * List of saved profiles.
@@ -188,7 +187,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
      * This is mostly used to warn about unknown SSH host, x509 certificates etc.
      * This request accepts two strings: First is used as title, second contains the message.
      */
-    val confirmationRequest = LiveRequest<Pair<String, String>, Boolean>(false, viewModelScope)
+    val confirmationRequest = LiveRequest<Pair<String, String>, Boolean>()
 
     /**
      * If user has asked to remember credentials in login dialog, we need to
@@ -343,7 +342,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
             return li
 
         // Something is missing, so we have to ask the user
-        return loginInfoRequest.requestResponse(type)  // Blocking call
+        return loginInfoRequest.getResponseFor(type)  // Blocking call
     }
 
     /**
@@ -501,11 +500,12 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
 
             val title = "Unknown server certificate"
             val message = getUnknownCertificateMessage(certificate)
-            if (!confirmationRequest.requestResponse(Pair(title, message)))
-                return false
+            if (confirmationRequest.getResponseFor(Pair(title, message))) {
+                trustCertificate(app, certificate)
+                return true
+            }
 
-            trustCertificate(app, certificate)
-            return true
+            return false
         }
 
         override fun onFramebufferUpdated() {
@@ -548,7 +548,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
         override fun confirmSshHostKeyWithUser(message: String, isNewHost: Boolean): Boolean {
             val titleRes = if (isNewHost) R.string.title_unknown_ssh_host else R.string.title_ssh_host_key_changed
             val title = app.getString(titleRes)
-            return confirmationRequest.requestResponse(Pair(title, message))
+            return confirmationRequest.getResponseFor(Pair(title, message))
         }
     }
 }

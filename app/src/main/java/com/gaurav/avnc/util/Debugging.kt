@@ -10,6 +10,7 @@ package com.gaurav.avnc.util
 
 import android.net.Uri
 import android.os.Build
+import android.os.Looper
 import com.gaurav.avnc.BuildConfig
 
 /**
@@ -27,6 +28,14 @@ fun debugCheck(condition: Boolean) {
 fun <T : Any> debugCheckNotNull(value: T?) {
     if (BuildConfig.DEBUG)
         checkNotNull(value)
+}
+
+fun checkMainThread() {
+    check(Looper.myLooper() == Looper.getMainLooper())
+}
+
+fun checkNotMainThread() {
+    check(Looper.myLooper() != Looper.getMainLooper())
 }
 
 
