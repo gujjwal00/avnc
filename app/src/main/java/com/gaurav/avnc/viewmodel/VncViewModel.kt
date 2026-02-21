@@ -34,7 +34,7 @@ import com.gaurav.avnc.util.monitor
 import com.gaurav.avnc.util.setClipboardText
 import com.gaurav.avnc.util.trustCertificate
 import com.gaurav.avnc.viewmodel.service.SshClient
-import com.gaurav.avnc.vnc.Messenger
+import com.gaurav.avnc.session.Messenger
 import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
 import kotlinx.coroutines.Dispatchers

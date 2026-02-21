@@ -27,7 +27,7 @@ import com.gaurav.avnc.viewmodel.PrefsViewModel
 import com.gaurav.avnc.viewmodel.VncViewModel
 import com.gaurav.avnc.viewmodel.service.Discovery
 import com.gaurav.avnc.viewmodel.service.SshClient
-import com.gaurav.avnc.vnc.Messenger
+import com.gaurav.avnc.session.Messenger
 import com.gaurav.avnc.vnc.VncClient
 
 /**

@@ -11,7 +11,7 @@ package com.gaurav.avnc.ui.vnc.input
 import android.graphics.PointF
 import com.gaurav.avnc.ui.vnc.VncActivity
 import com.gaurav.avnc.viewmodel.VncViewModel
-import com.gaurav.avnc.vnc.Messenger
+import com.gaurav.avnc.session.Messenger
 import com.gaurav.avnc.vnc.PointerButton
 import com.gaurav.avnc.vnc.XKeySym
 

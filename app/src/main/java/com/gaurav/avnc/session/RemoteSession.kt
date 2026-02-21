@@ -12,7 +12,6 @@ import android.util.Log
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.util.broadcastWoLPackets
 import com.gaurav.avnc.viewmodel.service.SshClient
-import com.gaurav.avnc.vnc.Messenger
 import com.gaurav.avnc.vnc.VncClient
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread

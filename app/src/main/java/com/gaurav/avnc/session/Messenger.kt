@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2020  Gaurav Ujjwal.
+ * Copyright (c) 2026  Gaurav Ujjwal.
  *
  * SPDX-License-Identifier:  GPL-3.0-or-later
  *
  * See COPYING.txt for more details.
  */
 
-package com.gaurav.avnc.vnc
+package com.gaurav.avnc.session
 
 import android.graphics.PointF
 import android.util.Log
+import com.gaurav.avnc.vnc.PointerButton
+import com.gaurav.avnc.vnc.VncClient
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
