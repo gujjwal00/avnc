@@ -72,6 +72,15 @@
                     android:src="@drawable/ic_toolbar_open"
                     android:visibility="gone"
                     app:backgroundAlpha="@{.5}" />
+
+                <!--Virtual keys-->
+                <ViewStub
+                    android:id="@+id/virtual_keys_stub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:layout="@layout/virtual_keys" />
+
             </FrameLayout>
 
             <!--A View containing helpful tips will be dynamically inserted here for new users -->
@@ -83,14 +92,6 @@
                 app:viewModel="@{viewModel}" />
 
         </androidx.drawerlayout.widget.DrawerLayout>
-
-        <!--Virtual keys-->
-        <ViewStub
-            android:id="@+id/virtual_keys_stub"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout="@layout/virtual_keys" />
 
         <!--Status-->
         <androidx.constraintlayout.widget.ConstraintLayout
