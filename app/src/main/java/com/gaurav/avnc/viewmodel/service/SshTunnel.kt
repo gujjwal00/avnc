@@ -227,14 +227,13 @@ class SshClient(private val observer: Observer) {
         // to know the port system picked.
         // So we create a temporary ServerSocket, close it immediately and try to use its port.
         // But between the close-reuse, that port can be assigned to someone else, so we try again.
-        for (i in 1..50) {
-            val attemptedPort = ServerSocket(0).use { it.localPort }
-            val address = InetSocketAddress(localHost, attemptedPort)
-
+        repeat(50) {
             try {
-                val forwarder = connection.createLocalPortForwarder(address, profile.host, profile.port)
+                val attemptedPort = ServerSocket(0).use { it.localPort }
+                val attemptedAddress = InetSocketAddress(localHost, attemptedPort)
+                val forwarder = connection.createLocalPortForwarder(attemptedAddress, profile.host, profile.port)
                 return TunnelGate(localHost, attemptedPort, forwarder)
-            } catch (e: IOException) {
+            } catch (_: IOException) {
                 //Retry
             } catch (e: Throwable) {
                 throw unwrapLibraryException(e)

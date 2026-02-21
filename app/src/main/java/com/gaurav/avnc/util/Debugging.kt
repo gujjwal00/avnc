@@ -61,7 +61,7 @@ object Debugging {
     fun clearLogs() {
         try {
             ProcessBuilder("logcat", "-c").start()
-        } catch (t: Throwable) {
+        } catch (_: Throwable) {
             //Ignore
         }
     }

@@ -31,12 +31,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.FragmentProfileEditorAdvancedBinding
 import com.gaurav.avnc.databinding.FragmentProfileEditorBinding
@@ -364,9 +365,10 @@ class AdvancedProfileEditor : Fragment() {
         }
     }
 
-    private class EditorViewModelFactory(private val fragment: Fragment) : AbstractSavedStateViewModelFactory(fragment, null) {
-        override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
+    private class EditorViewModelFactory(private val fragment: Fragment) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
             val app = fragment.requireActivity().application
+            val handle = extras.createSavedStateHandle()
             val profile = getProfileArg(fragment)
             return modelClass.cast(EditorViewModel(app, handle, profile))!!
         }

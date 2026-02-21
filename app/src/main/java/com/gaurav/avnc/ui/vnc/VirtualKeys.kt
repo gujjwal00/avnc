@@ -30,7 +30,6 @@ import android.widget.GridLayout
 import android.widget.HorizontalScrollView
 import android.widget.ImageButton
 import android.widget.ToggleButton
-import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -361,7 +360,6 @@ enum class VirtualKey(
         /**
          * If icon is set, this key will be rendered as an ImageButton.
          */
-        @DrawableRes
         val icon: Int? = null,
 
         /**
