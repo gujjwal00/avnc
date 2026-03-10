@@ -187,8 +187,10 @@ class VncActivity : AppCompatActivity() {
                       ?: intent.getParcelableExtra<ServerProfile?>(PROFILE_KEY)
 
         return when {
+            // Prefer to use profile if available to keep changes across activity restarts.
+            // And create a copy to avoid modification to source profile.
+            profile != null -> StartupArg.Profile(profile.copy())
             id != 0L -> StartupArg.ProfileId(id)
-            profile != null -> StartupArg.Profile(profile.copy())  // Use a copy to avoid modification to intent
             else -> {
                 handleMissingStartupArgs()
                 null
