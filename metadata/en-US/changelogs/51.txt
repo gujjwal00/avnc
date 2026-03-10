@@ -1,0 +1,3 @@
+* Fixed SSH connections on older devices
+* Don't enter Picture-in-Picture mode if video is disabled
+* Fixed virtual keys showing above viewer help
