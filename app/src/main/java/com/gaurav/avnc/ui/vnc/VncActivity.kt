@@ -120,7 +120,6 @@ class VncActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.frameView.initialize(viewModel, inputHandler)
         viewModel.frameViewRef = WeakReference(binding.frameView)
-        toolbar.initialize()
 
         setupLayout()
         setupNoVideoOverlay()
@@ -266,7 +265,9 @@ class VncActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun onProfileUpdated() {}
+    private fun onProfileUpdated() {
+        toolbar.initialize()
+    }
 
     private fun retryConnection(seamless: Boolean = false, nextAutoReconnectDelay: Int = 0) {
         //We simply create a new activity to force creation of new ViewModel
