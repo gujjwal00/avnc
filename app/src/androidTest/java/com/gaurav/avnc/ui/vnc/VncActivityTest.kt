@@ -65,6 +65,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -228,6 +229,7 @@ class VncActivityTest : VncSessionTest() {
 
     @Test
     @SdkSuppress(minSdkVersion = 28)
+    @Ignore("Can't check the toast on API 28")
     fun serverUnlockWithWrongBiometric() {
         targetPrefs.edit { putBoolean("lock_saved_server", true) }
         vncSession.saveProfileToDB(dbRule.db)
