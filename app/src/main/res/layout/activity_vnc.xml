@@ -52,9 +52,12 @@
                     android:id="@+id/frame_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_frame_view"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true" />
+                    android:background="@drawable/bg_frame_view" /> <!--Workaround for hole punching issues-->
+
+                <com.gaurav.avnc.ui.vnc.input.InputView
+                    android:id="@+id/input_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
                 <ViewStub
                     android:id="@+id/no_video_overlay_stub"

@@ -201,7 +201,7 @@ class VirtualKeysTest : VncSessionTest() {
     fun vkModifierKeysShouldApplyToKeyPressedOnKeyboard() {
         vncSession.run {
             onView(withText("Shift")).checkWillBeDisplayed().doClick()
-            onView(withId(R.id.frame_view)).doTypeText("a") // Should be sent as uppercase A to server
+            onView(withId(R.id.input_view)).doTypeText("a") // Should be sent as uppercase A to server
         }
         assertEquals(listOf(XKeySym.XK_Shift_L, XKeySym.XK_A), vncSession.server.receivedKeyDowns)
     }

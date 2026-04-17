@@ -118,7 +118,8 @@ class VncActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_vnc)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-        binding.frameView.initialize(viewModel, inputHandler)
+        binding.frameView.initialize(viewModel)
+        binding.inputView.initialize(viewModel, inputHandler)
         viewModel.frameViewRef = WeakReference(binding.frameView)
 
         setupLayout()
@@ -341,8 +342,8 @@ class VncActivity : AppCompatActivity() {
     fun showKeyboard() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 
-        binding.frameView.requestFocus()
-        imm.showSoftInput(binding.frameView, 0)
+        binding.inputView.requestFocus()
+        imm.showSoftInput(binding.inputView, 0)
 
         virtualKeys.onKeyboardOpen()
     }
@@ -381,10 +382,10 @@ class VncActivity : AppCompatActivity() {
             return
 
         if (capturePointer) {
-            binding.frameView.requestFocus()
-            binding.frameView.requestPointerCapture()
+            binding.inputView.requestFocus()
+            binding.inputView.requestPointerCapture()
         } else
-            binding.frameView.releasePointerCapture()
+            binding.inputView.releasePointerCapture()
     }
 
     private fun updateStatusContainerVisibility(isConnected: Boolean) {

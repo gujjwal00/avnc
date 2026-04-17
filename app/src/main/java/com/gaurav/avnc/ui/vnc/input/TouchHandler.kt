@@ -17,8 +17,8 @@ import android.view.HapticFeedbackConstants
 import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
+import android.view.View
 import android.view.ViewConfiguration
-import com.gaurav.avnc.ui.vnc.FrameView
 import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.vnc.PointerButton
 import kotlin.math.PI
@@ -29,7 +29,7 @@ import kotlin.math.max
 /**
  * Handler for touch events. It detects various gestures and notifies [dispatcher].
  */
-class TouchHandler(private val frameView: FrameView, private val dispatcher: Dispatcher, private val pref: AppPreferences)
+class TouchHandler(private val inputView: View, private val dispatcher: Dispatcher, private val pref: AppPreferences)
     : ScaleGestureDetector.OnScaleGestureListener {
 
     //Extension to easily access touch position
@@ -111,7 +111,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         if (Build.VERSION.SDK_INT < 26)
             return false
 
-        val screenDensity = frameView.context.resources.displayMetrics.density
+        val screenDensity = inputView.context.resources.displayMetrics.density
         val dx: Float
         val dy: Float
 
@@ -163,7 +163,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
     /****************************************************************************************
      * Stylus
      ****************************************************************************************/
-    private val stylusGestureDetector = GestureDetector(frameView.context, StylusGestureListener())
+    private val stylusGestureDetector = GestureDetector(inputView.context, StylusGestureListener())
 
     private fun handleStylusEvent(event: MotionEvent): Boolean {
         if (event.isFromSource(InputDevice.SOURCE_STYLUS) &&
@@ -193,7 +193,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         }
 
         override fun onLongPress(e: MotionEvent) {
-            frameView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            inputView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             dispatcher.onStylusLongPress(e.point())
         }
 
@@ -217,8 +217,8 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
     /****************************************************************************************
      * Finger Gestures (and everything else beside mouse & stylus)
      ****************************************************************************************/
-    private val scaleDetector = ScaleGestureDetector(frameView.context, this).apply { isQuickScaleEnabled = false }
-    private val gestureDetector = GestureDetectorEx(frameView.context, FingerGestureListener(), pref)
+    private val scaleDetector = ScaleGestureDetector(inputView.context, this).apply { isQuickScaleEnabled = false }
+    private val gestureDetector = GestureDetectorEx(inputView.context, FingerGestureListener(), pref)
     private val swipeVsScale = SwipeVsScale()
     private val longPressSwipeEnabled = pref.input.gesture.longPressSwipeEnabled
     private val swipeSensitivity = pref.input.gesture.swipeSensitivity
@@ -252,7 +252,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
         }
 
         override fun onLongPress(e: MotionEvent) {
-            frameView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            inputView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
 
             // If long-press-swipe is disabled, we can dispatch long-press immediately
             if (!longPressSwipeEnabled) dispatcher.onLongPress(e.point())
@@ -377,7 +377,7 @@ class TouchHandler(private val frameView: FrameView, private val dispatcher: Dis
          * -                              +-> | [innerDetector4] |
          *                                    +------------------+
          *                                        (quick-tap)
-         *                                                          
+         *
          */
         private val innerDetector1 = GestureDetector(context, InnerListener1())
         private val innerDetector2 = GestureDetector(context, InnerListener2()).apply { setIsLongpressEnabled(false) }

@@ -57,7 +57,7 @@ class VirtualKeys(private val activity: VncActivity, private val inputHandler: I
 
     private val viewModel = activity.viewModel
     private val pref = activity.viewModel.pref
-    private val frameView = activity.binding.frameView
+    private val inputView = activity.binding.inputView
     private val stub = activity.binding.virtualKeysStub
     private val toggleKeys = mutableSetOf<ToggleButton>()
     private val lockedToggleKeys = mutableSetOf<ToggleButton>()
@@ -184,7 +184,7 @@ class VirtualKeys(private val activity: VncActivity, private val inputHandler: I
             override fun onPageSelected(position: Int) {
                 if (ViewCompat.getRootWindowInsets(root)?.isVisible(Type.ime()) == true) {
                     if (position == textPageIndex) binding.textBox.requestFocus()
-                    else frameView.requestFocus()
+                    else inputView.requestFocus()
                 }
                 pref.runInfo.virtualKeysTextBoxVisible = (position == textPageIndex)
             }
@@ -201,7 +201,7 @@ class VirtualKeys(private val activity: VncActivity, private val inputHandler: I
 
         // Update size after layout changes
         addOnGlobalLayoutListener(activity, keys) {
-            val w = min(keys.width, frameView.width)
+            val w = min(keys.width, inputView.width)
             val h = keys.height
             if (w > 0 && h > 0 && (root.width != w || root.height != h))
                 root.layoutParams = root.layoutParams.apply { width = w; height = h }
@@ -222,7 +222,7 @@ class VirtualKeys(private val activity: VncActivity, private val inputHandler: I
             true
         }
         binding.textBox.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) frameView.requestFocus()
+            if (!hasFocus) inputView.requestFocus()
         }
         binding.textBox.onTextCopyListener = {
             viewModel.sendClipboardText()
@@ -239,7 +239,7 @@ class VirtualKeys(private val activity: VncActivity, private val inputHandler: I
             if (vk == VirtualKey.ToggleKeyboard) {
                 view.setOnClickListener {
                     @Suppress("DEPRECATION")
-                    ContextCompat.getSystemService(frameView.context, InputMethodManager::class.java)
+                    ContextCompat.getSystemService(inputView.context, InputMethodManager::class.java)
                             ?.toggleSoftInput(0, 0)
                 }
             } else if (vk == VirtualKey.CloseKeys) {

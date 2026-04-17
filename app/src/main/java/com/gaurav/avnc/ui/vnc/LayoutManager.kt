@@ -116,7 +116,7 @@ class LayoutManager(private val activity: VncActivity) {
      * Flags to hide system bars are not 'sticky' on API < 30. System will automatically
      * clear them in a lot of situations, e.g. when IME is shown. So we have to keep
      * reminding it that we still want to remain fullscreen.
-     * Same reason why [onWindowFocusChanged] exists.
+     * Same reason applies to window focus.
      */
     private fun hookSystemUiChangeListener() {
         @Suppress("DEPRECATION")

@@ -142,7 +142,7 @@ class VncActivityTest : VncSessionTest() {
         val text = "abcxyzABCXYZ1234567890{}[]()`~@#$%^&*_+-=/*"
 
         vncSession.run {
-            onView(withId(R.id.frame_view)).doTypeText(text)
+            onView(withId(R.id.input_view)).doTypeText(text)
         }
 
         val sentByClient = text.toCharArray().map { it.code }.toList()
@@ -366,7 +366,7 @@ class VncActivityTest : VncSessionTest() {
             onView(withId(R.id.drawer_layout)).perform(DrawerActions.close())
 
             onView(withText(R.string.msg_video_disabled)).check(doesNotExist())
-            onView(withId(R.id.frame_view)).checkIsDisplayed().doTypeText("abc")
+            onView(withId(R.id.input_view)).checkIsDisplayed().doTypeText("abc")
 
             pollingAssert { assertEquals(ServerProfile.VIEW_MODE_NO_INPUT, loadProfileFromDB()?.viewMode) }
             vncSession.onActivity { a -> assertEquals(ServerProfile.VIEW_MODE_NO_INPUT, a.viewModel.activeViewMode.value) }
