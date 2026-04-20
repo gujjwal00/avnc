@@ -68,7 +68,6 @@ class RemoteSession(private val observer: Observer) {
 
         log("Requesting session stop")
         stopRequested = true
-        sessionThread?.interrupt()
     }
 
 
@@ -169,8 +168,6 @@ class RemoteSession(private val observer: Observer) {
 
     private fun handleConnectionEnd(result: Result<Unit>) {
         runCatching {
-            Thread.interrupted() // clear any pending interrupt
-
             result.onFailure {
                 if (!stopRequested) {
                     logE("Connection error", it)

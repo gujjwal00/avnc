@@ -15,9 +15,11 @@ import android.media.ToneGenerator
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.gaurav.avnc.R
 import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.session.Messenger
 import com.gaurav.avnc.session.RemoteSession
 import com.gaurav.avnc.ui.vnc.FrameScroller
 import com.gaurav.avnc.ui.vnc.FrameState
@@ -34,7 +36,6 @@ import com.gaurav.avnc.util.monitor
 import com.gaurav.avnc.util.setClipboardText
 import com.gaurav.avnc.util.trustCertificate
 import com.gaurav.avnc.viewmodel.service.SshClient
-import com.gaurav.avnc.session.Messenger
 import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
 import kotlinx.coroutines.Dispatchers
@@ -342,7 +343,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
             return li
 
         // Something is missing, so we have to ask the user
-        return loginInfoRequest.getResponseFor(type)  // Blocking call
+        return loginInfoRequest.getResponseFor(type, viewModelScope)  // Blocking call
     }
 
     /**
@@ -500,7 +501,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
 
             val title = "Unknown server certificate"
             val message = getUnknownCertificateMessage(certificate)
-            if (confirmationRequest.getResponseFor(Pair(title, message))) {
+            if (confirmationRequest.getResponseFor(Pair(title, message), viewModelScope)) {
                 trustCertificate(app, certificate)
                 return true
             }
@@ -548,7 +549,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
         override fun confirmSshHostKeyWithUser(message: String, isNewHost: Boolean): Boolean {
             val titleRes = if (isNewHost) R.string.title_unknown_ssh_host else R.string.title_ssh_host_key_changed
             val title = app.getString(titleRes)
-            return confirmationRequest.getResponseFor(Pair(title, message))
+            return confirmationRequest.getResponseFor(Pair(title, message), viewModelScope)
         }
     }
 }
