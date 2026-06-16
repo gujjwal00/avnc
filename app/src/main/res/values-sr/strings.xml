@@ -181,7 +181,7 @@
     <string name="pref_touch_test">Опит додира</string>
     <string name="pref_key_test">Опит дугмета</string>
     <string name="pref_orientation_option_landscape">Положено</string>
-    <string name="pref_display_cutout">Исцртавај иза одсека приказа (опитно)</string>
+    <string name="pref_display_cutout">Пришири у одсеченој области</string>
     <string name="pref_orientation">Усмерење заслона</string>
     <string name="pref_orientation_option_auto">Самостално</string>
     <string name="hint_ssh_host">Домаћин ССХ-а</string>
@@ -194,4 +194,55 @@
 \n
 \n<b>Стисни-држи-пусти</b> → Дуги стисак
 \n<b>Стисни-држи-бриши</b> Дуги стисак и бриши</string>
+    <string name="title_try">Покушај</string>
+    <string name="title_forget">Заборави</string>
+    <string name="title_connect_on_app_start">Самоповежи при покретању програма</string>
+    <string name="title_enable_wol">Буђење-на-ЛАН-у</string>
+    <string name="title_always_show_advanced_editor">Увек приказуј напредне могућности</string>
+    <string name="title_export_passwords_and_keys">Извези лозинке и кључеве</string>
+    <string name="title_next">Следеће</string>
+    <string name="title_got_it">Схватам</string>
+    <string name="title_load_defaults">Учитај подразумевано</string>
+    <string name="hint_wol_mac">Адреса МАК</string>
+    <string name="hint_wol_address">Адреса зрачења (додатно)</string>
+    <string name="hint_send_text_to_server">Пошаљи писмо служитељу</string>
+    <string name="msg_normal_view_mode">Обичан начин је омогућен</string>
+    <string name="msg_input_disabled">Унос је онемогућен</string>
+    <string name="msg_video_disabled">Видео је онемогућен</string>
+    <string name="msg_gesture_style_locked_to_touchpad">Знаци додирне плочице делују и даље</string>
+    <string name="msg_saved">Сачувано</string>
+    <string name="msg_done">Урађено</string>
+    <string name="msg_required">Неопходно</string>
+    <string name="msg_invalid_mac_address">Адреса МАК је неисправна</string>
+    <string name="msg_tap_to_select_a_key">Тапните ради означавања кључа:</string>
+    <string name="msg_wake_on_lan_help">Буђење на ЛАН-у може бити коришћено ради даљинског укључивања рачунара.\n\nПрво, подесите БнЛ удаљеном рачунару, затим га омогућите у АВНЦ-у.\nКада је омогућено, чаробни пакет БнЛ ће самостално бити послат пре повезивања са овим служитељем.</string>
+    <string name="msg_viewer_tips_label">Неколико савета пре почетка</string>
+    <string name="tip_toolbar_usage">Пребришите са леве ивице ради отварања алатнице. Користите је да отворите тастатуру, промените начин давања знакова, или поништавање приближавања.</string>
+    <string name="tip_session_end">Ради затварања седнице, тапните на дугме навођења Назад, као што би учинили гледајући видео.</string>
+    <string name="desc_toolbar_btn">Отвори алатницу</string>
+    <string name="desc_view_modes_toggle">Начини прегледа</string>
+    <string name="desc_view_mode_normal">Обичан преглед</string>
+    <string name="desc_view_mode_no_input">Онемогући све уносе</string>
+    <string name="desc_view_mode_no_video">Онемогући видео</string>
+    <string name="pref_gesture_action_left_press">Дуги-притисак</string>
+    <string name="pref_gesture_action_remote_back_press">Притисак-назад на служитеља</string>
+    <string name="pref_bell">Звоно</string>
+    <string name="pref_gesture_style">Начин давања знакова</string>
+    <string name="pref_three_finger_tap">Тап трима прстима</string>
+    <string name="pref_swipe3">Брисање трима прстима</string>
+    <string name="pref_double_tap_swipe">Двотап и брисање</string>
+    <string name="pref_long_press_swipe">Дуги притисак и брисање</string>
+    <string name="pref_long_press_swipe_disabled_summary">Онемогућено тренутном вредношћу знака <b>Дуги притисак</b></string>
+    <string name="pref_swipe_sensitivity">Осетљивост брисања</string>
+    <string name="pref_invert_vertical_scrolling">Преокрени усправно клизање</string>
+    <string name="pref_capture_pointer">Захвати показивача</string>
+    <string name="pref_customize_virtual_keys">Прилагодите дугмад</string>
+    <string name="pref_vk_row_count">Редови</string>
+    <string name="pref_vk_use_super_with_single_tap">Користите дугме супер једним кликом</string>
+    <string name="pref_keep_screen_on">Држи приказ укљученим</string>
+    <string name="pref_toolbar_open_with_swipe">Убриши из ивице ради отварања</string>
+    <string name="pref_toolbar_open_with_button">Приказуј дугме ради отварања</string>
+    <string name="pref_show_gesture_style_toggle">Приказуј прекидач начина знакова</string>
+    <string name="pref_forget_known_hosts">Заборави познате домаћине</string>
+    <string name="pref_forget_known_hosts_question">Заборави познате домаћине ССХ и повеље поверења служитеља?</string>
 </resources>

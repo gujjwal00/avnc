@@ -1,16 +1,19 @@
-AVNC é um cliente VNC de software livre para Android. O app permite que você controle remotamente qualquer dispositivo que tem um servidor VNC implementado.
+AVNC é um cliente VNC de código aberto para Android. Permite controlar remotamente qualquer dispositivo que corre um servidor VNC.
 
 Funcionalidades:
 
-- Material Design (com tema escuro)
+- Desenho Material (com tema Escuro)
 - Gestos configuráveis
-- Codificação rigorosa
 - Chaves Virtuais
-- Modo de imagem em popup
+- Suporte de Repetidor VNC
+- Suporte Wake-on-LAN
+- Túnel SSH embutido (VNC sobre SSH)
+- Modo de Imagem-em-Imagem
 - Modo só de visualização
-- Descoberta do Servidor Zeroconf
-- Suporte ao TLS (AnonTLS, VeNCrypt)
-- Túnel SSH (VNC sobre SSH)
-- Importação/exportação de servidores
-- Suporte ao repetidor VNC
-- Sincronização do clipboard com servidor
+- Modo Sem-Vídeo
+- Descoberta Automática do Servidor Zeroconf
+- Importar/Exportar servidores
+- Sincronização da Área de transferência com o servidor
+- `vnc://` suporte de URI
+- Suporte de TLS (AnonTLS, VeNCrypt)
+- Suporte de codificação apertada

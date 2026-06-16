@@ -1,0 +1,19 @@
+AVNC adalah klien VNC sumber terbuka untuk Android. Aplikasi ini memungkinkan Anda mengendalikan perangkat apa pun yang menjalankan server VNC dari jarak jauh.
+
+Fitur:
+
+- Material Design (dengan tema Gelap)
+- Gerakan yang dapat dikonfigurasi
+- Tombol Virtual
+- Dukungan VNC Repeater
+- Dukungan Wake-on-LAN
+- Terowongan SSH bawaan (VNC melalui SSH)
+- Mode Picture-in-Picture
+- Mode Hanya Tampil
+- Mode Tanpa Video
+- Penemuan Server Otomatis (Zeroconf)
+- Impor/Ekspor server
+- Sinkronisasi Clipboard dengan server
+- Dukungan URI `vnc://`
+- Dukungan TLS (AnonTLS, VeNCrypt)
+- Dukungan enkripsi Tight
