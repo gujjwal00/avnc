@@ -220,8 +220,10 @@ class AdvancedProfileEditor : Fragment() {
 
             override fun onStart(owner: LifecycleOwner) {
                 requireActivity().window.let {
+                    val newColor = getNewColor()
                     originalNavBarColor = it.navigationBarColor
-                    it.navigationBarColor = getNewColor()
+                    it.navigationBarColor = newColor
+                    binding.edgeToEdgeWrapper.setCustomNavBarColor(newColor)
                 }
             }
 
@@ -229,6 +231,7 @@ class AdvancedProfileEditor : Fragment() {
                 originalNavBarColor?.let {
                     requireActivity().window.navigationBarColor = it
                     originalNavBarColor = null
+                    binding.edgeToEdgeWrapper.setCustomNavBarColor(null)
                 }
             }
         })

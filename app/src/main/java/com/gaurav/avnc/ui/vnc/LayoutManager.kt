@@ -40,7 +40,7 @@ import kotlin.math.max
  */
 class LayoutManager(private val activity: VncActivity) {
     private val viewModel = activity.viewModel
-    private val rootView = activity.binding.root
+    private val rootView = activity.binding.viewerRoot
     private val frameView = activity.binding.frameView
     private val window = activity.window
     private val insetController = WindowCompat.getInsetsController(window, window.decorView)

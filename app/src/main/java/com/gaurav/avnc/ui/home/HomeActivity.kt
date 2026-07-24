@@ -20,7 +20,6 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.net.toUri
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityHomeBinding
@@ -30,6 +29,7 @@ import com.gaurav.avnc.ui.prefs.PrefsActivity
 import com.gaurav.avnc.ui.vnc.IntentReceiverActivity
 import com.gaurav.avnc.ui.vnc.startVncActivity
 import com.gaurav.avnc.util.Debugging
+import com.gaurav.avnc.util.EdgeToEdgeHelper
 import com.gaurav.avnc.util.MsgDialog
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.gaurav.avnc.vnc.VncClient
@@ -53,7 +53,7 @@ class HomeActivity : AppCompatActivity() {
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
 
         //View Inflation
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
+        binding = EdgeToEdgeHelper.setDataBindingContentView(this, R.layout.activity_home)
         binding.lifecycleOwner = this
 
         tabs.create(binding.tabLayout, binding.pager)

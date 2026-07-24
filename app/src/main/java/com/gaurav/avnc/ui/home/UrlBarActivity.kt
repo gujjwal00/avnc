@@ -13,11 +13,11 @@ import android.view.Window
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityUrlBinding
 import com.gaurav.avnc.ui.vnc.startVncActivity
+import com.gaurav.avnc.util.EdgeToEdgeHelper
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.gaurav.avnc.viewmodel.UrlBarViewModel
 import com.gaurav.avnc.vnc.VncUri
@@ -38,7 +38,7 @@ class UrlBarActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
 
-        val binding = DataBindingUtil.setContentView<ActivityUrlBinding>(this, R.layout.activity_url)
+        val binding = EdgeToEdgeHelper.setDataBindingContentView<ActivityUrlBinding>(this, R.layout.activity_url)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 

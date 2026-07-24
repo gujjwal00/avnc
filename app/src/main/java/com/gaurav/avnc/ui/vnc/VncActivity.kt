@@ -31,7 +31,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.BundleCompat
 import androidx.core.view.isVisible
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -42,6 +41,7 @@ import com.gaurav.avnc.databinding.ViewerHelpBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.vnc.input.InputHandler
 import com.gaurav.avnc.util.DeviceAuthPrompt
+import com.gaurav.avnc.util.EdgeToEdgeHelper
 import com.gaurav.avnc.util.SamsungDex
 import com.gaurav.avnc.util.debugCheck
 import com.gaurav.avnc.util.enableChildLayoutTransitions
@@ -115,7 +115,7 @@ class VncActivity : AppCompatActivity() {
             return
 
         //Main UI
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_vnc)
+        binding = EdgeToEdgeHelper.setDataBindingContentView(this, R.layout.activity_vnc)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.frameView.initialize(viewModel)

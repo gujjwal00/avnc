@@ -32,6 +32,7 @@
     -->
 
     <FrameLayout
+        android:id="@+id/viewer_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

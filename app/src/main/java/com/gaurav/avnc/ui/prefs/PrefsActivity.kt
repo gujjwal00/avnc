@@ -19,6 +19,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.gaurav.avnc.R
 import com.gaurav.avnc.util.DeviceAuthPrompt
+import com.gaurav.avnc.util.EdgeToEdgeHelper
 import com.google.android.material.appbar.MaterialToolbar
 
 class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -27,7 +28,7 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
         DeviceAuthPrompt.applyFingerprintDialogFix(supportFragmentManager)
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        EdgeToEdgeHelper.setContentView(this, R.layout.activity_settings)
 
         if (savedInstanceState == null) {
             supportFragmentManager
