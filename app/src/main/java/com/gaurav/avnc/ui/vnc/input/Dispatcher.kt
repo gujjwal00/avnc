@@ -9,9 +9,9 @@
 package com.gaurav.avnc.ui.vnc.input
 
 import android.graphics.PointF
+import com.gaurav.avnc.session.Messenger
 import com.gaurav.avnc.ui.vnc.VncActivity
 import com.gaurav.avnc.viewmodel.VncViewModel
-import com.gaurav.avnc.session.Messenger
 import com.gaurav.avnc.vnc.PointerButton
 import com.gaurav.avnc.vnc.XKeySym
 
@@ -175,7 +175,9 @@ class Dispatcher(private val activity: VncActivity) {
     fun onStylusLongPress(p: PointF) = directMode.doClick(PointerButton.Right, p)
     fun onStylusScroll(p: PointF) = directMode.doButtonDown(PointerButton.Left, p)
 
-    fun onXKey(keySym: Int, xtCode: Int, isDown: Boolean) = viewModel.messenger!!.sendKey(keySym, xtCode, isDown)
+    fun onXKey(keySym: Int, xtCode: Int, isDown: Boolean): Boolean {
+        return viewModel.messenger?.sendKey(keySym, xtCode, isDown) ?: false
+    }
 
     /**************************************************************************
      * Available actions
