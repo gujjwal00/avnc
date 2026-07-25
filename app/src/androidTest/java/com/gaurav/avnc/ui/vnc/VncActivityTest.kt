@@ -519,6 +519,15 @@ class SshTunnelTest {
             vncSession.assertConnected()
             stop()
         }
+
+        // Key cache test
+        // Once unlocked, password should not be asked again
+        SshTunnelScenario().apply {
+            setupAuthWithKey(USER, ENCRYPTED_KEY, ENCRYPTED_KEY_PASSWORD)
+            start()
+            vncSession.assertConnected()
+            stop()
+        }
     }
 
     @Test
