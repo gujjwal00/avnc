@@ -1,0 +1,3 @@
+* Upgrade Target SDK to 36
+* Fixed couple of crashes
+* Translations updates
