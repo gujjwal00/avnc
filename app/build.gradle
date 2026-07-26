@@ -38,8 +38,6 @@ android {
                 targets "native-vnc", "vncclient"
             }
         }
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     sourceSets {
