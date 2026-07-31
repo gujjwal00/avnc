@@ -24,7 +24,7 @@ set(ENV{ANDROID_NDK_HOME} ${ANDROID_NDK})
 ###############################################################################
 # Project
 ###############################################################################
-project(NativeVNC C CXX ASM)
+project(NativeVNC C CXX)
 
 set(AVNC_EXTERN_DIR ${PROJECT_SOURCE_DIR}/../extern)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared Libs" FORCE)
@@ -42,32 +42,8 @@ macro(avnc_check_submodule name)
 endmacro()
 
 
-# Required to enable SIMD support on ARM
-if (CMAKE_ANDROID_ARCH STREQUAL "arm64")
-    set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} --target=aarch64-linux-android${ANDROID_NATIVE_API_LEVEL}")
-elseif (CMAKE_ANDROID_ARCH STREQUAL "arm")
-    set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} --target=arm-linux-androideabi${ANDROID_NATIVE_API_LEVEL}")
-endif ()
-
 # Clear build id in release builds to allow reproducible builds on F-Droid
 add_link_options("LINKER:$<$<NOT:$<CONFIG:Debug>>:--build-id=none>")
-
-
-###############################################################################
-# JPEG
-###############################################################################
-avnc_check_submodule(libjpeg-turbo)
-
-set(AVNC_LIBJPEG_SRC_DIR ${AVNC_EXTERN_DIR}/libjpeg-turbo)
-set(AVNC_LIBJPEG_BUILD_DIR ${CMAKE_BINARY_DIR}/libjpeg-turbo)
-
-add_subdirectory(${AVNC_LIBJPEG_SRC_DIR} ${AVNC_LIBJPEG_BUILD_DIR})
-
-# Set these variables so FindJPEG can find the library
-set(JPEG_LIBRARY ${AVNC_LIBJPEG_BUILD_DIR}/libturbojpeg.a)
-set(JPEG_INCLUDE_DIR ${AVNC_LIBJPEG_SRC_DIR})
-
-include_directories(${AVNC_LIBJPEG_SRC_DIR} ${AVNC_LIBJPEG_BUILD_DIR})
 
 
 ###############################################################################
