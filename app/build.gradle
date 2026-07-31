@@ -36,7 +36,7 @@ android {
                         "-DVCPKG_MANIFEST_MODE=ON"
                 )
 
-                targets "native-vnc", "vncclient", "wolfssl"
+                targets "native-vnc", "vncclient"
             }
         }
 

@@ -47,32 +47,6 @@ add_link_options("LINKER:$<$<NOT:$<CONFIG:Debug>>:--build-id=none>")
 
 
 ###############################################################################
-# SSL
-###############################################################################
-avnc_check_submodule(wolfssl)
-
-set(AVNC_LIBSSL_SRC_DIR ${AVNC_EXTERN_DIR}/wolfssl)
-set(AVNC_LIBSSL_BUILD_DIR ${CMAKE_BINARY_DIR}/wolfssl)
-
-# CMake support in wolfSSl is still under development, so we have to
-# manually set some flags to enable OpenSSL compatibility layer
-set(WOLFSSL_CRL yes)
-set(WOLFSSL_DES3 yes)
-add_definitions(-DOPENSSL_ALL -DOPENSSL_EXTRA -DHAVE_CRL -DHAVE_EX_DATA
-        -DHAVE_ANON -DWOLFSSL_AES_DIRECT -DHAVE_AES_ECB -DWOLFSSL_DES_ECB
-        -DWC_NO_HARDEN -DWOLFSSL_NO_OPTIONS_H)
-
-add_subdirectory(${AVNC_LIBSSL_SRC_DIR} ${AVNC_LIBSSL_BUILD_DIR})
-
-# Set these variables so FindOpenSSL can find the library
-set(OPENSSL_SSL_LIBRARY ${AVNC_LIBSSL_BUILD_DIR}/libwolfssl.a)
-set(OPENSSL_CRYPTO_LIBRARY ${AVNC_LIBSSL_BUILD_DIR}/libwolfssl.a)
-set(OPENSSL_INCLUDE_DIR ${AVNC_LIBSSL_SRC_DIR}/wolfssl)
-
-include_directories(${AVNC_LIBSSL_SRC_DIR})
-
-
-###############################################################################
 # LibVNC
 ###############################################################################
 avnc_check_submodule(libvncserver)

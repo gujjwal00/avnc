@@ -1,9 +1,6 @@
 [submodule "extern/libvncserver"]
 	path = extern/libvncserver
 	url = ../../gujjwal00/libvncserver.git
-[submodule "extern/wolfssl"]
-	path = extern/wolfssl
-	url = ../../wolfSSL/wolfssl.git
 [submodule "extern/vcpkg"]
 	path = extern/vcpkg
 	url = ../../gujjwal00/vcpkg.git
