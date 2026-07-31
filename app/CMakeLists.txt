@@ -1,7 +1,29 @@
 
 cmake_minimum_required(VERSION 3.13)
 
+###############################################################################
+# vcpkg setup
+# This must be done before project() is called.
+###############################################################################
+if (ANDROID_ABI STREQUAL "arm64-v8a")
+    set(VCPKG_TARGET_TRIPLET "arm64-android")
+elseif (ANDROID_ABI STREQUAL "armeabi-v7a")
+    set(VCPKG_TARGET_TRIPLET "arm-neon-android")
+elseif (ANDROID_ABI STREQUAL "x86")
+    set(VCPKG_TARGET_TRIPLET "x86-android")
+elseif (ANDROID_ABI STREQUAL "x86_64")
+    set(VCPKG_TARGET_TRIPLET "x64-android")
+else ()
+    message(FATAL_ERROR "Unknown ANDROID_ABI: ${ANDROID_ABI}")
+endif ()
 
+set(VCPKG_BOOTSTRAP_OPTIONS "-disableMetrics")
+set(ENV{ANDROID_NDK_HOME} ${ANDROID_NDK})
+
+
+###############################################################################
+# Project
+###############################################################################
 project(NativeVNC C CXX ASM)
 
 set(AVNC_EXTERN_DIR ${PROJECT_SOURCE_DIR}/../extern)

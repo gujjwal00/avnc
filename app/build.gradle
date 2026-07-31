@@ -29,8 +29,13 @@ android {
 
         externalNativeBuild {
             cmake {
-                //We are not using STL
-                arguments "-DANDROID_STL=none"
+                arguments(
+                        "-DANDROID_STL=none", // We are not using STL
+                        "-DCMAKE_TOOLCHAIN_FILE=${layout.settingsDirectory}/extern/vcpkg/scripts/buildsystems/vcpkg.cmake",
+                        "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=\${ndk.moduleNdkDir}/build/cmake/android.toolchain.cmake",
+                        "-DVCPKG_MANIFEST_MODE=ON"
+                )
+
                 targets "native-vnc", "vncclient", "turbojpeg-static", "wolfssl"
             }
         }
