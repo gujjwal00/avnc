@@ -1,0 +1,1 @@
+* Improve compatibility with Edge-to-Edge layout on Android 15+
