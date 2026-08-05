@@ -11,6 +11,7 @@ package com.gaurav.avnc.util
 import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Insets
 import android.graphics.Paint
 import android.os.Build
@@ -23,6 +24,7 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.gaurav.avnc.ui.vnc.VncActivity
 
 /**
  * Android forces apps to be edge to edge on API 35+.
@@ -52,6 +54,16 @@ class EdgeToEdgeWrapperLayout(context: Context, attrs: AttributeSet?, defStyleAt
     private var navBarThemeColor = 0
     private var navBarCustomColor: Int? = null
 
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private var cutoutInsets = Insets.NONE
+    private val cutoutPaint = Paint()
+    private val viewerDrawsBehindCutout by lazy { AppPreferences(context).viewer.drawBehindCutout }
+
+    /**
+     * Flag for special handling required by [VncActivity]
+     */
+    var isWrappingVncActivity = false
+
     init {
         if (Build.VERSION.SDK_INT >= 35) {
             setWillNotDraw(false)
@@ -66,9 +78,10 @@ class EdgeToEdgeWrapperLayout(context: Context, attrs: AttributeSet?, defStyleAt
             return super.onApplyWindowInsets(insets)
 
         statusBarInsets = insets.getInsets(Type.statusBars())
+        cutoutInsets = insets.getInsets(Type.displayCutout())
         navBarInsets = insets.getInsets(Type.navigationBars())
 
-        insets.getInsets(Type.systemBars() or Type.ime()).let {
+        insets.getInsets(getInsetTypesForPadding(insets)).let {
             setPadding(it.left, it.top, it.right, it.bottom)
         }
 
@@ -81,8 +94,14 @@ class EdgeToEdgeWrapperLayout(context: Context, attrs: AttributeSet?, defStyleAt
 
         statusBarPaint.color = statusBarThemeColor
         navBarPaint.color = navBarCustomColor ?: navBarThemeColor
+        cutoutPaint.color = when {
+            statusBarInsets.top != 0 && cutoutInsets.top != 0 -> statusBarPaint.color
+            statusBarInsets.top == 0 && isWrappingVncActivity -> Color.BLACK
+            else -> navBarPaint.color
+        }
 
         drawInsets(canvas, statusBarInsets, statusBarPaint)
+        drawInsets(canvas, cutoutInsets, cutoutPaint)
         drawInsets(canvas, navBarInsets, navBarPaint)
     }
 
@@ -95,6 +114,23 @@ class EdgeToEdgeWrapperLayout(context: Context, attrs: AttributeSet?, defStyleAt
             context.theme.resolveAttribute(attrib, it, true)
             it.data
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun getInsetTypesForPadding(insets: WindowInsets): Int {
+        if (!isWrappingVncActivity)
+            return Type.systemBars() or Type.displayCutout() or Type.ime()
+
+        // We are in VncActivity
+
+        // Status bar visibility implies non-fullscreen mode
+        if (insets.isVisible(Type.statusBars()))
+            return Type.systemBars() or Type.displayCutout()
+
+        if (!viewerDrawsBehindCutout)
+            return Type.displayCutout()
+
+        return 0
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -120,7 +156,7 @@ object EdgeToEdgeHelper {
         }
 
         val wrapper = EdgeToEdgeWrapperLayout(activity)
-        configureActivity(activity)
+        configure(activity, wrapper)
         activity.layoutInflater.inflate(res, wrapper, true)
         activity.setContentView(wrapper)
     }
@@ -131,13 +167,14 @@ object EdgeToEdgeHelper {
         }
 
         val wrapper = EdgeToEdgeWrapperLayout(activity)
-        configureActivity(activity)
+        configure(activity, wrapper)
         activity.setContentView(wrapper)
         return DataBindingUtil.inflate(activity.layoutInflater, res, wrapper, true)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    private fun configureActivity(activity: Activity) {
+    private fun configure(activity: Activity, wrapperLayout: EdgeToEdgeWrapperLayout) {
         activity.window.isNavigationBarContrastEnforced = false
+        wrapperLayout.isWrappingVncActivity = activity is VncActivity
     }
 }
