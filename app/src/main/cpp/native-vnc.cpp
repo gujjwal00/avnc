@@ -370,7 +370,7 @@ Java_com_gaurav_avnc_vnc_VncClient_nativeInit(JNIEnv *env, jobject /*thiz*/, jlo
     client->serverHost = getNativeStrCopy(env, host);
     client->serverPort = port < 100 ? port + 5900 : port;
 
-    if (rfbInitClient(client, nullptr, nullptr)) {
+    if (rfbClientConnect(client) && rfbClientInitialise(client)) {
         return JNI_TRUE;
     }
 
