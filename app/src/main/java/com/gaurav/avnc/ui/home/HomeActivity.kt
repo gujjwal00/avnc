@@ -30,9 +30,7 @@ import com.gaurav.avnc.ui.vnc.IntentReceiverActivity
 import com.gaurav.avnc.ui.vnc.startVncActivity
 import com.gaurav.avnc.util.Debugging
 import com.gaurav.avnc.util.EdgeToEdgeHelper
-import com.gaurav.avnc.util.MsgDialog
 import com.gaurav.avnc.viewmodel.HomeViewModel
-import com.gaurav.avnc.vnc.VncClient
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -102,8 +100,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun startNewConnection(profile: ServerProfile) {
-        if (checkNativeLib())
-            startVncActivity(this, profile)
+        startVncActivity(this, profile)
     }
 
     /**
@@ -163,20 +160,6 @@ class HomeActivity : AppCompatActivity() {
                     WelcomeFragment().show(supportFragmentManager, "WelcomeV3")
             }
         }*/
-    }
-
-    /**
-     * Warns about missing native library.
-     * This can happen if AVNC is installed by copying APK from a device with different architecture.
-     */
-    private fun checkNativeLib(): Boolean {
-        return runCatching {
-            VncClient.loadLibrary()
-        }.onFailure {
-            val msg = "You may have installed AVNC using an incorrect APK. " +
-                      "Please install correct version from F-Droid or Google Play."
-            MsgDialog.show(supportFragmentManager, "Native library is missing!", msg)
-        }.isSuccess
     }
 
     /**

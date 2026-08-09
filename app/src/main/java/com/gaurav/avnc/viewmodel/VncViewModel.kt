@@ -476,7 +476,8 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
         override fun onConnectionError(error: Throwable) {
             when (error) {
                 is IOException -> disconnectReason.postValue(error.message)
-                is UnsatisfiedLinkError -> disconnectReason.postValue("Missing native library")
+                is UnsatisfiedLinkError -> disconnectReason.postValue("Native library is missing! Please install correct" +
+                                                                      " version of AVNC from F-Droid or Google Play")
             }
         }
 
