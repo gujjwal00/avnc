@@ -49,6 +49,7 @@ Tools required:
 - Android Studio
 - Android SDK
 - NDK (with CMake)
+- For vcpkg (depending on your platform): curl, zip, unzip, tar, pkg-config, a C++ compiler
 
 To get started, simply clone the repo and initialize submodules:
 
@@ -62,6 +63,12 @@ Now you can import the project in Android Studio, or build it directly from term
 
 Read [Architecture.kt](app/src/main/java/com/gaurav/avnc/Architecture.kt) (preferably in
 Android Studio) to know more about the code.
+
+> [!TIP]
+> AVNC uses [vcpkg](https://learn.microsoft.com/en-us/vcpkg/) to manage C/C++ dependencies.
+> `vcpkg` downloads & builds these dependencies on first run.
+> So the first time you build/configure AVNC, it can take a lot of time.
+> If you face an error, try adding `android.native.buildOutput=verbose` to `gradle.properties` in project root.
 
 
 ##
