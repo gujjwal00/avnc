@@ -239,4 +239,10 @@ data class ServerProfile(
      */
     @IgnoredOnParcel
     var fConnectOnAppStart by Flag(FLAG_CONNECT_ON_APP_START)
+
+    /**
+     * Checks if this profile is persisted in database.
+     * Simply checks for non-zero [ID]
+     */
+    fun isSaved() = (ID != 0L)
 }

@@ -127,7 +127,7 @@ class HomeActivity : AppCompatActivity() {
         tabs.showSavedServers()
 
         // Show snackbar for new servers
-        if (profile.ID == 0L)
+        if (!profile.isSaved())
             Snackbar.make(binding.root, R.string.msg_server_profile_added, Snackbar.LENGTH_SHORT).show()
     }
 

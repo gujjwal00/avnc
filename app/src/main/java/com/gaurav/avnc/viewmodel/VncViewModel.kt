@@ -248,7 +248,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
      * Can be used to persist any changes made to [profile]
      */
     fun saveProfile() {
-        if (profile.ID != 0L)
+        if (profile.isSaved())
             launchMain { serverProfileDao.update(profile) }
     }
 
@@ -415,7 +415,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
 
     private fun rememberLoginInfo() {
         if (loginInfoToBeRemembered.isNotEmpty()) {
-            debugCheck(profile.ID != 0L)
+            debugCheck(profile.isSaved())
             loginInfoToBeRemembered.forEach { it.applyTo(profile) }
             loginInfoToBeRemembered.clear()
             saveProfile()
