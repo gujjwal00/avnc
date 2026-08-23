@@ -12,9 +12,15 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.util.Log
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import com.gaurav.avnc.R
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
@@ -74,4 +80,17 @@ suspend fun getClipboardText(context: Context): String? {
         Log.e("ClipboardUtil", "Could not retrieve text from clipboard.", t)
     }
     return result
+}
+
+/**
+ * Helper utility to set clip text & show a snack bar with confirmation
+ */
+fun AppCompatActivity.setClipboardTextWithNotification(text: String) {
+    lifecycleScope.launch {
+        val snackHost = findViewById<View>(android.R.id.content)
+        if (setClipboardText(this@setClipboardTextWithNotification, text))
+            Snackbar.make(snackHost, R.string.msg_copied_to_clipboard, Snackbar.LENGTH_SHORT).show()
+        else
+            Snackbar.make(snackHost, "Unable to copy text", Snackbar.LENGTH_SHORT).show()
+    }
 }

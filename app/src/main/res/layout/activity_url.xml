@@ -70,8 +70,8 @@
             </LinearLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/servers_rv"
+        <com.gaurav.avnc.ui.home.ServerList
+            android:id="@+id/servers"
             style="@style/ServerList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -81,7 +81,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appbar"
-            tools:listitem="@layout/server_saved_item" />
+            tools:listitem="@layout/server_list_item" />
 
         <TextView
             style="@style/TipView"

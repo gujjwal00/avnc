@@ -41,7 +41,7 @@ class ServerListTest {
 
     private val testProfile = ServerProfile(name = "Test Profile", host = "123.123.123.123")
     private fun testProfileMatcher() = allOf(
-            withParent(withId(R.id.servers_rv)),
+            withParent(withId(R.id.servers)),
             hasDescendant(withText(testProfile.name)),
             hasDescendant(withText(testProfile.host)),
     )
