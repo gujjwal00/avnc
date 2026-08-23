@@ -13,7 +13,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.util.Log
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.gaurav.avnc.R
@@ -85,7 +85,7 @@ suspend fun getClipboardText(context: Context): String? {
 /**
  * Helper utility to set clip text & show a snack bar with confirmation
  */
-fun AppCompatActivity.setClipboardTextWithNotification(text: String) {
+fun ComponentActivity.setClipboardTextWithNotification(text: String) {
     lifecycleScope.launch {
         val snackHost = findViewById<View>(android.R.id.content)
         if (setClipboardText(this@setClipboardTextWithNotification, text))

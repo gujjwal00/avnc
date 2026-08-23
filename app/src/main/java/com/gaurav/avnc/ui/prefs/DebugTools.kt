@@ -35,7 +35,7 @@ import com.gaurav.avnc.databinding.FragmentKeyTestBinding
 import com.gaurav.avnc.databinding.FragmentLogsBinding
 import com.gaurav.avnc.databinding.FragmentTouchTestBinding
 import com.gaurav.avnc.util.Debugging
-import com.gaurav.avnc.util.setClipboardText
+import com.gaurav.avnc.util.setClipboardTextWithNotification
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -51,10 +51,7 @@ abstract class DebugFragment : Fragment() {
 
     fun copyLogs(logs: String) {
         val wrapped = Debugging.wrapLogs(title(), logs)
-        lifecycleScope.launch {
-            if (setClipboardText(requireContext(), wrapped)) snackbar(getString(R.string.msg_copied_to_clipboard))
-            else snackbar("Error copying text")
-        }
+        requireActivity().setClipboardTextWithNotification(wrapped)
     }
 
     fun snackbar(text: String) = Snackbar.make(requireView(), text, Snackbar.LENGTH_SHORT).show()
