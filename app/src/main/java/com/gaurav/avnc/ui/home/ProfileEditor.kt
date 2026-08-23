@@ -106,7 +106,7 @@ private fun getProfileArg(f: Fragment): ServerProfile {
  * Returns title string based on whether we are editing an existing profile, or creating a new profile.
  */
 private fun getTitle(f: Fragment): Int {
-    return if (getProfileArg(f).ID == 0L) R.string.title_add_server_profile
+    return if (!getProfileArg(f).isSaved()) R.string.title_add_server_profile
     else R.string.title_edit_server_profile
 }
 

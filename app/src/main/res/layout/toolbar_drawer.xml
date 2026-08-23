@@ -95,9 +95,9 @@
                 <ImageButton
                     android:id="@+id/zoom_save_btn"
                     style="@style/ImageButton"
-                    android:alpha="@{viewModel.profileLive.ID != 0 ? 1f : .25f}"
+                    android:alpha="@{viewModel.profileLive.saved ? 1f : .25f}"
                     android:contentDescription="@string/desc_save_zoom_btn"
-                    android:enabled="@{viewModel.profileLive.ID != 0}"
+                    android:enabled="@{viewModel.profileLive.saved}"
                     android:src="@drawable/ic_save" />
 
             </LinearLayout>

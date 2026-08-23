@@ -62,7 +62,7 @@ private const val AUTO_RECONNECT_DELAY_KEY = "com.gaurav.avnc.auto_reconnect_del
 
 fun createVncIntent(context: Context, profile: ServerProfile): Intent {
     return Intent(context, VncActivity::class.java).apply {
-        if (profile.ID != 0L)
+        if (profile.isSaved())
             putExtra(PROFILE_ID_KEY, profile.ID)
         else
             putExtra(PROFILE_KEY, profile)
@@ -204,7 +204,7 @@ class VncActivity : AppCompatActivity() {
 
         val startupArg = prepareStartupArg(savedState) ?: return false
         val isSavedServer = startupArg is StartupArg.ProfileId ||
-                            (startupArg is StartupArg.Profile && startupArg.profile.ID == 0L)
+                            (startupArg is StartupArg.Profile && startupArg.profile.isSaved())
 
         if (isSavedServer && viewModel.pref.server.lockSavedServer)
             startAfterUnlockingServer(startupArg)

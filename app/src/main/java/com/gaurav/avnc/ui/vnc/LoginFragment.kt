@@ -57,7 +57,7 @@ class LoginFragment : DialogFragment() {
         binding.loginInfo = loginInfo
         binding.usernameLayout.isVisible = loginInfo.username.isBlank() && loginType == LoginInfo.Type.VNC_CREDENTIAL
         binding.passwordLayout.isVisible = loginInfo.password.isBlank()
-        binding.remember.isVisible = viewModel.profile.ID != 0L && loginType != LoginInfo.Type.SSH_KEY_PASSWORD
+        binding.remember.isVisible = viewModel.profile.isSaved() && loginType != LoginInfo.Type.SSH_KEY_PASSWORD
 
         binding.password.setOnEditorActionListener { _, _, _ ->
             onOk()
