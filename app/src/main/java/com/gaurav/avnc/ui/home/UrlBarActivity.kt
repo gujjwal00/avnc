@@ -13,11 +13,11 @@ import android.view.Window
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityUrlBinding
 import com.gaurav.avnc.ui.vnc.startVncActivity
 import com.gaurav.avnc.util.EdgeToEdgeHelper
+import com.gaurav.avnc.util.setClipboardTextWithNotification
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.gaurav.avnc.viewmodel.UrlBarViewModel
 import com.gaurav.avnc.vnc.VncUri
@@ -51,14 +51,11 @@ class UrlBarActivity : AppCompatActivity() {
                 binding.url.setText("")
         }
 
-        // TODO: Refactor server lists and remove dependency on HomeViewModel
-        val adapter = ServerTabs.SavedServerAdapter(homeViewModel, false)
-        binding.serversRv.layoutManager = LinearLayoutManager(this)
-        binding.serversRv.adapter = adapter
-        binding.serversRv.setHasFixedSize(true)
-        binding.serversRv.itemAnimator?.addDuration = 0 // Disable "flashing" of added items
-        viewModel.filteredServers.observe(this) { adapter.submitList(it) }
-        homeViewModel.newConnectionEvent.observe(this) {
+        binding.servers.setSource(this, viewModel.filteredServers, homeViewModel.rediscoveredProfiles)
+        binding.servers.itemAnimator?.addDuration = 0 // Disable "flashing" of added items
+        binding.servers.onCopyServerName = { setClipboardTextWithNotification(it.name) }
+        binding.servers.onCopyServerHost = { setClipboardTextWithNotification(it.host) }
+        binding.servers.onServerClick = {
             startVncActivity(this, it)
             finish()
         }

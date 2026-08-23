@@ -8,30 +8,17 @@
 
 package com.gaurav.avnc.ui.home
 
-import android.view.LayoutInflater
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.forEach
-import androidx.lifecycle.viewModelScope
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.gaurav.avnc.R
-import com.gaurav.avnc.databinding.ServerDiscoveryBinding
-import com.gaurav.avnc.databinding.ServerDiscoveryItemBinding
-import com.gaurav.avnc.databinding.ServerSavedBinding
-import com.gaurav.avnc.databinding.ServerSavedItemBinding
-import com.gaurav.avnc.model.ServerProfile
-import com.gaurav.avnc.util.setClipboardText
-import com.gaurav.avnc.viewmodel.HomeViewModel
-import com.google.android.material.snackbar.Snackbar
+import com.gaurav.avnc.databinding.TabDiscoveredServersBinding
+import com.gaurav.avnc.databinding.TabSavedServersBinding
+import com.gaurav.avnc.util.setClipboardTextWithNotification
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.coroutines.launch
 
 /**
  * This class creates and manages tabs in [HomeActivity].
@@ -109,150 +96,34 @@ class ServerTabs(val activity: HomeActivity) {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {}
     }
 
-
-    /**********************************************************************************************
-     * Saved servers
-     **********************************************************************************************/
-
     private fun createSavedServersView(parent: ViewGroup): View {
-        val binding = ServerSavedBinding.inflate(activity.layoutInflater, parent, false)
+        val viewModel = activity.viewModel
+        val binding = TabSavedServersBinding.inflate(activity.layoutInflater, parent, false)
         binding.lifecycleOwner = activity
-        binding.viewModel = activity.viewModel
+        binding.viewModel = viewModel
 
-        val adapter = SavedServerAdapter(activity.viewModel)
-        binding.serversRv.layoutManager = LinearLayoutManager(activity)
-        binding.serversRv.adapter = adapter
-        binding.serversRv.setHasFixedSize(true)
+        binding.servers.onServerClick = { viewModel.startConnection(it) }
+        binding.servers.onEditServer = { viewModel.onEditProfile(it) }
+        binding.servers.onDuplicateServer = { viewModel.onDuplicateProfile(it) }
+        binding.servers.onDeleteServer = { viewModel.deleteProfile(it) }
+        binding.servers.onCopyServerHost = { activity.setClipboardTextWithNotification(it.host) }
 
-        activity.viewModel.serverProfiles.observe(activity) { adapter.submitList(it) }
+        binding.servers.setSource(activity, viewModel.serverProfiles, viewModel.rediscoveredProfiles)
         return binding.root
     }
-
-
-    /**
-     * Adapter for saved servers
-     */
-    class SavedServerAdapter(val viewModel: HomeViewModel, val canEditServers: Boolean = true)
-        : ListAdapter<ServerProfile, SavedServerAdapter.ViewHolder>(Differ) {
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val inflater = LayoutInflater.from(parent.context)
-            val binding = ServerSavedItemBinding.inflate(inflater, parent, false)
-            return ViewHolder(binding)
-        }
-
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val profile = getItem(position)
-            holder.profile = profile
-            holder.binding.viewModel = profile
-            holder.binding.indicator.setup(profile, viewModel.rediscoveredProfiles)
-        }
-
-        inner class ViewHolder(val binding: ServerSavedItemBinding)
-            : ProfileViewHolder(viewModel, binding.root, if (canEditServers) R.menu.saved_server_editable else R.menu.saved_server)
-
-        object Differ : DiffUtil.ItemCallback<ServerProfile>() {
-            override fun areItemsTheSame(old: ServerProfile, new: ServerProfile) = (old.ID == new.ID)
-            override fun areContentsTheSame(old: ServerProfile, new: ServerProfile) = (old == new)
-        }
-    }
-
-
-    /**********************************************************************************************
-     * Discovered servers
-     **********************************************************************************************/
 
     private fun createDiscoveredServersView(parent: ViewGroup): View {
-        val binding = ServerDiscoveryBinding.inflate(activity.layoutInflater, parent, false)
+        val viewModel = activity.viewModel
+        val binding = TabDiscoveredServersBinding.inflate(activity.layoutInflater, parent, false)
         binding.lifecycleOwner = activity
-        binding.viewModel = activity.viewModel
+        binding.viewModel = viewModel
 
-        val adapter = DiscoveredServerAdapter(activity.viewModel)
-        binding.discoveredRv.layoutManager = LinearLayoutManager(activity)
-        binding.discoveredRv.adapter = adapter
-        binding.discoveredRv.setHasFixedSize(true)
+        binding.servers.onServerClick = { viewModel.startConnection(it) }
+        binding.servers.onSaveServer = { viewModel.onNewProfile(it) }
+        binding.servers.onCopyServerName = { activity.setClipboardTextWithNotification(it.name) }
+        binding.servers.onCopyServerHost = { activity.setClipboardTextWithNotification(it.host) }
 
-        activity.viewModel.discovery.servers.observe(activity) { adapter.submitList(it) }
-
+        binding.servers.setSource(activity, viewModel.discovery.servers)
         return binding.root
-    }
-
-    class DiscoveredServerAdapter(val viewModel: HomeViewModel)
-        : ListAdapter<ServerProfile, DiscoveredServerAdapter.ViewHolder>(Differ) {
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val inflater = LayoutInflater.from(parent.context)
-            val binding = ServerDiscoveryItemBinding.inflate(inflater, parent, false)
-            return ViewHolder(binding)
-        }
-
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val profile = getItem(position)
-            holder.profile = profile
-            holder.binding.viewModel = profile
-        }
-
-        inner class ViewHolder(val binding: ServerDiscoveryItemBinding) :
-                ProfileViewHolder(viewModel, binding.root, R.menu.discovered_server) {
-
-            init {
-                binding.saveBtn.setOnClickListener { viewModel.onNewProfile(profile) }
-            }
-        }
-
-        /**
-         * Profiles generated by discovery don't have unique IDs, so we compare the whole profile.
-         */
-        object Differ : DiffUtil.ItemCallback<ServerProfile>() {
-            override fun areItemsTheSame(old: ServerProfile, new: ServerProfile) = (old == new)
-            override fun areContentsTheSame(old: ServerProfile, new: ServerProfile) = (old == new)
-        }
-    }
-
-
-    /**
-     * Base ViewHolder for [ServerProfile], used by both adapters.
-     */
-    open class ProfileViewHolder(
-            private val homeViewModel: HomeViewModel,
-            private val rootView: View,
-            private val contextMenuId: Int)
-        : RecyclerView.ViewHolder(rootView) {
-
-        /**
-         * Points to the profile being rendered by this view holder.
-         * Updated by adapters during onBindViewHolder().
-         */
-        var profile = ServerProfile()
-
-        init {
-            rootView.setOnClickListener { homeViewModel.startConnection(profile) }
-
-            rootView.setOnCreateContextMenuListener { contextMenu, view, _ ->
-                MenuInflater(view.context).inflate(contextMenuId, contextMenu)
-                contextMenu.forEach { item ->
-                    item.setOnMenuItemClickListener { onContextMenuItemClick(it); true }
-                }
-            }
-        }
-
-        private fun onContextMenuItemClick(item: MenuItem) {
-            when (item.itemId) {
-                R.id.edit -> homeViewModel.onEditProfile(profile)
-                R.id.duplicate -> homeViewModel.onDuplicateProfile(profile)
-                R.id.delete -> homeViewModel.deleteProfile(profile)
-                R.id.copy_host -> copyToClipboard(profile.host)
-                R.id.copy_name -> copyToClipboard(profile.name)
-            }
-        }
-
-        private fun copyToClipboard(text: String) {
-            homeViewModel.viewModelScope.launch {
-                if (setClipboardText(rootView.context, text))
-                    Snackbar.make(rootView, R.string.msg_copied_to_clipboard, Snackbar.LENGTH_SHORT).show()
-                else
-                    Snackbar.make(rootView, "Unable to copy text", Snackbar.LENGTH_SHORT).show()
-            }
-        }
     }
 }

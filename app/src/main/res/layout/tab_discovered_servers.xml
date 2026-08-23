@@ -22,14 +22,14 @@
         android:layout_height="match_parent"
         android:clipChildren="false">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/discovered_rv"
+        <com.gaurav.avnc.ui.home.ServerList
+            android:id="@+id/servers"
             style="@style/ServerList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/desc_discovered_list"
             app:isVisible="@{!viewModel.discovery.servers.empty}"
-            tools:listitem="@layout/server_discovery_item" />
+            tools:listitem="@layout/server_list_item" />
 
         <TextView
             style="@style/TipView"

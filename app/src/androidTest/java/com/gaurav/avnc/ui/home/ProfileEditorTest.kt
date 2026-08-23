@@ -75,7 +75,7 @@ class BasicEditorTest {
 
         onView(withText(R.string.msg_server_profile_added)).checkWillBeDisplayed()
         onView(allOf(
-                withParent(withId(R.id.servers_rv)),
+                withParent(withId(R.id.servers)),
                 hasDescendant(withText(testProfile.name)),
                 hasDescendant(withText(testProfile.host)))
         ).checkWillBeDisplayed()
@@ -98,7 +98,7 @@ class BasicEditorTest {
 
         onView(withText(R.string.msg_server_profile_added)).checkWillBeDisplayed()
         onView(allOf(
-                withParent(withId(R.id.servers_rv)),
+                withParent(withId(R.id.servers)),
                 hasDescendant(withText(testProfile.name)),
                 hasDescendant(withText(testProfile.host)))
         ).checkWillBeDisplayed()
