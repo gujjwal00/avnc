@@ -12,28 +12,20 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.Window
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.pm.ShortcutInfoCompat
-import androidx.core.content.pm.ShortcutManagerCompat
-import androidx.core.graphics.drawable.IconCompat
 import androidx.core.net.toUri
-import androidx.lifecycle.lifecycleScope
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityHomeBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.about.AboutActivity
 import com.gaurav.avnc.ui.prefs.PrefsActivity
-import com.gaurav.avnc.ui.vnc.IntentReceiverActivity
 import com.gaurav.avnc.ui.vnc.startVncActivity
 import com.gaurav.avnc.util.Debugging
 import com.gaurav.avnc.util.EdgeToEdgeHelper
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * Primary activity of the app.
@@ -67,7 +59,7 @@ class HomeActivity : AppCompatActivity() {
         viewModel.profileDeletedEvent.observe(this) { onProfileDeleted(it) }
         viewModel.newConnectionEvent.observe(this) { startNewConnection(it) }
         viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }
-        viewModel.serverProfiles.observe(this) { updateShortcuts(it) }
+        viewModel.serverProfiles.observe(this) { updateShortcuts(this, it) }
 
         setupSplashTheme()
         showWelcomeMsg()
@@ -181,57 +173,5 @@ class HomeActivity : AppCompatActivity() {
     private fun maybeAutoConnect(isNewStart: Boolean) {
         if (isNewStart)
             viewModel.maybeConnectOnAppStart()
-    }
-
-    /************************************************************************************
-     * Shortcuts
-     ************************************************************************************/
-
-    private fun createShortcutId(profile: ServerProfile) = "shortcut:pid:${profile.ID}"
-
-    private fun updateShortcuts(profiles: List<ServerProfile>) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            runCatching {
-                val sortedProfiles = profiles.sortedByDescending { it.useCount }
-                updateShortcutState(sortedProfiles)
-                updateDynamicShortcuts(sortedProfiles)
-            }.onFailure {
-                Log.e("Shortcuts", "Unable to update shortcuts", it)
-            }
-        }
-    }
-
-    /**
-     * Enable/Disable shortcuts based on availability in [profiles]
-     */
-    private fun updateShortcutState(profiles: List<ServerProfile>) {
-        val pinnedShortcuts = ShortcutManagerCompat.getShortcuts(this, ShortcutManagerCompat.FLAG_MATCH_PINNED)
-        val disabledMessage = getString(R.string.msg_shortcut_server_deleted)
-
-        val possibleIds = profiles.map { createShortcutId(it) }
-        val pinnedIds = pinnedShortcuts.map { it.id }
-        val enabledIds = pinnedIds.intersect(possibleIds).toList()
-        val enabledShortcuts = pinnedShortcuts.filter { it.id in enabledIds }
-        val disabledIds = pinnedIds.subtract(enabledIds).toList()
-
-        ShortcutManagerCompat.enableShortcuts(this, enabledShortcuts)
-        ShortcutManagerCompat.disableShortcuts(this, disabledIds, disabledMessage)
-    }
-
-    /**
-     * Updates dynamic shortcut list
-     */
-    private fun updateDynamicShortcuts(profiles: List<ServerProfile>) {
-        val maxShortcuts = ShortcutManagerCompat.getMaxShortcutCountPerActivity(this)
-        val shortcuts = profiles.take(maxShortcuts).mapIndexed { i, p ->
-            ShortcutInfoCompat.Builder(this, createShortcutId(p))
-                    .setIcon(IconCompat.createWithResource(this, R.drawable.ic_computer_shortcut))
-                    .setShortLabel(p.name.ifBlank { p.host })
-                    .setLongLabel(p.name.ifBlank { p.host })
-                    .setRank(i)
-                    .setIntent(IntentReceiverActivity.createShortcutIntent(this, p.ID))
-                    .build()
-        }
-        ShortcutManagerCompat.setDynamicShortcuts(this, shortcuts)
     }
 }
