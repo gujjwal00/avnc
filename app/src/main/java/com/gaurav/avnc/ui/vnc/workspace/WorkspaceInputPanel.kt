@@ -33,7 +33,7 @@ class WorkspaceInputPanel @JvmOverloads constructor(
         val trackpad = TrackpadView(context).apply {
             initialize(dispatcher)
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, 0, 1f)
-            contentDescription = "Remote trackpad"
+            contentDescription = context.getString(com.gaurav.avnc.R.string.desc_workspace_trackpad)
         }
         addView(trackpad)
 
