@@ -520,7 +520,7 @@ class VncActivity : AppCompatActivity() {
         // Foldable devices enter workspace mode automatically in tabletop posture.
         // The toolbar entry remains available for manually showing it on other devices.
         val enabled = tabletopPosture || viewModel.pref.viewer.workspaceEnabled
-        binding.toolbar.workspaceToggle.isSelected = enabled
+        binding.toolbar.workspaceToggle.setChecked(enabled)
         binding.workspaceDivider.isVisible = enabled
         binding.workspaceInputPanel.isVisible = enabled
         val frameParams = binding.frameHost.layoutParams as android.widget.LinearLayout.LayoutParams

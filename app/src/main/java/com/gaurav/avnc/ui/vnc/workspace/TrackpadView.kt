@@ -27,7 +27,6 @@ class TrackpadView @JvmOverloads constructor(
     private var moved = false
     private var twoFinger = false
     private var dragging = false
-    private var isDown = false
     private var secondTap = false
     private var lastTapAt = 0L
     private var lastTap = PointF()
@@ -54,13 +53,13 @@ class TrackpadView @JvmOverloads constructor(
         val d = dispatcher ?: return false
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
+                releaseDrag(d)
                 val isDoubleTap = pendingSingleClick != null &&
                     event.eventTime - lastTapAt <= android.view.ViewConfiguration.getDoubleTapTimeout() &&
                     distance(event.x, event.y, lastTap.x, lastTap.y) <= slop * 2
                 pendingSingleClick?.let { removeCallbacks(it) }
                 pendingSingleClick = null
                 secondTap = isDoubleTap
-                isDown = true
                 downAt = event.eventTime
                 last.set(event.x, event.y)
                 moved = false
@@ -69,9 +68,9 @@ class TrackpadView @JvmOverloads constructor(
                 d.onWorkspaceGestureStart()
             }
             MotionEvent.ACTION_POINTER_DOWN -> if (event.pointerCount >= 2) {
+                releaseDrag(d)
                 twoFinger = true
                 secondTap = false
-                dragging = false
             }
             MotionEvent.ACTION_MOVE -> {
                 val dx = event.x - last.x
@@ -92,7 +91,6 @@ class TrackpadView @JvmOverloads constructor(
                 last.set(event.x, event.y)
             }
             MotionEvent.ACTION_UP -> {
-                isDown = false
                 if (!moved && !dragging && event.eventTime - downAt < 350) {
                     if (secondTap) {
                         d.onWorkspaceDoubleClick(PointerButton.Left)
@@ -108,13 +106,14 @@ class TrackpadView @JvmOverloads constructor(
                         }.also { postDelayed(it, android.view.ViewConfiguration.getDoubleTapTimeout().toLong()) }
                     }
                 }
+                releaseDrag(d)
                 d.onWorkspaceGestureStop()
             }
             MotionEvent.ACTION_CANCEL -> {
                 pendingSingleClick?.let { removeCallbacks(it) }
                 pendingSingleClick = null
-                isDown = false
                 secondTap = false
+                releaseDrag(d)
                 d.onWorkspaceGestureStop()
             }
         }
@@ -123,5 +122,11 @@ class TrackpadView @JvmOverloads constructor(
 
     private fun distance(x1: Float, y1: Float, x2: Float, y2: Float): Float {
         return kotlin.math.hypot(x1 - x2, y1 - y2)
+    }
+
+    private fun releaseDrag(dispatcher: Dispatcher) {
+        if (!dragging) return
+        dispatcher.onWorkspaceButtonUp(PointerButton.Left)
+        dragging = false
     }
 }

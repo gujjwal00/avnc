@@ -43,7 +43,7 @@
                     android:contentDescription="@string/desc_keyboard_btn"
                     android:src="@drawable/ic_keyboard" />
 
-                <ImageButton
+                <com.gaurav.avnc.ui.vnc.workspace.WorkspaceToggleButton
                     android:id="@+id/workspace_toggle"
                     style="@style/ImageButton.Toggle"
                     android:background="@drawable/bg_workspace_toggle"
