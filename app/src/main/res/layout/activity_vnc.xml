@@ -48,6 +48,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <LinearLayout
+                    android:id="@+id/workspace_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:id="@+id/frame_host"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
                 <!--FrameView-->
                 <com.gaurav.avnc.ui.vnc.FrameView
                     android:id="@+id/frame_view"
@@ -77,13 +89,30 @@
                     android:visibility="gone"
                     app:backgroundAlpha="@{.5}" />
 
-                <!--Virtual keys-->
                 <ViewStub
                     android:id="@+id/virtual_keys_stub"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|bottom"
                     android:layout="@layout/virtual_keys" />
+
+                    </FrameLayout>
+
+                    <View
+                        android:id="@+id/workspace_divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="6dp"
+                        android:background="?colorControlNormal"
+                        android:visibility="gone" />
+
+                    <com.gaurav.avnc.ui.vnc.workspace.WorkspaceInputPanel
+                        android:id="@+id/workspace_input_panel"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"
+                        android:visibility="gone" />
+
+                </LinearLayout>
 
             </FrameLayout>
 

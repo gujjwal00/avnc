@@ -40,6 +40,7 @@ import com.gaurav.avnc.databinding.NoVideoOverlayBinding
 import com.gaurav.avnc.databinding.ViewerHelpBinding
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.vnc.input.InputHandler
+import com.gaurav.avnc.ui.vnc.foldable.FoldStateProvider
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.EdgeToEdgeHelper
 import com.gaurav.avnc.util.SamsungDex
@@ -106,6 +107,8 @@ class VncActivity : AppCompatActivity() {
     private var wasConnectedWhenStopped = false
     private var onStartTime = 0L
     private var autoReconnectDelay = 5
+    private var tabletopPosture = false
+    private var workspaceInitialized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         DeviceAuthPrompt.applyFingerprintDialogFix(supportFragmentManager)
@@ -123,6 +126,7 @@ class VncActivity : AppCompatActivity() {
         viewModel.frameViewRef = WeakReference(binding.frameView)
 
         setupLayout()
+        setupWorkspace()
         setupNoVideoOverlay()
 
         //Observers
@@ -356,6 +360,13 @@ class VncActivity : AppCompatActivity() {
         SamsungDex.setMetaKeyCapture(this, isConnected)
         layoutManager.onConnectionStateChanged()
         inputHandler.onStateChanged(isConnected)
+        if (isConnected && !workspaceInitialized) {
+            inputHandler.workspaceDispatcher?.let {
+                binding.workspaceInputPanel.initialize(this, inputHandler, it)
+                workspaceInitialized = true
+            }
+        }
+        updateWorkspace()
         toolbar.onStateChange(isConnected)
         updateStatusContainerVisibility(isConnected)
         autoReconnect(newState)
@@ -459,6 +470,77 @@ class VncActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= 26 && isInPictureInPictureMode) {
             viewModel.inPiPMode.value = true
         }
+    }
+
+    private fun setupWorkspace() {
+        binding.toolbar.workspaceToggle.setOnClickListener { toggleWorkspace() }
+        binding.workspaceDivider.setOnTouchListener { _, event ->
+            if (!isWorkspaceVisible()) return@setOnTouchListener false
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                    val location = IntArray(2)
+                    binding.workspaceLayout.getLocationOnScreen(location)
+                    val total = binding.workspaceLayout.height.toFloat().coerceAtLeast(1f)
+                    val maxFrameFraction = if (tabletopPosture) .5f else .85f
+                    val fraction = ((event.rawY - location[1]) / total)
+                        .coerceIn(.25f, maxFrameFraction)
+                    viewModel.pref.viewer.workspaceSplit = fraction
+                    val frameParams = binding.frameHost.layoutParams as android.widget.LinearLayout.LayoutParams
+                    val panelParams = binding.workspaceInputPanel.layoutParams as android.widget.LinearLayout.LayoutParams
+                    frameParams.height = 0
+                    frameParams.weight = fraction
+                    panelParams.height = 0
+                    panelParams.weight = 1f - fraction
+                    binding.frameHost.layoutParams = frameParams
+                    binding.workspaceInputPanel.layoutParams = panelParams
+                    true
+                }
+                else -> false
+            }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                FoldStateProvider(this@VncActivity).isHorizontalTabletop.collect {
+                    tabletopPosture = it
+                    updateWorkspace()
+                }
+            }
+        }
+    }
+
+    fun toggleWorkspace() {
+        viewModel.pref.viewer.workspaceEnabled = !isWorkspaceVisible()
+        updateWorkspace()
+    }
+
+    private fun isWorkspaceVisible() = binding.workspaceInputPanel.isVisible
+
+    private fun updateWorkspace() {
+        if (!::binding.isInitialized) return
+        // Foldable devices enter workspace mode automatically in tabletop posture.
+        // The toolbar entry remains available for manually showing it on other devices.
+        val enabled = tabletopPosture || viewModel.pref.viewer.workspaceEnabled
+        binding.toolbar.workspaceToggle.isSelected = enabled
+        binding.workspaceDivider.isVisible = enabled
+        binding.workspaceInputPanel.isVisible = enabled
+        val frameParams = binding.frameHost.layoutParams as android.widget.LinearLayout.LayoutParams
+        val frameWeight = if (tabletopPosture) {
+            viewModel.pref.viewer.workspaceSplit.coerceIn(.25f, .5f)
+        } else {
+            viewModel.pref.viewer.workspaceSplit.coerceIn(.25f, .85f)
+        }
+        if (enabled) {
+            frameParams.height = 0
+            frameParams.weight = frameWeight
+        } else {
+            frameParams.height = 0
+            frameParams.weight = 1f
+        }
+        binding.frameHost.layoutParams = frameParams
+        val panelParams = binding.workspaceInputPanel.layoutParams as android.widget.LinearLayout.LayoutParams
+        panelParams.height = if (enabled) 0 else 0
+            panelParams.weight = if (enabled) (1f - frameParams.weight).coerceIn(.15f, .75f) else 0f
+        binding.workspaceInputPanel.layoutParams = panelParams
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

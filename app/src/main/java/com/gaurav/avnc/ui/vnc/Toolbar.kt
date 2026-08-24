@@ -69,6 +69,7 @@ class Toolbar(private val activity: VncActivity) {
 
     fun initialize() {
         binding.keyboardBtn.setOnClickListener { activity.showKeyboard(); close() }
+        binding.workspaceToggle.setOnClickListener { activity.toggleWorkspace(); close() }
         binding.zoomOptionsToggle.setOnLongClickListener { resetZoomToDefault(); close(); true }
         binding.zoomResetBtn.setOnClickListener { resetZoomToDefault(); close() }
         binding.zoomResetBtn.setOnLongClickListener { resetZoom(); close(); true }

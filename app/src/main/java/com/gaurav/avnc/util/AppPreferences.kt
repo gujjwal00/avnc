@@ -43,6 +43,8 @@ class AppPreferences(context: Context) {
         val perOrientationZoom; get() = prefs.getBoolean("per_orientation_zoom", true)
         val toolbarShowGestureStyleToggle; get() = prefs.getBoolean("toolbar_show_gesture_style_toggle", true)
         val pauseUpdatesInBackground; get() = prefs.getBoolean("pause_fb_updates_in_background", false)
+        var workspaceEnabled by BooleanPref("workspace_enabled", false)
+        var workspaceSplit by FloatPref("workspace_split", .65f)
     }
 
     inner class Gesture {

@@ -25,6 +25,8 @@ class InputHandler(private val activity: VncActivity) {
     private var touchHandler: TouchHandler? = null
     private var keyHandler: KeyHandler? = null
 
+    val workspaceDispatcher: Dispatcher? get() = dispatcher
+
     /**
      * List of listeners to be notified after a [KeyEvent] is handled
      */

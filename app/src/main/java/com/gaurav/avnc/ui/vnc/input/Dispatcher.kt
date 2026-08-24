@@ -170,6 +170,16 @@ class Dispatcher(private val activity: VncActivity) {
     fun onCapturedMouseMove(dx: Float, dy: Float) = relativeMode.doMovePointer(dx, dy, false)
     fun onCapturedMouseScroll(hs: Float, vs: Float) = relativeMode.doRemoteScrollFromMouse(PointF(), hs, vs)
 
+    /** Input entry points used by the optional remote-control workspace. */
+    fun onWorkspaceGestureStart() = relativeMode.onGestureStart()
+    fun onWorkspaceGestureStop() = relativeMode.onGestureStop(PointF())
+    fun onWorkspaceMove(dx: Float, dy: Float) = relativeMode.doMovePointer(dx, dy, true)
+    fun onWorkspaceScroll(dx: Float, dy: Float) = relativeMode.doRemoteScroll(PointF(), dx, dy)
+    fun onWorkspaceButtonDown(button: PointerButton) = relativeMode.doButtonDown(button, PointF())
+    fun onWorkspaceButtonUp(button: PointerButton) = relativeMode.doButtonUp(button, PointF())
+    fun onWorkspaceClick(button: PointerButton) = relativeMode.doClick(button, PointF())
+    fun onWorkspaceDoubleClick(button: PointerButton) = relativeMode.doDoubleClick(button, PointF())
+
     fun onStylusTap(p: PointF) = directMode.doClick(PointerButton.Left, p)
     fun onStylusDoubleTap(p: PointF) = directMode.doDoubleClick(PointerButton.Left, p)
     fun onStylusLongPress(p: PointF) = directMode.doClick(PointerButton.Right, p)

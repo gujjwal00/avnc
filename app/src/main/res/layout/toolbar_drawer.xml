@@ -44,6 +44,14 @@
                     android:src="@drawable/ic_keyboard" />
 
                 <ImageButton
+                    android:id="@+id/workspace_toggle"
+                    style="@style/ImageButton.Toggle"
+                    android:background="@drawable/bg_workspace_toggle"
+                    android:contentDescription="@string/desc_workspace_toggle"
+                    android:rotation="90"
+                    android:src="@drawable/ic_workspace" />
+
+                <ImageButton
                     android:id="@+id/virtual_keys_btn"
                     style="@style/ImageButton"
                     android:contentDescription="@string/desc_virtual_keys_btn"

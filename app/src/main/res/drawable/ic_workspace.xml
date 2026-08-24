@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Foldable/tabletop workspace: device outline with a central hinge. -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="?colorOnSurface"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M6,2.75h12A3.25,3.25 0,0 1,21.25 6v12A3.25,3.25 0,0 1,18 21.25H6A3.25,3.25 0,0 1,2.75 18V6A3.25,3.25 0,0 1,6 2.75z" />
+    <path
+        android:strokeColor="?colorOnSurface"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M12,3.75v6.25M12,14v6.25" />
+</vector>
