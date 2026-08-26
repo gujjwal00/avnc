@@ -12,8 +12,6 @@ import android.animation.LayoutTransition
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.PictureInPictureParams
-import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
@@ -34,6 +32,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.gaurav.avnc.BuildConfig
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.databinding.NoVideoOverlayBinding
@@ -43,11 +42,9 @@ import com.gaurav.avnc.ui.vnc.input.InputHandler
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.EdgeToEdgeHelper
 import com.gaurav.avnc.util.SamsungDex
-import com.gaurav.avnc.util.debugCheck
 import com.gaurav.avnc.util.enableChildLayoutTransitions
 import com.gaurav.avnc.util.loopAnimatedDrawable
 import com.gaurav.avnc.viewmodel.VncViewModel
-import com.gaurav.avnc.vnc.VncUri
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -56,26 +53,8 @@ import java.lang.ref.WeakReference
 /********** [VncActivity] startup helpers *********************************/
 
 private const val PROFILE_KEY = "com.gaurav.avnc.server_profile"
-private const val PROFILE_ID_KEY = "com.gaurav.avnc.server_profile_id"
 private const val FRAME_STATE_KEY = "com.gaurav.avnc.frame_state"
 private const val AUTO_RECONNECT_DELAY_KEY = "com.gaurav.avnc.auto_reconnect_delay"
-
-fun createVncIntent(context: Context, profile: ServerProfile): Intent {
-    return Intent(context, VncActivity::class.java).apply {
-        if (profile.isSaved())
-            putExtra(PROFILE_ID_KEY, profile.ID)
-        else
-            putExtra(PROFILE_KEY, profile)
-    }
-}
-
-fun startVncActivity(source: Activity, profile: ServerProfile) {
-    source.startActivity(createVncIntent(source, profile))
-}
-
-fun startVncActivity(source: Activity, uri: VncUri) {
-    startVncActivity(source, uri.toServerProfile())
-}
 
 @Parcelize
 private data class SavedFrameState(val frameX: Float, val frameY: Float, val zoom1: Float, val zoom2: Float) : Parcelable
@@ -111,8 +90,7 @@ class VncActivity : AppCompatActivity() {
         DeviceAuthPrompt.applyFingerprintDialogFix(supportFragmentManager)
 
         super.onCreate(savedInstanceState)
-        if (!startup(savedInstanceState))
-            return
+        startup(savedInstanceState)
 
         //Main UI
         binding = EdgeToEdgeHelper.setDataBindingContentView(this, R.layout.activity_vnc)
@@ -175,50 +153,30 @@ class VncActivity : AppCompatActivity() {
     /**********************************************************************************************
      * Session startup
      *********************************************************************************************/
-    private sealed class StartupArg {
-        data class Profile(val profile: ServerProfile) : StartupArg()
-        data class ProfileId(val profileId: Long) : StartupArg()
-    }
 
-    @Suppress("DEPRECATION")
-    private fun prepareStartupArg(savedState: Bundle?): StartupArg? {
-        val id = intent.getLongExtra(PROFILE_ID_KEY, 0)
-        val profile = savedState?.getParcelable(PROFILE_KEY)
-                      ?: intent.getParcelableExtra<ServerProfile?>(PROFILE_KEY)
-
-        return when {
-            // Prefer to use profile if available to keep changes across activity restarts.
-            // And create a copy to avoid modification to source profile.
-            profile != null -> StartupArg.Profile(profile.copy())
-            id != 0L -> StartupArg.ProfileId(id)
-            else -> {
-                handleMissingStartupArgs()
-                null
-            }
-        }
-    }
-
-    private fun startup(savedState: Bundle?): Boolean {
+    private fun startup(savedState: Bundle?) {
         if (viewModel.profileLive.value != null) // todo refactor
-            return true
+            return
 
-        val startupArg = prepareStartupArg(savedState) ?: return false
-        val isSavedServer = startupArg is StartupArg.ProfileId ||
-                            (startupArg is StartupArg.Profile && startupArg.profile.isSaved())
+        runCatching {
+            val startupArg = parseStartupArg(intent, savedState)
+            val isSavedServer = startupArg is StartupArg.ProfileId ||
+                                (startupArg is StartupArg.Profile && startupArg.profile.isSaved())
 
-        if (isSavedServer && viewModel.pref.server.lockSavedServer)
-            startAfterUnlockingServer(startupArg)
-        else
-            startSession(startupArg)
-
-        return true
+            if (isSavedServer && viewModel.pref.server.lockSavedServer)
+                startAfterUnlockingServer(startupArg)
+            else
+                startSession(startupArg)
+        }.onFailure {
+            handleStartupFailure(it)
+        }
     }
 
 
     private fun startAfterUnlockingServer(startupArg: StartupArg) {
         serverUnlockPrompt.init(
                 onSuccess = { startSession(startupArg) },
-                onFail = { handleServerUnlockFailure(it) }
+                onFail = { handleStartupFailure(Throwable("Could not unlock server")) }
         )
 
         if (serverUnlockPrompt.canLaunch()) {
@@ -230,39 +188,23 @@ class VncActivity : AppCompatActivity() {
 
 
     private fun startSession(startupArg: StartupArg) {
-        when (startupArg) {
-            is StartupArg.Profile -> startSession(startupArg.profile)
-            is StartupArg.ProfileId -> {
-                lifecycleScope.launch {
-                    val profile = viewModel.getProfileById(startupArg.profileId)
-                    if (profile == null)
-                        handleInvalidProfileId(startupArg.profileId)
-                    else
-                        startSession(profile)
-                }
+        lifecycleScope.launch {
+            runCatching {
+                startSession(startupArg, viewModel)
+            }.onFailure {
+                handleStartupFailure(it)
             }
         }
     }
 
-    private fun startSession(profile: ServerProfile) {
-        viewModel.initConnection(profile)
-    }
+    private fun handleStartupFailure(cause: Throwable) {
+        if (cause is MissingStartupArgException && BuildConfig.DEBUG) {
+            throw cause // Crash debug builds
+        }
 
-    private fun handleMissingStartupArgs() {
-        debugCheck(false) // Crash debug builds
-        Toast.makeText(this, "Error: Missing Server Info", Toast.LENGTH_LONG).show()
-        finish()
-    }
-
-    private fun handleServerUnlockFailure(msg: String) {
-        Toast.makeText(this, "Could not unlock server", Toast.LENGTH_LONG).show()
-        Log.e(TAG, "Server unlock failed: $msg")
-        finish()
-    }
-
-    private fun handleInvalidProfileId(id: Long) {
-        Toast.makeText(this, "Error: Invalid Server ID", Toast.LENGTH_LONG).show()
-        Log.e(TAG, "Invalid profile ID passed via Intent: $id")
+        val msg = cause.message ?: "An error occurred during startup"
+        Log.e(TAG, msg, cause)
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
         finish()
     }
 
