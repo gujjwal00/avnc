@@ -10,7 +10,6 @@ package com.gaurav.avnc.ui.vnc
 
 import android.animation.LayoutTransition
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.PictureInPictureParams
 import android.content.res.Configuration
 import android.os.Build
@@ -38,7 +37,6 @@ import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.databinding.NoVideoOverlayBinding
 import com.gaurav.avnc.databinding.ViewerHelpBinding
-import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.ui.vnc.input.InputHandler
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.EdgeToEdgeHelper
@@ -51,30 +49,30 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import java.lang.ref.WeakReference
+import kotlin.time.Duration.Companion.seconds
 
 /********** [VncActivity] startup helpers *********************************/
 
 private const val PROFILE_KEY = "com.gaurav.avnc.server_profile"
-private const val FRAME_STATE_KEY = "com.gaurav.avnc.frame_state"
-private const val AUTO_RECONNECT_DELAY_KEY = "com.gaurav.avnc.auto_reconnect_delay"
-
-@Parcelize
-private data class SavedFrameState(val frameX: Float, val frameY: Float, val zoom1: Float, val zoom2: Float) : Parcelable
-
-private fun startVncActivity(source: Activity, profile: ServerProfile, frameState: SavedFrameState, autoReconnectDelay: Int) {
-    source.startActivity(createVncIntent(source, profile).also {
-        it.putExtra(FRAME_STATE_KEY, frameState)
-        it.putExtra(AUTO_RECONNECT_DELAY_KEY, autoReconnectDelay)
-    })
-}
-/**************************************************************************/
 
 
 /**
  * This activity handles the connection to a VNC server.
  */
 class VncActivity : AppCompatActivity() {
-    private val TAG = "VncActivity"
+
+    @Parcelize
+    private data class SavedState(
+            val frameX: Float,
+            val frameY: Float,
+            val zoomScale1: Float,
+            val zoomScale2: Float,
+            val reconnectDelay: Int?) : Parcelable
+
+    companion object {
+        private const val TAG = "VncActivity"
+        private const val SAVED_STATE_KEY = "com.gaurav.avnc.vnc_activity.saved_state"
+    }
 
     val viewModel by viewModels<VncViewModel>()
     lateinit var binding: ActivityVncBinding
@@ -83,10 +81,11 @@ class VncActivity : AppCompatActivity() {
     val toolbar by lazy { Toolbar(this) }
     private val serverUnlockPrompt = DeviceAuthPrompt(this)
     private val layoutManager by lazy { LayoutManager(this) }
-    private var restoredFromBundle = false
-    private var wasConnectedWhenStopped = false
+    private var oldState: SavedState? = null
+    private var hasActivityRestarted = false
+    private var hasConnectedSuccessfully = false
+    private var wasConnectedWhenActivityStopped = false
     private var onStartTime = 0L
-    private var autoReconnectDelay = 5
 
     override fun onCreate(savedInstanceState: Bundle?) {
         DeviceAuthPrompt.applyFingerprintDialogFix(supportFragmentManager)
@@ -106,18 +105,17 @@ class VncActivity : AppCompatActivity() {
         setupNoVideoOverlay()
 
         //Observers
-        binding.reconnectBtn.setOnClickListener { retryConnection() }
+        binding.reconnectBtn.setOnClickListener { reconnect() }
         viewModel.loginInfoRequest.observe(this) { showLoginDialog() }
         viewModel.confirmationRequest.observe(this) { showConfirmationDialog() }
         viewModel.state.observe(this) { onClientStateChanged(it) }
         viewModel.profileLive.observe(this) { onProfileUpdated() }
         viewModel.capturePointer.observe(this) { updatePointerCapture(it) }
 
-        autoReconnectDelay = intent.getIntExtra(AUTO_RECONNECT_DELAY_KEY, 5)
-        savedInstanceState?.let {
-            restoredFromBundle = true
-            wasConnectedWhenStopped = it.getBoolean("wasConnectedWhenStopped")
+        oldState = (savedInstanceState ?: intent.extras)?.let {
+            BundleCompat.getParcelable(it, SAVED_STATE_KEY, SavedState::class.java)
         }
+        hasActivityRestarted = savedInstanceState != null
     }
 
     override fun onStart() {
@@ -132,7 +130,7 @@ class VncActivity : AppCompatActivity() {
         //   was frozen by the system
         if (viewModel.pref.viewer.pauseUpdatesInBackground && !viewModel.videoDisabled)
             viewModel.setFrameBufferUpdatesPaused(false)
-        else if (wasConnectedWhenStopped)
+        else if (wasConnectedWhenActivityStopped)
             viewModel.refreshFrameBuffer()
     }
 
@@ -142,13 +140,13 @@ class VncActivity : AppCompatActivity() {
         binding.frameView.onPause()
         if (viewModel.pref.viewer.pauseUpdatesInBackground)
             viewModel.setFrameBufferUpdatesPaused(true)
-        wasConnectedWhenStopped = viewModel.connected
+        wasConnectedWhenActivityStopped = viewModel.connected
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelable(PROFILE_KEY, viewModel.profileLive.value)
-        outState.putBoolean("wasConnectedWhenStopped", wasConnectedWhenStopped || viewModel.connected)
+        outState.putParcelable(SAVED_STATE_KEY, prepareSavedState())
     }
 
 
@@ -204,17 +202,15 @@ class VncActivity : AppCompatActivity() {
         toolbar.initialize()
     }
 
-    private fun retryConnection(seamless: Boolean = false, nextAutoReconnectDelay: Int = 0) {
+    private fun reconnect(savedState: SavedState = prepareSavedState()) {
         //We simply create a new activity to force creation of new ViewModel
         //which effectively restarts the connection.
         if (!isFinishing) {
-            val savedFrameState = viewModel.frameState.let {
-                SavedFrameState(frameX = it.frameX, frameY = it.frameY, zoom1 = it.zoomScale1, zoom2 = it.zoomScale2)
-            }
+            startActivity(createVncIntent(this, viewModel.profile).also {
+                it.putExtra(SAVED_STATE_KEY, savedState)
+            })
 
-            startVncActivity(this, viewModel.profile, savedFrameState, nextAutoReconnectDelay)
-
-            if (seamless) {
+            if (savedState.reconnectDelay == 0) {
                 @Suppress("DEPRECATION")
                 overridePendingTransition(0, 0)
             }
@@ -292,18 +288,20 @@ class VncActivity : AppCompatActivity() {
         inputHandler.onStateChanged(isConnected)
         toolbar.onStateChange(isConnected)
         updateStatusContainerVisibility(isConnected)
-        autoReconnect(newState)
 
         if (isConnected) {
             showViewerHelp()
             virtualKeys.onConnected()
-            autoReconnectDelay = 1
+            hasConnectedSuccessfully = true
         }
 
-        if (isConnected && !restoredFromBundle) {
+        if (isConnected && !hasActivityRestarted) {
             incrementUseCount()
             restoreFrameState()
         }
+
+        if (newState == VncViewModel.State.Disconnected)
+            autoReconnect()
     }
 
     private fun incrementUseCount() {
@@ -331,48 +329,65 @@ class VncActivity : AppCompatActivity() {
     }
 
     private fun restoreFrameState() {
-        intent.extras?.let { extras ->
-            BundleCompat.getParcelable(extras, FRAME_STATE_KEY, SavedFrameState::class.java)?.let {
-                viewModel.setZoom(it.zoom1, it.zoom2)
-                viewModel.panFrame(it.frameX, it.frameY)
-            }
+        oldState?.let {
+            viewModel.setZoom(it.zoomScale1, it.zoomScale2)
+            viewModel.panFrame(it.frameX, it.frameY)
         }
     }
 
     private var autoReconnecting = false
-    private fun autoReconnect(state: VncViewModel.State) {
-        if (state != VncViewModel.State.Disconnected)
+    private fun autoReconnect() {
+        if (autoReconnecting)
             return
 
-        // If disconnected when coming back from background, try to reconnect immediately
-        if (wasConnectedWhenStopped && (SystemClock.uptimeMillis() - onStartTime) in 0..2000) {
-            Log.i(TAG, "Disconnected while in background, reconnecting ...")
-            retryConnection(true)
-            return
-        }
-
-        if ((autoReconnecting || !viewModel.pref.server.autoReconnect) && !viewModel.profile.enableWol)
-            return
-
+        val reconnectDelay = calculateReconnectDelay() ?: return
         autoReconnecting = true
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                val reconnectDelay = autoReconnectDelay.coerceIn(0, 5) //seconds
-
+                // Show progress bar
+                // Progress intentionally reaches 100% 1 step earlier to allow the animation to complete
                 repeat(reconnectDelay) {
                     val progress = if (reconnectDelay <= 1) 100 else (100 * it) / (reconnectDelay - 1)
                     binding.autoReconnectProgress.setProgressCompat(progress, true)
-                    delay(1000)
+                    delay(1.seconds)
                 }
 
-                // Automatic reconnect attempts happen every 5 seconds.
-                // But if session had reached Connected state, first attempt happens
-                // after 1 second, second attempt after 3 seconds, and then every 5 seconds.
-                val nextReconnectDelay = if (reconnectDelay < 3) 3 else 5
-                Log.d(TAG, "AutoReconnect: Retrying after $reconnectDelay seconds")
-                retryConnection(nextAutoReconnectDelay = nextReconnectDelay)
+                reconnect(prepareSavedState(reconnectDelay))
             }
         }
+    }
+
+    private fun calculateReconnectDelay(): Int? {
+        // If disconnected when coming back from background, try to reconnect immediately
+        if (wasConnectedWhenActivityStopped && (SystemClock.uptimeMillis() - onStartTime) in 0..2000) {
+            Log.i(TAG, "Disconnected during activity restart, reconnecting ...")
+            return 0
+        }
+
+        if (!viewModel.pref.server.autoReconnect && !viewModel.profile.enableWol)
+            return null // Auto-reconnect is disabled
+
+        // Automatic reconnect happens every 5 seconds.
+        // But if session had reached Connected state, first attempt happens
+        // after 1 second, second attempt after 3 seconds, and then every 5 seconds.
+        val previousDelay = oldState?.reconnectDelay
+        return when {
+            hasConnectedSuccessfully -> 1   // Connection lost, try to reconnect early
+            previousDelay == null -> 5
+            previousDelay == 0 -> 1
+            else -> (previousDelay + 2).coerceAtMost(5)
+        }
+    }
+
+    private fun prepareSavedState(reconnectDelay: Int? = null): SavedState {
+        val fs = viewModel.frameState
+        return SavedState(
+                frameX = fs.frameX,
+                frameY = fs.frameY,
+                zoomScale1 = fs.zoomScale1,
+                zoomScale2 = fs.zoomScale2,
+                reconnectDelay = reconnectDelay
+        )
     }
 
 
