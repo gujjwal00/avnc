@@ -51,7 +51,7 @@ sealed class StartupArg {
     data class ProfileId(val id: Long) : StartupArg()
 }
 
-class MissingStartupArgException : Exception("Error: Missing Server Info")
+class MissingStartupArgException : Exception()
 
 fun parseStartupArg(intent: Intent, savedState: Bundle?): StartupArg {
     // Prefer to use profile if available to keep changes across activity restarts.
