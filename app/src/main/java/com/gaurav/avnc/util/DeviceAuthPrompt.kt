@@ -14,6 +14,7 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.biometric.FingerprintDialogFragment
 import androidx.biometric.auth.AuthPromptCallback
+import androidx.biometric.auth.authenticateWithClass2BiometricsOrCredentials
 import androidx.biometric.auth.startClass2BiometricOrCredentialAuthentication
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -92,6 +93,13 @@ class DeviceAuthPrompt(private val activity: FragmentActivity) {
             onAuthFail?.invoke("Error launching auth prompt")
             onAuthFinished()
         }
+    }
+
+    /**
+     * Coroutine variant
+     */
+    suspend fun authenticate(title: String) {
+        activity.authenticateWithClass2BiometricsOrCredentials(title = title, confirmationRequired = false)
     }
 
     private fun onAuthFinished() {

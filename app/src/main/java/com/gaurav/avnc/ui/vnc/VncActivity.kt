@@ -27,12 +27,13 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.auth.AuthPromptErrorException
+import androidx.biometric.auth.AuthPromptFailureException
 import androidx.core.os.BundleCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.gaurav.avnc.BuildConfig
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.ActivityVncBinding
 import com.gaurav.avnc.databinding.NoVideoOverlayBinding
@@ -42,6 +43,7 @@ import com.gaurav.avnc.ui.vnc.input.InputHandler
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.EdgeToEdgeHelper
 import com.gaurav.avnc.util.SamsungDex
+import com.gaurav.avnc.util.debugCheck
 import com.gaurav.avnc.util.enableChildLayoutTransitions
 import com.gaurav.avnc.util.loopAnimatedDrawable
 import com.gaurav.avnc.viewmodel.VncViewModel
@@ -158,38 +160,10 @@ class VncActivity : AppCompatActivity() {
         if (viewModel.profileLive.value != null) // todo refactor
             return
 
-        runCatching {
-            val startupArg = parseStartupArg(intent, savedState)
-            val isSavedServer = startupArg is StartupArg.ProfileId ||
-                                (startupArg is StartupArg.Profile && startupArg.profile.isSaved())
-
-            if (isSavedServer && viewModel.pref.server.lockSavedServer)
-                startAfterUnlockingServer(startupArg)
-            else
-                startSession(startupArg)
-        }.onFailure {
-            handleStartupFailure(it)
-        }
-    }
-
-
-    private fun startAfterUnlockingServer(startupArg: StartupArg) {
-        serverUnlockPrompt.init(
-                onSuccess = { startSession(startupArg) },
-                onFail = { handleStartupFailure(Throwable("Could not unlock server")) }
-        )
-
-        if (serverUnlockPrompt.canLaunch()) {
-            if (!serverUnlockPrompt.hasLaunched())
-                serverUnlockPrompt.launch(getString(R.string.title_unlock_dialog))
-        } else
-            startSession(startupArg)
-    }
-
-
-    private fun startSession(startupArg: StartupArg) {
         lifecycleScope.launch {
             runCatching {
+                val startupArg = parseStartupArg(intent, savedState)
+                unlockServers(startupArg)
                 startSession(startupArg, viewModel)
             }.onFailure {
                 handleStartupFailure(it)
@@ -197,12 +171,30 @@ class VncActivity : AppCompatActivity() {
         }
     }
 
+    private suspend fun unlockServers(startupArg: StartupArg) {
+        val isSavedServer = startupArg is StartupArg.ProfileId ||
+                            (startupArg is StartupArg.Profile && startupArg.profile.isSaved())
+
+        if (isSavedServer && viewModel.pref.server.lockSavedServer && serverUnlockPrompt.canLaunch())
+            serverUnlockPrompt.authenticate(getString(R.string.title_unlock_dialog))
+    }
+
     private fun handleStartupFailure(cause: Throwable) {
-        if (cause is MissingStartupArgException && BuildConfig.DEBUG) {
-            throw cause // Crash debug builds
+        var msg = cause.message ?: "An error occurred during startup"
+        when (cause) {
+            is MissingStartupArgException -> {
+                debugCheck(false) // Crash debug builds
+                msg = "Error: Missing Server Info"
+            }
+            is InvalidProfileIdException -> {
+                msg = "Error: Invalid Server ID"
+            }
+            is AuthPromptErrorException,
+            is AuthPromptFailureException -> {
+                msg = "Could not unlock server"
+            }
         }
 
-        val msg = cause.message ?: "An error occurred during startup"
         Log.e(TAG, msg, cause)
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
         finish()

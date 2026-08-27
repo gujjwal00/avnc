@@ -218,11 +218,9 @@ class VncActivityTest : VncSessionTest() {
     fun serverUnlock() {
         targetPrefs.edit { putBoolean("lock_saved_server", true) }
         vncSession.saveProfileToDB(dbRule.db)
-        BiometricMocking.start()
+        BiometricMocking.start(coAuthSuccess = true)
         vncSession.startServer()
         vncSession.startActivity()
-
-        BiometricMocking.endWithSuccess()
         vncSession.assertConnected()
         vncSession.stop()
     }
