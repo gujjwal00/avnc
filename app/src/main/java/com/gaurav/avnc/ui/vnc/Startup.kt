@@ -12,6 +12,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.os.BundleCompat
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.model.db.MainDb
 import com.gaurav.avnc.model.db.ServerProfileDao
@@ -24,6 +25,14 @@ import com.gaurav.avnc.vnc.VncUri
  *********************************************************************************************/
 private const val PROFILE_KEY = "com.gaurav.avnc.server_profile"
 private const val PROFILE_ID_KEY = "com.gaurav.avnc.server_profile_id"
+
+fun Bundle.putProfile(profile: ServerProfile) {
+    putParcelable(PROFILE_KEY, profile)
+}
+
+fun Bundle.getProfile(): ServerProfile? {
+    return BundleCompat.getParcelable(this, PROFILE_KEY, ServerProfile::class.java)
+}
 
 fun createVncIntent(context: Context, profile: ServerProfile): Intent {
     return Intent(context, VncActivity::class.java).apply {
@@ -55,9 +64,7 @@ class MissingStartupArgException : Exception()
 
 fun parseStartupArg(intent: Intent, savedState: Bundle?): StartupArg {
     // Prefer to use profile if available to keep changes across activity restarts.
-    @Suppress("DEPRECATION")
-    val profile = savedState?.getParcelable(PROFILE_KEY)
-                  ?: intent.getParcelableExtra<ServerProfile?>(PROFILE_KEY)
+    val profile = savedState?.getProfile() ?: intent.extras?.getProfile()
     if (profile != null)
         return StartupArg.Profile(profile.copy())  //Create a copy to avoid modification to source profile
 

@@ -51,11 +51,6 @@ import kotlinx.parcelize.Parcelize
 import java.lang.ref.WeakReference
 import kotlin.time.Duration.Companion.seconds
 
-/********** [VncActivity] startup helpers *********************************/
-
-private const val PROFILE_KEY = "com.gaurav.avnc.server_profile"
-
-
 /**
  * This activity handles the connection to a VNC server.
  */
@@ -145,8 +140,8 @@ class VncActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable(PROFILE_KEY, viewModel.profileLive.value)
         outState.putParcelable(SAVED_STATE_KEY, prepareSavedState())
+        viewModel.profileLive.value?.let { outState.putProfile(it) }
     }
 
 
