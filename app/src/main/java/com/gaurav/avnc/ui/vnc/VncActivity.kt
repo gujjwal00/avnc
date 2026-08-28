@@ -82,6 +82,10 @@ class VncActivity : AppCompatActivity() {
     private var wasConnectedWhenActivityStopped = false
     private var onStartTime = 0L
 
+    /**********************************************************************************************
+     * Activity Lifecycle
+     *********************************************************************************************/
+
     override fun onCreate(savedInstanceState: Bundle?) {
         DeviceAuthPrompt.applyFingerprintDialogFix(supportFragmentManager)
 
@@ -107,10 +111,10 @@ class VncActivity : AppCompatActivity() {
         viewModel.profileLive.observe(this) { onProfileUpdated() }
         viewModel.capturePointer.observe(this) { updatePointerCapture(it) }
 
+        hasActivityRestarted = savedInstanceState != null
         oldState = (savedInstanceState ?: intent.extras)?.let {
             BundleCompat.getParcelable(it, SAVED_STATE_KEY, SavedState::class.java)
         }
-        hasActivityRestarted = savedInstanceState != null
     }
 
     override fun onStart() {
@@ -138,15 +142,34 @@ class VncActivity : AppCompatActivity() {
         wasConnectedWhenActivityStopped = viewModel.connected
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        viewModel.hasWindowFocus.value = hasFocus
+        if (hasFocus) {
+            viewModel.sendClipboardText()
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelable(SAVED_STATE_KEY, prepareSavedState())
         viewModel.profileLive.value?.let { outState.putProfile(it) }
     }
 
+    private fun prepareSavedState(reconnectDelay: Int? = null): SavedState {
+        val fs = viewModel.frameState
+        return SavedState(
+                frameX = fs.frameX,
+                frameY = fs.frameY,
+                zoomScale1 = fs.zoomScale1,
+                zoomScale2 = fs.zoomScale2,
+                reconnectDelay = reconnectDelay
+        )
+    }
+
 
     /**********************************************************************************************
-     * Session startup
+     * Session Control
      *********************************************************************************************/
 
     private fun startup(savedState: Bundle?) {
@@ -193,10 +216,6 @@ class VncActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun onProfileUpdated() {
-        toolbar.initialize()
-    }
-
     private fun reconnect(savedState: SavedState = prepareSavedState()) {
         //We simply create a new activity to force creation of new ViewModel
         //which effectively restarts the connection.
@@ -210,6 +229,117 @@ class VncActivity : AppCompatActivity() {
                 overridePendingTransition(0, 0)
             }
             finish()
+        }
+    }
+
+    private var autoReconnecting = false
+    private fun autoReconnect() {
+        if (autoReconnecting)
+            return
+
+        val reconnectDelay = calculateAutoReconnectDelay() ?: return
+        autoReconnecting = true
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Show progress bar
+                // Progress intentionally reaches 100% 1 step earlier to allow the animation to complete
+                repeat(reconnectDelay) {
+                    val progress = if (reconnectDelay <= 1) 100 else (100 * it) / (reconnectDelay - 1)
+                    binding.autoReconnectProgress.setProgressCompat(progress, true)
+                    delay(1.seconds)
+                }
+
+                reconnect(prepareSavedState(reconnectDelay))
+            }
+        }
+    }
+
+    private fun calculateAutoReconnectDelay(): Int? {
+        // If disconnected when coming back from background, try to reconnect immediately
+        if (wasConnectedWhenActivityStopped && (SystemClock.uptimeMillis() - onStartTime) in 0..2000) {
+            Log.i(TAG, "Disconnected during activity restart, reconnecting ...")
+            return 0
+        }
+
+        if (!viewModel.pref.server.autoReconnect && !viewModel.profile.enableWol)
+            return null // Auto-reconnect is disabled
+
+        // Automatic reconnect happens every 5 seconds.
+        // But if session had reached Connected state, first attempt happens
+        // after 1 second, second attempt after 3 seconds, and then every 5 seconds.
+        val previousDelay = oldState?.reconnectDelay
+        return when {
+            hasConnectedSuccessfully -> 1   // Connection lost, try to reconnect early
+            previousDelay == null -> 5
+            previousDelay == 0 -> 1
+            else -> (previousDelay + 2).coerceAtMost(5)
+        }
+    }
+
+
+    /**********************************************************************************************
+     * Session lifecycle
+     *********************************************************************************************/
+
+    private fun onProfileUpdated() {
+        toolbar.initialize()
+    }
+
+    private fun onClientStateChanged(newState: VncViewModel.State) {
+        val isConnected = newState == VncViewModel.State.Connected
+
+        binding.frameView.isVisible = isConnected
+        binding.frameView.keepScreenOn = isConnected && viewModel.pref.viewer.keepScreenOn
+        SamsungDex.setMetaKeyCapture(this, isConnected)
+        layoutManager.onConnectionStateChanged()
+        inputHandler.onStateChanged(isConnected)
+        toolbar.onStateChange(isConnected)
+        updateStatusContainerVisibility(isConnected)
+
+        if (isConnected) {
+            showViewerHelp()
+            virtualKeys.onConnected()
+            hasConnectedSuccessfully = true
+        }
+
+        if (isConnected && !hasActivityRestarted) {
+            incrementUseCount()
+            restoreFrameState()
+        }
+
+        if (newState == VncViewModel.State.Disconnected)
+            autoReconnect()
+    }
+
+    private fun restoreFrameState() {
+        oldState?.let {
+            viewModel.setZoom(it.zoomScale1, it.zoomScale2)
+            viewModel.panFrame(it.frameX, it.frameY)
+        }
+    }
+
+    private fun incrementUseCount() {
+        viewModel.profile.useCount += 1
+        viewModel.saveProfile()
+    }
+
+
+    /************************************************************************************
+     * Interface
+     ************************************************************************************/
+    private fun setupLayout() {
+        layoutManager.initialize()
+
+        viewModel.preferredScreenOrientation.observe(this) { requestedOrientation = it }
+
+        if (Build.VERSION.SDK_INT >= 28 && viewModel.pref.viewer.drawBehindCutout) {
+            window.attributes = window.attributes.apply {
+                layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= 26 && isInPictureInPictureMode) {
+            viewModel.inPiPMode.value = true
         }
     }
 
@@ -273,37 +403,6 @@ class VncActivity : AppCompatActivity() {
         virtualKeys.onKeyboardOpen()
     }
 
-    private fun onClientStateChanged(newState: VncViewModel.State) {
-        val isConnected = newState == VncViewModel.State.Connected
-
-        binding.frameView.isVisible = isConnected
-        binding.frameView.keepScreenOn = isConnected && viewModel.pref.viewer.keepScreenOn
-        SamsungDex.setMetaKeyCapture(this, isConnected)
-        layoutManager.onConnectionStateChanged()
-        inputHandler.onStateChanged(isConnected)
-        toolbar.onStateChange(isConnected)
-        updateStatusContainerVisibility(isConnected)
-
-        if (isConnected) {
-            showViewerHelp()
-            virtualKeys.onConnected()
-            hasConnectedSuccessfully = true
-        }
-
-        if (isConnected && !hasActivityRestarted) {
-            incrementUseCount()
-            restoreFrameState()
-        }
-
-        if (newState == VncViewModel.State.Disconnected)
-            autoReconnect()
-    }
-
-    private fun incrementUseCount() {
-        viewModel.profile.useCount += 1
-        viewModel.saveProfile()
-    }
-
     private fun updatePointerCapture(capturePointer: Boolean) {
         if (Build.VERSION.SDK_INT < 26)
             return
@@ -322,97 +421,6 @@ class VncActivity : AppCompatActivity() {
                 .alpha(if (isConnected) 0f else 1f)
                 .withEndAction { binding.statusContainer.isVisible = !isConnected }
     }
-
-    private fun restoreFrameState() {
-        oldState?.let {
-            viewModel.setZoom(it.zoomScale1, it.zoomScale2)
-            viewModel.panFrame(it.frameX, it.frameY)
-        }
-    }
-
-    private var autoReconnecting = false
-    private fun autoReconnect() {
-        if (autoReconnecting)
-            return
-
-        val reconnectDelay = calculateReconnectDelay() ?: return
-        autoReconnecting = true
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                // Show progress bar
-                // Progress intentionally reaches 100% 1 step earlier to allow the animation to complete
-                repeat(reconnectDelay) {
-                    val progress = if (reconnectDelay <= 1) 100 else (100 * it) / (reconnectDelay - 1)
-                    binding.autoReconnectProgress.setProgressCompat(progress, true)
-                    delay(1.seconds)
-                }
-
-                reconnect(prepareSavedState(reconnectDelay))
-            }
-        }
-    }
-
-    private fun calculateReconnectDelay(): Int? {
-        // If disconnected when coming back from background, try to reconnect immediately
-        if (wasConnectedWhenActivityStopped && (SystemClock.uptimeMillis() - onStartTime) in 0..2000) {
-            Log.i(TAG, "Disconnected during activity restart, reconnecting ...")
-            return 0
-        }
-
-        if (!viewModel.pref.server.autoReconnect && !viewModel.profile.enableWol)
-            return null // Auto-reconnect is disabled
-
-        // Automatic reconnect happens every 5 seconds.
-        // But if session had reached Connected state, first attempt happens
-        // after 1 second, second attempt after 3 seconds, and then every 5 seconds.
-        val previousDelay = oldState?.reconnectDelay
-        return when {
-            hasConnectedSuccessfully -> 1   // Connection lost, try to reconnect early
-            previousDelay == null -> 5
-            previousDelay == 0 -> 1
-            else -> (previousDelay + 2).coerceAtMost(5)
-        }
-    }
-
-    private fun prepareSavedState(reconnectDelay: Int? = null): SavedState {
-        val fs = viewModel.frameState
-        return SavedState(
-                frameX = fs.frameX,
-                frameY = fs.frameY,
-                zoomScale1 = fs.zoomScale1,
-                zoomScale2 = fs.zoomScale2,
-                reconnectDelay = reconnectDelay
-        )
-    }
-
-
-    /************************************************************************************
-     * Layout handling.
-     ************************************************************************************/
-    private fun setupLayout() {
-        layoutManager.initialize()
-
-        viewModel.preferredScreenOrientation.observe(this) { requestedOrientation = it }
-
-        if (Build.VERSION.SDK_INT >= 28 && viewModel.pref.viewer.drawBehindCutout) {
-            window.attributes = window.attributes.apply {
-                layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-            }
-        }
-
-        if (Build.VERSION.SDK_INT >= 26 && isInPictureInPictureMode) {
-            viewModel.inPiPMode.value = true
-        }
-    }
-
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        viewModel.hasWindowFocus.value = hasFocus
-        if (hasFocus) {
-            viewModel.sendClipboardText()
-        }
-    }
-
 
     /************************************************************************************
      * Picture-in-Picture support
