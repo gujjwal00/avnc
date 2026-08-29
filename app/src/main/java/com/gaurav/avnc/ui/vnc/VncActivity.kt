@@ -21,7 +21,6 @@ import android.util.Rational
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -44,6 +43,7 @@ import com.gaurav.avnc.util.SamsungDex
 import com.gaurav.avnc.util.debugCheck
 import com.gaurav.avnc.util.enableChildLayoutTransitions
 import com.gaurav.avnc.util.loopAnimatedDrawable
+import com.gaurav.avnc.util.showKeyboard
 import com.gaurav.avnc.viewmodel.VncViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -407,11 +407,7 @@ class VncActivity : AppCompatActivity() {
     }
 
     fun showKeyboard() {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-
-        binding.inputView.requestFocus()
-        imm.showSoftInput(binding.inputView, 0)
-
+        showKeyboard(binding.inputView)
         virtualKeys.onKeyboardOpen()
     }
 

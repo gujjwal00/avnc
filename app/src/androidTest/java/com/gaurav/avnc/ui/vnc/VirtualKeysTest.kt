@@ -32,6 +32,8 @@ import com.gaurav.avnc.VncSessionScenario
 import com.gaurav.avnc.VncSessionTest
 import com.gaurav.avnc.checkIsDisplayed
 import com.gaurav.avnc.checkIsNotDisplayed
+import com.gaurav.avnc.checkKeyboardIsHidden
+import com.gaurav.avnc.checkKeyboardIsDisplayed
 import com.gaurav.avnc.checkWillBeDisplayed
 import com.gaurav.avnc.doClick
 import com.gaurav.avnc.doLongClick
@@ -120,6 +122,19 @@ class VirtualKeysTest : VncSessionTest() {
             onView(withText("Ctrl")).checkIsDisplayed()
             onView(withText("Alt")).checkIsDisplayed()
             onView(withText("Tab")).checkIsDisplayed()
+        }
+    }
+
+    @Test
+    fun toggleKeyboard() {
+        vncSession.run {
+            val toggleBtnMatcher = withContentDescription("Toggle keyboard")
+
+            onView(toggleBtnMatcher).checkIsDisplayed().doClick()
+            onView(withId(R.id.input_view)).checkKeyboardIsDisplayed()
+
+            onView(toggleBtnMatcher).checkIsDisplayed().doClick()
+            onView(withId(R.id.input_view)).checkKeyboardIsHidden()
         }
     }
 

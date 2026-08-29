@@ -45,6 +45,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.viewpager2.widget.ViewPager2
+import com.gaurav.avnc.util.isKeyboardVisible
 import junit.framework.AssertionFailedError
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -115,6 +116,8 @@ fun ViewInteraction.checkWillBeCompletelyDisplayed() = checkWithTimeout(matches(
 fun ViewInteraction.checkWillBeHidden() = checkWithTimeout(matches(not(isDisplayed())))
 fun ViewInteraction.checkIsNotDisplayed() = check(matches(not(isDisplayed())))!!
 fun ViewInteraction.checkDoesNotExist() = check(doesNotExist())!!
+fun ViewInteraction.checkKeyboardIsDisplayed() = checkWithTimeout(KeyboardVisibilityAssertion(true))
+fun ViewInteraction.checkKeyboardIsHidden() = checkWithTimeout(KeyboardVisibilityAssertion(false))
 fun ViewInteraction.doClick() = perform(click())!!
 fun ViewInteraction.doLongClick() = perform(longClick())!!
 fun ViewInteraction.doTypeText(text: String) = perform(typeText(text)).perform(closeSoftKeyboard())!!
@@ -165,6 +168,18 @@ class ProgressAssertion(private val test: (Int) -> Boolean) : ViewAssertion {
         noViewFoundException?.let { throw it }
         if (view !is ProgressBar) throw AssertionFailedError("View is not a ProgressBar")
         Assert.assertTrue("Progress test failed for '${view.progress}'", test(view.progress))
+    }
+}
+
+/**
+ * Asserts that soft keyboard has given [visibility] & matched view has focus
+ */
+class KeyboardVisibilityAssertion(private val visibility: Boolean) : ViewAssertion {
+    override fun check(view: View?, noViewFoundException: NoMatchingViewException?) {
+        noViewFoundException?.let { throw it }
+        checkNotNull(view)
+        Assert.assertTrue(view.hasFocus())
+        Assert.assertEquals(visibility, isKeyboardVisible(view))
     }
 }
 
