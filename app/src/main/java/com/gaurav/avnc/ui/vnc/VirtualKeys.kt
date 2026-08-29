@@ -23,7 +23,6 @@ import android.view.View
 import android.view.View.MeasureSpec
 import android.view.ViewConfiguration
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.GridLayout
@@ -43,6 +42,7 @@ import com.gaurav.avnc.ui.vnc.input.InputHandler
 import com.gaurav.avnc.util.AppPreferences
 import com.gaurav.avnc.util.addOnGlobalLayoutListener
 import com.gaurav.avnc.util.isTrue
+import com.gaurav.avnc.util.toggleKeyboard
 import kotlin.math.min
 import kotlin.math.sign
 
@@ -237,11 +237,7 @@ class VirtualKeys(private val activity: VncActivity, private val inputHandler: I
             binding.keys.addView(view)
 
             if (vk == VirtualKey.ToggleKeyboard) {
-                view.setOnClickListener {
-                    @Suppress("DEPRECATION")
-                    ContextCompat.getSystemService(inputView.context, InputMethodManager::class.java)
-                            ?.toggleSoftInput(0, 0)
-                }
+                view.setOnClickListener { toggleKeyboard(inputView) }
             } else if (vk == VirtualKey.CloseKeys) {
                 view.setOnClickListener { hide(true) }
             } else if (vk.keyCode != null) {
