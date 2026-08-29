@@ -179,8 +179,8 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
                         val content = element.content
                         when {
                             content == "true" || content == "false" -> putBoolean(key, content.toBoolean())
-                            content.toIntOrNull() != null -> putInt(key, content.toInt())
                             content.toLongOrNull() != null -> putLong(key, content.toLong())
+                            content.toIntOrNull() != null -> putInt(key, content.toInt())
                             content.toFloatOrNull() != null -> putFloat(key, content.toFloat())
                             else -> Log.w("PrefsViewModel", "Ignoring unknown preference: $key")
                         }
@@ -223,6 +223,7 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
                     .replace("<", "&lt;")
                     .replace(">", "&gt;")
                     .replace("\"", "&quot;")
+                    .replace("\x27", "&apos;")
 
     private fun scrubSecrets(profiles: List<ServerProfile>) {
         profiles.forEach {

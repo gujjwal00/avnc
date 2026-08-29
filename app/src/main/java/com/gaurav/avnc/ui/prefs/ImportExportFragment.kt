@@ -47,7 +47,7 @@ class ImportExportFragment : Fragment() {
             viewModel.importExportError.value = null
 
         binding = FragmentImportExportBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
         binding.importBtn.setOnClickListener { startImport() }
