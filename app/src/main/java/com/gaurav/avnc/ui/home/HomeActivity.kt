@@ -33,6 +33,9 @@ import com.gaurav.avnc.util.EdgeToEdgeHelper
 import com.gaurav.avnc.util.MsgDialog
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.gaurav.avnc.vnc.VncClient
+import com.google.android.gms.vision.barcode.GmsBarcodeScanning
+import com.google.android.gms.vision.barcode.GmsBarcodeScannerOptions
+import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -62,12 +65,17 @@ class HomeActivity : AppCompatActivity() {
         binding.navigationBtn.setOnClickListener { binding.drawerLayout.open() }
         binding.settingsBtn.setOnClickListener { showSettings() }
         binding.urlbar.setOnClickListener { showUrlActivity() }
+        binding.qrScanBtn.setOnClickListener { startQrScan() }
 
         //Observers
         viewModel.editProfileEvent.observe(this) { showProfileEditor(it) }
         viewModel.profileSavedEvent.observe(this) { onProfileInserted(it) }
         viewModel.profileDeletedEvent.observe(this) { onProfileDeleted(it) }
         viewModel.newConnectionEvent.observe(this) { startNewConnection(it) }
+        viewModel.qrErrorEvent.observe(this) { showQrError(it) }
+        viewModel.qrImportedEvent.observe(this) {
+            Snackbar.make(binding.root, R.string.msg_server_profile_added, Snackbar.LENGTH_SHORT).show()
+        }
         viewModel.discovery.servers.observe(this) { updateDiscoveryBadge(it) }
         viewModel.serverProfiles.observe(this) { updateShortcuts(it) }
 
@@ -111,6 +119,33 @@ class HomeActivity : AppCompatActivity() {
      */
     private fun showSettings() {
         startActivity(Intent(this, PrefsActivity::class.java))
+    }
+
+    /**
+     * Starts the Google Code Scanner to read a server profile QR code.
+     * The decoded JSON is handed to the view model, which maps & saves it.
+     * Failures (e.g. missing Play Services) are surfaced via [showQrError].
+     */
+    private fun startQrScan() {
+        val options = GmsBarcodeScannerOptions.Builder()
+                .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
+                .build()
+
+        runCatching { GmsBarcodeScanning.getClient(this, options) }
+                .onSuccess { scanner ->
+                scanner.startScan()
+                        .addOnSuccessListener { barcode ->
+                            val value = barcode.rawValue
+                            if (value != null) viewModel.importProfileFromQr(value)
+                            else viewModel.qrErrorEvent.fire(getString(R.string.msg_qr_import_empty))
+                        }
+                        .addOnFailureListener { showQrError(it.message ?: getString(R.string.msg_qr_import_failed)) }
+                }
+                .onFailure { showQrError(it.message ?: getString(R.string.msg_qr_import_failed)) }
+    }
+
+    private fun showQrError(message: String) {
+        Snackbar.make(binding.root, getString(R.string.msg_qr_import_failed, message), Snackbar.LENGTH_LONG).show()
     }
 
     private fun showAbout() {
