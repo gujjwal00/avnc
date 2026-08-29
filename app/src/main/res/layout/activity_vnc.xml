@@ -53,6 +53,7 @@
                     android:id="@+id/frame_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:visibility="gone"
                     android:background="@drawable/bg_frame_view" /> <!--Workaround for hole punching issues-->
 
                 <com.gaurav.avnc.ui.vnc.input.InputView

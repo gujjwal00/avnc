@@ -288,27 +288,39 @@ class VncActivity : AppCompatActivity() {
     private fun onClientStateChanged(newState: VncViewModel.State) {
         val isConnected = newState == VncViewModel.State.Connected
 
-        binding.frameView.isVisible = isConnected
-        binding.frameView.keepScreenOn = isConnected && viewModel.pref.viewer.keepScreenOn
-        SamsungDex.setMetaKeyCapture(this, isConnected)
+        //todo: Cleanup these too
         layoutManager.onConnectionStateChanged()
         inputHandler.onStateChanged(isConnected)
         toolbar.onStateChange(isConnected)
         updateStatusContainerVisibility(isConnected)
 
-        if (isConnected) {
-            showViewerHelp()
-            virtualKeys.onConnected()
-            hasConnectedSuccessfully = true
+        when (newState) {
+            VncViewModel.State.Connected -> onSessionConnected()
+            VncViewModel.State.Disconnected -> onSessionDisconnected()
+            else -> return
         }
+    }
 
-        if (isConnected && !hasActivityRestarted) {
-            incrementUseCount()
+    private fun onSessionConnected() {
+        hasConnectedSuccessfully = true
+
+        binding.frameView.isVisible = true
+        binding.frameView.keepScreenOn = viewModel.pref.viewer.keepScreenOn
+        virtualKeys.onConnected()
+        SamsungDex.setMetaKeyCapture(this, true)
+
+        showViewerHelp()
+        if (hasActivityRestarted)
             restoreFrameState()
-        }
+        else
+            incrementUseCount()
+    }
 
-        if (newState == VncViewModel.State.Disconnected)
-            autoReconnect()
+    private fun onSessionDisconnected() {
+        binding.frameView.isVisible = false
+        binding.frameView.keepScreenOn = false
+        SamsungDex.setMetaKeyCapture(this, false)
+        autoReconnect()
     }
 
     private fun restoreFrameState() {
