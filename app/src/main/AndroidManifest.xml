@@ -20,6 +20,18 @@
         android:supportsRtl="true"
         android:theme="@style/App.Theme">
 
+        <meta-data
+            android:name="android.content.APP_RESTRICTIONS"
+            android:resource="@xml/app_restrictions" />
+
+        <receiver
+            android:name=".util.ManagedConfigReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.APPLICATION_RESTRICTIONS_CHANGED" />
+            </intent-filter>
+        </receiver>
+
         <activity-alias
             android:name=".StartupActivity"
             android:exported="true"

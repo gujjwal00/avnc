@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<!--
+  This is a static mirror of com.gaurav.avnc.util.Restrictions.ALL.
+  It is consumed by EMM consoles to present manageable settings.
+  Keep it in sync with that list (config, not logic).
+-->
+<restrictions xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Appearance -->
+    <restriction
+        android:key="emm_theme"
+        android:title="@string/emm_theme_title"
+        android:restrictionType="choice"
+        android:entries="@array/theme_entries"
+        android:entryValues="@array/theme_values" />
+
+    <restriction
+        android:key="emm_bell"
+        android:title="@string/emm_bell_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_sort_server_list"
+        android:title="@string/emm_sort_server_list_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_prefer_advanced_editor"
+        android:title="@string/emm_prefer_advanced_editor_title"
+        android:restrictionType="bool" />
+
+    <!-- Viewer -->
+    <restriction
+        android:key="emm_screen_orientation"
+        android:title="@string/emm_screen_orientation_title"
+        android:restrictionType="choice"
+        android:entries="@array/orientation_entries"
+        android:entryValues="@array/orientation_values" />
+
+    <restriction
+        android:key="emm_keep_screen_on"
+        android:title="@string/emm_keep_screen_on_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_fullscreen"
+        android:title="@string/emm_fullscreen_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_draw_behind_cutout"
+        android:title="@string/emm_draw_behind_cutout_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_pip"
+        android:title="@string/emm_pip_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_pause_fb_background"
+        android:title="@string/emm_pause_fb_background_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_zoom_min"
+        android:title="@string/emm_zoom_min_title"
+        android:restrictionType="integer"
+        android:defaultValue="50"
+        android:minValue="10"
+        android:maxValue="100" />
+
+    <restriction
+        android:key="emm_zoom_max"
+        android:title="@string/emm_zoom_max_title"
+        android:restrictionType="integer"
+        android:defaultValue="500"
+        android:minValue="100"
+        android:maxValue="1000" />
+
+    <restriction
+        android:key="emm_per_orientation_zoom"
+        android:title="@string/emm_per_orientation_zoom_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_toolbar_alignment"
+        android:title="@string/emm_toolbar_alignment_title"
+        android:restrictionType="choice"
+        android:entries="@array/toolbar_alignment_entries"
+        android:entryValues="@array/toolbar_alignment_values" />
+
+    <restriction
+        android:key="emm_toolbar_open_swipe"
+        android:title="@string/emm_toolbar_open_swipe_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_toolbar_open_button"
+        android:title="@string/emm_toolbar_open_button_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_toolbar_show_gesture_toggle"
+        android:title="@string/emm_toolbar_show_gesture_toggle_title"
+        android:restrictionType="bool" />
+
+    <!-- Input -->
+    <restriction
+        android:key="emm_gesture_style"
+        android:title="@string/emm_gesture_style_title"
+        android:restrictionType="choice"
+        android:entries="@array/gesture_style_entries"
+        android:entryValues="@array/gesture_style_values" />
+
+    <restriction
+        android:key="emm_gesture_double_tap"
+        android:title="@string/emm_gesture_double_tap_title"
+        android:restrictionType="choice"
+        android:entries="@array/double_tap_action_entries"
+        android:entryValues="@array/double_tap_action_values" />
+
+    <restriction
+        android:key="emm_gesture_long_press"
+        android:title="@string/emm_gesture_long_press_title"
+        android:restrictionType="choice"
+        android:entries="@array/long_press_action_entries"
+        android:entryValues="@array/long_press_action_values" />
+
+    <restriction
+        android:key="emm_gesture_tap2"
+        android:title="@string/emm_gesture_tap2_title"
+        android:restrictionType="choice"
+        android:entries="@array/tap2_action_entries"
+        android:entryValues="@array/tap2_action_values" />
+
+    <restriction
+        android:key="emm_gesture_tap3"
+        android:title="@string/emm_gesture_tap3_title"
+        android:restrictionType="choice"
+        android:entries="@array/tap3_action_entries"
+        android:entryValues="@array/tap3_action_values" />
+
+    <restriction
+        android:key="emm_gesture_swipe1"
+        android:title="@string/emm_gesture_swipe1_title"
+        android:restrictionType="choice"
+        android:entries="@array/swipe1_action_entries"
+        android:entryValues="@array/swipe1_action_values" />
+
+    <restriction
+        android:key="emm_gesture_swipe2"
+        android:title="@string/emm_gesture_swipe2_title"
+        android:restrictionType="choice"
+        android:entries="@array/swipe2_action_entries"
+        android:entryValues="@array/swipe2_action_values" />
+
+    <restriction
+        android:key="emm_gesture_swipe3"
+        android:title="@string/emm_gesture_swipe3_title"
+        android:restrictionType="choice"
+        android:entries="@array/swipe3_action_entries"
+        android:entryValues="@array/swipe3_action_values" />
+
+    <restriction
+        android:key="emm_gesture_double_tap_swipe"
+        android:title="@string/emm_gesture_double_tap_swipe_title"
+        android:restrictionType="choice"
+        android:entries="@array/double_tap_swipe_action_entries"
+        android:entryValues="@array/double_tap_swipe_action_values" />
+
+    <restriction
+        android:key="emm_gesture_long_press_swipe"
+        android:title="@string/emm_gesture_long_press_swipe_title"
+        android:restrictionType="choice"
+        android:entries="@array/long_press_swipe_action_entries"
+        android:entryValues="@array/long_press_swipe_action_values" />
+
+    <restriction
+        android:key="emm_gesture_swipe_sensitivity"
+        android:title="@string/emm_gesture_swipe_sensitivity_title"
+        android:restrictionType="integer"
+        android:defaultValue="10"
+        android:minValue="5"
+        android:maxValue="15" />
+
+    <restriction
+        android:key="emm_invert_scrolling"
+        android:title="@string/emm_invert_scrolling_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_mouse_passthrough"
+        android:title="@string/emm_mouse_passthrough_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_capture_pointer"
+        android:title="@string/emm_capture_pointer_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_hide_local_cursor"
+        android:title="@string/emm_hide_local_cursor_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_hide_remote_cursor"
+        android:title="@string/emm_hide_remote_cursor_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_mouse_back"
+        android:title="@string/emm_mouse_back_title"
+        android:restrictionType="choice"
+        android:entries="@array/mouse_back_action_entries"
+        android:entryValues="@array/mouse_back_action_values" />
+
+    <restriction
+        android:key="emm_vk_open_with_keyboard"
+        android:title="@string/emm_vk_open_with_keyboard_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_vk_use_super_single_tap"
+        android:title="@string/emm_vk_use_super_single_tap_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_vk_row_count"
+        android:title="@string/emm_vk_row_count_title"
+        android:restrictionType="choice"
+        android:entries="@array/vk_row_count_values"
+        android:entryValues="@array/vk_row_count_values" />
+
+    <restriction
+        android:key="emm_km_right_alt_super"
+        android:title="@string/emm_km_right_alt_super_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_km_language_switch_super"
+        android:title="@string/emm_km_language_switch_super_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_km_back_escape"
+        android:title="@string/emm_km_back_escape_title"
+        android:restrictionType="bool" />
+
+    <!-- Server -->
+    <restriction
+        android:key="emm_clipboard_sync"
+        android:title="@string/emm_clipboard_sync_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_lock_saved_server"
+        android:title="@string/emm_lock_saved_server_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_auto_reconnect"
+        android:title="@string/emm_auto_reconnect_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_discovery_autorun"
+        android:title="@string/emm_discovery_autorun_title"
+        android:restrictionType="bool" />
+
+    <restriction
+        android:key="emm_rediscovery_indicator"
+        android:title="@string/emm_rediscovery_indicator_title"
+        android:restrictionType="bool" />
+
+</restrictions>
