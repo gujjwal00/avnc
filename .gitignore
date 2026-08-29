@@ -39,3 +39,6 @@ gastest.o
 
 #Private data
 private/
+
+#kilo code
+.kilo/
