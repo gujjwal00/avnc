@@ -20,27 +20,30 @@ import com.gaurav.avnc.ui.vnc.VncActivity
  * This is a simple hub, used for logging, filtering, notifications etc.
  * Main input processing happens in [TouchHandler] & [KeyHandler].
  */
-class InputHandler(private val activity: VncActivity) {
+class InputHandler {
     private var dispatcher: Dispatcher? = null
     private var touchHandler: TouchHandler? = null
     private var keyHandler: KeyHandler? = null
+    private var interceptMouseBack = false
 
     /**
      * List of listeners to be notified after a [KeyEvent] is handled
      */
     val onAfterKeyEventListeners = mutableListOf<(KeyEvent) -> Unit>()
 
-    fun onStateChanged(isConnected: Boolean) {
-        if (isConnected) {
-            val viewModel = activity.viewModel
-            dispatcher = Dispatcher(activity)
-            touchHandler = TouchHandler(activity.binding.inputView, dispatcher!!, viewModel.pref)
-            keyHandler = KeyHandler(dispatcher!!, viewModel.pref)
-        } else {
-            dispatcher = null
-            touchHandler = null
-            keyHandler = null
-        }
+    fun onSessionConnected(activity: VncActivity) {
+        val viewModel = activity.viewModel
+        dispatcher = Dispatcher(activity)
+        touchHandler = TouchHandler(activity.binding.inputView, dispatcher!!, viewModel.pref)
+        keyHandler = KeyHandler(dispatcher!!, viewModel.pref)
+        interceptMouseBack = viewModel.pref.input.interceptMouseBack
+    }
+
+    fun onSessionDisconnected() {
+        dispatcher = null
+        touchHandler = null
+        keyHandler = null
+        interceptMouseBack = false
     }
 
     fun onKeyEvent(keyEvent: KeyEvent): Boolean {
@@ -79,12 +82,11 @@ class InputHandler(private val activity: VncActivity) {
         //need Mouse right-click events. It is hardcoded to act as back-press, without
         //giving apps a chance to handle it. For better or worse, they set the 'source'
         //for such key events to Mouse, enabling the following workarounds.
-        if (touchHandler != null &&
+        if (touchHandler != null && interceptMouseBack &&
             keyEvent.keyCode == KeyEvent.KEYCODE_BACK &&
             keyEvent.scanCode == 0 &&
             keyEvent.flags and KeyEvent.FLAG_VIRTUAL_HARD_KEY == 0 &&
-            InputDevice.getDevice(keyEvent.deviceId)?.supportsSource(InputDevice.SOURCE_MOUSE) == true &&
-            activity.viewModel.pref.input.interceptMouseBack) {
+            InputDevice.getDevice(keyEvent.deviceId)?.supportsSource(InputDevice.SOURCE_MOUSE) == true) {
             if (keyEvent.action == KeyEvent.ACTION_DOWN)
                 touchHandler!!.onMouseBack()
             return true

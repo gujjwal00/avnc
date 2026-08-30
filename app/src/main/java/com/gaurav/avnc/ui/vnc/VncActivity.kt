@@ -40,6 +40,7 @@ import com.gaurav.avnc.util.EdgeToEdgeHelper
 import com.gaurav.avnc.util.SamsungDex
 import com.gaurav.avnc.util.debugCheck
 import com.gaurav.avnc.util.enableChildLayoutTransitions
+import com.gaurav.avnc.util.isKeyboardVisible
 import com.gaurav.avnc.util.loopAnimatedDrawable
 import com.gaurav.avnc.util.showKeyboard
 import com.gaurav.avnc.viewmodel.VncViewModel
@@ -69,7 +70,7 @@ class VncActivity : AppCompatActivity() {
 
     val viewModel by viewModels<VncViewModel>()
     lateinit var binding: ActivityVncBinding
-    private val inputHandler = InputHandler(this)
+    private val inputHandler = InputHandler()
     val virtualKeys by lazy { VirtualKeys(this, inputHandler) }
     val toolbar by lazy { Toolbar(this) }
     private val serverUnlockPrompt = DeviceAuthPrompt(this)
@@ -78,6 +79,7 @@ class VncActivity : AppCompatActivity() {
     private var hasActivityRestarted = false
     private var hasConnectedSuccessfully = false
     private var wasConnectedWhenActivityStopped = false
+    private var wasKeyboardVisibleWhenActivityStopped = false
     private var onStartTime = 0L
 
     /**********************************************************************************************
@@ -138,6 +140,7 @@ class VncActivity : AppCompatActivity() {
         if (viewModel.pref.viewer.pauseUpdatesInBackground)
             viewModel.setFrameBufferUpdatesPaused(true)
         wasConnectedWhenActivityStopped = viewModel.connected
+        wasKeyboardVisibleWhenActivityStopped = isKeyboardVisible(binding.inputView)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -145,6 +148,7 @@ class VncActivity : AppCompatActivity() {
         viewModel.hasWindowFocus.value = hasFocus
         if (hasFocus) {
             viewModel.sendClipboardText()
+            restoreKeyboard()
         }
     }
 
@@ -163,6 +167,15 @@ class VncActivity : AppCompatActivity() {
                 zoomScale2 = fs.zoomScale2,
                 reconnectDelay = reconnectDelay
         )
+    }
+
+    private fun restoreKeyboard() {
+        // API 31+ automatically restores the keyboard when app comes back from background
+        // For older devices we manually track keyboard visibility
+        if (wasKeyboardVisibleWhenActivityStopped && Build.VERSION.SDK_INT <= 30) {
+            wasKeyboardVisibleWhenActivityStopped = false
+            showKeyboard()
+        }
     }
 
 
@@ -299,7 +312,6 @@ class VncActivity : AppCompatActivity() {
 
         //todo: Cleanup these too
         layoutManager.onConnectionStateChanged()
-        inputHandler.onStateChanged(isConnected)
         toolbar.onStateChange(isConnected)
         updateStatusContainerVisibility(isConnected)
 
@@ -315,6 +327,7 @@ class VncActivity : AppCompatActivity() {
 
         binding.frameView.isVisible = true
         binding.frameView.keepScreenOn = viewModel.pref.viewer.keepScreenOn
+        inputHandler.onSessionConnected(this)
         virtualKeys.onConnected()
         SamsungDex.setMetaKeyCapture(this, true)
 
@@ -328,6 +341,7 @@ class VncActivity : AppCompatActivity() {
     private fun onSessionDisconnected() {
         binding.frameView.isVisible = false
         binding.frameView.keepScreenOn = false
+        inputHandler.onSessionDisconnected()
         SamsungDex.setMetaKeyCapture(this, false)
         autoReconnect()
     }
@@ -416,7 +430,7 @@ class VncActivity : AppCompatActivity() {
     }
 
     fun showKeyboard() {
-        showKeyboard(binding.inputView)
+        showKeyboard(currentFocus ?: binding.inputView)
         virtualKeys.onKeyboardOpen()
     }
 
