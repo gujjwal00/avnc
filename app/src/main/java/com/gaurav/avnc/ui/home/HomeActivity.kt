@@ -33,9 +33,9 @@ import com.gaurav.avnc.util.EdgeToEdgeHelper
 import com.gaurav.avnc.util.MsgDialog
 import com.gaurav.avnc.viewmodel.HomeViewModel
 import com.gaurav.avnc.vnc.VncClient
-import com.google.android.gms.vision.barcode.GmsBarcodeScanning
-import com.google.android.gms.vision.barcode.GmsBarcodeScannerOptions
-import com.google.android.gms.vision.barcode.Barcode
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
+import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
+import com.google.mlkit.vision.barcode.Barcode
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

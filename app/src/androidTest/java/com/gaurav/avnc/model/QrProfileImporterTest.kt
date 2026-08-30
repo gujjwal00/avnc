@@ -14,6 +14,7 @@ import io.mockk.mockk
 import io.mockk.slot
 import com.gaurav.avnc.model.QrProfileImporter
 import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.model.db.ServerProfileDao
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -119,5 +120,36 @@ class QrProfileImporterTest {
         val result = QrProfileImporter.importFromRawJson(json, dao)
         assertTrue(result.isSuccess)
         assertEquals(5, slot.captured.ID)
+    }
+
+    @Test
+    fun embeddedConfigMapsCorrectly() = runBlocking {
+        val payload = """{"type":"avnc_server_profile","name":"Embedded","host":"10.0.0.1","port":5902}"""
+        val raw = "AVNC:F;$payload"
+        val (dao, slot) = fakeDao()
+
+        val result = QrProfileImporter.importFromRawJson(raw, dao)
+
+        assertTrue(result.isSuccess)
+        val p = slot.captured
+        assertEquals("Embedded", p.name)
+        assertEquals("10.0.0.1", p.host)
+        assertEquals(5902, p.port)
+    }
+
+    @Test
+    fun urlFormatFailsGracefully() = runBlocking {
+        val raw = "AVNC:U;http://localhost:1/invalid"
+        val (dao, _) = fakeDao()
+        val result = QrProfileImporter.importFromRawJson(raw, dao)
+        assertFalse(result.isSuccess)
+    }
+
+    @Test
+    fun invalidAvncFormatFails() = runBlocking {
+        val (dao, _) = fakeDao()
+        assertFalse(QrProfileImporter.importFromRawJson("AVNC:X;payload", dao).isSuccess)
+        assertFalse(QrProfileImporter.importFromRawJson("AVNC:U", dao).isSuccess)
+        assertFalse(QrProfileImporter.importFromRawJson("AVNC:", dao).isSuccess)
     }
 }

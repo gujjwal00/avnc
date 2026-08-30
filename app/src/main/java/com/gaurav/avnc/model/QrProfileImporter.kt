@@ -9,42 +9,49 @@
 package com.gaurav.avnc.model
 
 import com.gaurav.avnc.model.db.ServerProfileDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonDecodingException
+import kotlinx.serialization.SerializationException
+import java.net.URL
 
-/**
- * Maps a QR-code payload to a [ServerProfile] and persists it.
- *
- * All failures are reported via the returned [Result] — never by throwing to the caller.
- */
+data class AvncQrPayload(
+    val type: Char,
+    val options: List<String> = emptyList(),
+    val payload: String
+)
+
+private const val AVNC_PREFIX = "AVNC:"
+
+private fun parseAvncFormat(raw: String): AvncQrPayload? {
+    if (!raw.startsWith(AVNC_PREFIX)) return null
+    val content = raw.substring(AVNC_PREFIX.length)
+    val sepIndex = content.indexOf(';')
+    if (sepIndex < 0) return null
+    val header = content.substring(0, sepIndex)
+    val payload = content.substring(sepIndex + 1)
+    val headerParts = header.split(":")
+    val type = headerParts.firstOrNull()?.firstOrNull() ?: return null
+    val options = if (headerParts.size > 1) headerParts.drop(1) else emptyList()
+    return AvncQrPayload(type, options, payload)
+}
+
+private suspend fun fetchUrl(url: String): String = withContext(Dispatchers.IO) {
+    URL(url).openConnection().apply { connectTimeout = 10000; readTimeout = 10000 }
+            .getInputStream().bufferedReader().use { it.readText() }
+}
+
 object QrProfileImporter {
 
     private val json = Json { ignoreUnknownKeys = true }
 
-    /**
-     * Decodes [raw] JSON, validates its payload, maps it to a [ServerProfile] and persists it.
-     * Returns the saved profile, or a failure describing why the import could not be done.
-     *
-     * Note: [dao.save] is a `suspend` function, so this must run inside a coroutine. The
-     * non-suspending decode/validate/map steps are wrapped in [runCatching]; the suspending
-     * persistence step runs afterwards in the suspend context.
-     */
     suspend fun importFromRawJson(raw: String, dao: ServerProfileDao): Result<ServerProfile> {
         val profile = runCatching {
-            val dto = try {
-                json.decodeFromString(QrServerProfileDto.serializer(), raw)
-            } catch (e: JsonDecodingException) {
-                throw IllegalArgumentException("Cannot parse QR code content", e)
-            }
-
-            if (dto.type != "avnc_server_profile")
-                throw IllegalArgumentException("Unrecognized QR code type: ${dto.type ?: "null"}")
-
+            val dto = resolveDto(raw)
             validate(dto)
             mapToProfile(dto)
         }.getOrElse { return Result.failure(it) }
 
-        // Avoid creating duplicate profiles for the same server: reuse an existing profile's ID.
         return try {
             dao.getByName(profile.name)
                     .firstOrNull { it.host == profile.host && it.port == profile.port }
@@ -57,9 +64,26 @@ object QrProfileImporter {
         }
     }
 
-    /**
-     * Rejects payloads that cannot produce a usable connection.
-     */
+    private suspend fun resolveDto(raw: String): QrServerProfileDto {
+        val avnc = parseAvncFormat(raw)
+        val content = when (avnc?.type) {
+            'U' -> fetchUrl(avnc.payload)
+            'F' -> avnc.payload
+            else -> raw
+        }
+
+        val dto = try {
+            json.decodeFromString(QrServerProfileDto.serializer(), content)
+        } catch (e: SerializationException) {
+            throw IllegalArgumentException("Cannot parse QR code content", e)
+        }
+
+        if (avnc == null && dto.type != "avnc_server_profile")
+            throw IllegalArgumentException("Unrecognized QR code type: ${dto.type ?: "null"}")
+
+        return dto
+    }
+
     private fun validate(dto: QrServerProfileDto) {
         if (dto.host.isBlank())
             throw IllegalArgumentException("Server host is required")
@@ -77,7 +101,6 @@ object QrProfileImporter {
                 host = dto.host,
                 port = dto.port,
                 username = dto.username,
-                // Password is intentionally NOT part of the QR payload (security).
                 viewMode = if (dto.viewOnly) ServerProfile.VIEW_MODE_NO_INPUT else ServerProfile.VIEW_MODE_NORMAL,
                 colorLevel = mapColorDepth(dto.colorDepth),
                 channelType = if (ssh?.enabled == true) ServerProfile.CHANNEL_SSH_TUNNEL else ServerProfile.CHANNEL_TCP,
@@ -87,12 +110,6 @@ object QrProfileImporter {
         )
     }
 
-    /**
-     * Maps the QR `colorDepth` string to the native [ServerProfile.colorLevel] integer.
-     * Values follow the standard VNC color formats:
-     *   8-bit -> 1, 16-bit -> 4, 24-bit -> 7, 32-bit -> 8.
-     * Unknown/invalid values fall back to 24-bit (7).
-     */
     private fun mapColorDepth(value: String?): Int = when (value) {
         "COLOR_8BIT" -> 1
         "COLOR_16BIT" -> 4
