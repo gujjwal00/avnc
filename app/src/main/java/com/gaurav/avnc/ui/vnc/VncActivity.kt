@@ -42,6 +42,7 @@ import com.gaurav.avnc.util.EdgeToEdgeHelper
 import com.gaurav.avnc.util.SamsungDex
 import com.gaurav.avnc.util.debugCheck
 import com.gaurav.avnc.util.enableChildLayoutTransitions
+import com.gaurav.avnc.util.isKeyboardVisible
 import com.gaurav.avnc.util.loopAnimatedDrawable
 import com.gaurav.avnc.util.showKeyboard
 import com.gaurav.avnc.viewmodel.VncViewModel
@@ -80,6 +81,7 @@ class VncActivity : AppCompatActivity() {
     private var hasActivityRestarted = false
     private var hasConnectedSuccessfully = false
     private var wasConnectedWhenActivityStopped = false
+    private var wasKeyboardVisibleWhenActivityStopped = false
     private var onStartTime = 0L
 
     /**********************************************************************************************
@@ -140,6 +142,7 @@ class VncActivity : AppCompatActivity() {
         if (viewModel.pref.viewer.pauseUpdatesInBackground)
             viewModel.setFrameBufferUpdatesPaused(true)
         wasConnectedWhenActivityStopped = viewModel.connected
+        wasKeyboardVisibleWhenActivityStopped = isKeyboardVisible(binding.inputView)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -147,6 +150,7 @@ class VncActivity : AppCompatActivity() {
         viewModel.hasWindowFocus.value = hasFocus
         if (hasFocus) {
             viewModel.sendClipboardText()
+            restoreKeyboard()
         }
     }
 
@@ -165,6 +169,15 @@ class VncActivity : AppCompatActivity() {
                 zoomScale2 = fs.zoomScale2,
                 reconnectDelay = reconnectDelay
         )
+    }
+
+    private fun restoreKeyboard() {
+        // API 30+ automatically restores the keyboard when app comes back from background
+        // For older devices we manually track keyboard visibility
+        if (wasKeyboardVisibleWhenActivityStopped && Build.VERSION.SDK_INT <= 30) {
+            wasKeyboardVisibleWhenActivityStopped = false
+            showKeyboard()
+        }
     }
 
 
@@ -407,7 +420,7 @@ class VncActivity : AppCompatActivity() {
     }
 
     fun showKeyboard() {
-        showKeyboard(binding.inputView)
+        showKeyboard(currentFocus ?: binding.inputView)
         virtualKeys.onKeyboardOpen()
     }
 
