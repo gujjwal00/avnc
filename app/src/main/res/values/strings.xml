@@ -258,12 +258,5 @@
     <string name="pref_keycode_map">Keycode map</string>
     <string name="pref_touch_test">Touch test</string>
     <string name="pref_key_test">Key test</string>
-
-
-    <!-- QR-code server import -->
-    <string name="desc_qr_scan_btn">Scan QR code to add server</string>
-    <string name="title_scan_qr">Scan server QR code</string>
-    <string name="msg_qr_import_failed">Invalid QR code: %s</string>
-    <string name="msg_qr_import_empty">Scanned QR code is empty</string>
-
+    <string name="title_export_profiles">Include server profiles</string>
 </resources>
