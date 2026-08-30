@@ -35,7 +35,7 @@
                     android:focusable="true"
                     android:gravity="center"
                     android:nextFocusLeft="@id/navigation_btn"
-                    android:nextFocusRight="@id/settings_btn"
+                    android:nextFocusRight="@id/qr_scan_btn"
                     android:touchscreenBlocksFocus="false">
 
                     <ImageButton
@@ -54,10 +54,18 @@
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
 
                     <ImageButton
+                        android:id="@+id/qr_scan_btn"
+                        style="@style/ImageButton"
+                        android:contentDescription="@string/desc_qr_scan_btn"
+                        android:nextFocusLeft="@id/urlbar"
+                        android:nextFocusRight="@id/settings_btn"
+                        android:src="@drawable/ic_qr_scan" />
+
+                    <ImageButton
                         android:id="@+id/settings_btn"
                         style="@style/ImageButton"
                         android:contentDescription="@string/desc_settings_btn"
-                        android:nextFocusLeft="@id/urlbar"
+                        android:nextFocusLeft="@id/qr_scan_btn"
                         android:src="@drawable/ic_settings" />
 
                 </LinearLayout>

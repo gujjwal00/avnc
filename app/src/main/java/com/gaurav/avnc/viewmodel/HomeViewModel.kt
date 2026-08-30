@@ -13,6 +13,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
 import com.gaurav.avnc.model.ServerProfile
+import com.gaurav.avnc.R
 import com.gaurav.avnc.util.LiveEvent
 import com.gaurav.avnc.viewmodel.service.Discovery
 
@@ -56,6 +57,16 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
      * This is used for notifying the user and potentially undo the deletion.
      */
     val profileDeletedEvent = LiveEvent<ServerProfile>()
+
+    /**
+     * Fired when QR-code import fails, carrying a human-readable error message.
+     */
+    val qrErrorEvent = LiveEvent<String>()
+
+    /**
+     * Fired when a QR-code import succeeds, so the UI can confirm the addition.
+     */
+    val qrImportedEvent = LiveEvent<Unit>()
 
     /**
      * Starts new connection to given profile.
@@ -130,6 +141,20 @@ class HomeViewModel(app: Application) : BaseViewModel(app) {
     fun deleteProfile(profile: ServerProfile) = launchMain {
         serverProfileDao.delete(profile)
         profileDeletedEvent.fire(profile)
+    }
+
+    /**
+     * Imports a server profile from raw QR-code JSON.
+     * On success the new profile is announced via [profileSavedEvent]; otherwise an
+     * error message is announced via [qrErrorEvent].
+     */
+    fun importProfileFromQr(raw: String) = launchMain {
+        com.gaurav.avnc.model.QrProfileImporter.importFromRawJson(raw, serverProfileDao)
+                .onSuccess {
+                    profileSavedEvent.fire(it)
+                    qrImportedEvent.fire(Unit)
+                }
+                .onFailure { qrErrorEvent.fire(it.message ?: app.getString(R.string.msg_qr_import_failed)) }
     }
 
     /**************************************************************************
