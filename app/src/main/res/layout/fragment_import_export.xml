@@ -47,19 +47,6 @@
             app:layout_constraintStart_toEndOf="@id/export_btn"
             app:layout_constraintWidth_percent=".4" />
 
-        <Button
-            android:id="@+id/export_prefs_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:minHeight="60dp"
-            android:text="@string/title_export_settings"
-            app:icon="@drawable/ic_upload"
-            app:layout_constraintEnd_toEndOf="@id/import_btn"
-            app:layout_constraintStart_toStartOf="@id/export_btn"
-            app:layout_constraintTop_toBottomOf="@id/export_btn"
-            app:layout_constraintWidth_percent=".8" />
-
         <View
             android:id="@+id/options_divider"
             android:layout_width="0dp"
@@ -68,7 +55,16 @@
             android:background="@color/colorBorder"
             app:layout_constraintEnd_toEndOf="@id/import_btn"
             app:layout_constraintStart_toStartOf="@id/export_btn"
-            app:layout_constraintTop_toBottomOf="@id/export_prefs_btn" />
+            app:layout_constraintTop_toBottomOf="@id/export_btn" />
+
+        <CheckBox
+            android:id="@+id/export_profiles_checkbox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/title_export_profiles"
+            app:layout_constraintEnd_toEndOf="@id/options_divider"
+            app:layout_constraintStart_toStartOf="@id/options_divider"
+            app:layout_constraintTop_toBottomOf="@id/options_divider" />
 
         <CheckBox
             android:id="@+id/export_secrets"
@@ -77,7 +73,7 @@
             android:text="@string/title_export_passwords_and_keys"
             app:layout_constraintEnd_toEndOf="@id/options_divider"
             app:layout_constraintStart_toStartOf="@id/options_divider"
-            app:layout_constraintTop_toBottomOf="@id/options_divider" />
+            app:layout_constraintTop_toBottomOf="@id/export_profiles_checkbox" />
 
         <CheckBox
             android:id="@+id/delete_current_servers"

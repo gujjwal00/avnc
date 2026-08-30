@@ -48,7 +48,7 @@ class PrefsExportTest {
         val file = File(targetContext.cacheDir, "prefs-export.json")
         val uri = Uri.fromFile(file)
 
-        vm.export(uri, true)
+        vm.export(uri, includeProfiles = true, exportSecrets = true)
         pollingAssert { assertTrue("Export file not written", file.exists() && file.length() > 0) }
 
         targetPrefs.edit {
