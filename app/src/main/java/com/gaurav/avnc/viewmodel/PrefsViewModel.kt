@@ -42,7 +42,7 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
     @Serializable
     private data class Container(
             val version: Int = 2,
-            val profiles: List<ServerProfile> = emptyList(),
+            val profiles: List<ServerProfile>? = null,
             val preferences: Map<String, JsonElement> = emptyMap()
     )
 
@@ -54,26 +54,25 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
 
     val importFinishedEvent = LiveEvent<Boolean>()
     val exportFinishedEvent = LiveEvent<Boolean>()
-    val prefsExportFinishedEvent = LiveEvent<Boolean>()
     var importExportError = MutableLiveData<String>()
 
 
     /**
      * Exports data to given [uri].
      *
-     * Includes both server profiles and the current app preferences (so the whole
-     * configuration can be restored by importing the file back).
+     * @param includeProfiles if false, only app preferences are exported (no server profiles).
      */
-    fun export(uri: Uri, exportSecrets: Boolean) {
+    fun export(uri: Uri, includeProfiles: Boolean, exportSecrets: Boolean) {
         launchIO {
             runCatching {
-                // Serialize
-                val profiles = serverProfileDao.getList()
-                if (!exportSecrets) scrubSecrets(profiles)
-                val data = Container(profiles = profiles, preferences = collectPreferences())
+                val profiles = if (includeProfiles) serverProfileDao.getList() else emptyList()
+                if (!exportSecrets && includeProfiles) scrubSecrets(profiles)
+                val data = Container(
+                        profiles = if (includeProfiles) profiles else null,
+                        preferences = collectPreferences()
+                )
                 val json = serializer.encodeToString(data)
 
-                // Write out
                 app.contentResolver.openOutputStream(uri)?.use { stream ->
                     stream.writer().use { it.write(json) }
                 } ?: throw IOException("Unable to write the file.")
@@ -81,24 +80,6 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
             }.let {
                 importExportError.postValue(it.exceptionOrNull()?.message)
                 exportFinishedEvent.fireAsync(it.isSuccess)
-            }
-        }
-    }
-
-    /**
-     * Exports only the app preferences as a simple XML file.
-     * Server profiles are not included in this variant.
-     */
-    fun exportPrefs(uri: Uri) {
-        launchIO {
-            runCatching {
-                val xml = buildPreferencesXml()
-                app.contentResolver.openOutputStream(uri)?.use { stream ->
-                    stream.writer().use { it.write(xml) }
-                } ?: throw IOException("Unable to write the file.")
-            }.let {
-                importExportError.postValue(it.exceptionOrNull()?.message)
-                prefsExportFinishedEvent.fireAsync(it.isSuccess)
             }
         }
     }
@@ -120,20 +101,21 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
 
                 //This is where migrations would be applied (if required in future)
 
-                // Replay app preferences (best-effort, unknown keys are ignored)
-                applyPreferences(data.preferences)
-
                 //Update database
-                if (deleteCurrentServers) {
-                    db.withTransaction {
-                        serverProfileDao.deleteAll()
+                if (!data.profiles.isNullOrEmpty()) {
+                    if (deleteCurrentServers) {
+                        db.withTransaction {
+                            serverProfileDao.deleteAll()
+                            serverProfileDao.save(data.profiles)
+                        }
+                    } else {
+                        data.profiles.forEach { it.ID = 0 }
                         serverProfileDao.save(data.profiles)
                     }
-                } else {
-                    //Reset IDs so that they don't conflict with saved profiles
-                    data.profiles.forEach { it.ID = 0 }
-                    serverProfileDao.save(data.profiles)
                 }
+
+                // Replay app preferences (best-effort, unknown keys are ignored)
+                applyPreferences(data.preferences)
 
             }.let {
                 importExportError.postValue(it.exceptionOrNull()?.message)
@@ -150,6 +132,7 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
         val map = mutableMapOf<String, JsonElement>()
         for ((key, value) in all) {
             when (value) {
+                null -> Log.w("PrefsViewModel", "Skipping null preference: $key")
                 is String -> map[key] = JsonPrimitive(value)
                 is Boolean -> map[key] = JsonPrimitive(value)
                 is Int -> map[key] = JsonPrimitive(value)
@@ -179,9 +162,9 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
                         val content = element.content
                         when {
                             content == "true" || content == "false" -> putBoolean(key, content.toBoolean())
-                            content.toLongOrNull() != null -> putLong(key, content.toLong())
                             content.toIntOrNull() != null -> putInt(key, content.toInt())
                             content.toFloatOrNull() != null -> putFloat(key, content.toFloat())
+                            content.toLongOrNull() != null -> putLong(key, content.toLong())
                             else -> Log.w("PrefsViewModel", "Ignoring unknown preference: $key")
                         }
                     }
@@ -192,38 +175,6 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
             }
         }.apply()
     }
-
-    /**
-     * Builds a simple, human-readable XML document of all preferences.
-     */
-    private fun buildPreferencesXml(): String {
-        val sb = StringBuilder()
-        sb.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
-        sb.append("<avnc-preferences>\n")
-        for ((key, value) in PreferenceManager.getDefaultSharedPreferences(app).all) {
-            when (value) {
-                is String -> sb.append("  <entry key=\"$key\" type=\"string\">${escapeXml(value)}</entry>\n")
-                is Boolean -> sb.append("  <entry key=\"$key\" type=\"boolean\">$value</entry>\n")
-                is Int -> sb.append("  <entry key=\"$key\" type=\"int\">$value</entry>\n")
-                is Float -> sb.append("  <entry key=\"$key\" type=\"float\">$value</entry>\n")
-                is Long -> sb.append("  <entry key=\"$key\" type=\"long\">$value</entry>\n")
-                is Set<*> -> if (value.all { it is String }) {
-                    sb.append("  <entry key=\"$key\" type=\"string-set\">\n")
-                    value.filterIsInstance<String>().forEach { sb.append("    <item>${escapeXml(it)}</item>\n") }
-                    sb.append("  </entry>\n")
-                }
-            }
-        }
-        sb.append("</avnc-preferences>\n")
-        return sb.toString()
-    }
-
-    private fun escapeXml(value: String): String =
-            value.replace("&", "&amp;")
-                    .replace("<", "&lt;")
-                    .replace(">", "&gt;")
-                    .replace("\"", "&quot;")
-                    .replace("\x27", "&apos;")
 
     private fun scrubSecrets(profiles: List<ServerProfile>) {
         profiles.forEach {

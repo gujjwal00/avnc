@@ -35,7 +35,6 @@ class ImportExportFragment : Fragment() {
 
     private val importFilePicker = registerForActivityResult(OpenableDocument()) { import(it) }
     private val exportFilePicker = registerForActivityResult(ActivityResultContracts.CreateDocument("*/*")) { export(it) }
-    private val exportPrefsFilePicker = registerForActivityResult(ActivityResultContracts.CreateDocument("*/*")) { exportPrefs(it) }
 
     private lateinit var binding: FragmentImportExportBinding
     private val viewModel by activityViewModels<PrefsViewModel>()
@@ -52,11 +51,9 @@ class ImportExportFragment : Fragment() {
 
         binding.importBtn.setOnClickListener { startImport() }
         binding.exportBtn.setOnClickListener { startExport() }
-        binding.exportPrefsBtn.setOnClickListener { startExportPrefs() }
 
         viewModel.importFinishedEvent.observe(viewLifecycleOwner) { if (it) showMsg(R.string.msg_imported) }
         viewModel.exportFinishedEvent.observe(viewLifecycleOwner) { if (it) showMsg(R.string.msg_exported) }
-        viewModel.prefsExportFinishedEvent.observe(viewLifecycleOwner) { if (it) showMsg(R.string.msg_settings_exported) }
 
         exportAuthPrompt.init(
                 onSuccess = { launchFilePicker(exportFilePicker, generateFilename()) },
@@ -84,12 +81,6 @@ class ImportExportFragment : Fragment() {
         return "${getString(R.string.app_name)}-Export-${date.time} $dateStr.json"
     }
 
-    private fun generatePrefsFilename(): String {
-        val date = Date()
-        val dateStr = DateFormat.getDateInstance(DateFormat.MEDIUM).format(date)
-        return "${getString(R.string.app_name)}-Settings-${date.time} $dateStr.xml"
-    }
-
     private fun startImport() {
         launchFilePicker(importFilePicker, arrayOf("*/*"))
     }
@@ -99,26 +90,11 @@ class ImportExportFragment : Fragment() {
      * This is to protect sensitive info that might be present in exported data.
      */
     private fun startExport() {
-        startExportTo(exportFilePicker) { generateFilename() }
-    }
-
-    /**
-     * Exports only the app preferences (XML). Same authentication gating as [startExport].
-     */
-    private fun startExportPrefs() {
-        startExportTo(exportPrefsFilePicker) { generatePrefsFilename() }
-    }
-
-    private fun startExportTo(picker: ActivityResultLauncher<String>, filename: () -> String) {
         if (exportAuthPrompt.canLaunch()) {
-            exportAuthPrompt.init(
-                    onSuccess = { launchFilePicker(picker, filename()) },
-                    onFail = { viewModel.importExportError.value = it }
-            )
             exportAuthPrompt.launch(getString(R.string.msg_export_auth_required))
-            viewModel.importExportError.value = null
+            viewModel.importExportError.value = null //Clear old error
         } else
-            launchFilePicker(picker, filename())
+            launchFilePicker(exportFilePicker, generateFilename())
     }
 
     private fun <I> launchFilePicker(picker: ActivityResultLauncher<I>, args: I) {
@@ -137,11 +113,6 @@ class ImportExportFragment : Fragment() {
 
     private fun export(uri: Uri?) {
         if (uri != null)
-            viewModel.export(uri, binding.exportSecrets.isChecked)
-    }
-
-    private fun exportPrefs(uri: Uri?) {
-        if (uri != null)
-            viewModel.exportPrefs(uri)
+            viewModel.export(uri, binding.exportProfilesCheckbox.isChecked, binding.exportSecrets.isChecked)
     }
 }
