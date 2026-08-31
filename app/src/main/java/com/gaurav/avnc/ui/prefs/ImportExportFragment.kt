@@ -92,7 +92,7 @@ class ImportExportFragment : Fragment() {
     private fun startExport() {
         if (exportAuthPrompt.canLaunch()) {
             exportAuthPrompt.launch(getString(R.string.msg_export_auth_required))
-            viewModel.importExportError.value = null //Clear old error
+            viewModel.importExportError.value = null // Clear old error
         } else
             launchFilePicker(exportFilePicker, generateFilename())
     }
