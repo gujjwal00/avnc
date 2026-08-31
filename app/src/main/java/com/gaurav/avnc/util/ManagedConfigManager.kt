@@ -173,7 +173,7 @@ class ManagedConfigManager(context: Context) {
         val managed = managedKeys.value ?: emptySet()
         if (def.prefKey !in managed && !backupPrefs.contains(def.prefKey))
             backupCurrentValue(def)
-        prefs.edit(write)
+        prefs.edit { write() }
     }
 
     private fun backupCurrentValue(def: RestrictionDefinition) {
