@@ -61,7 +61,6 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
      * Exports data to given [uri].
      *
      * @param includeProfiles if false, only app preferences are exported (no server profiles).
-     * @param exportSecrets if false, secrets (passwords, keys) are scrubbed before export.
      */
     fun export(uri: Uri, includeProfiles: Boolean, exportSecrets: Boolean) {
         launchIO {
@@ -114,7 +113,25 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
                         data.profiles.forEach { it.ID = 0 }
                         serverProfileDao.save(data.profiles)
                     }
+                } else {
+                    // Reset IDs so that they don't conflict with saved profiles
+                    data.profiles.forEach { it.ID = 0 }
+                    serverProfileDao.save(data.profiles)
+                //Update database
+                if (!data.profiles.isNullOrEmpty()) {
+                    if (deleteCurrentServers) {
+                        db.withTransaction {
+                            serverProfileDao.deleteAll()
+                            serverProfileDao.save(data.profiles)
+                        }
+                    } else {
+                        data.profiles.forEach { it.ID = 0 }
+                        serverProfileDao.save(data.profiles)
+                    }
                 }
+                // Replay app preferences (best-effort, unknown keys are ignored)
+                applyPreferences(data.preferences)
+
                 // Replay app preferences (best-effort, unknown keys are ignored)
                 applyPreferences(data.preferences)
 
@@ -139,12 +156,9 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
                 is Int -> map[key] = JsonPrimitive(value)
                 is Float -> map[key] = JsonPrimitive(value)
                 is Long -> map[key] = JsonPrimitive(value)
-                is Set<*> -> {
-                    if (value.all { it is String })
-                        map[key] = JsonArray(value.filterIsInstance<String>().map { JsonPrimitive(it) })
-                    else
-                        Log.w("PrefsViewModel", "Skipping unsupported preference type for key: $key")
-                }
+                is Set<*> -> if (value.all { it is String })
+                    map[key] = JsonArray(value.filterIsInstance<String>().map { JsonPrimitive(it) })
+                else -> Log.w("PrefsViewModel", "Skipping unsupported preference type for key: $key")
             }
         }
         return map
