@@ -272,7 +272,9 @@
     <string name="emm_pip_title">Picture-in-picture</string>
     <string name="emm_pause_fb_background_title">Pause updates when in background</string>
     <string name="emm_zoom_min_title">Minimum zoom</string>
+    <string name="emm_zoom_min_desc">Allowed range: 10 to 100</string>
     <string name="emm_zoom_max_title">Maximum zoom</string>
+    <string name="emm_zoom_max_desc">Allowed range: 100 to 1000</string>
     <string name="emm_per_orientation_zoom_title">Per-orientation zoom</string>
     <string name="emm_toolbar_alignment_title">Toolbar alignment</string>
     <string name="emm_toolbar_open_swipe_title">Swipe-in from edge to open toolbar</string>
@@ -289,6 +291,7 @@
     <string name="emm_gesture_double_tap_swipe_title">Double tap and swipe</string>
     <string name="emm_gesture_long_press_swipe_title">Long press and swipe</string>
     <string name="emm_gesture_swipe_sensitivity_title">Swipe sensitivity</string>
+    <string name="emm_gesture_swipe_sensitivity_desc">Allowed range: 5 to 15</string>
     <string name="emm_invert_scrolling_title">Invert vertical scrolling</string>
     <string name="emm_mouse_passthrough_title">Mouse passthrough</string>
     <string name="emm_capture_pointer_title">Capture pointer</string>

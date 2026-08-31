@@ -69,21 +69,21 @@
         android:title="@string/emm_pause_fb_background_title"
         android:restrictionType="bool" />
 
+    <!-- Zoom min bounds: 10 to 100 -->
     <restriction
         android:key="emm_zoom_min"
         android:title="@string/emm_zoom_min_title"
         android:restrictionType="integer"
         android:defaultValue="50"
-        android:minValue="10"
-        android:maxValue="100" />
+        android:description="@string/emm_zoom_min_desc" />
 
+    <!-- Zoom max bounds: 100 to 1000 -->
     <restriction
         android:key="emm_zoom_max"
         android:title="@string/emm_zoom_max_title"
         android:restrictionType="integer"
         android:defaultValue="500"
-        android:minValue="100"
-        android:maxValue="1000" />
+        android:description="@string/emm_zoom_max_desc" />
 
     <restriction
         android:key="emm_per_orientation_zoom"
@@ -183,13 +183,13 @@
         android:entries="@array/long_press_swipe_action_entries"
         android:entryValues="@array/long_press_swipe_action_values" />
 
+    <!-- Swipe sensitivity bounds: 5 to 15 -->
     <restriction
         android:key="emm_gesture_swipe_sensitivity"
         android:title="@string/emm_gesture_swipe_sensitivity_title"
         android:restrictionType="integer"
         android:defaultValue="10"
-        android:minValue="5"
-        android:maxValue="15" />
+        android:description="@string/emm_gesture_swipe_sensitivity_desc" />
 
     <restriction
         android:key="emm_invert_scrolling"
