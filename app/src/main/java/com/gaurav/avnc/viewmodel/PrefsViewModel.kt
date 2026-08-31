@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2021  Gaurav Ujjwal.
  *
  * SPDX-License-Identifier:  GPL-3.0-or-later
@@ -114,18 +114,7 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
                         data.profiles.forEach { it.ID = 0 }
                         serverProfileDao.save(data.profiles)
                     }
-                // Update database
-                if (deleteCurrentServers) {
-                    db.withTransaction {
-                        serverProfileDao.deleteAll()
-                        serverProfileDao.save(data.profiles)
-                    }
-                } else {
-                    // Reset IDs so that they don't conflict with saved profiles
-                    data.profiles.forEach { it.ID = 0 }
-                    serverProfileDao.save(data.profiles)
                 }
-
                 // Replay app preferences (best-effort, unknown keys are ignored)
                 applyPreferences(data.preferences)
 
@@ -150,9 +139,12 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
                 is Int -> map[key] = JsonPrimitive(value)
                 is Float -> map[key] = JsonPrimitive(value)
                 is Long -> map[key] = JsonPrimitive(value)
-                is Set<*> -> if (value.all { it is String })
-                    map[key] = JsonArray(value.filterIsInstance<String>().map { JsonPrimitive(it) })
-                else -> Log.w("PrefsViewModel", "Skipping unsupported preference type for key: $key")
+                is Set<*> -> {
+                    if (value.all { it is String })
+                        map[key] = JsonArray(value.filterIsInstance<String>().map { JsonPrimitive(it) })
+                    else
+                        Log.w("PrefsViewModel", "Skipping unsupported preference type for key: $key")
+                }
             }
         }
         return map

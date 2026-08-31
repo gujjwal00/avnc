@@ -39,3 +39,4 @@ gastest.o
 
 #Private data
 private/
+extern/
