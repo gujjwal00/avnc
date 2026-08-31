@@ -87,3 +87,4 @@ class ManagedConfigTest {
         assertFalse(mgr.isManaged("bell_enabled"))
     }
 }
+

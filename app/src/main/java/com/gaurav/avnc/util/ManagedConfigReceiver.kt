@@ -26,3 +26,4 @@ class ManagedConfigReceiver : BroadcastReceiver() {
         app.managedConfig.applyRestrictions()
     }
 }
+
