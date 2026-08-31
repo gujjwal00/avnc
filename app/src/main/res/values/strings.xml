@@ -311,4 +311,5 @@
     <string name="emm_auto_reconnect_title">Reconnect automatically</string>
     <string name="emm_discovery_autorun_title">Discovery autorun</string>
     <string name="emm_rediscovery_indicator_title">Highlight rediscovered servers</string>
+    
 </resources>

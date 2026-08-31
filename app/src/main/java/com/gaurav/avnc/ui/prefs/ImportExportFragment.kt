@@ -113,6 +113,6 @@ class ImportExportFragment : Fragment() {
 
     private fun export(uri: Uri?) {
         if (uri != null)
-            viewModel.export(uri, includeProfiles = binding.exportProfilesCheckbox.isChecked, exportSecrets = binding.exportSecrets.isChecked)
+            viewModel.export(uri, binding.exportProfilesCheckbox.isChecked, binding.exportSecrets.isChecked)
     }
 }
