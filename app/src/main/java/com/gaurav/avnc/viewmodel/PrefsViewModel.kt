@@ -89,16 +89,16 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
                 // Deserialize
                 val data = serializer.decodeFromString<Container>(json)
 
-                //This is where migrations would be applied (if required in future)
+                // This is where migrations would be applied (if required in future)
 
-                //Update database
+                // Update database
                 if (deleteCurrentServers) {
                     db.withTransaction {
                         serverProfileDao.deleteAll()
                         serverProfileDao.save(data.profiles)
                     }
                 } else {
-                    //Reset IDs so that they don't conflict with saved profiles
+                    // Reset IDs so that they don't conflict with saved profiles
                     data.profiles.forEach { it.ID = 0 }
                     serverProfileDao.save(data.profiles)
                 }
