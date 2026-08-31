@@ -11,6 +11,7 @@
 
     <string name="title_add_server_profile">Add server</string>
     <string name="title_edit_server_profile">Edit server</string>
+    <string name="title_export_profiles">Include server profiles</string>
     <string name="title_duplicate">Duplicate</string>
     <string name="title_edit">Edit</string>
     <string name="title_delete">Delete</string>
@@ -258,5 +259,56 @@
     <string name="pref_keycode_map">Keycode map</string>
     <string name="pref_touch_test">Touch test</string>
     <string name="pref_key_test">Key test</string>
-    <string name="title_export_profiles">Include server profiles</string>
+    
+
+    <!-- EMM managed configuration -->
+    <string name="pref_managed_summary">This setting is managed by your organization.</string>
+    <string name="emm_theme_title">Theme</string>
+    <string name="emm_bell_title">Bell</string>
+    <string name="emm_sort_server_list_title">Sort saved servers by name</string>
+    <string name="emm_prefer_advanced_editor_title">Directly open advanced server options</string>
+    <string name="emm_screen_orientation_title">Screen orientation</string>
+    <string name="emm_keep_screen_on_title">Keep screen ON</string>
+    <string name="emm_fullscreen_title">Fullscreen</string>
+    <string name="emm_draw_behind_cutout_title">Extend into cutout area</string>
+    <string name="emm_pip_title">Picture-in-picture</string>
+    <string name="emm_pause_fb_background_title">Pause updates when in background</string>
+    <string name="emm_zoom_min_title">Minimum zoom</string>
+    <string name="emm_zoom_min_desc">Allowed range: 10 to 100</string>
+    <string name="emm_zoom_max_title">Maximum zoom</string>
+    <string name="emm_zoom_max_desc">Allowed range: 100 to 1000</string>
+    <string name="emm_per_orientation_zoom_title">Per-orientation zoom</string>
+    <string name="emm_toolbar_alignment_title">Toolbar alignment</string>
+    <string name="emm_toolbar_open_swipe_title">Swipe-in from edge to open toolbar</string>
+    <string name="emm_toolbar_open_button_title">Show toolbar button</string>
+    <string name="emm_toolbar_show_gesture_toggle_title">Show gesture style toggle</string>
+    <string name="emm_gesture_style_title">Gesture style</string>
+    <string name="emm_gesture_double_tap_title">Double tap</string>
+    <string name="emm_gesture_long_press_title">Long press</string>
+    <string name="emm_gesture_tap2_title">Two-finger tap</string>
+    <string name="emm_gesture_tap3_title">Three-finger tap</string>
+    <string name="emm_gesture_swipe1_title">One-finger swipe</string>
+    <string name="emm_gesture_swipe2_title">Two-finger swipe</string>
+    <string name="emm_gesture_swipe3_title">Three-finger swipe</string>
+    <string name="emm_gesture_double_tap_swipe_title">Double tap and swipe</string>
+    <string name="emm_gesture_long_press_swipe_title">Long press and swipe</string>
+    <string name="emm_gesture_swipe_sensitivity_title">Swipe sensitivity</string>
+    <string name="emm_gesture_swipe_sensitivity_desc">Allowed range: 5 to 15</string>
+    <string name="emm_invert_scrolling_title">Invert vertical scrolling</string>
+    <string name="emm_mouse_passthrough_title">Mouse passthrough</string>
+    <string name="emm_capture_pointer_title">Capture pointer</string>
+    <string name="emm_hide_local_cursor_title">Hide local pointer</string>
+    <string name="emm_hide_remote_cursor_title">Hide remote pointer</string>
+    <string name="emm_mouse_back_title">Back button</string>
+    <string name="emm_vk_open_with_keyboard_title">Open virtual keys with keyboard</string>
+    <string name="emm_vk_use_super_single_tap_title">Use Super key with single tap</string>
+    <string name="emm_vk_row_count_title">Virtual keys rows</string>
+    <string name="emm_km_right_alt_super_title">Right Alt → Super</string>
+    <string name="emm_km_language_switch_super_title">Language Switch → Super</string>
+    <string name="emm_km_back_escape_title">Back → Escape</string>
+    <string name="emm_clipboard_sync_title">Clipboard sync</string>
+    <string name="emm_lock_saved_server_title">Lock saved servers</string>
+    <string name="emm_auto_reconnect_title">Reconnect automatically</string>
+    <string name="emm_discovery_autorun_title">Discovery autorun</string>
+    <string name="emm_rediscovery_indicator_title">Highlight rediscovered servers</string>
 </resources>

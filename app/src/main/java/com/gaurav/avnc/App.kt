@@ -12,17 +12,22 @@ import android.app.Application
 import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatDelegate
 import com.gaurav.avnc.util.AppPreferences
+import com.gaurav.avnc.util.ManagedConfigManager
 
 class App : Application() {
 
     @Keep
     lateinit var prefs: AppPreferences
 
+    @Keep
+    lateinit var managedConfig: ManagedConfigManager
+
     override fun onCreate() {
         super.onCreate()
         configureLeakCanary()
 
         prefs = AppPreferences(this)
+        managedConfig = ManagedConfigManager(this)
         prefs.ui.theme.observeForever { updateNightMode(it) }
     }
 

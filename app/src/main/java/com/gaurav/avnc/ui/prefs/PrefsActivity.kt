@@ -14,9 +14,12 @@ import android.os.Build
 import android.os.Bundle
 import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceGroup
 import androidx.preference.SwitchPreference
+import com.gaurav.avnc.App
 import com.gaurav.avnc.R
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.EdgeToEdgeHelper
@@ -39,6 +42,13 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
 
         setSupportActionBar(findViewById<MaterialToolbar>(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        (application as App).managedConfig.managedKeys.observe(this) { managed ->
+            (supportFragmentManager.findFragmentById(R.id.fragment_host) as? PrefFragment)?.let {
+                it.refreshIntrinsicState()
+                it.applyManagedState(managed)
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -67,13 +77,79 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
 
     abstract class PrefFragment(private val prefResource: Int) : PreferenceFragmentCompat() {
 
+        private var appliedManagedKeys = emptySet<String>()
+
         override fun onResume() {
             super.onResume()
             activity?.title = preferenceScreen.title
+            refreshIntrinsicState()
+            applyManagedState()
         }
+
+        /**
+         * Re-applies fragment-specific enable/visibility logic (e.g. showIf/enableIf tests
+         * and device-capability checks). Called before managed state is (re)applied so that
+         * preferences freed from EMM management return to their natural state.
+         */
+        open fun refreshIntrinsicState() {}
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(prefResource, rootKey)
+        }
+
+        /**
+         * Disables & marks preferences that are managed by EMM.
+         * Managed preferences are always shown (even if hidden by showIf logic) and their
+         * summary is replaced with the managed note. Preferences that were managed before but
+         * are no longer are restored to their natural state first.
+         */
+        fun applyManagedState(managed: Set<String> = (requireActivity().application as App).managedConfig.managedKeys.value ?: emptySet()) {
+            val screen = preferenceScreen ?: return
+            for (key in appliedManagedKeys - managed)
+                restoreUnmanaged(screen, key)
+            applyManagedStateTo(screen, managed)
+            appliedManagedKeys = managed
+        }
+
+        private fun applyManagedStateTo(group: PreferenceGroup, managed: Set<String>) {
+            for (i in 0 until group.preferenceCount) {
+                val pref = group.getPreference(i)
+                if (pref is PreferenceGroup)
+                    applyManagedStateTo(pref, managed)
+
+                if (pref.key != null && pref.key in managed) {
+                    pref.isVisible = true
+                    pref.isEnabled = false
+                    if (pref is ListPreferenceEx)
+                        pref.disabledStateSummary = null
+                    if (pref is ListPreference)
+                        pref.summaryProvider = null
+                    pref.summary = getString(R.string.pref_managed_summary)
+                }
+            }
+        }
+
+        /**
+         * Undoes the visual effects of managed state for a preference that was freed from EMM.
+         * Re-enables it and restores its summary provider; visibility is restored by
+         * [refreshIntrinsicState].
+         */
+        private fun restoreUnmanaged(group: PreferenceGroup, key: String) {
+            for (i in 0 until group.preferenceCount) {
+                val pref = group.getPreference(i)
+                if (pref is PreferenceGroup)
+                    restoreUnmanaged(pref, key)
+                if (pref.key == key)
+                    restorePref(pref)
+            }
+        }
+
+        private fun restorePref(pref: Preference) {
+            pref.isEnabled = true
+            if (pref is ListPreference && pref.summaryProvider == null)
+                pref.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
+            if (pref.summary == getString(R.string.pref_managed_summary))
+                pref.summary = null
         }
     }
 
@@ -81,15 +157,20 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
     @Keep class Appearance : PrefFragment(R.xml.pref_appearance)
 
     @Keep class Viewer : PrefFragment(R.xml.pref_viewer) {
+
+        private val hasPiPSupport by lazy {
+            Build.VERSION.SDK_INT >= 26 &&
+                    requireActivity().packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+        }
+
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
+            refreshIntrinsicState()
+        }
 
-            // If system does not support PiP, disable its preference
-            val hasPiPSupport = Build.VERSION.SDK_INT >= 26 &&
-                                requireActivity().packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
-
+        override fun refreshIntrinsicState() {
             if (!hasPiPSupport) {
-                findPreference<SwitchPreference>("pip_enabled")!!.apply {
+                findPreference<SwitchPreference>("pip_enabled")?.apply {
                     isEnabled = false
                     summary = getString(R.string.msg_pip_not_supported)
                 }
@@ -149,10 +230,13 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
             applyTests()
         }
 
+        override fun refreshIntrinsicState() = applyTests()
+
         private fun applyTests() {
             val prefs = preferenceManager.sharedPreferences?.all ?: return
             visibilityTests.forEach { it.key.isVisible = it.value(prefs) }
             enablementTests.forEach { it.key.isEnabled = it.value(prefs) }
+            applyManagedState()
         }
     }
 

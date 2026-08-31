@@ -13,6 +13,7 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.preference.PreferenceManager
+import com.gaurav.avnc.App
 import kotlin.reflect.KProperty
 
 /**
@@ -20,6 +21,7 @@ import kotlin.reflect.KProperty
  */
 class AppPreferences(context: Context) {
 
+    private val appContext = context.applicationContext
     private val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
     inner class UI {
@@ -110,6 +112,16 @@ class AppPreferences(context: Context) {
     val input = Input()
     val server = Server()
     val runInfo = RunInfo()
+
+    /**
+     * Access to EMM managed configuration.
+     * All managed values are written into the default [SharedPreferences], so they
+     * are read automatically by the properties above.
+     */
+    val managed: ManagedConfigManager
+        get() = (appContext as App).managedConfig
+
+    fun isManaged(key: String) = managed.isManaged(key)
 
     /****************************** Helpers *******************************/
     open inner class Pref<T>(private val getter: SharedPreferences.() -> T, private val setter: SharedPreferences.Editor.(T) -> Unit) {
