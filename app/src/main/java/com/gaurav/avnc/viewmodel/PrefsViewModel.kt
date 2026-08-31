@@ -61,6 +61,7 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
      * Exports data to given [uri].
      *
      * @param includeProfiles if false, only app preferences are exported (no server profiles).
+     * @param exportSecrets if false, secrets (passwords, keys) are scrubbed before export.
      */
     fun export(uri: Uri, includeProfiles: Boolean, exportSecrets: Boolean) {
         launchIO {
@@ -109,6 +110,7 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
                             serverProfileDao.save(data.profiles)
                         }
                     } else {
+                        //Reset IDs so that they don't conflict with saved profiles
                         data.profiles.forEach { it.ID = 0 }
                         serverProfileDao.save(data.profiles)
                     }
