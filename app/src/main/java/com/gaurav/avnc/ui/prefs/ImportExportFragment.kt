@@ -92,7 +92,7 @@ class ImportExportFragment : Fragment() {
     private fun startExport() {
         if (exportAuthPrompt.canLaunch()) {
             exportAuthPrompt.launch(getString(R.string.msg_export_auth_required))
-            viewModel.importExportError.value = null //Clear old error
+            viewModel.importExportError.value = null // Clear old error
         } else
             launchFilePicker(exportFilePicker, generateFilename())
     }
@@ -113,6 +113,6 @@ class ImportExportFragment : Fragment() {
 
     private fun export(uri: Uri?) {
         if (uri != null)
-            viewModel.export(uri, binding.exportProfilesCheckbox.isChecked, binding.exportSecrets.isChecked)
+            viewModel.export(uri, includeProfiles = binding.exportProfilesCheckbox.isChecked, exportSecrets = binding.exportSecrets.isChecked)
     }
 }
