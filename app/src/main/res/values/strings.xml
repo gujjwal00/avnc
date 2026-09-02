@@ -45,6 +45,8 @@
     <string name="title_unknown_ssh_host">Unknown SSH host</string>
     <string name="title_ssh_host_key_changed">SSH host key changed</string>
     <string name="title_continue">Continue</string>
+    <string name="title_export_settings">Export settings</string>
+    <string name="title_export_profiles">Export servers</string>
     <string name="title_export_passwords_and_keys">Export passwords and keys</string>
     <string name="title_delete_servers_before_import">Delete current servers before import</string>
     <string name="title_password">Password</string>
@@ -252,11 +254,10 @@
     <string name="pref_discovery_autorun">Autorun</string>
     <string name="pref_discovery_autorun_summary">Discover servers while on homepage</string>
     <string name="pref_rediscovery_indicator">Highlight rediscovered servers</string>
-    <string name="pref_import_export">Import/Export servers</string>
+    <string name="pref_import_export">Import/Export</string>
     <string name="pref_debugging">Debugging</string>
     <string name="pref_logs">Logs</string>
     <string name="pref_keycode_map">Keycode map</string>
     <string name="pref_touch_test">Touch test</string>
     <string name="pref_key_test">Key test</string>
-    <string name="title_export_profiles">Include server profiles</string>
 </resources>

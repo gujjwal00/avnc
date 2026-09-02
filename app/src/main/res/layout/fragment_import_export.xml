@@ -7,8 +7,7 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -17,86 +16,77 @@
             type="com.gaurav.avnc.viewmodel.PrefsViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.gaurav.avnc.ui.backup.BackupActivity">
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="5dp"
+        android:weightSum="1">
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.exportSettings}"
+            android:text="@string/title_export_settings" />
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.exportProfiles}"
+            android:text="@string/title_export_profiles" />
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.exportSecrets}"
+            android:enabled="@{viewModel.exportProfiles}"
+            android:text="@string/title_export_passwords_and_keys" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight=".1" />
 
         <Button
             android:id="@+id/export_btn"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
-            android:minHeight="80dp"
+            android:enabled="@{viewModel.exportSettings || viewModel.exportProfiles}"
+            android:paddingHorizontal="30dp"
+            android:paddingVertical="@dimen/padding_normal"
             android:text="@string/title_export"
-            app:icon="@drawable/ic_upload"
-            app:layout_constraintEnd_toStartOf="@id/import_btn"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent=".4" />
+            app:icon="@drawable/ic_upload" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight=".3" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorBorder" />
+
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@={viewModel.deleteCurrentServerBeforeImport}"
+            android:paddingTop="@dimen/padding_small"
+            android:text="@string/title_delete_servers_before_import" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight=".1" />
 
         <Button
             android:id="@+id/import_btn"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="80dp"
+            android:paddingHorizontal="30dp"
+            android:paddingVertical="@dimen/padding_normal"
             android:text="@string/title_import"
-            app:icon="@drawable/ic_download"
-            app:layout_constraintBaseline_toBaselineOf="@id/export_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/export_btn"
-            app:layout_constraintWidth_percent=".4" />
-
-        <View
-            android:id="@+id/options_divider"
-            android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginTop="30dp"
-            android:background="@color/colorBorder"
-            app:layout_constraintEnd_toEndOf="@id/import_btn"
-            app:layout_constraintStart_toStartOf="@id/export_btn"
-            app:layout_constraintTop_toBottomOf="@id/export_btn" />
-
-        <CheckBox
-            android:id="@+id/export_profiles_checkbox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/title_export_profiles"
-            app:layout_constraintEnd_toEndOf="@id/options_divider"
-            app:layout_constraintStart_toStartOf="@id/options_divider"
-            app:layout_constraintTop_toBottomOf="@id/options_divider" />
-
-        <CheckBox
-            android:id="@+id/export_secrets"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/title_export_passwords_and_keys"
-            app:layout_constraintEnd_toEndOf="@id/options_divider"
-            app:layout_constraintStart_toStartOf="@id/options_divider"
-            app:layout_constraintTop_toBottomOf="@id/export_profiles_checkbox" />
-
-        <CheckBox
-            android:id="@+id/delete_current_servers"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/title_delete_servers_before_import"
-            app:layout_constraintEnd_toEndOf="@id/options_divider"
-            app:layout_constraintStart_toStartOf="@id/options_divider"
-            app:layout_constraintTop_toBottomOf="@id/export_secrets" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:text='@{"Error: " + viewModel.importExportError}'
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            android:textColor="?colorError"
-            app:isVisible="@{viewModel.importExportError != null}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/options_divider"
-            app:layout_constraintStart_toStartOf="@id/options_divider"
-            app:layout_constraintTop_toBottomOf="@id/delete_current_servers"
-            tools:text="A message about export/import result" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:icon="@drawable/ic_download" />
+    </LinearLayout>
 </layout>

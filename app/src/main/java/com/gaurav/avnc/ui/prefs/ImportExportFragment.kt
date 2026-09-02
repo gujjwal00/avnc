@@ -18,12 +18,12 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Keep
-import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.FragmentImportExportBinding
 import com.gaurav.avnc.util.DeviceAuthPrompt
+import com.gaurav.avnc.util.MsgDialog
 import com.gaurav.avnc.util.OpenableDocument
 import com.gaurav.avnc.viewmodel.PrefsViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -42,9 +42,6 @@ class ImportExportFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        if (savedInstanceState == null)
-            viewModel.importExportError.value = null
-
         binding = FragmentImportExportBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
@@ -52,12 +49,11 @@ class ImportExportFragment : Fragment() {
         binding.importBtn.setOnClickListener { startImport() }
         binding.exportBtn.setOnClickListener { startExport() }
 
-        viewModel.importFinishedEvent.observe(viewLifecycleOwner) { if (it) showMsg(R.string.msg_imported) }
-        viewModel.exportFinishedEvent.observe(viewLifecycleOwner) { if (it) showMsg(R.string.msg_exported) }
+        viewModel.importExportFinishedEvent.observe(viewLifecycleOwner) { handleImportExportResult(it) }
 
         exportAuthPrompt.init(
                 onSuccess = { launchFilePicker(exportFilePicker, generateFilename()) },
-                onFail = { viewModel.importExportError.value = it }
+                onFail = { showMsg("Authentication error: $it") }
         )
 
         return binding.root
@@ -68,8 +64,8 @@ class ImportExportFragment : Fragment() {
         activity?.title = getString(R.string.pref_import_export)
     }
 
-    private fun showMsg(@StringRes msgRes: Int) {
-        Snackbar.make(requireView(), msgRes, Snackbar.LENGTH_SHORT).show()
+    private fun showMsg(msg: CharSequence) {
+        Snackbar.make(requireView(), msg, Snackbar.LENGTH_LONG).show()
     }
 
     /**
@@ -90,10 +86,9 @@ class ImportExportFragment : Fragment() {
      * This is to protect sensitive info that might be present in exported data.
      */
     private fun startExport() {
-        if (exportAuthPrompt.canLaunch()) {
+        if (exportAuthPrompt.canLaunch())
             exportAuthPrompt.launch(getString(R.string.msg_export_auth_required))
-            viewModel.importExportError.value = null //Clear old error
-        } else
+        else
             launchFilePicker(exportFilePicker, generateFilename())
     }
 
@@ -101,18 +96,27 @@ class ImportExportFragment : Fragment() {
         try {
             picker.launch(args)
         } catch (e: ActivityNotFoundException) {
-            Snackbar.make(requireView(), "Error: No app found to choose backup file.", Snackbar.LENGTH_LONG).show()
+            showMsg("Error: No app found to choose backup file.")
             Log.e("ImportExport", "Error: No app found to choose backup file.", e)
         }
     }
 
     private fun import(uri: Uri?) {
         if (uri != null)
-            viewModel.import(uri, binding.deleteCurrentServers.isChecked)
+            viewModel.import(uri)
     }
 
     private fun export(uri: Uri?) {
         if (uri != null)
-            viewModel.export(uri, binding.exportProfilesCheckbox.isChecked, binding.exportSecrets.isChecked)
+            viewModel.export(uri)
+    }
+
+    private fun handleImportExportResult(result: Result<String>) {
+        result.onSuccess {
+            showMsg(it)
+        }.onFailure {
+            MsgDialog.show(childFragmentManager, "Error", it.message ?: "An error occurred")
+            Log.e(javaClass.simpleName, "Import/Export error", it)
+        }
     }
 }
