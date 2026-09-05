@@ -11,7 +11,7 @@ package com.gaurav.avnc.util
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricPrompt
+import androidx.biometric.BiometricPrompt.AuthenticationResult
 import androidx.biometric.FingerprintDialogFragment
 import androidx.biometric.auth.AuthPromptCallback
 import androidx.biometric.auth.startClass2BiometricOrCredentialAuthentication
@@ -38,10 +38,11 @@ class DeviceAuthPrompt(private val activity: FragmentActivity) {
     class PromptViewModel : ViewModel() {
         var isPromptShown = false
         var promptTitle = ""
+        var promptTag: Any? = null
     }
 
     private val viewModel by activity.viewModels<PromptViewModel>()
-    private var onAuthSuccess: (() -> Unit)? = null
+    private var onAuthSuccess: ((Any?) -> Unit)? = null
     private var onAuthFail: ((String) -> Unit)? = null
 
 
@@ -50,12 +51,12 @@ class DeviceAuthPrompt(private val activity: FragmentActivity) {
      * Should be called from onCreate() of the host activity/fragment.
      * If an auth session is active, it will be updated with given callbacks.
      */
-    fun init(onSuccess: () -> Unit, onFail: (String) -> Unit) {
+    fun init(onSuccess: (Any?) -> Unit, onFail: (String) -> Unit) {
         onAuthSuccess = onSuccess
         onAuthFail = onFail
 
         if (viewModel.isPromptShown)
-            launch(viewModel.promptTitle)
+            launch(viewModel.promptTitle, viewModel.promptTag)
     }
 
     /**
@@ -74,11 +75,12 @@ class DeviceAuthPrompt(private val activity: FragmentActivity) {
     /**
      * Launch auth prompt.
      */
-    fun launch(title: String) {
+    fun launch(title: String, tag: Any? = null) {
         check(onAuthSuccess != null)
         check(onAuthFail != null)
 
         runCatching {
+            viewModel.promptTag = tag
             activity.startClass2BiometricOrCredentialAuthentication(
                     title = title,
                     confirmationRequired = false,
@@ -96,11 +98,12 @@ class DeviceAuthPrompt(private val activity: FragmentActivity) {
 
     private fun onAuthFinished() {
         viewModel.isPromptShown = false
+        viewModel.promptTag = null
     }
 
     private inner class PromptCallback : AuthPromptCallback() {
-        override fun onAuthenticationSucceeded(activity: FragmentActivity?, result: BiometricPrompt.AuthenticationResult) {
-            onAuthSuccess?.invoke()
+        override fun onAuthenticationSucceeded(activity: FragmentActivity?, result: AuthenticationResult) {
+            onAuthSuccess?.invoke(viewModel.promptTag)
             onAuthFinished()
         }
 

@@ -33,12 +33,14 @@ import java.util.Date
 @Keep
 class ImportExportFragment : Fragment() {
 
+    private enum class Tag { Import, Export }
+
     private val importFilePicker = registerForActivityResult(OpenableDocument()) { import(it) }
     private val exportFilePicker = registerForActivityResult(ActivityResultContracts.CreateDocument("*/*")) { export(it) }
 
     private lateinit var binding: FragmentImportExportBinding
     private val viewModel by activityViewModels<PrefsViewModel>()
-    private val exportAuthPrompt by lazy { DeviceAuthPrompt(requireActivity()) }
+    private val authPrompt by lazy { DeviceAuthPrompt(requireActivity()) }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -46,13 +48,13 @@ class ImportExportFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        binding.importBtn.setOnClickListener { startImport() }
-        binding.exportBtn.setOnClickListener { startExport() }
+        binding.importBtn.setOnClickListener { checkAuthAndStart(Tag.Import) }
+        binding.exportBtn.setOnClickListener { checkAuthAndStart(Tag.Export) }
 
         viewModel.importExportFinishedEvent.observe(viewLifecycleOwner) { handleImportExportResult(it) }
 
-        exportAuthPrompt.init(
-                onSuccess = { launchFilePicker(exportFilePicker, generateFilename()) },
+        authPrompt.init(
+                onSuccess = { checkNotNull(it as? Tag); start(it) },
                 onFail = { showMsg("Authentication error: $it") }
         )
 
@@ -77,19 +79,22 @@ class ImportExportFragment : Fragment() {
         return "${getString(R.string.app_name)}-Export-${date.time} $dateStr.json"
     }
 
-    private fun startImport() {
-        launchFilePicker(importFilePicker, arrayOf("*/*"))
-    }
-
     /**
      * If user has enabled any authentication method, we verify the user before exporting data.
      * This is to protect sensitive info that might be present in exported data.
      */
-    private fun startExport() {
-        if (exportAuthPrompt.canLaunch())
-            exportAuthPrompt.launch(getString(R.string.msg_export_auth_required))
+    private fun checkAuthAndStart(tag: Tag) {
+        if (authPrompt.canLaunch())
+            authPrompt.launch(getString(R.string.msg_export_auth_required), tag)
         else
-            launchFilePicker(exportFilePicker, generateFilename())
+            start(tag)
+    }
+
+    private fun start(tag: Tag) {
+        when (tag) {
+            Tag.Import -> launchFilePicker(importFilePicker, arrayOf("*/*"))
+            Tag.Export -> launchFilePicker(exportFilePicker, generateFilename())
+        }
     }
 
     private fun <I> launchFilePicker(picker: ActivityResultLauncher<I>, args: I) {

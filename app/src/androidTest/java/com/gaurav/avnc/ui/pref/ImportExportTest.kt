@@ -153,7 +153,9 @@ class ImportExportTest {
         Intents.intending(IntentMatchers.hasAction(Intent.ACTION_CREATE_DOCUMENT))
                 .respondWithFunction { throw ActivityNotFoundException() }
 
+        BiometricMocking.start()
         onView(withText(R.string.title_export)).doClick()
+        BiometricMocking.endWithSuccess()
         onView(withSubstring("No app found to choose backup file")).checkWillBeDisplayed()
     }
 
@@ -165,8 +167,10 @@ class ImportExportTest {
         setupFileOpenIntent(sampleJson)
 
         // Import
+        BiometricMocking.start()
         onView(withText(R.string.title_delete_servers_before_import)).doClick()
         onView(withText(R.string.title_import)).doClick()
+        BiometricMocking.endWithSuccess()
         onView(withText(R.string.msg_imported)).checkWillBeDisplayed()
 
         // Verify imported data
@@ -183,7 +187,9 @@ class ImportExportTest {
         setupFileOpenIntent(sampleJson)
 
         // Import
+        BiometricMocking.start()
         onView(withText(R.string.title_import)).doClick()
+        BiometricMocking.endWithSuccess()
         onView(withText(R.string.msg_imported)).checkWillBeDisplayed()
 
         // Verify imported data
