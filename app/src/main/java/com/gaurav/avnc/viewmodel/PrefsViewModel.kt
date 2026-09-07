@@ -66,20 +66,10 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
         val exportSettings = exportSettings.isTrue
         val exportProfiles = exportProfiles.isTrue
         val exportSecrets = exportSecrets.isTrue && exportProfiles
-        debugCheck(exportSettings || exportProfiles)
 
         launchIO {
             runCatching {
-                // Serialize
-                val data = Container(
-                        profiles = if (exportProfiles) serverProfileDao.getList() else emptyList(),
-                        preferences = if (exportSettings) collectPreferences() else emptyMap()
-                )
-
-                if (!exportSecrets)
-                    scrubSecrets(data.profiles)
-
-                val json = serializer.encodeToString(data)
+                val json = exportJson(exportProfiles, exportSettings, exportSecrets)
 
                 // Write out
                 app.contentResolver.openOutputStream(uri)?.use { stream ->
@@ -107,33 +97,61 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
                     stream.reader().use { it.readText() }
                 } ?: throw IOException("Unable to read the file.")
 
-                // Deserialize
-                val data = serializer.decodeFromString<Container>(json)
-
-                //This is where migrations would be applied (if required in future)
-
-                //Update database
-                if (data.profiles.isNotEmpty()) {
-                    if (deleteCurrentServers) {
-                        db.withTransaction {
-                            serverProfileDao.deleteAll()
-                            serverProfileDao.save(data.profiles)
-                        }
-                    } else {
-                        //Reset IDs so that they don't conflict with saved profiles
-                        data.profiles.forEach { it.ID = 0 }
-                        serverProfileDao.save(data.profiles)
-                    }
-                }
-
-                // Replay app preferences (best-effort, unknown keys are ignored)
-                applyPreferences(data.preferences)
+                importJson(json, deleteCurrentServers)
 
                 return@runCatching app.getString(R.string.msg_imported)
             }.let {
                 importExportFinishedEvent.fireAsync(it)
             }
         }
+    }
+
+    /**
+     * Serializes current profiles or settings into a backup JSON string.
+     */
+    private suspend fun exportJson(
+            exportProfiles: Boolean,
+            exportSettings: Boolean,
+            exportSecrets: Boolean,
+    ): String {
+        debugCheck(exportSettings || exportProfiles)
+
+        // Serialize
+        val data = Container(
+                profiles = if (exportProfiles) serverProfileDao.getList() else emptyList(),
+                preferences = if (exportSettings) collectPreferences() else emptyMap()
+        )
+
+        if (!exportSecrets)
+            scrubSecrets(data.profiles)
+
+        return serializer.encodeToString(data)
+    }
+
+    /**
+     * Deserializes given backup JSON and updates the database.
+     */
+    private suspend fun importJson(json: String, deleteCurrentServers: Boolean) {
+        // Deserialize
+        val data = serializer.decodeFromString<Container>(json)
+
+        //This is where migrations would be applied (if required in future)
+
+        if (data.profiles.isNotEmpty()) {
+            if (deleteCurrentServers) {
+                db.withTransaction {
+                    serverProfileDao.deleteAll()
+                    serverProfileDao.save(data.profiles)
+                }
+            } else {
+                //Reset IDs so that they don't conflict with saved profiles
+                data.profiles.forEach { it.ID = 0 }
+                serverProfileDao.save(data.profiles)
+            }
+        }
+
+        // Replay app preferences (best-effort, unknown keys are ignored)
+        applyPreferences(data.preferences)
     }
 
     /**
