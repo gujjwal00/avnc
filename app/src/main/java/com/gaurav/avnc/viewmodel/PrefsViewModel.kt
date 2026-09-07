@@ -63,13 +63,9 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
      * Exports data to given [uri].
      */
     fun export(uri: Uri) {
-        val exportSettings = exportSettings.isTrue
-        val exportProfiles = exportProfiles.isTrue
-        val exportSecrets = exportSecrets.isTrue && exportProfiles
-
         launchIO {
             runCatching {
-                val json = exportJson(exportProfiles, exportSettings, exportSecrets)
+                val json = exportJson()
 
                 // Write out
                 app.contentResolver.openOutputStream(uri)?.use { stream ->
@@ -83,13 +79,26 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
         }
     }
 
+    /**
+     * Exports data as JSON and posts the result on [jsonDestination],
+     * for export, e.g. via QR code.
+     */
+    fun export(jsonDestination : MutableLiveData<String>) {
+        launchIO {
+            runCatching {
+                val json = exportJson()
+                jsonDestination.postValue(json)
+                return@runCatching app.getString(R.string.msg_exported)
+            }.let {
+                importExportFinishedEvent.fireAsync(it)
+            }
+        }
+    }
 
     /**
      * Imports data from given [uri].
      */
     fun import(uri: Uri) {
-        val deleteCurrentServers = deleteCurrentServerBeforeImport.isTrue
-
         launchIO {
             runCatching {
 
@@ -97,8 +106,22 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
                     stream.reader().use { it.readText() }
                 } ?: throw IOException("Unable to read the file.")
 
-                importJson(json, deleteCurrentServers)
+                importJson(json)
 
+                return@runCatching app.getString(R.string.msg_imported)
+            }.let {
+                importExportFinishedEvent.fireAsync(it)
+            }
+        }
+    }
+
+    /**
+     * Imports data from given JSON string (e.g. read off a QR code).
+     */
+    fun import(json: String) {
+        launchIO {
+            runCatching {
+                importJson(json)
                 return@runCatching app.getString(R.string.msg_imported)
             }.let {
                 importExportFinishedEvent.fireAsync(it)
@@ -109,11 +132,10 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
     /**
      * Serializes current profiles or settings into a backup JSON string.
      */
-    private suspend fun exportJson(
-            exportProfiles: Boolean,
-            exportSettings: Boolean,
-            exportSecrets: Boolean,
-    ): String {
+    private suspend fun exportJson(): String {
+        val exportSettings = exportSettings.isTrue
+        val exportProfiles = exportProfiles.isTrue
+        val exportSecrets = exportSecrets.isTrue && exportProfiles
         debugCheck(exportSettings || exportProfiles)
 
         // Serialize
@@ -131,7 +153,9 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
     /**
      * Deserializes given backup JSON and updates the database.
      */
-    private suspend fun importJson(json: String, deleteCurrentServers: Boolean) {
+    private suspend fun importJson(json: String) {
+        val deleteCurrentServers = deleteCurrentServerBeforeImport.isTrue
+
         // Deserialize
         val data = serializer.decodeFromString<Container>(json)
 
