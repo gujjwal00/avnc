@@ -67,8 +67,8 @@
             android:enabled="@{viewModel.exportSettings || viewModel.exportProfiles}"
             android:paddingHorizontal="30dp"
             android:paddingVertical="@dimen/padding_normal"
-            android:text="@string/title_export"
-            app:icon="@drawable/ic_upload" />
+            android:text="@string/title_export_file"
+            app:icon="@drawable/ic_file" />
 
         <Space
             android:layout_width="0dp"
@@ -111,8 +111,8 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="30dp"
             android:paddingVertical="@dimen/padding_normal"
-            android:text="@string/title_import"
-            app:icon="@drawable/ic_download" />
+            android:text="@string/title_import_file"
+            app:icon="@drawable/ic_file" />
 
         <Space
             android:layout_width="0dp"
