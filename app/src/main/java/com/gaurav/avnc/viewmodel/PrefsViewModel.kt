@@ -63,19 +63,15 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
      * Exports data to given [uri].
      */
     fun export(uri: Uri) {
-        launchIO {
-            runCatching {
-                val json = exportJson()
+        launchImportExport {
+            val json = exportJson()
 
-                // Write out
-                app.contentResolver.openOutputStream(uri)?.use { stream ->
-                    stream.writer().use { it.write(json) }
-                } ?: throw IOException("Unable to write the file.")
+            // Write out
+            app.contentResolver.openOutputStream(uri)?.use { stream ->
+                stream.writer().use { it.write(json) }
+            } ?: throw IOException("Unable to write the file.")
 
-                return@runCatching app.getString(R.string.msg_exported)
-            }.let {
-                importExportFinishedEvent.fireAsync(it)
-            }
+            app.getString(R.string.msg_exported)
         }
     }
 
@@ -84,14 +80,10 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
      * for export, e.g. via QR code.
      */
     fun export(jsonDestination : MutableLiveData<String>) {
-        launchIO {
-            runCatching {
-                val json = exportJson()
-                jsonDestination.postValue(json)
-                return@runCatching app.getString(R.string.msg_exported)
-            }.let {
-                importExportFinishedEvent.fireAsync(it)
-            }
+        launchImportExport {
+            val json = exportJson()
+            jsonDestination.postValue(json)
+            app.getString(R.string.msg_exported)
         }
     }
 
@@ -99,19 +91,14 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
      * Imports data from given [uri].
      */
     fun import(uri: Uri) {
-        launchIO {
-            runCatching {
+        launchImportExport {
+            val json = app.contentResolver.openInputStream(uri)?.use { stream ->
+                stream.reader().use { it.readText() }
+            } ?: throw IOException("Unable to read the file.")
 
-                val json = app.contentResolver.openInputStream(uri)?.use { stream ->
-                    stream.reader().use { it.readText() }
-                } ?: throw IOException("Unable to read the file.")
+            importJson(json)
 
-                importJson(json)
-
-                return@runCatching app.getString(R.string.msg_imported)
-            }.let {
-                importExportFinishedEvent.fireAsync(it)
-            }
+            app.getString(R.string.msg_imported)
         }
     }
 
@@ -119,10 +106,20 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
      * Imports data from given JSON string (e.g. read off a QR code).
      */
     fun import(json: String) {
+        launchImportExport {
+            importJson(json)
+            app.getString(R.string.msg_imported)
+        }
+    }
+
+    /**
+     * Runs an import/export operation on a background thread and fires
+     * [importExportFinishedEvent] with its [Result].
+     */
+    private fun launchImportExport(block: suspend () -> String) {
         launchIO {
             runCatching {
-                importJson(json)
-                return@runCatching app.getString(R.string.msg_imported)
+                block()
             }.let {
                 importExportFinishedEvent.fireAsync(it)
             }
