@@ -13,6 +13,7 @@
     <string name="title_vnc_login">Connexion VNC</string>
     <string name="title_export">Exporter</string>
     <string name="title_import">Importer</string>
+    <string name="title_import_qr">Scanner un code QR</string>
     <string name="title_view_only_mode">Visualisation uniquement</string>
     <string name="title_remember">Mémoriser</string>
     <string name="title_hide_remote_cursor">Masquer le curseur distant</string>

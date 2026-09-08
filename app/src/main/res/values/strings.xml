@@ -30,6 +30,7 @@
     <string name="title_remember">Remember</string>
     <string name="title_export">Export</string>
     <string name="title_import">Import</string>
+    <string name="title_import_qr">Scan QR code</string>
     <string name="title_view_only_mode">View-only</string>
     <string name="title_connect_on_app_start">Auto-connect when app starts</string>
     <string name="title_enable_wol">Wake-on-LAN</string>
