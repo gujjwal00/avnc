@@ -73,6 +73,21 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_weight=".1" />
+
+        <Button
+            android:id="@+id/export_qr_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="@{viewModel.exportSettings || viewModel.exportProfiles}"
+            android:paddingHorizontal="30dp"
+            android:paddingVertical="@dimen/padding_normal"
+            android:text="@string/title_export_qr"
+            app:icon="@drawable/ic_qr_code" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_weight=".3" />
 
         <View

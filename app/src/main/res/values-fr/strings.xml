@@ -13,6 +13,7 @@
     <string name="title_vnc_login">Connexion VNC</string>
     <string name="title_export">Exporter</string>
     <string name="title_export_file">Export vers un fichier</string>
+    <string name="title_export_qr">Afficher le code QR</string>
     <string name="title_import">Importer</string>
     <string name="title_import_file">Importer un fichier</string>
     <string name="title_import_qr">Scanner un code QR</string>

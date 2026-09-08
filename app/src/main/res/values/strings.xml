@@ -30,6 +30,7 @@
     <string name="title_remember">Remember</string>
     <string name="title_export">Export</string>
     <string name="title_export_file">Export to file</string>
+    <string name="title_export_qr">Display QR code</string>
     <string name="title_import">Import</string>
     <string name="title_import_file">Import file</string>
     <string name="title_import_qr">Scan QR code</string>
