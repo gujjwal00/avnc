@@ -24,6 +24,18 @@
         android:paddingTop="5dp"
         android:weightSum="1">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_export"
+            style="@style/PreferenceCategoryTitleTextStyle" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:background="@color/colorBorder" />
+
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,6 +78,19 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:background="@color/colorBorder" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_import"
+            style="@style/PreferenceCategoryTitleTextStyle" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/padding_small"
             android:background="@color/colorBorder" />
 
         <CheckBox
