@@ -26,12 +26,17 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URI
 
 /**
  * Viewmodel for preferences activity.
  */
 class PrefsViewModel(app: Application) : BaseViewModel(app) {
 
+    private companion object {
+        const val TIMEOUT_MS = 10_000
+    }
 
     /**************************************************************************
      * Import/Export
@@ -92,13 +97,37 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
      */
     fun import(uri: Uri) {
         launchImportExport {
-            val json = app.contentResolver.openInputStream(uri)?.use { stream ->
-                stream.reader().use { it.readText() }
-            } ?: throw IOException("Unable to read the file.")
+            val json = when (uri.scheme) {
+                "http", "https" -> readFromNetwork(uri)
+                else -> app.contentResolver.openInputStream(uri)?.use { stream ->
+                    stream.reader().use { it.readText() }
+                } ?: throw IOException("Unable to read the file.")
+            }
 
             importJson(json)
 
             app.getString(R.string.msg_imported)
+        }
+    }
+
+    /**
+     * Reads the entire body of an http/https [uri] into a String.
+     */
+    private fun readFromNetwork(uri: Uri): String {
+        val connection = (URI(uri.toString()).toURL().openConnection() as HttpURLConnection).apply {
+            connectTimeout = TIMEOUT_MS
+            readTimeout = TIMEOUT_MS
+            requestMethod = "GET"
+        }
+        try {
+            val code = connection.responseCode
+            if (code !in 200..299)
+                throw IOException("Unable to read the file: HTTP $code")
+            return connection.inputStream.use { stream ->
+                stream.reader().use { it.readText() }
+            }
+        } finally {
+            connection.disconnect()
         }
     }
 
