@@ -79,6 +79,22 @@ class QrCodeTest {
         assertEquals("", json.json)
     }
 
+    @Test
+    fun encodeJson() {
+        val encoded = QrCode.encode("{\"profiles\":[]}")
+        assertEquals("AVNC:DATA;{\"profiles\":[]}", encoded)
+    }
+
+    @Test
+    fun encodeThenDecodeJson() {
+        val original = "{\"a\":\"x;y:z\"}"
+        val decoded = QrCode.decode(QrCode.encode(original))
+
+        val json = decoded as? QrCode.Content.Json
+            ?: throw AssertionError("Expected Json content, got $decoded")
+        assertEquals(original, json.json)
+    }
+
     private fun assertThrows(block: () -> Any?) {
         try {
             block()

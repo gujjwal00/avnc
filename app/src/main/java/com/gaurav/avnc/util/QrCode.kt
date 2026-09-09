@@ -27,4 +27,9 @@ object QrCode {
         }
     }
 
+    /**
+     * Encodes the given [json] as AVNC QR content of the form `AVNC:DATA;<json>`.
+     */
+    fun encode(json: String): String = "AVNC:DATA;$json"
+
 }
