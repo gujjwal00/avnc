@@ -10,7 +10,10 @@ package com.gaurav.avnc.ui.prefs
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.net.Uri
+import android.widget.ImageView
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,6 +24,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Keep
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.MutableLiveData
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.FragmentImportExportBinding
 import com.gaurav.avnc.util.DeviceAuthPrompt
@@ -30,15 +34,20 @@ import com.gaurav.avnc.util.QrCode
 import com.gaurav.avnc.viewmodel.PrefsViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.WriterException
+import com.google.zxing.qrcode.QRCodeWriter
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import java.text.DateFormat
 import java.util.Date
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.set
 
 @Keep
 class ImportExportFragment : Fragment() {
 
-    private enum class Tag { Import, ImportQr, Export }
+    private enum class Tag { Import, ImportQr, Export, ExportQr }
 
     private val importFilePicker = registerForActivityResult(OpenableDocument()) { import(it) }
     private val exportFilePicker = registerForActivityResult(ActivityResultContracts.CreateDocument("*/*")) { export(it) }
@@ -61,7 +70,6 @@ class ImportExportFragment : Fragment() {
     private val viewModel by activityViewModels<PrefsViewModel>()
     private val authPrompt by lazy { DeviceAuthPrompt(requireActivity()) }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentImportExportBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
@@ -70,6 +78,7 @@ class ImportExportFragment : Fragment() {
         binding.importBtn.setOnClickListener { checkAuthAndStart(Tag.Import) }
         binding.importQrBtn.setOnClickListener { checkAuthAndStart(Tag.ImportQr) }
         binding.exportBtn.setOnClickListener { checkAuthAndStart(Tag.Export) }
+        binding.exportQrBtn.setOnClickListener { checkAuthAndStart(Tag.ExportQr) }
 
         viewModel.importExportFinishedEvent.observe(viewLifecycleOwner) { handleImportExportResult(it) }
 
@@ -115,6 +124,11 @@ class ImportExportFragment : Fragment() {
             Tag.Import -> launchFilePicker(importFilePicker, arrayOf("*/*"))
             Tag.ImportQr -> launchScan()
             Tag.Export -> launchFilePicker(exportFilePicker, generateFilename())
+            Tag.ExportQr -> {
+                val json = MutableLiveData<String>()
+                json.observe(viewLifecycleOwner) { showQrDialog(it) }
+                viewModel.export(json)
+            }
         }
     }
 
@@ -162,10 +176,38 @@ class ImportExportFragment : Fragment() {
 
     private fun handleImportExportResult(result: Result<String>) {
         result.onSuccess {
-            showMsg(it)
+            if (it.isNotEmpty())
+                showMsg(it)
         }.onFailure {
             MsgDialog.show(childFragmentManager, "Error", it.message ?: "An error occurred")
             Log.e(javaClass.simpleName, "Import/Export error", it)
+        }
+    }
+
+    /**
+     * Shows the exported [json] as a QR code in a dialog.
+     */
+    private fun showQrDialog(json: String) {
+        try {
+            val matrix = QRCodeWriter().encode(QrCode.encode(json), BarcodeFormat.QR_CODE, 512, 512)
+            val bitmap = createBitmap(matrix.width, matrix.height, Bitmap.Config.RGB_565)
+            for (x in 0 until matrix.width)
+                for (y in 0 until matrix.height)
+                    bitmap[x, y] = if (matrix[x, y]) Color.BLACK else Color.WHITE
+
+            val image = ImageView(requireContext()).apply {
+                setImageBitmap(bitmap)
+                adjustViewBounds = true
+            }
+
+            MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.title_export_qr)
+                    .setView(image)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show()
+        } catch (e: WriterException) {
+            MsgDialog.show(childFragmentManager, "Error", getString(R.string.err_qr_export_failed))
+            Log.e(javaClass.simpleName, "Failed to generate QR code.", e)
         }
     }
 }
