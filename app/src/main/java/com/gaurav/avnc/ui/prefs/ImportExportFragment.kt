@@ -9,6 +9,7 @@
 package com.gaurav.avnc.ui.prefs
 
 import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -25,18 +26,36 @@ import com.gaurav.avnc.databinding.FragmentImportExportBinding
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.MsgDialog
 import com.gaurav.avnc.util.OpenableDocument
+import com.gaurav.avnc.util.QrCode
 import com.gaurav.avnc.viewmodel.PrefsViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
 import java.text.DateFormat
 import java.util.Date
 
 @Keep
 class ImportExportFragment : Fragment() {
 
-    private enum class Tag { Import, Export }
+    private enum class Tag { Import, ImportQr, Export }
 
     private val importFilePicker = registerForActivityResult(OpenableDocument()) { import(it) }
     private val exportFilePicker = registerForActivityResult(ActivityResultContracts.CreateDocument("*/*")) { export(it) }
+    private val scanCode = registerForActivityResult(ScanContract()) { scanResult ->
+        val content = scanResult?.contents ?: return@registerForActivityResult
+        val decoded = try {
+            QrCode.decode(content)
+        } catch (_: QrCode.InvalidQrCodeException) {
+            showMsg(getString(R.string.err_invalid_qr_code))
+            return@registerForActivityResult
+        }
+
+        when (decoded) {
+            is QrCode.Content.Json -> viewModel.import(decoded.json)
+            is QrCode.Content.Uri -> handleImportedUri(decoded.uri)
+        }
+    }
 
     private lateinit var binding: FragmentImportExportBinding
     private val viewModel by activityViewModels<PrefsViewModel>()
@@ -49,6 +68,7 @@ class ImportExportFragment : Fragment() {
         binding.viewModel = viewModel
 
         binding.importBtn.setOnClickListener { checkAuthAndStart(Tag.Import) }
+        binding.importQrBtn.setOnClickListener { checkAuthAndStart(Tag.ImportQr) }
         binding.exportBtn.setOnClickListener { checkAuthAndStart(Tag.Export) }
 
         viewModel.importExportFinishedEvent.observe(viewLifecycleOwner) { handleImportExportResult(it) }
@@ -93,6 +113,7 @@ class ImportExportFragment : Fragment() {
     private fun start(tag: Tag) {
         when (tag) {
             Tag.Import -> launchFilePicker(importFilePicker, arrayOf("*/*"))
+            Tag.ImportQr -> launchScan()
             Tag.Export -> launchFilePicker(exportFilePicker, generateFilename())
         }
     }
@@ -103,6 +124,29 @@ class ImportExportFragment : Fragment() {
         } catch (e: ActivityNotFoundException) {
             showMsg("Error: No app found to choose backup file.")
             Log.e("ImportExport", "Error: No app found to choose backup file.", e)
+        }
+    }
+
+    private fun launchScan() {
+        val options = ScanOptions()
+                .setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+                .setPrompt(getString(R.string.title_import_qr))
+        try {
+            scanCode.launch(options)
+        } catch (e: ActivityNotFoundException) {
+            showMsg(getString(R.string.err_no_scan_app))
+            Log.e(javaClass.simpleName, "No app found to scan QR code.", e)
+        }
+    }
+
+    /**
+     * Handles an `AVNC:URI` decoded from a QR code.
+     */
+    private fun handleImportedUri(uri: Uri) {
+        when (uri.scheme) {
+            "vnc" -> startActivity(Intent(Intent.ACTION_VIEW, uri))
+            "file", "http", "https" -> viewModel.import(uri)
+            else -> showMsg(getString(R.string.err_unsupported_qr_uri))
         }
     }
 

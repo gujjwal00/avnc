@@ -107,6 +107,9 @@
     <string name="msg_saved">Saved</string>
     <string name="msg_done">Done</string>
     <string name="msg_export_auth_required">Authenticate to export servers</string>
+    <string name="err_invalid_qr_code">Invalid AVNC QR code.</string>
+    <string name="err_no_scan_app">Error: No app found to scan QR code.</string>
+    <string name="err_unsupported_qr_uri">Unsupported or invalid URI.</string>
     <string name="msg_required">Required</string>
     <string name="msg_invalid_mac_address">Invalid MAC address</string>
     <string name="msg_invalid_key_file">Invalid private key file</string>
