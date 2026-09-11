@@ -44,7 +44,7 @@
     <string name="msg_exported">Exporté</string>
     <string name="msg_export_auth_required">Authentifiez-vous pour exporter des serveurs</string>
     <string name="err_invalid_qr_code">Ce n’est pas un code QR AVNC.</string>
-    <string name="err_qr_export_failed">Échec de la génération du code QR.</string>
+    <string name="err_qr_export_failed">Échec de la génération du code QR :</string>
     <string name="err_unsupported_qr_uri">URI non prise en charge ou invalide.</string>
     <string name="msg_invalid_key_file">Fichier de clé privée invalide</string>
     <string name="msg_invalid_vnc_uri">URI VNC invalide</string>

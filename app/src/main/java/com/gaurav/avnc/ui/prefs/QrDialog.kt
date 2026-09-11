@@ -51,7 +51,7 @@ class QrDialog : DialogFragment() {
         } catch (e: WriterException) {
             Log.e(QrDialog::class.simpleName, "Failed to generate QR code", e)
             return dialogBuilder(title)
-                    .setMessage(R.string.err_qr_export_failed)
+                    .setMessage("${getString(R.string.err_qr_export_failed)} ${e.localizedMessage}")
                     .create()
         }
 

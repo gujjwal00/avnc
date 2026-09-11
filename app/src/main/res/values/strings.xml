@@ -108,7 +108,7 @@
     <string name="msg_done">Done</string>
     <string name="msg_export_auth_required">Authenticate to export servers</string>
     <string name="err_invalid_qr_code">Invalid AVNC QR code.</string>
-    <string name="err_qr_export_failed">Failed to generate QR code.</string>
+    <string name="err_qr_export_failed">Failed to generate QR code:</string>
     <string name="err_unsupported_qr_uri">Unsupported or invalid URI.</string>
     <string name="msg_required">Required</string>
     <string name="msg_invalid_mac_address">Invalid MAC address</string>
