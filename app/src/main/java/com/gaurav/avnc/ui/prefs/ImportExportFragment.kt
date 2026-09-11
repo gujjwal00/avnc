@@ -136,12 +136,7 @@ class ImportExportFragment : Fragment() {
         val options = ScanOptions()
                 .setDesiredBarcodeFormats(ScanOptions.QR_CODE)
                 .setPrompt(getString(R.string.title_import_qr))
-        try {
-            scanCode.launch(options)
-        } catch (e: ActivityNotFoundException) {
-            showMsg(getString(R.string.err_no_scan_app))
-            Log.e(javaClass.simpleName, "No app found to scan QR code.", e)
-        }
+        scanCode.launch(options)
     }
 
     /**
