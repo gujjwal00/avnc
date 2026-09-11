@@ -10,10 +10,7 @@ package com.gaurav.avnc.ui.prefs
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Color
 import android.net.Uri
-import android.widget.ImageView
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -32,17 +29,11 @@ import com.gaurav.avnc.util.MsgDialog
 import com.gaurav.avnc.util.OpenableDocument
 import com.gaurav.avnc.util.QrCode
 import com.gaurav.avnc.viewmodel.PrefsViewModel
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.google.zxing.BarcodeFormat
-import com.google.zxing.WriterException
-import com.google.zxing.qrcode.QRCodeWriter
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import java.text.DateFormat
 import java.util.Date
-import androidx.core.graphics.createBitmap
-import androidx.core.graphics.set
 
 @Keep
 class ImportExportFragment : Fragment() {
@@ -188,26 +179,8 @@ class ImportExportFragment : Fragment() {
      * Shows the exported [json] as a QR code in a dialog.
      */
     private fun showQrDialog(json: String) {
-        try {
-            val matrix = QRCodeWriter().encode(QrCode.encode(json), BarcodeFormat.QR_CODE, 512, 512)
-            val bitmap = createBitmap(matrix.width, matrix.height, Bitmap.Config.RGB_565)
-            for (x in 0 until matrix.width)
-                for (y in 0 until matrix.height)
-                    bitmap[x, y] = if (matrix[x, y]) Color.BLACK else Color.WHITE
-
-            val image = ImageView(requireContext()).apply {
-                setImageBitmap(bitmap)
-                adjustViewBounds = true
-            }
-
-            MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.title_export_qr)
-                    .setView(image)
-                    .setPositiveButton(android.R.string.ok, null)
-                    .show()
-        } catch (e: WriterException) {
-            MsgDialog.show(childFragmentManager, "Error", getString(R.string.err_qr_export_failed))
-            Log.e(javaClass.simpleName, "Failed to generate QR code.", e)
-        }
+        val title = getString(R.string.title_export_qr)
+        val data = QrCode.encode(json)
+        QrDialog.show(childFragmentManager, title, data)
     }
 }
