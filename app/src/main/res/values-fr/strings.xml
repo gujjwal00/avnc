@@ -43,6 +43,7 @@
     <string name="msg_imported">Importé</string>
     <string name="msg_exported">Exporté</string>
     <string name="msg_export_auth_required">Authentifiez-vous pour exporter des serveurs</string>
+    <string name="err_import_too_large">Le fichier d\'import est trop gros (limite : 1 Mio).</string>
     <string name="err_invalid_qr_code">Ce n’est pas un code QR AVNC.</string>
     <string name="err_qr_export_failed">Échec de la génération du code QR :</string>
     <string name="err_unsupported_qr_uri">URI non prise en charge ou invalide.</string>

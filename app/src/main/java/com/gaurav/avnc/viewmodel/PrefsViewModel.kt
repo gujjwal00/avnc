@@ -25,6 +25,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URI
@@ -36,6 +37,7 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
 
     private companion object {
         const val TIMEOUT_MS = 10_000
+        const val MAX_RESPONSE_BYTES = 1024 * 1024
     }
 
     /**************************************************************************
@@ -124,7 +126,16 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
             if (code !in 200..299)
                 throw IOException("Unable to read the file: HTTP $code")
             return connection.inputStream.use { stream ->
-                stream.reader().use { it.readText() }
+                val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                val output = ByteArrayOutputStream()
+                while (true) {
+                    val n = stream.read(buffer)
+                    if (n < 0) break
+                    if (output.size() + n > MAX_RESPONSE_BYTES)
+                        throw IOException(app.getString(R.string.err_import_too_large))
+                    output.write(buffer, 0, n)
+                }
+                output.toString(Charsets.UTF_8.name())
             }
         } finally {
             connection.disconnect()

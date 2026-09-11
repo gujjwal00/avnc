@@ -107,6 +107,7 @@
     <string name="msg_saved">Saved</string>
     <string name="msg_done">Done</string>
     <string name="msg_export_auth_required">Authenticate to export servers</string>
+    <string name="err_import_too_large">Import file is too large (limit: 1 MiB).</string>
     <string name="err_invalid_qr_code">Invalid AVNC QR code.</string>
     <string name="err_qr_export_failed">Failed to generate QR code:</string>
     <string name="err_unsupported_qr_uri">Unsupported or invalid URI.</string>
