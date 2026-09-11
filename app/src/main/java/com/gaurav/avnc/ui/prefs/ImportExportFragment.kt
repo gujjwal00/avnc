@@ -19,11 +19,13 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Keep
+import androidx.core.os.BundleCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import com.gaurav.avnc.R
 import com.gaurav.avnc.databinding.FragmentImportExportBinding
+import com.gaurav.avnc.util.ConfirmDialog
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.MsgDialog
 import com.gaurav.avnc.util.OpenableDocument
@@ -39,6 +41,11 @@ import java.util.Date
 class ImportExportFragment : Fragment() {
 
     private enum class Tag { Import, ImportQr, Export, ExportQr }
+
+    companion object {
+        private const val REQUEST_IMPORT_URI = "request_import_uri"
+        private const val KEY_IMPORT_URI = "import_uri"
+    }
 
     private val importFilePicker = registerForActivityResult(OpenableDocument()) { import(it) }
     private val exportFilePicker = registerForActivityResult(ActivityResultContracts.CreateDocument("*/*")) { export(it) }
@@ -72,6 +79,12 @@ class ImportExportFragment : Fragment() {
         binding.exportQrBtn.setOnClickListener { checkAuthAndStart(Tag.ExportQr) }
 
         viewModel.importExportFinishedEvent.observe(viewLifecycleOwner) { handleImportExportResult(it) }
+
+        childFragmentManager.setFragmentResultListener(REQUEST_IMPORT_URI, viewLifecycleOwner) { _, bundle ->
+            val uri = BundleCompat.getParcelable(bundle, KEY_IMPORT_URI, Uri::class.java)
+                    ?: return@setFragmentResultListener
+            viewModel.import(uri)
+        }
 
         authPrompt.init(
                 onSuccess = { checkNotNull(it as? Tag); start(it) },
@@ -141,10 +154,16 @@ class ImportExportFragment : Fragment() {
 
     /**
      * Handles an `AVNC:URI` decoded from a QR code.
+     * Displays the URI and asks the user for confirmation before dereferencing it.
      */
     private fun handleImportedUri(uri: Uri) {
         when (uri.scheme) {
-            "file", "http", "https" -> viewModel.import(uri)
+            "file", "http", "https" -> {
+                val title = getString(R.string.title_import)
+                val msg = "${getString(R.string.msg_confirm_import_uri)}\n\n$uri"
+                val result = Bundle().apply { putParcelable(KEY_IMPORT_URI, uri) }
+                ConfirmDialog.show(childFragmentManager, REQUEST_IMPORT_URI, title, msg, result)
+            }
             else -> showMsg(getString(R.string.err_unsupported_qr_uri))
         }
     }
