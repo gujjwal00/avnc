@@ -149,7 +149,6 @@ class ImportExportFragment : Fragment() {
      */
     private fun handleImportedUri(uri: Uri) {
         when (uri.scheme) {
-            "vnc" -> startActivity(Intent(Intent.ACTION_VIEW, uri))
             "file", "http", "https" -> viewModel.import(uri)
             else -> showMsg(getString(R.string.err_unsupported_qr_uri))
         }
