@@ -12,7 +12,11 @@
     <string name="title_settings">Paramètres</string>
     <string name="title_vnc_login">Connexion VNC</string>
     <string name="title_export">Exporter</string>
+    <string name="title_export_file">Export vers un fichier</string>
+    <string name="title_export_qr">Afficher le code QR</string>
     <string name="title_import">Importer</string>
+    <string name="title_import_file">Importer un fichier</string>
+    <string name="title_import_qr">Scanner un code QR</string>
     <string name="title_view_only_mode">Visualisation uniquement</string>
     <string name="title_remember">Mémoriser</string>
     <string name="title_hide_remote_cursor">Masquer le curseur distant</string>
@@ -39,6 +43,11 @@
     <string name="msg_imported">Importé</string>
     <string name="msg_exported">Exporté</string>
     <string name="msg_export_auth_required">Authentifiez-vous pour exporter des serveurs</string>
+    <string name="err_import_too_large">Le fichier d\'import est trop gros (limite : 1 Mio).</string>
+    <string name="err_invalid_qr_code">Ce n’est pas un code QR AVNC.</string>
+    <string name="err_qr_export_failed">Échec de la génération du code QR :</string>
+    <string name="err_unsupported_qr_uri">URI non prise en charge ou invalide.</string>
+    <string name="msg_confirm_import_uri">Importer depuis l’URI suivante ?</string>
     <string name="msg_invalid_key_file">Fichier de clé privée invalide</string>
     <string name="msg_invalid_vnc_uri">URI VNC invalide</string>
     <string name="msg_copied_to_clipboard">Copié</string>

@@ -25,13 +25,20 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
+import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URI
 
 /**
  * Viewmodel for preferences activity.
  */
 class PrefsViewModel(app: Application) : BaseViewModel(app) {
 
+    private companion object {
+        const val TIMEOUT_MS = 10_000
+        const val MAX_RESPONSE_BYTES = 1024 * 1024
+    }
 
     /**************************************************************************
      * Import/Export
@@ -63,77 +70,149 @@ class PrefsViewModel(app: Application) : BaseViewModel(app) {
      * Exports data to given [uri].
      */
     fun export(uri: Uri) {
-        val exportSettings = exportSettings.isTrue
-        val exportProfiles = exportProfiles.isTrue
-        val exportSecrets = exportSecrets.isTrue && exportProfiles
-        debugCheck(exportSettings || exportProfiles)
+        launchImportExport {
+            val json = exportJson()
 
+            // Write out
+            app.contentResolver.openOutputStream(uri)?.use { stream ->
+                stream.writer().use { it.write(json) }
+            } ?: throw IOException("Unable to write the file.")
+
+            app.getString(R.string.msg_exported)
+        }
+    }
+
+    /**
+     * Exports data as JSON and posts the result on [jsonDestination],
+     * for export, e.g. via QR code.
+     */
+    fun export(jsonDestination : MutableLiveData<String>) {
+        launchImportExport {
+            val json = exportJson()
+            jsonDestination.postValue(json)
+            app.getString(R.string.msg_exported)
+        }
+    }
+
+    /**
+     * Imports data from given [uri].
+     */
+    fun import(uri: Uri) {
+        launchImportExport {
+            val json = when (uri.scheme) {
+                "http", "https" -> readFromNetwork(uri)
+                else -> app.contentResolver.openInputStream(uri)?.use { stream ->
+                    stream.reader().use { it.readText() }
+                } ?: throw IOException("Unable to read the file.")
+            }
+
+            importJson(json)
+
+            app.getString(R.string.msg_imported)
+        }
+    }
+
+    /**
+     * Reads the entire body of an http/https [uri] into a String.
+     */
+    private fun readFromNetwork(uri: Uri): String {
+        val connection = (URI(uri.toString()).toURL().openConnection() as HttpURLConnection).apply {
+            connectTimeout = TIMEOUT_MS
+            readTimeout = TIMEOUT_MS
+            requestMethod = "GET"
+        }
+        try {
+            val code = connection.responseCode
+            if (code !in 200..299)
+                throw IOException("Unable to read the file: HTTP $code")
+            return connection.inputStream.use { stream ->
+                val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                val output = ByteArrayOutputStream()
+                while (true) {
+                    val n = stream.read(buffer)
+                    if (n < 0) break
+                    if (output.size() + n > MAX_RESPONSE_BYTES)
+                        throw IOException(app.getString(R.string.err_import_too_large))
+                    output.write(buffer, 0, n)
+                }
+                output.toString(Charsets.UTF_8.name())
+            }
+        } finally {
+            connection.disconnect()
+        }
+    }
+
+    /**
+     * Imports data from given JSON string (e.g. read off a QR code).
+     */
+    fun import(json: String) {
+        launchImportExport {
+            importJson(json)
+            app.getString(R.string.msg_imported)
+        }
+    }
+
+    /**
+     * Runs an import/export operation on a background thread and fires
+     * [importExportFinishedEvent] with its [Result].
+     */
+    private fun launchImportExport(block: suspend () -> String) {
         launchIO {
             runCatching {
-                // Serialize
-                val data = Container(
-                        profiles = if (exportProfiles) serverProfileDao.getList() else emptyList(),
-                        preferences = if (exportSettings) collectPreferences() else emptyMap()
-                )
-
-                if (!exportSecrets)
-                    scrubSecrets(data.profiles)
-
-                val json = serializer.encodeToString(data)
-
-                // Write out
-                app.contentResolver.openOutputStream(uri)?.use { stream ->
-                    stream.writer().use { it.write(json) }
-                } ?: throw IOException("Unable to write the file.")
-
-                return@runCatching app.getString(R.string.msg_exported)
+                block()
             }.let {
                 importExportFinishedEvent.fireAsync(it)
             }
         }
     }
 
+    /**
+     * Serializes current profiles or settings into a backup JSON string.
+     */
+    private suspend fun exportJson(): String {
+        val exportSettings = exportSettings.isTrue
+        val exportProfiles = exportProfiles.isTrue
+        val exportSecrets = exportSecrets.isTrue && exportProfiles
+        debugCheck(exportSettings || exportProfiles)
+
+        // Serialize
+        val data = Container(
+                profiles = if (exportProfiles) serverProfileDao.getList() else emptyList(),
+                preferences = if (exportSettings) collectPreferences() else emptyMap()
+        )
+
+        if (!exportSecrets)
+            scrubSecrets(data.profiles)
+
+        return serializer.encodeToString(data)
+    }
 
     /**
-     * Imports data from given [uri].
+     * Deserializes given backup JSON and updates the database.
      */
-    fun import(uri: Uri) {
+    private suspend fun importJson(json: String) {
         val deleteCurrentServers = deleteCurrentServerBeforeImport.isTrue
 
-        launchIO {
-            runCatching {
+        // Deserialize
+        val data = serializer.decodeFromString<Container>(json)
 
-                val json = app.contentResolver.openInputStream(uri)?.use { stream ->
-                    stream.reader().use { it.readText() }
-                } ?: throw IOException("Unable to read the file.")
+        //This is where migrations would be applied (if required in future)
 
-                // Deserialize
-                val data = serializer.decodeFromString<Container>(json)
-
-                //This is where migrations would be applied (if required in future)
-
-                //Update database
-                if (data.profiles.isNotEmpty()) {
-                    if (deleteCurrentServers) {
-                        db.withTransaction {
-                            serverProfileDao.deleteAll()
-                            serverProfileDao.save(data.profiles)
-                        }
-                    } else {
-                        //Reset IDs so that they don't conflict with saved profiles
-                        data.profiles.forEach { it.ID = 0 }
-                        serverProfileDao.save(data.profiles)
-                    }
+        if (data.profiles.isNotEmpty()) {
+            if (deleteCurrentServers) {
+                db.withTransaction {
+                    serverProfileDao.deleteAll()
+                    serverProfileDao.save(data.profiles)
                 }
-
-                // Replay app preferences (best-effort, unknown keys are ignored)
-                applyPreferences(data.preferences)
-
-                return@runCatching app.getString(R.string.msg_imported)
-            }.let {
-                importExportFinishedEvent.fireAsync(it)
+            } else {
+                //Reset IDs so that they don't conflict with saved profiles
+                data.profiles.forEach { it.ID = 0 }
+                serverProfileDao.save(data.profiles)
             }
         }
+
+        // Replay app preferences (best-effort, unknown keys are ignored)
+        applyPreferences(data.preferences)
     }
 
     /**

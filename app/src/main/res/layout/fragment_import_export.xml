@@ -24,6 +24,18 @@
         android:paddingTop="5dp"
         android:weightSum="1">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_export"
+            style="@style/PreferenceCategoryTitleTextStyle" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:background="@color/colorBorder" />
+
         <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,8 +67,23 @@
             android:enabled="@{viewModel.exportSettings || viewModel.exportProfiles}"
             android:paddingHorizontal="30dp"
             android:paddingVertical="@dimen/padding_normal"
-            android:text="@string/title_export"
-            app:icon="@drawable/ic_upload" />
+            android:text="@string/title_export_file"
+            app:icon="@drawable/ic_file" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight=".1" />
+
+        <Button
+            android:id="@+id/export_qr_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="@{viewModel.exportSettings || viewModel.exportProfiles}"
+            android:paddingHorizontal="30dp"
+            android:paddingVertical="@dimen/padding_normal"
+            android:text="@string/title_export_qr"
+            app:icon="@drawable/ic_qr_code" />
 
         <Space
             android:layout_width="0dp"
@@ -66,6 +93,19 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:background="@color/colorBorder" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_import"
+            style="@style/PreferenceCategoryTitleTextStyle" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/padding_small"
             android:background="@color/colorBorder" />
 
         <CheckBox
@@ -86,7 +126,21 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="30dp"
             android:paddingVertical="@dimen/padding_normal"
-            android:text="@string/title_import"
-            app:icon="@drawable/ic_download" />
+            android:text="@string/title_import_file"
+            app:icon="@drawable/ic_file" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight=".1" />
+
+        <Button
+            android:id="@+id/import_qr_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="30dp"
+            android:paddingVertical="@dimen/padding_normal"
+            android:text="@string/title_import_qr"
+            app:icon="@drawable/ic_qr_code" />
     </LinearLayout>
 </layout>
