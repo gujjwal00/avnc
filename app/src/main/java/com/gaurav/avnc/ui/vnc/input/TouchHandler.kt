@@ -288,6 +288,8 @@ class TouchHandler(private val inputView: View, private val dispatcher: Dispatch
         override fun onFling(velocityX: Float, velocityY: Float) {
             dispatcher.onFling(velocityX, velocityY)
         }
+
+        override fun shouldDiscardSlop() = dispatcher.shouldDiscardSwipeSlop()
     }
 
     /**
@@ -350,6 +352,7 @@ class TouchHandler(private val inputView: View, private val dispatcher: Dispatch
             fun onScrollAfterDoubleTap(e1: MotionEvent, e2: MotionEvent, dx: Float, dy: Float)
 
             fun onFling(velocityX: Float, velocityY: Float)
+            fun shouldDiscardSlop(): Boolean
         }
 
 
@@ -445,7 +448,8 @@ class TouchHandler(private val inputView: View, private val dispatcher: Dispatch
 
         private fun handleScroll(e1: MotionEvent?, e2: MotionEvent, dx: Float, dy: Float): Boolean {
             e1 ?: return false
-            if (!scrolling) {
+            val isFirstScroll = !scrolling
+            if (isFirstScroll) {
                 scrolling = true
                 // Send first scroll event on initial touch-down point, because GestureDetector
                 // requires certain amount of finger movement before scroll is triggered, and
@@ -453,7 +457,12 @@ class TouchHandler(private val inputView: View, private val dispatcher: Dispatch
                 callOnScroll(e1, e1, 0f, 0f)
             }
 
-            callOnScroll(e1, e2, -dx, -dy)
+            // GestureDetector holds back first slop of movement and sends it
+            // as one big delta, which makes the cursor jump, so we swallow it here
+            val discardSlop = isFirstScroll && e2.pointerCount == 1 && !doubleTapDetected && !longPressDetected && listener.shouldDiscardSlop()
+
+            if (!discardSlop)
+                callOnScroll(e1, e2, -dx, -dy)
             cumulatedX += dx
             cumulatedY += dy
             return true

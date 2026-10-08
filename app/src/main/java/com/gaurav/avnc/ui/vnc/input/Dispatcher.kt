@@ -159,6 +159,8 @@ class Dispatcher(private val activity: VncActivity) {
     fun onScale(scaleFactor: Float, fx: Float, fy: Float) = doScale(scaleFactor, fx, fy)
     fun onFling(vx: Float, vy: Float) = config.flingAction(vx, vy)
 
+    fun shouldDiscardSwipeSlop() = config.gestureStyle == "touchpad"
+
     fun onMouseButtonDown(button: PointerButton, p: PointF) = directMode.doButtonDown(button, p)
     fun onMouseButtonUp(button: PointerButton, p: PointF) = directMode.doButtonUp(button, p)
     fun onMouseMove(p: PointF) = directMode.doMovePointer(p, 0f, 0f)
