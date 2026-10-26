@@ -269,4 +269,7 @@
     <string name="pref_keycode_map">Keycode map</string>
     <string name="pref_touch_test">Touch test</string>
     <string name="pref_key_test">Key test</string>
+    <string name="title_key_side">Side</string>
+    <string name="title_key_side_left">Left</string>
+    <string name="title_key_side_right">Right</string>
 </resources>

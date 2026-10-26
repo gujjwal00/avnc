@@ -57,6 +57,24 @@ class VirtualKeysTest : VncSessionTest() {
     val prefsRule = CleanPrefsRule()
 
     @Test
+    fun rightModifiersSendMatchingPressAndRelease() {
+        // This is an explicit new selection, after the existing one-time migration.
+        targetPrefs.edit {
+            putBoolean("run_info_right_meta_keys_migrated", true)
+            putString("vk_keys_layout", "RightCtrl,RightAlt,RightShift,RightSuper")
+        }
+        val keys = listOf("rCtrl" to XKeySym.XK_Control_R, "rAlt" to XKeySym.XK_Alt_R,
+                          "rShift" to XKeySym.XK_Shift_R, "rSuper" to XKeySym.XK_Super_R)
+        vncSession.run {
+            keys.forEach { (label, _) ->
+                onView(withText(label)).doClick().doClick()
+            }
+        }
+        assertEquals(keys.flatMap { (_, symbol) -> listOf(symbol to true, symbol to false) },
+                     vncSession.server.receivedKeySyms)
+    }
+
+    @Test
     fun basicTest() {
         vncSession.run {
             // Should be visible

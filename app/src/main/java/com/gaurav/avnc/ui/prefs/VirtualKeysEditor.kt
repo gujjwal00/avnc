@@ -26,6 +26,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
 import androidx.core.view.doOnLayout
+import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import com.gaurav.avnc.R
@@ -92,6 +93,9 @@ class VirtualKeysEditor : Fragment() {
         binding.moveUpBtn.setOnClickListener { focusedKey?.let { moveKey(it, -1) } }
         binding.moveDownBtn.setOnClickListener { focusedKey?.let { moveKey(it, 1) } }
         binding.deleteBtn.setOnClickListener { focusedKey?.let { removeKey(it) } }
+        binding.keySideGroup.addOnButtonCheckedListener { _, id, checked ->
+            if (checked) changeSide(id == R.id.key_side_right)
+        }
         updateActionButtons()
 
         binding.saveBtn.setOnClickListener { saveKeys() }
@@ -136,13 +140,38 @@ class VirtualKeysEditor : Fragment() {
         binding.moveUpBtn.isEnabled = index > 0
         binding.moveDownBtn.isEnabled = index >= 0 && index < (keyList.size - 1)
         binding.deleteBtn.isEnabled = index >= 0 && keyList.size > 1
+        val selected = focusedKey?.vk
+        val left = selected?.leftVariant ?: selected
+        val right = VirtualKey.entries.find { it.leftVariant != null && it.leftVariant == left }
+        binding.keySide.isVisible = right != null
+        if (right != null) {
+            // MaterialButton ignores checked-state changes while disabled.
+            binding.keySideLeft.isEnabled = true
+            binding.keySideRight.isEnabled = true
+            binding.keySideGroup.check(if (selected == right) R.id.key_side_right else R.id.key_side_left)
+            binding.keySideLeft.isEnabled = keyList.none { it.vk == left && it != focusedKey }
+            binding.keySideRight.isEnabled = keyList.none { it.vk == right && it != focusedKey }
+        }
     }
 
-    private fun addNewKey(vk: VirtualKey): KeyWrapper {
+    // Replace only the selected modifier, preserving its position and unique key identity.
+    private fun changeSide(right: Boolean) {
+        val current = focusedKey ?: return
+        val left = current.vk.leftVariant ?: current.vk
+        val target = if (right) VirtualKey.entries.find { it.leftVariant == left } ?: return else left
+        if (current.vk == target || keyList.any { it.vk == target }) return
+        val index = keyList.indexOf(current)
+        removeKey(current)
+        val replacement = addNewKey(target, index)
+        setFocusedKey(replacement.view)
+        replacement.view.doOnLayout { refreshFocus() }
+    }
+
+    private fun addNewKey(vk: VirtualKey, index: Int = keyList.size): KeyWrapper {
         check(keyList.find { it.vk == vk } == null) { "Duplicate key detected" }
 
         val view = VirtualKeyViewFactory.create(requireContext(), vk)
-        binding.keyGrid.addView(view)
+        binding.keyGrid.addView(view, index)
         view.contentDescription = vk.description
         view.setOnClickListener {
             if (focusedKey?.view == view) setFocusedKey(null) // Clear focus on 2nd click
@@ -151,7 +180,7 @@ class VirtualKeysEditor : Fragment() {
         }
 
         val wrapper = KeyWrapper(vk, view)
-        keyList.add(wrapper)
+        keyList.add(index, wrapper)
 
         updateActionButtons()
         return wrapper
@@ -226,7 +255,7 @@ class VirtualKeysEditor : Fragment() {
             addView(
                     GridLayout(context).apply {
                         columnCount = 6
-                        VirtualKey.entries.forEach { virtualKey ->
+                        VirtualKey.entries.filter { it.leftVariant == null }.forEach { virtualKey ->
                             addView(VirtualKeyViewFactory.create(context, virtualKey).apply {
                                 setOnClickListener {
                                     selectOrAddKey(virtualKey)

@@ -364,6 +364,9 @@ enum class VirtualKey(
         val description: String? = null,
 
         val isToggle: Boolean = false,
+
+        // Right variants retain their left counterpart for the editor’s side selector.
+        val leftVariant: VirtualKey? = null,
 ) {
 
     // Special actions
@@ -375,6 +378,11 @@ enum class VirtualKey(
     LeftCtrl(keyCode = KeyEvent.KEYCODE_CTRL_LEFT, label = "Ctrl", isToggle = true),
     LeftAlt(keyCode = KeyEvent.KEYCODE_ALT_LEFT, label = "Alt", isToggle = true),
     LeftSuper(keyCode = KeyEvent.KEYCODE_META_LEFT, label = "Super", icon = R.drawable.ic_super_key, isToggle = true),
+
+    RightShift(keyCode = KeyEvent.KEYCODE_SHIFT_RIGHT, label = "rShift", isToggle = true, leftVariant = LeftShift),
+    RightCtrl(keyCode = KeyEvent.KEYCODE_CTRL_RIGHT, label = "rCtrl", isToggle = true, leftVariant = LeftCtrl),
+    RightAlt(keyCode = KeyEvent.KEYCODE_ALT_RIGHT, label = "rAlt", isToggle = true, leftVariant = LeftAlt),
+    RightSuper(keyCode = KeyEvent.KEYCODE_META_RIGHT, label = "rSuper", isToggle = true, leftVariant = LeftSuper),
 
     Esc(keyCode = KeyEvent.KEYCODE_ESCAPE),
     Tab(keyCode = KeyEvent.KEYCODE_TAB),

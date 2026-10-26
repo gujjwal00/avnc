@@ -10,6 +10,11 @@ package com.gaurav.avnc.ui.pref
 
 import androidx.core.content.edit
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isChecked
+import androidx.test.espresso.matcher.ViewMatchers.isNotChecked
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.isNotEnabled
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import androidx.test.espresso.action.ViewActions
@@ -44,6 +49,28 @@ class VirtualKeysEditorTest {
         onView(withText(R.string.pref_customize_virtual_keys)).checkIsDisplayed()
         onView(withText(R.string.title_save)).checkIsDisplayed()
         onView(withText(R.string.title_cancel)).checkIsDisplayed()
+    }
+
+    @Test
+    fun bothSidesCanBeAddedWithoutDuplicates() {
+        targetPrefs.edit { putString("vk_keys_layout", "LeftCtrl,Tab") }
+        openEditor()
+        onView(withText("Ctrl")).doClick()
+        onView(withId(R.id.key_side_right)).doClick()
+        onView(withId(R.id.add_key_btn)).doClick()
+        onView(withText("Ctrl")).doClick()
+        onView(withId(R.id.key_side_right)).check(matches(isNotChecked()))
+        onView(withId(R.id.key_side_left)).check(matches(isChecked()))
+        onView(withId(R.id.key_side_right)).check(matches(isNotEnabled()))
+        onView(withId(R.id.key_side_left)).check(matches(isEnabled()))
+        onView(withText("rCtrl")).doClick()
+        onView(withId(R.id.key_side_right)).check(matches(isChecked()))
+        onView(withId(R.id.key_side_left)).check(matches(isNotChecked()))
+        onView(withText("Ctrl")).doClick()
+        onView(withId(R.id.key_side_left)).check(matches(isChecked()))
+        onView(withId(R.id.key_side_right)).check(matches(isNotChecked()))
+        onView(withId(R.id.save_btn)).doClick()
+        Assert.assertEquals("RightCtrl,Tab,LeftCtrl", targetPrefs.getString("vk_keys_layout", null))
     }
 
     @Test // User should be able to restore default config

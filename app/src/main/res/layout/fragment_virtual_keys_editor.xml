@@ -94,6 +94,45 @@
                 app:tint="?android:textColorPrimary" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/key_side"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/key_actions"
+            app:layout_constraintTop_toBottomOf="@id/key_actions">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:text="@string/title_key_side" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/key_side_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/key_side_left"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_key_side_left" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/key_side_right"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_key_side_right" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+        </LinearLayout>
+
         <FrameLayout
             android:id="@+id/global_actions"
             android:layout_width="match_parent"
