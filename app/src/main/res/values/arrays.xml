@@ -227,4 +227,203 @@
         <item>Item 2</item>
         <item>Item 3</item>
     </string-array>
+
+    <!--
+      Managed configuration (EMM/MDM).
+      First option, with an empty value, leaves the setting to the user.
+    -->
+    <string-array name="restriction_bool_entries">
+        <item>@string/restriction_option_user_defined</item>
+        <item>@string/restriction_option_enabled</item>
+        <item>@string/restriction_option_disabled</item>
+    </string-array>
+    <string-array name="restriction_bool_values">
+        <item />
+        <item>true</item>
+        <item>false</item>
+    </string-array>
+    <string-array name="restriction_theme_entries">
+        <item>@string/restriction_option_user_defined</item>
+        <item>@string/pref_theme_option_system</item>
+        <item>@string/pref_theme_option_dark</item>
+        <item>@string/pref_theme_option_light</item>
+    </string-array>
+    <string-array name="restriction_theme_values">
+        <item />
+        <item>system</item>
+        <item>dark</item>
+        <item>light</item>
+    </string-array>
+    <string-array name="restriction_orientation_entries">
+        <item>@string/restriction_option_user_defined</item>
+        <item>@string/pref_orientation_option_auto</item>
+        <item>@string/pref_orientation_option_portrait</item>
+        <item>@string/pref_orientation_option_landscape</item>
+    </string-array>
+    <string-array name="restriction_orientation_values">
+        <item />
+        <item>auto</item>
+        <item>portrait</item>
+        <item>landscape</item>
+    </string-array>
+    <string-array name="restriction_pref_gesture_style_entries">
+        <item>@string/restriction_option_user_defined</item>
+        <item>@string/pref_gesture_style_touchscreen</item>
+        <item>@string/pref_gesture_style_touchpad</item>
+    </string-array>
+    <string-array name="restriction_pref_gesture_style_values">
+        <item />
+        <item>touchscreen</item>
+        <item>touchpad</item>
+    </string-array>
+    <string-array name="restriction_tap2_action_entries">
+        <item>@string/restriction_option_user_defined</item>
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_right_click</item>
+        <item>@string/pref_gesture_action_open_keyboard</item>
+    </string-array>
+    <string-array name="restriction_tap2_action_values">
+        <item />
+        <item>none</item>
+        <item>right-click</item>
+        <item>open-keyboard</item>
+    </string-array>
+    <string-array name="restriction_swipe1_action_entries">
+        <item>@string/restriction_option_user_defined</item>
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_pan</item>
+        <item>@string/pref_gesture_action_remote_scroll</item>
+        <item>@string/pref_gesture_action_remote_drag</item>
+    </string-array>
+    <string-array name="restriction_swipe1_action_values">
+        <item />
+        <item>none</item>
+        <item>pan</item>
+        <item>remote-scroll</item>
+        <item>remote-drag</item>
+    </string-array>
+    <string-array name="restriction_swipe2_action_entries">
+        <item>@string/restriction_option_user_defined</item>
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_pan</item>
+        <item>@string/pref_gesture_action_remote_scroll</item>
+    </string-array>
+    <string-array name="restriction_swipe2_action_values">
+        <item />
+        <item>none</item>
+        <item>pan</item>
+        <item>remote-scroll</item>
+    </string-array>
+    <string-array name="restriction_double_tap_action_entries">
+        <item>@string/restriction_option_user_defined</item>
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_double_click</item>
+        <item>@string/pref_gesture_action_middle_click</item>
+        <item>@string/pref_gesture_action_right_click</item>
+    </string-array>
+    <string-array name="restriction_double_tap_action_values">
+        <item />
+        <item>none</item>
+        <item>double-click</item>
+        <item>middle-click</item>
+        <item>right-click</item>
+    </string-array>
+    <string-array name="restriction_long_press_action_entries">
+        <item>@string/restriction_option_user_defined</item>
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_double_click</item>
+        <item>@string/pref_gesture_action_middle_click</item>
+        <item>@string/pref_gesture_action_right_click</item>
+        <item>@string/pref_gesture_action_left_press</item>
+    </string-array>
+    <string-array name="restriction_long_press_action_values">
+        <item />
+        <item>none</item>
+        <item>double-click</item>
+        <item>middle-click</item>
+        <item>right-click</item>
+        <item>left-press</item>
+    </string-array>
+    <string-array name="restriction_tap3_action_entries">
+        <item>@string/restriction_option_user_defined</item>
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_right_click</item>
+        <item>@string/pref_gesture_action_middle_click</item>
+    </string-array>
+    <string-array name="restriction_tap3_action_values">
+        <item />
+        <item>none</item>
+        <item>right-click</item>
+        <item>middle-click</item>
+    </string-array>
+    <string-array name="restriction_swipe3_action_entries">
+        <item>@string/restriction_option_user_defined</item>
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_pan</item>
+        <item>@string/pref_gesture_action_remote_scroll</item>
+    </string-array>
+    <string-array name="restriction_swipe3_action_values">
+        <item />
+        <item>none</item>
+        <item>pan</item>
+        <item>remote-scroll</item>
+    </string-array>
+    <string-array name="restriction_double_tap_swipe_action_entries">
+        <item>@string/restriction_option_user_defined</item>
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_remote_drag</item>
+        <item>@string/pref_gesture_action_remote_drag_middle</item>
+        <item>@string/pref_gesture_action_pan</item>
+        <item>@string/pref_gesture_action_remote_scroll</item>
+    </string-array>
+    <string-array name="restriction_double_tap_swipe_action_values">
+        <item />
+        <item>none</item>
+        <item>remote-drag</item>
+        <item>remote-drag-middle</item>
+        <item>pan</item>
+        <item>remote-scroll</item>
+    </string-array>
+    <string-array name="restriction_long_press_swipe_action_entries">
+        <item>@string/restriction_option_user_defined</item>
+        <item>@string/pref_gesture_action_none</item>
+        <item>@string/pref_gesture_action_remote_drag</item>
+        <item>@string/pref_gesture_action_remote_drag_middle</item>
+        <item>@string/pref_gesture_action_pan</item>
+        <item>@string/pref_gesture_action_remote_scroll</item>
+    </string-array>
+    <string-array name="restriction_long_press_swipe_action_values">
+        <item />
+        <item>none</item>
+        <item>remote-drag</item>
+        <item>remote-drag-middle</item>
+        <item>pan</item>
+        <item>remote-scroll</item>
+    </string-array>
+    <string-array name="restriction_mouse_back_action_entries">
+        <item>@string/restriction_option_user_defined</item>
+        <item>@string/pref_mouse_back_action_default</item>
+        <item>@string/pref_gesture_action_middle_click</item>
+        <item>@string/pref_gesture_action_right_click</item>
+        <item>@string/pref_gesture_action_remote_back_press</item>
+    </string-array>
+    <string-array name="restriction_mouse_back_action_values">
+        <item />
+        <item>default</item>
+        <item>middle-click</item>
+        <item>right-click</item>
+        <item>remote-back-press</item>
+    </string-array>
+    <string-array name="restriction_vk_row_count_entries">
+        <item>@string/restriction_option_user_defined</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="restriction_vk_row_count_values">
+        <item />
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>

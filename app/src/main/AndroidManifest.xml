@@ -25,6 +25,10 @@
         android:supportsRtl="true"
         android:theme="@style/App.Theme">
 
+        <meta-data
+            android:name="android.content.APP_RESTRICTIONS"
+            android:resource="@xml/app_restrictions" />
+
         <activity-alias
             android:name=".StartupActivity"
             android:exported="true"

@@ -12,14 +12,17 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceGroup
 import androidx.preference.SwitchPreference
 import com.gaurav.avnc.R
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.gaurav.avnc.util.EdgeToEdgeHelper
+import com.gaurav.avnc.util.ManagedConfig
 import com.google.android.material.appbar.MaterialToolbar
 
 class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -39,6 +42,12 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
 
         setSupportActionBar(findViewById<MaterialToolbar>(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        // Managed preferences are disabled when fragments are created,
+        // so recreate them if managed configuration is changed later.
+        val managedConfig = ManagedConfig.obtain(this)
+        val initialRestrictions = managedConfig.restrictions
+        managedConfig.liveRestrictions.observe(this) { if (it !== initialRestrictions) recreate() }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -67,6 +76,8 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
 
     abstract class PrefFragment(private val prefResource: Int) : PreferenceFragmentCompat() {
 
+        protected val managedConfig by lazy { ManagedConfig.obtain(requireContext()) }
+
         override fun onResume() {
             super.onResume()
             activity?.title = preferenceScreen.title
@@ -74,6 +85,31 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(prefResource, rootKey)
+        }
+
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            super.onViewCreated(view, savedInstanceState)
+            // Done here, after subclasses have finished their setup in onCreate()
+            disableManagedPrefs(preferenceScreen)
+        }
+
+        /**
+         * Returns true if value of [pref] is enforced by managed configuration.
+         */
+        protected fun isManaged(pref: Preference) = pref.key?.let { managedConfig.isManaged(it) } == true
+
+        private fun disableManagedPrefs(group: PreferenceGroup) {
+            for (i in 0 until group.preferenceCount) {
+                val pref = group.getPreference(i)
+                if (pref is PreferenceGroup) {
+                    disableManagedPrefs(pref)
+                } else if (isManaged(pref)) {
+                    pref.isEnabled = false
+                    // Summary can't be directly set on preferences with a summary provider
+                    pref.summaryProvider = Preference.SummaryProvider<Preference> { getString(R.string.msg_managed_by_organization) }
+                    (pref as? ListPreferenceEx)?.disabledStateSummary = null
+                }
+            }
         }
     }
 
@@ -150,9 +186,11 @@ class PrefsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreference
         }
 
         private fun applyTests() {
-            val prefs = preferenceManager.sharedPreferences?.all ?: return
+            val prefs = preferenceManager.sharedPreferences?.all?.toMutableMap() ?: return
+            prefs.putAll(managedConfig.enforcedStrings()) // Managed values take precedence
+
             visibilityTests.forEach { it.key.isVisible = it.value(prefs) }
-            enablementTests.forEach { it.key.isEnabled = it.value(prefs) }
+            enablementTests.forEach { it.key.isEnabled = it.value(prefs) && !isManaged(it.key) }
         }
     }
 
