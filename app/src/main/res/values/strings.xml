@@ -269,4 +269,19 @@
     <string name="pref_keycode_map">Keycode map</string>
     <string name="pref_touch_test">Touch test</string>
     <string name="pref_key_test">Key test</string>
+
+    <!--Managed configuration (EMM/MDM)-->
+    <string name="msg_managed_by_organization">Managed by your organization</string>
+    <string name="restriction_viewer_orientation_desc">Screen orientation of the viewer.</string>
+    <string name="restriction_fullscreen_display_desc">Hide system bars in the viewer.</string>
+    <string name="restriction_keep_screen_on_desc">Prevent the screen from turning off while connected.</string>
+    <string name="restriction_gesture_style_desc">How touch gestures are interpreted.</string>
+    <string name="restriction_gesture_tap2_desc">Action performed on two-finger tap.</string>
+    <string name="restriction_gesture_swipe1_desc">Action performed on one-finger swipe (touchscreen style only).</string>
+    <string name="restriction_gesture_swipe2_desc">Action performed on two-finger swipe.</string>
+    <string name="restriction_gesture_swipe_sensitivity_desc">Swipe sensitivity, from 5 to 15. If 0, user can change it in settings.</string>
+    <string name="restriction_auto_reconnect_desc">Reconnect automatically when connection is lost.</string>
+    <string name="restriction_option_user_defined">Defined by user</string>
+    <string name="restriction_option_enabled">Enabled</string>
+    <string name="restriction_option_disabled">Disabled</string>
 </resources>

@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025  Gaurav Ujjwal.
+  ~
+  ~ SPDX-License-Identifier:  GPL-3.0-or-later
+  ~
+  ~ See COPYING.txt for more details.
+  -->
+
+<!--
+  Managed configuration schema for EMM/MDM solutions.
+  See docs/emm-managed-configurations.md
+
+  - Restrictions are grouped in sections using 'bundle' restrictions.
+    Groups are flattened when read (see ManagedConfig), so keys must be unique.
+  - Keys of restrictions which override a preference are same as the preference key.
+  - Settings which can be left to the user default to "Defined by user" (empty value, or 0).
+    So booleans use the 'choice' type.
+-->
+<restrictions xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Interface ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <restriction
+        android:key="interface"
+        android:restrictionType="bundle"
+        android:title="@string/pref_ui">
+
+        <restriction
+            android:defaultValue=""
+            android:entries="@array/restriction_theme_entries"
+            android:entryValues="@array/restriction_theme_values"
+            android:key="theme"
+            android:restrictionType="choice"
+            android:title="@string/pref_theme" />
+
+        <restriction
+            android:defaultValue=""
+            android:entries="@array/restriction_bool_entries"
+            android:entryValues="@array/restriction_bool_values"
+            android:key="bell_enabled"
+            android:restrictionType="choice"
+            android:title="@string/pref_bell" />
+
+        <restriction
+            android:defaultValue=""
+            android:entries="@array/restriction_bool_entries"
+            android:entryValues="@array/restriction_bool_values"
+            android:key="sort_server_list"
+            android:restrictionType="choice"
+            android:title="@string/pref_sort_server_list" />
+
+        <restriction
+            android:defaultValue=""
+            android:entries="@array/restriction_bool_entries"
+            android:entryValues="@array/restriction_bool_values"
+            android:key="prefer_advanced_editor"
+            android:restrictionType="choice"
+            android:title="@string/pref_prefer_advanced_editor" />
+    </restriction>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Viewer ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <restriction
+        android:key="viewer"
+        android:restrictionType="bundle"
+        android:title="@string/pref_viewer">
+
+        <restriction
+            android:defaultValue=""
+            android:description="@string/restriction_viewer_orientation_desc"
+            android:entries="@array/restriction_orientation_entries"
+            android:entryValues="@array/restriction_orientation_values"
+            android:key="viewer_orientation"
+            android:restrictionType="choice"
+            android:title="@string/pref_orientation" />
+
+        <restriction
+            android:defaultValue=""
+            android:description="@string/restriction_fullscreen_display_desc"
+            android:entries="@array/restriction_bool_entries"
+            android:entryValues="@array/restriction_bool_values"
+            android:key="fullscreen_display"
+            android:restrictionType="choice"
+            android:title="@string/pref_fullscreen" />
+
+        <restriction
+            android:defaultValue=""
+            android:description="@string/restriction_keep_screen_on_desc"
+            android:entries="@array/restriction_bool_entries"
+            android:entryValues="@array/restriction_bool_values"
+            android:key="keep_screen_on"
+            android:restrictionType="choice"
+            android:title="@string/pref_keep_screen_on" />
+    </restriction>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Input ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <restriction
+        android:key="input"
+        android:restrictionType="bundle"
+        android:title="@string/pref_input">
+
+        <restriction
+            android:key="input_gestures"
+            android:restrictionType="bundle"
+            android:title="@string/pref_gesture">
+
+            <restriction
+                android:defaultValue=""
+                android:description="@string/restriction_gesture_style_desc"
+                android:entries="@array/restriction_pref_gesture_style_entries"
+                android:entryValues="@array/restriction_pref_gesture_style_values"
+                android:key="gesture_style"
+                android:restrictionType="choice"
+                android:title="@string/pref_gesture_style" />
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_double_tap_action_entries"
+                android:entryValues="@array/restriction_double_tap_action_values"
+                android:key="gesture_double_tap"
+                android:restrictionType="choice"
+                android:title="@string/pref_double_tap" />
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_long_press_action_entries"
+                android:entryValues="@array/restriction_long_press_action_values"
+                android:key="gesture_long_press"
+                android:restrictionType="choice"
+                android:title="@string/pref_long_press" />
+
+            <restriction
+                android:defaultValue=""
+                android:description="@string/restriction_gesture_tap2_desc"
+                android:entries="@array/restriction_tap2_action_entries"
+                android:entryValues="@array/restriction_tap2_action_values"
+                android:key="gesture_tap2"
+                android:restrictionType="choice"
+                android:title="@string/pref_two_finger_tap" />
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_tap3_action_entries"
+                android:entryValues="@array/restriction_tap3_action_values"
+                android:key="gesture_tap3"
+                android:restrictionType="choice"
+                android:title="@string/pref_three_finger_tap" />
+
+            <restriction
+                android:defaultValue=""
+                android:description="@string/restriction_gesture_swipe1_desc"
+                android:entries="@array/restriction_swipe1_action_entries"
+                android:entryValues="@array/restriction_swipe1_action_values"
+                android:key="gesture_swipe1"
+                android:restrictionType="choice"
+                android:title="@string/pref_swipe1" />
+
+            <restriction
+                android:defaultValue=""
+                android:description="@string/restriction_gesture_swipe2_desc"
+                android:entries="@array/restriction_swipe2_action_entries"
+                android:entryValues="@array/restriction_swipe2_action_values"
+                android:key="gesture_swipe2"
+                android:restrictionType="choice"
+                android:title="@string/pref_swipe2" />
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_swipe3_action_entries"
+                android:entryValues="@array/restriction_swipe3_action_values"
+                android:key="gesture_swipe3"
+                android:restrictionType="choice"
+                android:title="@string/pref_swipe3" />
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_double_tap_swipe_action_entries"
+                android:entryValues="@array/restriction_double_tap_swipe_action_values"
+                android:key="gesture_double_tap_swipe"
+                android:restrictionType="choice"
+                android:title="@string/pref_double_tap_swipe" />
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_long_press_swipe_action_entries"
+                android:entryValues="@array/restriction_long_press_swipe_action_values"
+                android:key="gesture_long_press_swipe"
+                android:restrictionType="choice"
+                android:title="@string/pref_long_press_swipe" />
+
+            <restriction
+                android:defaultValue="0"
+                android:description="@string/restriction_gesture_swipe_sensitivity_desc"
+                android:key="gesture_swipe_sensitivity"
+                android:restrictionType="integer"
+                android:title="@string/pref_swipe_sensitivity" />
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_bool_entries"
+                android:entryValues="@array/restriction_bool_values"
+                android:key="invert_vertical_scrolling"
+                android:restrictionType="choice"
+                android:title="@string/pref_invert_vertical_scrolling" />
+        </restriction>
+
+        <restriction
+            android:key="input_mouse"
+            android:restrictionType="bundle"
+            android:title="@string/pref_mouse">
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_bool_entries"
+                android:entryValues="@array/restriction_bool_values"
+                android:key="mouse_passthrough"
+                android:restrictionType="choice"
+                android:title="@string/pref_mouse_passthrough" />
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_bool_entries"
+                android:entryValues="@array/restriction_bool_values"
+                android:key="capture_pointer"
+                android:restrictionType="choice"
+                android:title="@string/pref_capture_pointer" />
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_bool_entries"
+                android:entryValues="@array/restriction_bool_values"
+                android:key="hide_local_cursor"
+                android:restrictionType="choice"
+                android:title="@string/pref_hide_local_cursor" />
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_bool_entries"
+                android:entryValues="@array/restriction_bool_values"
+                android:key="hide_remote_cursor"
+                android:restrictionType="choice"
+                android:title="@string/title_hide_remote_cursor" />
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_mouse_back_action_entries"
+                android:entryValues="@array/restriction_mouse_back_action_values"
+                android:key="mouse_back"
+                android:restrictionType="choice"
+                android:title="@string/pref_mouse_back" />
+        </restriction>
+
+        <restriction
+            android:key="input_virtual_keys"
+            android:restrictionType="bundle"
+            android:title="@string/pref_vk">
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_bool_entries"
+                android:entryValues="@array/restriction_bool_values"
+                android:key="vk_open_with_keyboard"
+                android:restrictionType="choice"
+                android:title="@string/pref_vk_open_with_keyboard" />
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_bool_entries"
+                android:entryValues="@array/restriction_bool_values"
+                android:key="vk_use_super_with_single_tap"
+                android:restrictionType="choice"
+                android:title="@string/pref_vk_use_super_with_single_tap" />
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_vk_row_count_entries"
+                android:entryValues="@array/restriction_vk_row_count_values"
+                android:key="vk_row_count"
+                android:restrictionType="choice"
+                android:title="@string/pref_vk_row_count" />
+        </restriction>
+
+        <restriction
+            android:key="input_key_mapping"
+            android:restrictionType="bundle"
+            android:title="@string/pref_km">
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_bool_entries"
+                android:entryValues="@array/restriction_bool_values"
+                android:key="km_right_alt_to_super"
+                android:restrictionType="choice"
+                android:title="@string/pref_km_right_alt_to_super" />
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_bool_entries"
+                android:entryValues="@array/restriction_bool_values"
+                android:key="km_language_switch_to_super"
+                android:restrictionType="choice"
+                android:title="@string/pref_km_language_switch_to_super" />
+
+            <restriction
+                android:defaultValue=""
+                android:entries="@array/restriction_bool_entries"
+                android:entryValues="@array/restriction_bool_values"
+                android:key="km_back_to_escape"
+                android:restrictionType="choice"
+                android:title="@string/pref_km_back_to_escape" />
+        </restriction>
+    </restriction>
+
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Servers ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <restriction
+        android:key="servers"
+        android:restrictionType="bundle"
+        android:title="@string/pref_servers">
+
+        <restriction
+            android:defaultValue=""
+            android:description="@string/restriction_auto_reconnect_desc"
+            android:entries="@array/restriction_bool_entries"
+            android:entryValues="@array/restriction_bool_values"
+            android:key="auto_reconnect"
+            android:restrictionType="choice"
+            android:title="@string/pref_auto_reconnect" />
+
+        <restriction
+            android:defaultValue=""
+            android:description="@string/pref_saved_server_lock_summary"
+            android:entries="@array/restriction_bool_entries"
+            android:entryValues="@array/restriction_bool_values"
+            android:key="lock_saved_server"
+            android:restrictionType="choice"
+            android:title="@string/pref_saved_server_lock" />
+    </restriction>
+
+</restrictions>
