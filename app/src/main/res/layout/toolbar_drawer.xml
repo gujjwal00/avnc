@@ -49,6 +49,13 @@
                     android:contentDescription="@string/desc_virtual_keys_btn"
                     android:src="@drawable/ic_keyboard_mini" />
 
+                <ImageButton
+                    android:id="@+id/audio_btn"
+                    style="@style/ImageButton"
+                    android:contentDescription="@string/desc_audio_btn"
+                    android:src="@drawable/ic_volume_off"
+                    app:isVisible="@{viewModel.audioAvailable}" />
+
                 <ToggleButton
                     android:id="@+id/view_modes_toggle"
                     style="@style/ToolbarFlyoutToggle"

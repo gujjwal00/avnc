@@ -11,6 +11,7 @@
 #include <rfb/rfbclient.h>
 
 #include "ClientEx.h"
+#include "QemuAudio.h"
 #include "Utility.h"
 
 
@@ -67,6 +68,34 @@ JNI_OnUnload(JavaVM *, void *) {
 }
 
 
+/******************************************************************************
+ * Sound (QEMU audio extension, see QemuAudio.h)
+ *****************************************************************************/
+
+static void onAudioAvailable(rfbClient *client) {
+    auto env = context.getEnv();
+    auto mid = env->GetMethodID(context.managedCls, "cbAudioAvailable", "()V");
+    env->CallVoidMethod(getManagedClient(client), mid);
+}
+
+static void onAudioData(rfbClient *client, const uint8_t *pcm, uint32_t length) {
+    auto env = context.getEnv();
+    jbyteArray bytes = env->NewByteArray((jsize) length);
+    if (!bytes) {
+        rfbClientErr("onAudioData: Unable to allocate memory for %u bytes of audio\n", length);
+        return;
+    }
+    env->SetByteArrayRegion(bytes, 0, (jsize) length, reinterpret_cast<const jbyte *>(pcm));
+    auto mid = env->GetMethodID(context.managedCls, "cbAudioData", "([B)V");
+    env->CallVoidMethod(getManagedClient(client), mid, bytes);
+    env->DeleteLocalRef(bytes);
+}
+
+static void installAudioExtension() {
+    qemuAudioInstall({onAudioAvailable, onAudioData});
+}
+
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_initLibrary(JNIEnv *env, jclass clazz) {
@@ -79,6 +108,8 @@ Java_com_gaurav_avnc_vnc_VncClient_initLibrary(JNIEnv *env, jclass clazz) {
 
     rfbClientLog = &log_info;
     rfbClientErr = &log_error;
+
+    installAudioExtension();
 }
 
 
@@ -488,6 +519,19 @@ JNIEXPORT void JNICALL
 Java_com_gaurav_avnc_vnc_VncClient_nativePauseFramebufferUpdates(JNIEnv * /*env*/, jobject /*thiz*/, jlong client_ptr,
                                                                  jboolean pause) {
     ((rfbClient *) client_ptr)->pauseFramebufferUpdates = pause;
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_gaurav_avnc_vnc_VncClient_nativeAudioStart(JNIEnv * /*env*/, jobject /*thiz*/, jlong client_ptr,
+                                                    jint frequency, jint channels) {
+    return qemuAudioStart((rfbClient *) client_ptr, (uint32_t) frequency, (uint8_t) channels) ? JNI_TRUE : JNI_FALSE;
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_gaurav_avnc_vnc_VncClient_nativeAudioStop(JNIEnv * /*env*/, jobject /*thiz*/, jlong client_ptr) {
+    return qemuAudioStop((rfbClient *) client_ptr) ? JNI_TRUE : JNI_FALSE;
 }
 
 extern "C"
