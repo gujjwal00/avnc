@@ -32,8 +32,13 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew assembleDebug -Pandroid.injected.build.abi=arm64-v8a
+      - name: Find the APK
+        run: find app/build -name '*.apk' -not -path '*androidTest*' -print
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: avnc-sound-debug
-          path: app/build/outputs/apk/debug/*.apk
+          path: |
+            app/build/**/*.apk
+            !app/build/**/androidTest/**
+          if-no-files-found: error
