@@ -5,6 +5,7 @@
 Usage: python3 test_qemu_audio.py <path to libvncserver checkout> <path to built libvncclient.a>
 Builds qemu_audio_check.cpp against LibVNCClient, runs it against this server, and checks the bytes both ways.
 """
+import shutil
 import socket
 import struct
 import subprocess
@@ -79,7 +80,10 @@ def serve(listener):
 
 def main(src, lib):
     exe = Path(tempfile.mkdtemp()) / "check"
-    cmd = ["g++", "-std=c++17", "-o", str(exe), str(HERE / "qemu_audio_check.cpp"), "-I", f"{src}/include", "-I", f"{src}/src/libvncclient",
+    # The Android NDK uses clang, which accepts the C11 `_Atomic` in LibVNCClient's header from C++. GCC does not,
+    # so with GCC the qualifier is dropped (same size and layout).
+    clang = shutil.which("clang++")
+    cmd = [clang or "g++", *([] if clang else ["-D_Atomic="]), "-std=c++17", "-o", str(exe), str(HERE / "qemu_audio_check.cpp"), "-I", f"{src}/include", "-I", f"{src}/src/libvncclient",
            "-I", str(Path(lib).parent / "include"), lib, "-lz", "-lpthread"]
     subprocess.run(cmd, check=True)
     listener = socket.socket(); listener.bind(("127.0.0.1", 0)); listener.listen(1)

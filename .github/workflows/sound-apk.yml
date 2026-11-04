@@ -17,7 +17,7 @@ jobs:
           submodules: true
       - name: Check the QEMU audio protocol against a fake server
         run: |
-          sudo apt-get update && sudo apt-get install -y cmake g++ zlib1g-dev
+          sudo apt-get update && sudo apt-get install -y cmake clang zlib1g-dev
           cmake -S extern/libvncserver -B /tmp/vncbuild -DBUILD_SHARED_LIBS=OFF -DWITH_OPENSSL=OFF -DWITH_GNUTLS=OFF \
             -DWITH_GCRYPT=OFF -DWITH_LIBSSHTUNNEL=OFF -DWITH_SDL=OFF -DWITH_GTK=OFF -DWITH_FFMPEG=OFF -DWITH_WEBSOCKETS=OFF \
             -DWITH_SASL=OFF -DWITH_SYSTEMD=OFF -DWITH_TESTS=OFF -DWITH_EXAMPLES=OFF -DWITH_JPEG=OFF -DWITH_PNG=OFF
