@@ -52,6 +52,9 @@ class VncClient(private val observer: Observer) {
         fun onFramebufferSizeChanged(width: Int, height: Int)
         fun onPointerMoved(x: Int, y: Int)
         fun onBell()
+
+        /** The server can stream sound (QEMU's VNC audio extension). Called from the message thread. */
+        fun onAudioAvailable() {}
     }
 
     /**
@@ -113,6 +116,19 @@ class VncClient(private val observer: Observer) {
     @Volatile
     var ignorePointerMovesByServer = false
 
+
+    /**
+     * Receives raw PCM (signed 16 bit) after [startAudio]. Invoked on the message thread, so it must not block.
+     */
+    @Volatile
+    var audioListener: ((ByteArray) -> Unit)? = null
+
+    /**
+     * True once the server has said it can stream sound. Always false for servers other than QEMU.
+     */
+    @Volatile
+    var audioAvailable = false
+        private set
 
     /**
      * Value of the most recent cut text sent/received from server
@@ -241,6 +257,25 @@ class VncClient(private val observer: Observer) {
     }
 
     /**
+     * Ask the server to stream sound as signed 16-bit PCM. Only works if [audioAvailable] is true.
+     * This does network IO, so it must not be called from the Main thread.
+     */
+    fun startAudio(sampleRate: Int, channels: Int): Boolean {
+        var sent = false
+        ifConnected { sent = nativeAudioStart(nativePtr, sampleRate, channels) }
+        return sent
+    }
+
+    /**
+     * Ask the server to stop streaming sound. Must not be called from the Main thread.
+     */
+    fun stopAudio(): Boolean {
+        var sent = false
+        ifConnected { sent = nativeAudioStop(nativePtr) }
+        return sent
+    }
+
+    /**
      * Set remote desktop size to given dimensions.
      * This needs server support to actually work.
      * Non-positive [width] & [height] are ignored.
@@ -356,6 +391,8 @@ class VncClient(private val observer: Observer) {
     private external fun nativeSetDesktopSize(clientPtr: Long, width: Int, height: Int): Boolean
     private external fun nativeRefreshFrameBuffer(clientPtr: Long): Boolean
     private external fun nativePauseFramebufferUpdates(clientPtr: Long, pause: Boolean)
+    private external fun nativeAudioStart(clientPtr: Long, sampleRate: Int, channels: Int): Boolean
+    private external fun nativeAudioStop(clientPtr: Long): Boolean
     private external fun nativeGetDesktopName(clientPtr: Long): String
     private external fun nativeGetWidth(clientPtr: Long): Int
     private external fun nativeGetHeight(clientPtr: Long): Int
@@ -399,6 +436,17 @@ class VncClient(private val observer: Observer) {
 
     @Keep
     private fun cbBell() = observer.onBell()
+
+    @Keep
+    private fun cbAudioAvailable() {
+        audioAvailable = true
+        observer.onAudioAvailable()
+    }
+
+    @Keep
+    private fun cbAudioData(pcm: ByteArray) {
+        audioListener?.invoke(pcm)
+    }
 
     @Keep
     private fun cbHandleCursorPos(x: Int, y: Int) {

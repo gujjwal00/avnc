@@ -36,6 +36,7 @@ import com.gaurav.avnc.util.monitor
 import com.gaurav.avnc.util.setClipboardText
 import com.gaurav.avnc.util.trustCertificate
 import com.gaurav.avnc.viewmodel.service.SshClient
+import com.gaurav.avnc.vnc.AudioPlayer
 import com.gaurav.avnc.vnc.UserCredential
 import com.gaurav.avnc.vnc.VncClient
 import kotlinx.coroutines.Dispatchers
@@ -129,6 +130,32 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
     val connected get() = state.value == State.Connected
 
     /**
+     * Sound from servers that support QEMU's VNC audio extension.
+     * [audioAvailable] turns true once the server says it can stream; [audioOn] is the user's choice.
+     */
+    val audioAvailable = MutableLiveData(false)
+    val audioOn = MutableLiveData(false)
+    private val audioPlayer = AudioPlayer()
+
+    fun toggleAudio() {
+        if (audioOn.value == true) {
+            audioOn.value = false
+            audioPlayer.stop()
+            messenger?.stopAudio()
+        } else if (audioAvailable.value == true) {
+            audioPlayer.start()
+            messenger?.startAudio(audioPlayer.sampleRate, audioPlayer.channels)
+            audioOn.value = true
+        }
+    }
+
+    private fun resetAudio() {
+        audioPlayer.stop()
+        audioOn.value = false
+        audioAvailable.value = false
+    }
+
+    /**
      * Reason for disconnecting.
      */
     val disconnectReason = MutableLiveData("")
@@ -219,6 +246,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
 
     override fun onCleared() {
         super.onCleared()
+        audioPlayer.stop()
         session.stop()
     }
 
@@ -454,6 +482,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
             launchMain {
                 this@VncViewModel.client = vncClient
                 this@VncViewModel.messenger = messenger
+                vncClient.audioListener = { audioPlayer.write(it) }
                 state.value = State.Connected
 
                 rememberLoginInfo()
@@ -470,6 +499,7 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
                 state.value = State.Disconnected
                 client = null
                 messenger = null
+                resetAudio()
             }
         }
 
@@ -526,6 +556,10 @@ class VncViewModel(app: Application) : BaseViewModel(app) {
 
         override fun onPointerMoved(x: Int, y: Int) {
             refreshFrameView()
+        }
+
+        override fun onAudioAvailable() {
+            audioAvailable.postValue(true)
         }
 
         override fun onBell() {

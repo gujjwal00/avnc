@@ -96,6 +96,14 @@ class Messenger(private val client: VncClient) {
         execute { client.sendCutText(text) }
     }
 
+    fun startAudio(sampleRate: Int, channels: Int) {
+        execute { client.startAudio(sampleRate, channels) }
+    }
+
+    fun stopAudio() {
+        execute { client.stopAudio() }
+    }
+
     fun setDesktopSize(width: Int, height: Int) {
         execute { client.setDesktopSize(width, height) }
     }

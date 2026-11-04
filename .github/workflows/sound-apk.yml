@@ -1,0 +1,44 @@
+name: Sound APK
+
+# Builds an installable (debug-signed) arm64 APK of this fork, with QEMU VNC sound support.
+# Run it from the Actions tab ("Run workflow"), or push to the qemu-audio branch.
+on:
+  workflow_dispatch:
+  push:
+    branches: [qemu-audio]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Check the QEMU audio protocol against a fake server
+        run: |
+          sudo apt-get update && sudo apt-get install -y cmake clang zlib1g-dev
+          cmake -S extern/libvncserver -B /tmp/vncbuild -DBUILD_SHARED_LIBS=OFF -DWITH_OPENSSL=OFF -DWITH_GNUTLS=OFF \
+            -DWITH_GCRYPT=OFF -DWITH_LIBSSHTUNNEL=OFF -DWITH_SDL=OFF -DWITH_GTK=OFF -DWITH_FFMPEG=OFF -DWITH_WEBSOCKETS=OFF \
+            -DWITH_SASL=OFF -DWITH_SYSTEMD=OFF -DWITH_TESTS=OFF -DWITH_EXAMPLES=OFF -DWITH_JPEG=OFF -DWITH_PNG=OFF
+          cmake --build /tmp/vncbuild --target vncclient -j4
+          python3 app/src/test/native/test_qemu_audio.py "$PWD/extern/libvncserver" /tmp/vncbuild/libvncclient.a
+      - name: set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Build the APK (arm64 only, to keep it quick)
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug -Pandroid.injected.build.abi=arm64-v8a
+      - name: Find the APK
+        run: find app/build -name '*.apk' -not -path '*androidTest*' -print
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: avnc-sound-debug
+          path: |
+            app/build/**/*.apk
+            !app/build/**/androidTest/**
+          if-no-files-found: error

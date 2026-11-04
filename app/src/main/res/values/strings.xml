@@ -142,6 +142,7 @@
     <string name="desc_discovery_running">Discovering servers on you network</string>
     <string name="desc_toolbar_btn">Open toolbar</string>
     <string name="desc_keyboard_btn">Open keyboard</string>
+    <string name="desc_audio_btn">Turn sound on or off</string>
     <string name="desc_virtual_keys_btn">Show virtual keys</string>
     <string name="desc_view_modes_toggle">View modes</string>
     <string name="desc_view_mode_normal">Normal mode</string>
