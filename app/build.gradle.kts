@@ -25,6 +25,9 @@ android {
                 arguments += "room.schemaLocation" to "$projectDir/roomSchema/"
             }
         }
+        androidResources {
+            generateLocaleConfig = true
+        }
 
         externalNativeBuild {
             cmake {
